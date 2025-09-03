@@ -1,0 +1,9 @@
+# serve custom error pages 
+ErrorDocument 404 /404.html
+ErrorDocument 400 /404.html
+
+
+#force SSL on entire site
+RewriteEngine On 
+RewriteCond %{HTTPS} !=on
+RewriteRule ^/?(.*) https://homexo.in/$1 [R=301,L]
