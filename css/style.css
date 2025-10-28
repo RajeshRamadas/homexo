@@ -1002,7 +1002,7 @@ header .header_margin {
 
 /* end of mouse*/
 
-/* banner CTA*/
+/* banner CTA
 .cta_banner {
   background-color: #fff;
   border-radius: 0.625rem;
@@ -1013,6 +1013,27 @@ header .header_margin {
   overflow: hidden;
   width: 34.37rem;
   background: linear-gradient(-45deg, #dbb6ab, #c297fa, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  position: absolute;
+  position: fixed;
+  left: 50%;
+  bottom: 3.75rem;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+}*/
+
+/* banner CTA*/
+.cta_banner {
+  background-color: #fff;
+  border-radius: 0.625rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3);
+  display: flex;
+  max-width: 100%;
+  margin: 1.25rem;
+  overflow: hidden;
+  width: 34.37rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   position: absolute;
