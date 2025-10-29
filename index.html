@@ -1,719 +1,608 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script>
-      document.onreadystatechange = function () {
-        if (document.readyState === "loading") {
-          nodisplay_content();
-          document.querySelector("body").style.visibility = "hidden";
-        } else if (document.readyState === "complete") {
-          display_content();
-          nodisplayloading();
-          document.querySelector("body").style.visibility = "visible";
-        } else {
-          document.querySelector("body").style.visibility = "visible";
-          nodisplay_content();
-          displayloading();
-        }
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+  
+  <!-- Primary Meta Tags -->
+  <title>HOMEXO – Buy | Sell | Rent | Invest</title>
+  <meta name="description" content="Delivering digital transformation">
+  <meta name="keywords" content="Consulting, marketing, digital transformation">
+  <meta name="author" content="Homexo.in">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="./images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="./images/favicon/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.homexo.in/">
+  <meta property="og:title" content="Redefining Real Estate Experiences">
+  <meta property="og:description" content="Grow your online presence by connecting limitless customers.">
+  <meta property="og:image" content="https://www.homexo.in/images/homexo.png">
+  <meta property="og:image" content="https://www.homexo.in/images/homexo.webp">
+  <meta property="og:image:alt" content="Get your business online at most afforable price">
+  <meta property="og:site_name" content="Marketingadda">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@MarketingaddaO">
+  <meta name="twitter:creator" content="@MarketingaddaO">
+  <meta name="twitter:domain" content="https://www.homexo.in/">
+  <meta name="twitter:title" content="Redefining Real Estate Experiences">
+  <meta name="twitter:description" content="Grow your online presence by connecting limitless customers.">
+  <meta name="twitter:image" content="https://www.marketingadda.com/images/marketingadda.png">
+  <meta name="twitter:image" content="https://www.marketingadda.com/images/marketingadda.webp">
+  <meta name="twitter:image:alt" content="Get your business online at most afforable price">
+  
+  <!-- Schema.org for Google -->
+  <meta itemprop="name" content="Marketingadda">
+  <meta itemprop="description" content="Grow your online presence by connecting limitless customers.">
+  <meta itemprop="image" content="https://www.marketingadda.com/images/marketingadda.webp">
+  <meta itemprop="image" content="https://www.marketingadda.com/images/marketingadda.png">
+  
+  <!-- Geo Tags -->
+  <meta name="geo.position" content="12.972442;77.580643">
+  <meta name="geo.placename" content="Bengaluru">
+  <meta name="geo.region" content="IN-KA">
+  
+  <!-- Additional Meta -->
+  <meta name="HandheldFriendly" content="true">
+  <meta http-equiv="content-language" content="en-in">
+  <meta name="theme-color" content="#012b4d">
+  
+  <!-- Verification Tags -->
+  <meta name="google-site-verification" content="mb0wHDrTIfHcZM06nytkWPZMVAe4-tYY_WGcBgYADG8">
+  <meta name="ahrefs-site-verification" content="7864f660fc98a53e5653b37c31643652415febf5b2a3fd9813c79c27e0c7bb7f">
+  
+  <!-- Canonical & Alternate Links -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="canonical" href="https://www.marketingadda.com/">
+  <link rel="alternate" hreflang="en-in" href="https://www.marketingadda.com/">
+  <link rel="alternate" hreflang="x-default" href="https://www.marketingadda.com/">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/style.css">
+  
+  <!-- Preloader Script -->
+  <script>
+    document.onreadystatechange = function () {
+      if (document.readyState === "loading") {
+        nodisplay_content();
+        document.querySelector("body").style.visibility = "hidden";
+      } else if (document.readyState === "complete") {
+        display_content();
+        nodisplayloading();
+        document.querySelector("body").style.visibility = "visible";
+      } else {
+        document.querySelector("body").style.visibility = "visible";
+        nodisplay_content();
+        displayloading();
+      }
+    };
+
+    function nodisplayloading() {
+      var preloader_active = document.getElementsByClassName("preloader-active");
+      preloader_active[0].style.display = "none";
+    }
+
+    function displayloading() {
+      var preloader_active = document.getElementsByClassName("preloader-active");
+      preloader_active[0].style.display = "block";
+    }
+
+    function display_content() {
+      var preloader_header = document.getElementsByClassName("preloader-header");
+      preloader_header[0].style.visibility = "visible";
+
+      var preloader_main = document.getElementsByClassName("preloader-main");
+      preloader_main[0].style.visibility = "visible";
+
+      var preloader_footer = document.getElementsByClassName("preloader-footer");
+      preloader_footer[0].style.visibility = "visible";
+    }
+
+    function nodisplay_content() {
+      var preloader_header = document.getElementsByClassName("preloader-header");
+      preloader_header[0].style.visibility = "hidden";
+
+      var preloader_main = document.getElementsByClassName("preloader-main");
+      preloader_main[0].style.visibility = "hidden";
+
+      var preloader_footer = document.getElementsByClassName("preloader-footer");
+      preloader_footer[0].style.visibility = "hidden";
+    }
+  </script>
+  
+  <!-- Microsoft Clarity Analytics -->
+  <script>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () {
+        (c[a].q = c[a].q || []).push(arguments);
       };
+      t = l.createElement(r);
+      t.async = 1;
+      t.src = "https://www.clarity.ms/tag/" + i + "?ref=bwt";
+      y = l.getElementsByTagName(r)[0];
+      y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "7xwl5lqb34");
+  </script>
+</head>
 
-      function nodisplayloading() {
-        var preloader_active =
-          document.getElementsByClassName("preloader-active");
-        preloader_active[0].style.display = "none";
-      }
-
-      function displayloading() {
-        var preloader_active =
-          document.getElementsByClassName("preloader-active");
-        preloader_active[0].style.display = "block";
-      }
-
-      function display_content() {
-        var preloader_header =
-          document.getElementsByClassName("preloader-header");
-        preloader_header[0].style.visibility = "visible";
-
-        var preloader_main = document.getElementsByClassName("preloader-main");
-        preloader_main[0].style.visibility = "visible";
-
-        var preloader_footer =
-          document.getElementsByClassName("preloader-footer");
-        preloader_footer[0].style.visibility = "visible";
-      }
-
-      function nodisplay_content() {
-        var preloader_header =
-          document.getElementsByClassName("preloader-header");
-        preloader_header[0].style.visibility = "hidden";
-
-        var preloader_main = document.getElementsByClassName("preloader-main");
-        preloader_main[0].style.visibility = "hidden";
-
-        var preloader_footer =
-          document.getElementsByClassName("preloader-footer");
-        preloader_footer[0].style.visibility = "hidden";
-      }
-    </script>
-    <script>
-      (function (c, l, a, r, i, t, y) {
-        c[a] =
-          c[a] ||
-          function () {
-            (c[a].q = c[a].q || []).push(arguments);
-          };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i + "?ref=bwt";
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-      })(window, document, "clarity", "script", "7xwl5lqb34");
-    </script>
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-
-    <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-
-    <meta name="description" content="Delivering digital transformation" />
-    <meta
-      name="keywords"
-      content=" Consulting, marketing, digital transformation"
-    />
-
-    <meta name="author" content="Homexo.in" />
-
-    <link rel="icon" type="image/x-icon" href="./images/favicon/favicon.ico" />
-
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./images/favicon/apple-touch-icon.png"
-    />
-
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="48x48"
-      href="./images/favicon/favicon-48x48.png"
-    />
-
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./images/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./images/favicon/favicon-16x16.png"
-    />
-    <title>
-      HOMEXO – Buy | Sell | Rent | Invest
-    </title>
-    <meta
-      name="google-site-verification"
-      content="mb0wHDrTIfHcZM06nytkWPZMVAe4-tYY_WGcBgYADG8"
-    />
-    <meta
-      name="ahrefs-site-verification"
-      content="7864f660fc98a53e5653b37c31643652415febf5b2a3fd9813c79c27e0c7bb7f"
-    />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@MarketingaddaO" />
-    <meta name="twitter:creator" content="@MarketingaddaO" />
-    <meta name="twitter:domain" content="https://www.homexo.in/" />
-    <meta name="twitter:title" content="Redefining Real Estate Experiences" />
-    <meta
-      name="twitter:description"
-      content="Grow your online presence by connecting limitless customers."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.marketingadda.com/images/marketingadda.png"
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.marketingadda.com/images/marketingadda.webp"
-    />
-    <meta
-      name="twitter:image:alt"
-      content="Get your business online at most afforable price"
-    />
-    <meta property="og:title" content="Redefining Real Estate Experiences" />
-    <meta property="og:url" content="https://www.homexo.in/" />
-    <meta
-      property="og:image"
-      content="https://www.homexo.in/images/homexo.png"
-    />
-    <meta
-      property="og:image"
-      content="https://www.homexo.in/images/homexo.webp"
-    />
-    <meta
-      name="og:image:alt"
-      content="Get your business online at most afforable price"
-    />
-    <meta
-      name="og:description"
-      content="Grow your online presence by connecting limitless customers."
-    />
-
-    <meta property="og:site_name" content="Marketingadda" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-
-    <meta itemprop="name" content="Marketingadda" />
-    <meta
-      itemprop="description"
-      content="Grow your online presence by connecting limitless customers."
-    />
-    <meta
-      itemprop="image"
-      content="https://www.marketingadda.com/images/marketingadda.webp"
-    />
-    <meta
-      itemprop="image"
-      content="https://www.marketingadda.com/images/marketingadda.png"
-    />
-    <meta name="HandheldFriendly" content="true" />
-    <meta http-equiv="content-language" content="en-in" />
-    <meta name="geo.position" content=" 12.972442;77.580643" />
-    <meta name="geo.placename" content="Bengaluru" />
-    <meta name="geo.region" content="IN-KA" />
-
-    <meta name="theme-color" content="#012b4d" />
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="canonical" href="https://www.marketingadda.com/" />
-    <link
-      rel="alternate"
-      hreflang="en-in"
-      href="https://www.marketingadda.com/"
-    />
-    <link
-      rel="alternate"
-      hreflang="x-default"
-      href="https://www.marketingadda.com/"
-    />
-
-    <link rel="stylesheet" href="./css/normalize.css" />
-    <link rel="stylesheet" href="./css/style.css" />
-  </head>
-  <body class="bg_logo" id="bg_logo" style="visibility: hidden">
-    <div class="preloader-active">
-      <div class="loading"></div>
-    </div>
-    <header class="preloader-header">
-      <nav>
-        <div class="container header_margin">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="logo_size navbar-fixed hover-target">
-            <polyline points="50,120 100,50 150,120" stroke="#003366" stroke-width="8" fill="none" />
-            <line x1="70" y1="130" x2="130" y2="130" stroke="#003366" stroke-width="8" />
-            <text x="100" y="160" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#003366">HOMEXO</text>
-          </svg>
-        </div>
-
-        <div class="menu-wrap">
-          <input
-            type="checkbox"
-            id="toggle-checkbox"
-            class="toggler hover-target"
-          />
-          <div class="hamburger"><div></div></div>
-          <div class="menu">
+<body class="bg_logo" id="bg_logo" style="visibility: hidden">
+  
+  <!-- Preloader -->
+  <div class="preloader-active">
+    <div class="loading"></div>
+  </div>
+  
+  <!-- Header -->
+  <header class="preloader-header">
+    <nav>
+      
+      <!-- Logo -->
+      <div class="container header_margin">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="logo_size navbar-fixed hover-target">
+          <polyline points="50,120 100,50 150,120" stroke="#003366" stroke-width="8" fill="none" />
+          <line x1="70" y1="130" x2="130" y2="130" stroke="#003366" stroke-width="8" />
+          <text x="100" y="160" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#003366">HOMEXO</text>
+        </svg>
+      </div>
+      
+      <!-- Hamburger Menu -->
+      <div class="menu-wrap">
+        <input type="checkbox" id="toggle-checkbox" class="toggler hover-target" />
+        <div class="hamburger"><div></div></div>
+        
+        <div class="menu">
+          <div>
             <div>
-              <div>
-                <ul>
-                  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-ma"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','0')"
-                      ><span>HOMEXO</span></a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-design"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','1')"
-                      ><span>Property</span></a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-dev"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','2')"
-                      ><span>Finance</span></a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-app"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','3')"
-                      ><span>Legal Consulting</span></a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-digimarket"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','4')"
-                      ><span>Asset Care</span></a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-price"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','5')"
-                      ><span>About us</span></a
-                    >
-                  </li>
-                  <!--
-				  <li>
-                    <a
-                      href="#"
-                      class="menu-nav nav-active-about"
-                      type="text/html"
-                      onclick="handleSidemenu('sel_class','6')"
-                      ><span>About us</span></a
-                    >
-                  </li> -->
-                  <li class="overlay_email" style="padding-top: 4rem">
-					  <a href="mailto:hello@homexo.in">
-						<span>Get in touch!<br />hello@homexo.in</span>
-					  </a>
-					  <br />
-					  <a href="tel:+918105568225">
-						<span>+91 810 556 8225</span>
-					  </a>
-					</li>
-                </ul>
-              </div>
+              <ul>
+                <li>
+                  <a href="#" class="menu-nav nav-active-ma" type="text/html" onclick="handleSidemenu('sel_class','0')">
+                    <span>HOMEXO</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-nav nav-active-design" type="text/html" onclick="handleSidemenu('sel_class','1')">
+                    <span>Property</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-nav nav-active-dev" type="text/html" onclick="handleSidemenu('sel_class','2')">
+                    <span>Finance</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-nav nav-active-app" type="text/html" onclick="handleSidemenu('sel_class','3')">
+                    <span>Legal Consulting</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-nav nav-active-digimarket" type="text/html" onclick="handleSidemenu('sel_class','4')">
+                    <span>Asset Care</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-nav nav-active-price" type="text/html" onclick="handleSidemenu('sel_class','5')">
+                    <span>About us</span>
+                  </a>
+                </li>
+                <li class="overlay_email" style="padding-top: 4rem">
+                  <a href="mailto:hello@homexo.in">
+                    <span>Get in touch!<br />hello@homexo.in</span>
+                  </a>
+                  <br />
+                  <a href="tel:+918105568225">
+                    <span>+91 810 556 8225</span>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-
-        <div class="side-menu">
-          <nav class="sticky-left-nav">
-            <ul class="stick-left-nav-ul">
-             <li class="nav-active nav-active-ma selected-nav-ma">
-				  <a href="#" class="hover-target"><span>HOMEXO</span></a>
-			</li>
-			<li class="nav-active nav-active-design">
-			  <a href="#" class="hover-target"><span>Property</span></a>
-			</li>
-			<li class="nav-active nav-active-dev">
-			  <a href="#" class="hover-target"><span>Legal Consulting</span></a>
-			</li>
-			<li class="nav-active nav-active-app">
-			  <a href="#" class="hover-target"><span>Finance</span></a>
-			</li>
-			<li class="nav-active nav-active-digimarket">
-			  <a href="#" class="hover-target"><span>Asset Care</span></a>
-			</li>
-			<li class="nav-active nav-active-about">
-			  <a href="#" class="hover-target"><span>About us</span></a>
-			</li>
-            </ul>
-          </nav>
-        </div>
-      </nav>
-    </header>
-    <main class="preloader-main">
-      <div class="carousel">
-        <button class="carousel_button carousel_button--left is-hidden">
-          <img src="./images/arrow.svg" alt="left arrow" />
-        </button>
-
-        <div class="carousel__track-container">
-          <ul class="carousel_track">
-            <li class="carousel_slide current-slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline reveal-text">
-                    <span>Hi, We’re<br />
-                      HOMEXO!
-                    </span>
-                  </h1>
-                  <h2 class="c-hero__subheadline reveal-text">
-                    <span>
-                      One-stop solution for property, legal, finance & asset care
-                      </span
-                    >
-                  </h2>
-                  <p class="c-hero__Para reveal-text">
-                    <span>
-					
-					  At <span class="bold">Homexo</span>, we make finding your dream home simple and stress-free. Explore top listings, 
-					  connect with trusted agents, and turn your <span class="bold">real estate goals</span> into reality—all in one place.
-                      <br />
-                    </span>
-                  </p>
-                </div>
-              </div>
+      </div>
+      
+      <!-- Side Navigation Menu (Desktop) -->
+      <div class="side-menu">
+        <nav class="sticky-left-nav">
+          <ul class="stick-left-nav-ul">
+            <li class="nav-active nav-active-ma selected-nav-ma">
+              <a href="#" class="hover-target"><span>HOMEXO</span></a>
             </li>
-            <li class="carousel_slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline home-title">
-                    <span> PROPERTY</span>
-                  </h1>
-                  <h2 class="c-hero__subheadline home-title">
-                    <span> Find, Buy & Sell Properties with Ease</span>
-                  </h2>
-                  <p class="c-hero__Para home-title">
-                    <span>
-                        Discover verified real estate listings, top residential and commercial properties,
-                        and connect with <span class="bold">trusted</span> agents. Whether you’re buying, selling, or renting,
-                        <span class="bold">HOMEXO</span> makes property search simple, fast, and secure.
-                      <br /><br /><span class="underline_mark"
-                        >Begin your property search today!</span
-                      ></span
-                    >
-                  </p>
-                </div>
-              </div>
+            <li class="nav-active nav-active-design">
+              <a href="#" class="hover-target"><span>Property</span></a>
             </li>
-            <li class="carousel_slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline reveal-text">
-                    <span>Legal Consulting</span>
-                  </h1>
-                  <h2 class="c-hero__subheadline reveal-text">
-                    <span>
-                      Expert Property Legal Services</span
-                    >
-                  </h2>
-                  <p class="c-hero__Para reveal-text">
-                    <span>
-                        <span class="bold">Protect</span> your investment with property legal consulting you can trust. We handle property verification,
-                        title checks, registration, and  <span class="bold">compliance</span> services — ensuring your real estate transactions are smooth and legally sound.
-                        <br />
-                      <br /><span class="underline_mark1"
-                        >Book your legal consultation now and secure your investment!</span
-                      >
-                    </span>
-                  </p>
-                </div>
-              </div>
+            <li class="nav-active nav-active-dev">
+              <a href="#" class="hover-target"><span>Legal Consulting</span></a>
             </li>
-            <li class="carousel_slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline reveal-text">
-                    <span>Finance</span>
-                  </h1>
-                  <h2 class="c-hero__subheadline reveal-text">
-                    <span> Easy Home Loans & Property Finance</span>
-                  </h2>
-                  <p class="c-hero__Para reveal-text">
-                    <span>
-                      Access tailored financial solutions for home loans, mortgages, and real estate investments with leading <span class="bold">nationalized</span> banks.
-                        Enjoy the <span class="bold">best</span> interest rates, quick approvals, and a hassle-free process — trusted by thousands of homeowners nationwide. <br /><br />
-                      <span class="underline_mark"
-                        >Apply for a home loan today and take the next step toward your dream home!</span
-                      >
-                    </span>
-                  </p>
-                </div>
-              </div>
+            <li class="nav-active nav-active-app">
+              <a href="#" class="hover-target"><span>Finance</span></a>
             </li>
-            <li class="carousel_slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline reveal-text">
-                    <span>Asset Care</span>
-                  </h1>
-                  <h2 class="c-hero__subheadline reveal-text">
-                    <span> Worry-Free Property Management Services</span>
-                  </h2>
-                  <p class="c-hero__Para reveal-text">
-                    <span>
-                      We provide complete property <span class="bold">management</span>, handling everything from property maintenance and regular inspections to tenant screening and legal formalities.
-                        Our service ensures timely payment of taxes and utility bills, keeping your investment protected and hassle-free.
-                        <br /><br /><span class="underline_mark"
-                        >Start managing your property smarter with HOMEXO today!</span
-                      >
-                    </span>
-                  </p>
-                </div>
-              </div>
+            <li class="nav-active nav-active-digimarket">
+              <a href="#" class="hover-target"><span>Asset Care</span></a>
             </li>
-            <li class="carousel_slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline reveal-text">
-                    <span>About Us</span>
-                  </h1>
-                  <h2 class="c-hero__subheadline reveal-text">
-                    <span> Your One-Stop Real Estate Solution</span>
-                  </h2>
-                  <p class="c-hero__Para reveal-text">
-                    <span>
-                      With years of experience in the real estate industry, HOMEXO combines property search, legal consulting, finance solutions, and asset care under one trusted platform.
-                        Our team of experts ensures every transaction is <span class="bold">transparent</span>, <span class="bold">simple</span>, and <span class="bold">stress-free</span> — helping buyers, sellers, and investors make confident decisions..<br />
-                      <br /><span class="underline_mark"
-                        >Discover how HOMEXO’s expertise can simplify your real estate journey — contact us today!</span
-                      >
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="carousel_slide">
-              <div class="c-hero">
-                <div class="c-hero__content">
-                  <h1 class="c-hero__headline reveal-text">
-                    <span>About us</span>
-                  </h1>
-                  <h2 class="c-hero__subheadline reveal-text">
-                    <span>
-                      CONSULTING, MARKET RESEARCH,
-                      SOFTWARE DEVELOPMENT</span
-                    >
-                  </h2>
-                  <p class="c-hero__Para reveal-text">
-                    <span>
-                      The client's <span class="bold">success</span> is our
-                      goal, not the delivery of the solution! We have a team
-                      of<span class="bold"> well-seasoned</span>
-                      market research analysts and developers.
-                      <br />
-                      <span class="bold">Demo</span> presentation is delivered
-                      to clients before project<span class="bold">
-                        confirmation</span
-                      >, and give a proposal of the end product. <br /><br />
-                      <span class="underline_mark"
-                        >Talk to us for more information!</span
-                      >
-                    </span>
-                  </p>
-                </div>
-              </div>
+            <li class="nav-active nav-active-about">
+              <a href="#" class="hover-target"><span>About us</span></a>
             </li>
           </ul>
+        </nav>
+      </div>
+      
+    </nav>
+  </header>
+  
+  <!-- Main Content -->
+  <main class="preloader-main">
+    <div class="carousel">
+      
+      <!-- Carousel Navigation Buttons -->
+      <button class="carousel_button carousel_button--left is-hidden">
+        <img src="./images/arrow.svg" alt="left arrow" />
+      </button>
+      
+      <!-- Carousel Track -->
+      <div class="carousel__track-container">
+        <ul class="carousel_track">
+          
+          <!-- Slide 1: Home/Intro -->
+          <li class="carousel_slide current-slide">
+            <div class="c-hero">
+              <div class="c-hero__content">
+                <h1 class="c-hero__headline reveal-text">
+                  <span>Hi, We're<br />HOMEXO!</span>
+                </h1>
+                <h2 class="c-hero__subheadline reveal-text">
+                  <span>One-stop solution for property, legal, finance & asset care</span>
+                </h2>
+                <p class="c-hero__Para reveal-text">
+                  <span>
+                    At <span class="bold">Homexo</span>, we make finding your dream home simple and stress-free. 
+                    Explore top listings, connect with trusted agents, and turn your <span class="bold">real estate goals</span> 
+                    into reality—all in one place.
+                    <br />
+                  </span>
+                </p>
+              </div>
+            </div>
+          </li>
+          
+          <!-- Slide 2: Property -->
+          <li class="carousel_slide">
+            <div class="c-hero">
+              <div class="c-hero__content">
+                <h1 class="c-hero__headline home-title">
+                  <span>PROPERTY</span>
+                </h1>
+                <h2 class="c-hero__subheadline home-title">
+                  <span>Find, Buy & Sell Properties with Ease</span>
+                </h2>
+                <p class="c-hero__Para home-title">
+                  <span>
+                    Discover verified real estate listings, top residential and commercial properties,
+                    and connect with <span class="bold">trusted</span> agents. Whether you're buying, selling, or renting,
+                    <span class="bold">HOMEXO</span> makes property search simple, fast, and secure.
+                    <br /><br />
+                    <span class="underline_mark">Begin your property search today!</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </li>
+          
+          <!-- Slide 3: Legal Consulting -->
+          <li class="carousel_slide">
+            <div class="c-hero">
+              <div class="c-hero__content">
+                <h1 class="c-hero__headline reveal-text">
+                  <span>Legal Consulting</span>
+                </h1>
+                <h2 class="c-hero__subheadline reveal-text">
+                  <span>Expert Property Legal Services</span>
+                </h2>
+                <p class="c-hero__Para reveal-text">
+                  <span>
+                    <span class="bold">Protect</span> your investment with property legal consulting you can trust. 
+                    We handle property verification, title checks, registration, and <span class="bold">compliance</span> 
+                    services – ensuring your real estate transactions are smooth and legally sound.
+                    <br />
+                    <br />
+                    <span class="underline_mark1">Book your legal consultation now and secure your investment!</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </li>
+          
+          <!-- Slide 4: Finance -->
+          <li class="carousel_slide">
+            <div class="c-hero">
+              <div class="c-hero__content">
+                <h1 class="c-hero__headline reveal-text">
+                  <span>Finance</span>
+                </h1>
+                <h2 class="c-hero__subheadline reveal-text">
+                  <span>Easy Home Loans & Property Finance</span>
+                </h2>
+                <p class="c-hero__Para reveal-text">
+                  <span>
+                    Access tailored financial solutions for home loans, mortgages, and real estate investments 
+                    with leading <span class="bold">nationalized</span> banks.
+                    Enjoy the <span class="bold">best</span> interest rates, quick approvals, and a hassle-free process 
+                    – trusted by thousands of homeowners nationwide.
+                    <br /><br />
+                    <span class="underline_mark">Apply for a home loan today and take the next step toward your dream home!</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </li>
+          
+          <!-- Slide 5: Asset Care -->
+          <li class="carousel_slide">
+            <div class="c-hero">
+              <div class="c-hero__content">
+                <h1 class="c-hero__headline reveal-text">
+                  <span>Asset Care</span>
+                </h1>
+                <h2 class="c-hero__subheadline reveal-text">
+                  <span>Worry-Free Property Management Services</span>
+                </h2>
+                <p class="c-hero__Para reveal-text">
+                  <span>
+                    We provide complete property <span class="bold">management</span>, handling everything from 
+                    property maintenance and regular inspections to tenant screening and legal formalities.
+                    Our service ensures timely payment of taxes and utility bills, keeping your investment protected 
+                    and hassle-free.
+                    <br /><br />
+                    <span class="underline_mark">Start managing your property smarter with HOMEXO today!</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </li>
+          
+          <!-- Slide 6: About Us -->
+          <li class="carousel_slide">
+            <div class="c-hero">
+              <div class="c-hero__content">
+                <h1 class="c-hero__headline reveal-text">
+                  <span>About Us</span>
+                </h1>
+                <h2 class="c-hero__subheadline reveal-text">
+                  <span>Your One-Stop Real Estate Solution</span>
+                </h2>
+                <p class="c-hero__Para reveal-text">
+                  <span>
+                    With years of experience in the real estate industry, HOMEXO combines property search, 
+                    legal consulting, finance solutions, and asset care under one trusted platform.
+                    Our team of experts ensures every transaction is <span class="bold">transparent</span>, 
+                    <span class="bold">simple</span>, and <span class="bold">stress-free</span> – helping buyers, 
+                    sellers, and investors make confident decisions.
+                    <br />
+                    <br />
+                  </span>
+                </p>
+              </div>
+            </div>
+          </li>
+          
+          
+        </ul>
+      </div>
+      
+      <button class="carousel_button carousel_button--right">
+        <img src="./images/arrow.svg" alt="right arrow" />
+      </button>
+      
+      <!-- Carousel Indicators (Hidden by default) -->
+      <div class="carousel_nav" style="display:none;">
+        <button class="carousel__indicator current-slide"></button>
+        <button class="carousel__indicator"></button>
+        <button class="carousel__indicator"></button>
+        <button class="carousel__indicator"></button>
+        <button class="carousel__indicator"></button>
+        <button class="carousel__indicator"></button>
+      </div>
+      
+      <!-- Video Modal -->
+      <div class="modal" id="modal">
+        <div class="close">
+          <span class="close" id="close">×</span>
         </div>
-        <button class="carousel_button carousel_button--right">
-          <img src="./images/arrow.svg" alt="right arrow" />
-        </button>
-	
-        <div class="carousel_nav" style="display:none;">
-          <button class="carousel__indicator current-slide"></button>
-          <button class="carousel__indicator"></button>
-          <button class="carousel__indicator"></button>
-          <button class="carousel__indicator"></button>
-          <button class="carousel__indicator"></button>
-          <button class="carousel__indicator"></button>
-          <button class="carousel__indicator"></button>
-        </div> 
-
-        <div class="modal" id="modal">
-          <div class="close"><span class="close" id="close">×</span></div>
-          <div class="modal-video-container" id="mdc">
-            <iframe
-              class="video-popup"
-              frameborder="0"
-              allow="autoplay; encrypted-media"
-              allowfullscreen
-              id="modal-video"
-            ></iframe>
-          </div>
+        <div class="modal-video-container" id="mdc">
+          <iframe
+            class="video-popup"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            id="modal-video">
+          </iframe>
         </div>
-
-        <div class="blobs-container hover-target">
-          <div class="blob">
-            <a
-              href="https://www.youtube.com/embed/CG__N4SS1Fc1111?autoplay=112121"
-              data-vidup
-            >
-              <svg
-                version="1.1"
-                id="Capa_1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                viewBox="0 0 32 32"
-                style="enable-background: new 0 0 32 32"
-                xml:space="preserve"
-              >
-                <g>
-                  <g id="play_x5F_alt">
-                    <path
-                      style="fill: #012b4d"
-                      d="M16,0C7.164,0,0,7.164,0,16s7.164,16,16,16s16-7.164,16-16S24.836,0,16,0z M10,24V8l16.008,8L10,24z"
-                    />
-                  </g>
+      </div>
+      
+      <!-- Play Button -->
+      <div class="blobs-container hover-target">
+        <div class="blob">
+          <a href="https://www.youtube.com/embed/CG__N4SS1Fc1111?autoplay=112121" data-vidup>
+            <svg
+              version="1.1"
+              id="Capa_1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 32 32"
+              style="enable-background: new 0 0 32 32"
+              xml:space="preserve">
+              <g>
+                <g id="play_x5F_alt">
+                  <path
+                    style="fill: #012b4d"
+                    d="M16,0C7.164,0,0,7.164,0,16s7.164,16,16,16s16-7.164,16-16S24.836,0,16,0z M10,24V8l16.008,8L10,24z"
+                  />
                 </g>
-              </svg>
+              </g>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- CTA Banner -->
+    <section>
+      <div>
+        <div class="cta_banner">
+          <div class="cta_banner-info">
+            <a>Questions? answered by experts.</a>
+            <a href="tel:+918105568225">
+              <button class="cta_banner-glow hover-target" type="button">
+                CALL US
+              </button>
             </a>
           </div>
         </div>
       </div>
-      <section>
-		  <div>
-			<div class="cta_banner">
-			  <div class="cta_banner-info">
-				<a>Questions? answered by experts.</a>
-				<a href="tel:+918105568225">
-				  <button class="cta_banner-glow hover-target" type="button">
-					CALL US
-				  </button>
-				</a>
-			  </div>
-			</div>
-		  </div>
 
-		  <div class="btn-contact">
-			<a href="tel:+918105568225" class="btn">CALL US</a>
-		  </div>
-		</section>
-      <section>
-        <div class="cursor" id="cursor"></div>
-        <div class="cursor2" id="cursor2"></div>
-        <div class="cursor3" id="cursor3"></div>
-      </section>
-    </main>
-    <footer class="preloader-footer">
-      <section>
-        <div class="mouse-wrap">
-          <div class="mouse">
-            <div class="frame">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                viewBox="0 0 54.9 91"
-                style="enable-background: new 0 0 54.9 91"
-                xml:space="preserve"
-              >
-                <path
-                  id="XMLID_173_"
-                  class="st0"
-                  stroke-linecap="round"
-                  stroke-miterlimit="10"
-                  d="M27.4,3.6L27.4,3.6C14.2,3.6,3.5,14.3,3.5,27.5v36c0,13.2,10.7,23.9,23.9,23.9h0
+      <div class="btn-contact">
+        <a href="tel:+918105568225" class="btn">CALL US</a>
+      </div>
+    </section>
+    
+    <!-- Custom Cursor Elements -->
+    <section>
+      <div class="cursor" id="cursor"></div>
+      <div class="cursor2" id="cursor2"></div>
+      <div class="cursor3" id="cursor3"></div>
+    </section>
+    
+  </main>
+  
+  <!-- Footer -->
+  <footer class="preloader-footer">
+    
+    <!-- Mouse Scroll Indicator -->
+    <section>
+      <div class="mouse-wrap">
+        <div class="mouse">
+          <div class="frame">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 54.9 91"
+              style="enable-background: new 0 0 54.9 91"
+              xml:space="preserve">
+              <path
+                id="XMLID_173_"
+                class="st0"
+                stroke-linecap="round"
+                stroke-miterlimit="10"
+                d="M27.4,3.6L27.4,3.6C14.2,3.6,3.5,14.3,3.5,27.5v36c0,13.2,10.7,23.9,23.9,23.9h0
                 c13.2,0,23.9-10.7,23.9-23.9v-36C51.4,14.3,40.7,3.6,27.4,3.6z"
-                />
-              </svg>
-            </div>
+              />
+            </svg>
+          </div>
 
-            <div class="mouse-left">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                viewBox="0 0 27.4 91"
-                style="enable-background: new 0 0 27.4 91"
-                xml:space="preserve"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-miterlimit="10"
-                  class="Draw-Frame Animate-Draw"
-                  d="M27.4,87.5L27.4,87.5c-13.2,0-23.9-10.7-23.9-23.9v-36c0-13.2,10.7-23.9,23.9-23.9h0"
-                />
-              </svg>
-            </div>
+          <div class="mouse-left">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 27.4 91"
+              style="enable-background: new 0 0 27.4 91"
+              xml:space="preserve">
+              <path
+                stroke-linecap="round"
+                stroke-miterlimit="10"
+                class="Draw-Frame Animate-Draw"
+                d="M27.4,87.5L27.4,87.5c-13.2,0-23.9-10.7-23.9-23.9v-36c0-13.2,10.7-23.9,23.9-23.9h0"
+              />
+            </svg>
+          </div>
 
-            <div class="mouse-right">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                viewBox="0 0 27.4 91"
-                style="enable-background: new 0 0 27.4 91"
-                xml:space="preserve"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-miterlimit="10"
-                  class="Draw-Frame Animate-Draw"
-                  d="M0,3.6L0,3.6c13.2,0,23.9,10.7,23.9,23.9v36c0,13.2-10.7,23.9-23.9,23.9h0"
-                />
-              </svg>
-            </div>
+          <div class="mouse-right">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 27.4 91"
+              style="enable-background: new 0 0 27.4 91"
+              xml:space="preserve">
+              <path
+                stroke-linecap="round"
+                stroke-miterlimit="10"
+                class="Draw-Frame Animate-Draw"
+                d="M0,3.6L0,3.6c13.2,0,23.9,10.7,23.9,23.9v36c0,13.2-10.7,23.9-23.9,23.9h0"
+              />
+            </svg>
           </div>
         </div>
-      </section>
-      <section>
-        <ul class="social">
-          <li>
-            <a
-              href="https://www.youtube.com/@Homexoproperties"
-              rel="noopener noreferrer nofollow"
-              target="_blank"
-              title="Youtube"
-              class="hover-underline-animation hover-target"
-              style="color: #012b4d"
-              >YouTube</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://www.instagram.com/homexo_properties/"
-              rel="noopener noreferrer nofollow"
-              title="Instagram"
-              target="_blank"
-              class="hover-underline-animation hover-target"
-              style="color: #012b4d"
-              >Instagram</a
-            >
-          </li>
-         <!-- <li>
-            <a
-              href="https://dribbble.com/Marketingadda"
-              rel="noopener noreferrer nofollow"
-              title="Instagram"
-              target="_blank"
-              class="hover-underline-animation hover-target"
-              style="color: #012b4d"
-              >Blog</a
-            >
-          </li>  -->
-        </ul>
-      </section>
-      <section>
-        <div >
-         <a
-				  href="https://wa.me/918105568225?text=Hello%2C%20I'm%20interested%20in%20learning%20more%20about%20your%20services.%20Could%20we%20schedule%20a%20time%20to%20talk%3F"
-				  class="whatsapp-float"
-				  target="_blank"
-				  title="Chat on WhatsApp"
-				>
-				  <img
-					src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-					alt="WhatsApp"
-				  />
-				</a>
-        </div>
-      </section>
-    </footer>
-
-    <script src="./js/script.js"></script>
-    </body>
+      </div>
+    </section>
+    
+    <!-- Social Links -->
+    <section>
+      <ul class="social">
+        <li>
+          <a
+            href="https://www.youtube.com/@Homexoproperties"
+            rel="noopener noreferrer nofollow"
+            target="_blank"
+            title="Youtube"
+            class="hover-underline-animation hover-target"
+            style="color: #012b4d">
+            YouTube
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://www.instagram.com/homexo_properties/"
+            rel="noopener noreferrer nofollow"
+            title="Instagram"
+            target="_blank"
+            class="hover-underline-animation hover-target"
+            style="color: #012b4d">
+            Instagram
+          </a>
+        </li>
+      </ul>
+    </section>
+    
+    <!-- WhatsApp Float Button -->
+    <section>
+      <div>
+        <a
+          href="https://wa.me/918105568225?text=Hello%2C%20I'm%20interested%20in%20learning%20more%20about%20your%20services.%20Could%20we%20schedule%20a%20time%20to%20talk%3F"
+          class="whatsapp-float"
+          target="_blank"
+          title="Chat on WhatsApp">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+            alt="WhatsApp"
+          />
+        </a>
+      </div>
+    </section>
+    
+  </footer>
+  
+  <!-- Main JavaScript -->
+  <script src="./js/script.js"></script>
+  
+</body>
 </html>

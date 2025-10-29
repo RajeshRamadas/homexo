@@ -1,9 +1,282 @@
-# serve custom error pages 
-ErrorDocument 404 /404.html
+# =====================================================
+# HOMEXO.IN - Apache .htaccess Configuration
+# Modern, secure, and performance-optimized
+# =====================================================
+
+# =====================================================
+# FORCE HTTPS (SSL)
+# =====================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Force www to non-www (or vice versa - choose one)
+  # Option 1: Redirect www to non-www
+  RewriteCond %{HTTP_HOST} ^www\.homexo\.in [NC]
+  RewriteRule ^(.*)$ https://homexo.in/$1 [R=301,L]
+  
+  # Force HTTPS
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://homexo.in/$1 [R=301,L]
+</IfModule>
+
+# =====================================================
+# CUSTOM ERROR PAGES
+# =====================================================
 ErrorDocument 400 /404.html
+ErrorDocument 401 /404.html
+ErrorDocument 403 /404.html
+ErrorDocument 404 /404.html
+ErrorDocument 500 /404.html
+ErrorDocument 503 /404.html
 
+# =====================================================
+# SECURITY HEADERS
+# =====================================================
+<IfModule mod_headers.c>
+  # Prevent clickjacking
+  Header set X-Frame-Options "SAMEORIGIN"
+  
+  # Prevent MIME type sniffing
+  Header set X-Content-Type-Options "nosniff"
+  
+  # Enable XSS protection
+  Header set X-XSS-Protection "1; mode=block"
+  
+  # Referrer Policy
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  
+  # Permissions Policy (formerly Feature Policy)
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  
+  # Strict Transport Security (HSTS)
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+  
+  # Content Security Policy (adjust as needed)
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.clarity.ms https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: http:; connect-src 'self' https:; frame-src https://www.youtube.com;"
+</IfModule>
 
-#force SSL on entire site
-RewriteEngine On 
-RewriteCond %{HTTPS} !=on
-RewriteRule ^/?(.*) https://homexo.in/$1 [R=301,L]
+# =====================================================
+# COMPRESSION (GZIP)
+# =====================================================
+<IfModule mod_deflate.c>
+  # Compress HTML, CSS, JavaScript, Text, XML and fonts
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+  AddOutputFilterByType DEFLATE application/x-font-ttf
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/x-web-app-manifest+json
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE font/opentype
+  AddOutputFilterByType DEFLATE font/otf
+  AddOutputFilterByType DEFLATE font/ttf
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE image/x-icon
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/xml
+  
+  # Remove browser bugs (only needed for really old browsers)
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4\.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+  Header append Vary User-Agent
+</IfModule>
+
+# =====================================================
+# BROWSER CACHING
+# =====================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  
+  # Default expiration: 1 hour
+  ExpiresDefault "access plus 1 hour"
+  
+  # Images: 1 year
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  
+  # Video: 1 month
+  ExpiresByType video/mp4 "access plus 1 month"
+  ExpiresByType video/webm "access plus 1 month"
+  
+  # Fonts: 1 year
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/otf "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType application/font-woff "access plus 1 year"
+  
+  # CSS and JavaScript: 1 month
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  
+  # HTML: 1 hour
+  ExpiresByType text/html "access plus 1 hour"
+  
+  # Manifest: 1 week
+  ExpiresByType application/manifest+json "access plus 1 week"
+  ExpiresByType application/x-web-app-manifest+json "access plus 1 week"
+</IfModule>
+
+# Alternative caching using Cache-Control
+<IfModule mod_headers.c>
+  # 1 YEAR - Images, Fonts
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|ico|svg|woff|woff2|ttf|otf|eot)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+  
+  # 1 MONTH - CSS, JS
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "max-age=2592000, public"
+  </FilesMatch>
+  
+  # 1 HOUR - HTML
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "max-age=3600, public, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# =====================================================
+# FILE ACCESS PROTECTION
+# =====================================================
+# Block access to hidden files (except .well-known)
+<FilesMatch "^\.">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+# Allow .well-known for SSL verification
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule ^\.well-known/ - [L]
+</IfModule>
+
+# Block access to backup and source files
+<FilesMatch "(\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)|~)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+# Protect configuration files
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+# =====================================================
+# MIME TYPES
+# =====================================================
+<IfModule mod_mime.c>
+  # JavaScript
+  AddType application/javascript js
+  AddType application/json json
+  
+  # Fonts
+  AddType font/woff woff
+  AddType font/woff2 woff2
+  AddType application/vnd.ms-fontobject eot
+  AddType font/ttf ttf
+  AddType font/otf otf
+  
+  # Images
+  AddType image/webp webp
+  AddType image/svg+xml svg svgz
+  
+  # Manifest
+  AddType application/manifest+json webmanifest
+  AddType application/x-web-app-manifest+json webapp
+  
+  # Other
+  AddType text/cache-manifest appcache
+</IfModule>
+
+# =====================================================
+# CHARACTER ENCODING
+# =====================================================
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+  AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+</IfModule>
+
+# =====================================================
+# DISABLE DIRECTORY BROWSING
+# =====================================================
+Options -Indexes
+
+# =====================================================
+# FOLLOW SYMBOLIC LINKS
+# =====================================================
+Options +FollowSymLinks
+
+# =====================================================
+# PREVENT SERVER SIGNATURE
+# =====================================================
+ServerSignature Off
+
+# =====================================================
+# DENY ACCESS TO SPECIFIC FILES
+# =====================================================
+<Files "composer.json">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</Files>
+
+<Files "package.json">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</Files>
+
+<Files ".htaccess">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</Files>
+
+# =====================================================
+# PERFORMANCE: ETags
+# =====================================================
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
+
+# =====================================================
+# URL REWRITING (if needed)
+# =====================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Remove trailing slash (optional)
+  # RewriteCond %{REQUEST_FILENAME} !-d
+  # RewriteRule ^(.*)/$ /$1 [R=301,L]
+  
+  # Remove .html extension (optional)
+  # RewriteCond %{REQUEST_FILENAME}.html -f
+  # RewriteRule ^([^\.]+)$ $1.html [NC,L]
+</IfModule>
+
+# =====================================================
+# LIMIT REQUEST SIZE (prevent DoS)
+# =====================================================
+LimitRequestBody 10485760
+
+# =====================================================
+# END OF CONFIGURATION
+# =====================================================

@@ -1,4 +1,43 @@
+# robots.txt for https://www.homexo.in/
+
+# Allow all bots to crawl everything
 User-agent: *
 Disallow:
-Disallow: /404.html/
+
+# Disallow specific pages/directories
+Disallow: /404.html
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /private/
+
+# Allow CSS and JS files for proper rendering
+User-agent: *
+Allow: /css/
+Allow: /js/
+Allow: /images/
+
+# Crawl-delay (optional - only if needed)
+# Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://www.homexo.in/sitemap.xml
+
+# Additional common bots (optional specifics)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /images/
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block bad bots (optional)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
