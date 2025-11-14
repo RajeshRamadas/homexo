@@ -213,8 +213,8 @@ small,
   inset: 0 0 auto auto;
   z-index: 2;
   cursor: pointer;
-  width: 3.125rem;
-  height: 3.125rem;
+  width: 4rem;
+  height: 4rem;
   opacity: 0;
 }
 
@@ -222,10 +222,10 @@ small,
   position: absolute;
   inset: 0 0 auto auto;
   z-index: 1;
-  width: 3.125rem;
-  height: 3.125rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
-  padding: 0.9rem;
+  padding: 1.2rem;
   background: var(--clr-primary);
   display: flex;
   align-items: center;
@@ -319,8 +319,8 @@ small,
 .menu-wrap .menu li {
   list-style: none;
   color: var(--clr-white);
-  font-size: var(--fs-base);
-  padding: 0.5rem;
+  font-size: 1.25rem;
+  padding: 0.75rem;
 }
 
 .menu-wrap .menu a {
@@ -591,13 +591,14 @@ small,
   background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
-  border-radius: 0.625rem;
+  border-radius: 0.75rem;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3);
   display: flex;
   max-width: 100%;
   margin: var(--space-md);
   overflow: hidden;
-  width: 34.37rem;
+  width: 42rem;
+  height: 5.5rem;
   position: fixed;
   inset-inline-start: 50%;
   inset-block-end: 3.75rem;
@@ -605,32 +606,35 @@ small,
 }
 
 .cta_banner-info {
-  padding: 1.87rem;
+  padding: 2rem;
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .cta_banner-info a {
   letter-spacing: 0.0625rem;
   margin-block: 0.625rem;
-  font-size: var(--fs-large);
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
 .cta_banner-glow {
-  width: 7rem;
-  height: 3.125rem;
+  width: 9rem;
+  height: 3.75rem;
   border: none;
   outline: none;
   color: var(--clr-white);
   background: var(--clr-black);
   cursor: pointer;
   position: absolute;
-  inset-block-start: 1.18rem;
-  inset-inline-end: 1.25rem;
+  inset-block-start: 0.875rem;
+  inset-inline-end: 1.5rem;
   z-index: 0;
   border-radius: 0.625rem;
-  font-size: var(--fs-base);
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 
 .cta_banner-glow::before {
@@ -1215,34 +1219,34 @@ small,
   }
 
   .menu-wrap .toggler {
-    width: 3.125rem;
-    height: 3.125rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
 
   .menu-wrap .hamburger {
-    width: 2.5rem;
-    height: 2.5rem;
-    padding: 0.6rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0.9rem;
   }
 
   .menu-wrap .hamburger > div {
     width: 100%;
-    height: 0.125rem;
+    height: 0.15rem;
   }
 
   .menu-wrap .hamburger > div::before,
   .menu-wrap .hamburger > div::after {
-    inset-block-start: -0.4rem;
-    height: 0.125rem;
+    inset-block-start: -0.5rem;
+    height: 0.15rem;
   }
 
   .menu-wrap .hamburger > div::after {
-    inset-block-start: 0.4rem;
+    inset-block-start: 0.5rem;
   }
 
   .menu-wrap .menu li {
-    font-size: var(--fs-small);
-    padding: 0.4rem;
+    font-size: 1rem;
+    padding: 0.6rem;
   }
 
   .navbar-fixed {
@@ -1310,25 +1314,25 @@ small,
   }
 
   .cta_banner-info a {
-    font-size: 0.8125rem;
+    font-size: 1rem;
   }
 
   .cta_banner {
-    width: 19.37rem;
-    height: 4.37rem;
+    width: 22rem;
+    height: 5rem;
   }
 
   .cta_banner-info {
-    padding: 0.5rem;
+    padding: 0.75rem;
     text-align: center;
   }
 
   .cta_banner-glow {
-    width: 6.87rem;
-    height: 1.68rem;
-    font-size: var(--fs-small);
-    inset-block-start: 2.18rem;
-    inset-inline-end: 6.56rem;
+    width: 7.5rem;
+    height: 2.25rem;
+    font-size: 0.875rem;
+    inset-block-start: 1.375rem;
+    inset-inline-end: 7.25rem;
   }
 
   .blobs-container {
