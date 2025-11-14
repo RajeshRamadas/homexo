@@ -1055,7 +1055,7 @@ small,
 
   /* Ensure content is visible on small screens */
   .c-hero__content {
-    inset-block-start: 30vh;
+    inset-block-start: 50vh;
     inset-inline-start: 50%;
     transform: translate(-50%, -50%);
     max-width: 90vw;
@@ -1281,7 +1281,7 @@ small,
   }
 
   .c-hero__content {
-    inset-block-start: 35vh;
+    inset-block-start: 50vh;
     inset-inline-start: 50%;
     transform: translate(-50%, -50%);
     max-width: 90vw;
