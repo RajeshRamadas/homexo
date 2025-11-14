@@ -78,7 +78,6 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   overflow-x: hidden;
-  overflow-y: hidden;
   display: flex;
   flex-wrap: wrap;
 }
@@ -674,6 +673,7 @@ small,
 .carousel__track-container {
   background: transparent;
   height: 100%;
+  min-height: 500px;
   position: relative;
   overflow: hidden;
 }
@@ -1037,20 +1037,54 @@ small,
     inset-block-start: 0.5rem;
     inset-inline-start: 0.5rem;
   }
-  
+
   .logo_size {
     width: 160px;
     height: 48px;
   }
-  
+
   .social {
     inset-block-end: 0.3rem;
     padding-inline-start: 0.4rem;
     font-size: var(--fs-base);
   }
-  
+
   .social li:not(:last-child) {
     margin-inline-end: 0.6rem;
+  }
+
+  /* Ensure content is visible on small screens */
+  .c-hero__content {
+    inset-block-start: 30vh;
+    inset-inline-start: 5vw;
+    max-width: 90vw;
+  }
+
+  .c-hero__headline {
+    font-size: clamp(1.75rem, 12vw, 3.5rem);
+    line-height: 1.1;
+  }
+
+  .c-hero__subheadline {
+    font-size: clamp(1rem, 6vw, 1.75rem);
+    width: 95%;
+    line-height: 1.3;
+  }
+
+  .c-hero__Para {
+    font-size: clamp(0.875rem, 4vw, 1rem);
+    width: 95%;
+    line-height: 1.5;
+  }
+
+  .carousel {
+    height: auto;
+    min-height: 75vh;
+  }
+
+  .blobs-container {
+    inset-inline-end: 2vw;
+    inset-block-start: 65vh;
   }
 }
 
@@ -1172,80 +1206,109 @@ small,
     inset-inline-end: var(--space-md);
     padding-block-start: var(--space-xl);
   }
-  
+
   .menu-wrap .toggler {
     width: 3.125rem;
     height: 3.125rem;
   }
-  
+
   .menu-wrap .hamburger {
     width: 2.5rem;
     height: 2.5rem;
     padding: 0.6rem;
   }
-  
+
   .menu-wrap .hamburger > div {
     width: 100%;
     height: 0.125rem;
   }
-  
+
   .menu-wrap .hamburger > div::before,
   .menu-wrap .hamburger > div::after {
     inset-block-start: -0.4rem;
     height: 0.125rem;
   }
-  
+
   .menu-wrap .hamburger > div::after {
     inset-block-start: 0.4rem;
   }
-  
+
   .menu-wrap .menu li {
     font-size: var(--fs-small);
     padding: 0.4rem;
   }
-  
+
   .navbar-fixed {
     inset-block-start: 0.5rem;
     inset-inline-start: 0.5rem;
   }
-  
+
   .logo_size {
     width: 220px;
     height: 66px;
   }
-  
+
   .side-menu {
     display: none;
   }
-  
+
   .mouse-wrap {
     display: none;
   }
-  
+
   .social {
     inset-block-end: 0.3rem;
     padding-inline-start: 0.4rem;
     font-size: var(--fs-base);
   }
-  
+
   .social li:not(:last-child) {
     margin-inline-end: 0.6rem;
   }
-  
+
+  /* Mobile hero content adjustments */
+  .carousel {
+    height: auto;
+    min-height: 70vh;
+    width: 100%;
+  }
+
+  .c-hero__content {
+    inset-block-start: 35vh;
+    inset-inline-start: 5vw;
+    max-width: 90vw;
+  }
+
+  .c-hero__headline {
+    font-size: clamp(2rem, 10vw, 4rem);
+  }
+
+  .c-hero__subheadline {
+    font-size: clamp(1rem, 5vw, 2rem);
+    width: 95%;
+    padding-block-start: 2vh;
+  }
+
+  .c-hero__Para {
+    font-size: clamp(0.875rem, 3.5vw, 1.125rem);
+    width: 95%;
+    max-width: 90vw;
+  }
+
   .cta_banner-info a {
     font-size: 0.8125rem;
   }
-  
+
   .cta_banner {
     width: 19.37rem;
     height: 4.37rem;
   }
-  
+
   .cta_banner-info {
     padding: 0.5rem;
     text-align: center;
   }
-  
+
   .cta_banner-glow {
     width: 6.87rem;
     height: 1.68rem;
@@ -1253,56 +1316,82 @@ small,
     inset-block-start: 2.18rem;
     inset-inline-end: 6.56rem;
   }
-  
+
   .blobs-container {
     inset-inline-end: 5vw;
     inset-block-start: 60vh;
     transform: translateY(-90%) scale(0.8);
   }
-  
+
   .blob {
     height: 60px;
     width: 60px;
   }
-  
+
   .video-popup {
     width: 85%;
     height: 85%;
   }
-  
+
   .modal-video-container {
     inset-inline-start: 7%;
   }
-  
+
   .loading {
     padding: 15px;
     border-radius: 40px;
+  }
+
+  /* Ensure carousel buttons are visible on mobile */
+  .carousel_button {
+    display: block;
+    z-index: 1000;
+  }
+
+  .carousel_button img {
+    width: 1.25rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+
+  .carousel_button--left {
+    inset-inline-start: 0.5rem;
+  }
+
+  .carousel_button--right {
+    inset-inline-end: 0.5rem;
   }
 }
 
 /* Landscape mode for tablets and below */
 @media only screen and (max-width: 61.94em) and (orientation: landscape) {
+  .carousel {
+    height: auto;
+    min-height: 90vh;
+  }
+
   .c-hero__content {
     inset-block-start: 45vh;
     inset-inline-start: 10vw;
+    max-width: 85vw;
   }
-  
+
   .c-hero__headline {
-    font-size: 2.5vw;
+    font-size: clamp(1.5rem, 2.5vw, 3rem);
     padding-block-end: 1vh;
     margin-block-end: 2vh;
   }
-  
+
   .c-hero__subheadline {
-    font-size: 2vw;
-    width: 80%;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    width: 90%;
     padding-block-end: 0;
     margin-block-end: 1.5vh;
   }
-  
+
   .c-hero__Para {
-    font-size: 1vw;
-    width: 80%;
+    font-size: clamp(0.875rem, 1vw, 1.125rem);
+    width: 90%;
+    max-width: 85vw;
   }
   
   .cta_banner {
@@ -1388,33 +1477,34 @@ small,
   .carousel_nav {
     display: none;
   }
-  
+
   .carousel_button {
     display: none;
   }
-  
+
   .carousel {
     height: 68vh;
     width: 80%;
   }
-  
+
   .c-hero__content {
     inset-block-start: 50vh;
     inset-inline-start: 25vw;
+    max-width: 70vw;
   }
-  
+
   .c-hero__headline {
-    font-size: 4vw;
+    font-size: clamp(2.5rem, 4vw, 5rem);
     padding-block-end: 0.6vh;
   }
-  
+
   .c-hero__subheadline {
-    font-size: 2vw;
+    font-size: clamp(1.25rem, 2vw, 2.5rem);
     width: 60%;
   }
-  
+
   .c-hero__Para {
-    font-size: 1vw;
+    font-size: clamp(1rem, 1vw, 1.25rem);
     width: 60%;
     padding-block-end: 1.4vh;
   }
