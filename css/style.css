@@ -1056,25 +1056,32 @@ small,
   /* Ensure content is visible on small screens */
   .c-hero__content {
     inset-block-start: 30vh;
-    inset-inline-start: 5vw;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
     max-width: 90vw;
+    text-align: center;
   }
 
   .c-hero__headline {
     font-size: clamp(1.75rem, 12vw, 3.5rem);
     line-height: 1.1;
+    text-align: center;
   }
 
   .c-hero__subheadline {
     font-size: clamp(1rem, 6vw, 1.75rem);
-    width: 95%;
+    width: 100%;
     line-height: 1.3;
+    text-align: center;
+    margin-inline: auto;
   }
 
   .c-hero__Para {
     font-size: clamp(0.875rem, 4vw, 1rem);
-    width: 95%;
+    width: 100%;
     line-height: 1.5;
+    text-align: center;
+    margin-inline: auto;
   }
 
   .carousel {
@@ -1275,24 +1282,31 @@ small,
 
   .c-hero__content {
     inset-block-start: 35vh;
-    inset-inline-start: 5vw;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
     max-width: 90vw;
+    text-align: center;
   }
 
   .c-hero__headline {
     font-size: clamp(2rem, 10vw, 4rem);
+    text-align: center;
   }
 
   .c-hero__subheadline {
     font-size: clamp(1rem, 5vw, 2rem);
-    width: 95%;
+    width: 100%;
     padding-block-start: 2vh;
+    text-align: center;
+    margin-inline: auto;
   }
 
   .c-hero__Para {
     font-size: clamp(0.875rem, 3.5vw, 1.125rem);
-    width: 95%;
+    width: 100%;
     max-width: 90vw;
+    text-align: center;
+    margin-inline: auto;
   }
 
   .cta_banner-info a {
@@ -1371,27 +1385,34 @@ small,
 
   .c-hero__content {
     inset-block-start: 45vh;
-    inset-inline-start: 10vw;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
     max-width: 85vw;
+    text-align: center;
   }
 
   .c-hero__headline {
     font-size: clamp(1.5rem, 2.5vw, 3rem);
     padding-block-end: 1vh;
     margin-block-end: 2vh;
+    text-align: center;
   }
 
   .c-hero__subheadline {
     font-size: clamp(1rem, 2vw, 1.5rem);
-    width: 90%;
+    width: 100%;
     padding-block-end: 0;
     margin-block-end: 1.5vh;
+    text-align: center;
+    margin-inline: auto;
   }
 
   .c-hero__Para {
     font-size: clamp(0.875rem, 1vw, 1.125rem);
-    width: 90%;
+    width: 100%;
     max-width: 85vw;
+    text-align: center;
+    margin-inline: auto;
   }
   
   .cta_banner {
@@ -1490,22 +1511,22 @@ small,
   .c-hero__content {
     inset-block-start: 50vh;
     inset-inline-start: 25vw;
-    max-width: 70vw;
+    max-width: 75vw;
   }
 
   .c-hero__headline {
-    font-size: clamp(2.5rem, 4vw, 5rem);
+    font-size: clamp(3.5rem, 6vw, 7rem);
     padding-block-end: 0.6vh;
   }
 
   .c-hero__subheadline {
-    font-size: clamp(1.25rem, 2vw, 2.5rem);
-    width: 60%;
+    font-size: clamp(1.75rem, 3vw, 3.5rem);
+    width: 80%;
   }
 
   .c-hero__Para {
-    font-size: clamp(1rem, 1vw, 1.25rem);
-    width: 60%;
+    font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+    width: 75%;
     padding-block-end: 1.4vh;
   }
 }
