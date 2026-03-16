@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}My Profile — HOMEXO{% endblock %}
+
+{% block content %}
+<div style="background:var(--charcoal);padding:60px;">
+  <div class="section-eyebrow">My Account</div>
+  <h1 class="section-title" style="color:var(--ivory);">{{ user.get_full_name }}</h1>
+  <div style="color:rgba(255,255,255,.4);margin-top:8px;font-size:13px;">{{ user.email }} · {{ user.get_role_display }}</div>
+</div>
+
+<section class="section" style="background:var(--ivory);">
+  <div style="display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:start;">
+    <!-- Sidebar nav -->
+    <div style="background:var(--white);border:1px solid var(--border);">
+      {% for label, url, icon in profile_nav %}
+      <a href="{{ url }}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">
+        <span>{{ icon }}</span> {{ label }}
+      </a>
+      {% empty %}
+      <a href="{% url 'accounts:profile_update' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">✏️ Edit Profile</a>
+      <a href="{% url 'wishlist:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">♡ Saved Properties</a>
+      <a href="{% url 'properties:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">🏠 Browse Properties</a>
+      {% if user.is_seller %}
+      <a href="{% url 'properties:create' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">+ List Property</a>
+      {% endif %}
+      <form action="{% url 'accounts:logout' %}" method="POST" style="padding:0;">
+        {% csrf_token %}
+        <button type="submit" style="width:100%;padding:16px 20px;text-align:left;background:none;border:none;cursor:pointer;color:var(--warm-grey);font-size:13px;font-family:'DM Sans',sans-serif;">🚪 Sign Out</button>
+      </form>
+      {% endfor %}
+    </div>
+
+    <!-- Profile summary -->
+    <div>
+      <div style="background:var(--white);padding:32px;border:1px solid var(--border);margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;">
+          {% if user.avatar %}
+          <img src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;">
+          {% else %}
+          <div style="width:72px;height:72px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:28px;color:white;">{{ user.first_name|first }}</div>
+          {% endif %}
+          <div>
+            <div style="font-size:20px;font-weight:500;color:var(--charcoal);">{{ user.get_full_name }}</div>
+            <div style="font-size:13px;color:var(--sky);margin-top:4px;">{{ user.get_role_display }}</div>
+            {% if not user.is_verified %}<div style="font-size:11px;color:#ff9800;margin-top:4px;">⚠️ Email not verified</div>{% endif %}
+          </div>
+          <a href="{% url 'accounts:profile_update' %}" class="btn-outline" style="margin-left:auto;padding:10px 22px;font-size:11px;">Edit</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+          <div style="text-align:center;padding:16px;background:var(--ivory);border:1px solid var(--border);">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);">{{ user.wishlist.count }}</div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Saved</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--ivory);border:1px solid var(--border);">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);">{{ user.enquiries.count }}</div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Enquiries</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--ivory);border:1px solid var(--border);">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);">{{ user.owned_properties.count }}</div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Listings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent saved properties -->
+      {% with saved=user.wishlist.all|slice:":3" %}
+      {% if saved %}
+      <div style="background:var(--white);padding:28px;border:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);">Recently Saved</div>
+          <a href="{% url 'wishlist:list' %}" style="font-size:12px;color:var(--navy);text-decoration:none;">View All →</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          {% for item in saved %}
+          <a href="{{ item.property.get_absolute_url }}" style="text-decoration:none;display:flex;gap:14px;align-items:center;padding:12px;background:var(--ivory);border:1px solid var(--border);transition:border-color .2s;" onmouseover="this.style.borderColor='var(--sky)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="width:64px;height:48px;flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);">{% if item.property.primary_image %}<img src="{{ item.property.primary_image.image.url }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:500;color:var(--charcoal);">{{ item.property.title }}</div>
+              <div style="font-size:12px;color:var(--warm-grey);">{{ item.property.locality }}, {{ item.property.city }}</div>
+            </div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--navy);flex-shrink:0;">{{ item.property.display_price }}</div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</section>
+{% endblock %}

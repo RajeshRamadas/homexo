@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} — HOMEXO Blog{% endblock %}
+{% block meta_description %}{{ post.excerpt }}{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<div style="background:var(--charcoal);padding:60px 60px 0;">
+  <div style="max-width:760px;">
+    {% if post.category %}
+    <div class="section-eyebrow">{{ post.category.name }}</div>
+    {% endif %}
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4.5vw,56px);font-weight:300;color:var(--ivory);line-height:1.1;margin-bottom:20px;">{{ post.title }}</h1>
+    <div style="display:flex;align-items:center;gap:20px;padding-bottom:32px;">
+      <span style="font-size:13px;color:rgba(255,255,255,.4);">{{ post.published_at|date:"F d, Y" }}</span>
+      {% if post.author %}
+      <span style="font-size:13px;color:rgba(255,255,255,.4);">By {{ post.author.get_full_name }}</span>
+      {% endif %}
+      <span style="font-size:13px;color:rgba(255,255,255,.3);">{{ post.views_count }} views</span>
+    </div>
+  </div>
+</div>
+
+{% if post.cover_image %}
+<div style="height:420px;overflow:hidden;background:var(--charcoal);">
+  <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;opacity:.85;">
+</div>
+{% endif %}
+
+<section class="section" style="background:var(--ivory);">
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start;max-width:1100px;">
+    <!-- Article body -->
+    <div>
+      {% if post.excerpt %}
+      <div style="font-size:17px;line-height:1.8;color:var(--soft-brown);font-weight:400;margin-bottom:28px;padding:24px;background:var(--white);border-left:3px solid var(--sky);">{{ post.excerpt }}</div>
+      {% endif %}
+      <div style="background:var(--white);padding:36px;font-size:15px;line-height:1.9;color:var(--charcoal);">
+        {{ post.body|linebreaks }}
+      </div>
+
+      <!-- Share -->
+      <div style="background:var(--white);padding:24px;margin-top:3px;display:flex;align-items:center;gap:16px;">
+        <span style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Share:</span>
+        <a href="https://wa.me/?text={{ post.title|urlencode }}" target="_blank" style="padding:8px 16px;background:#25d366;color:white;text-decoration:none;font-size:12px;">WhatsApp</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" style="padding:8px 16px;background:#0077b5;color:white;text-decoration:none;font-size:12px;">LinkedIn</a>
+        <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" style="padding:8px 16px;background:var(--charcoal);color:white;text-decoration:none;font-size:12px;">X / Twitter</a>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div style="position:sticky;top:90px;">
+      <!-- Back -->
+      <a href="{% url 'blog:list' %}" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--soft-brown);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;">← Back to Blog</a>
+
+      {% if related %}
+      <div style="background:var(--white);padding:24px;border:1px solid var(--border);">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:18px;">Related Posts</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          {% for rpost in related %}
+          <a href="{{ rpost.get_absolute_url }}" style="text-decoration:none;display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:64px;height:52px;flex-shrink:0;background:linear-gradient(135deg,#0D2B4E,#1A3A5C);overflow:hidden;">
+              {% if rpost.cover_image %}<img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
+            </div>
+            <div>
+              <div style="font-size:13px;color:var(--charcoal);font-weight:500;line-height:1.4;margin-bottom:4px;">{{ rpost.title|truncatewords:8 }}</div>
+              <div style="font-size:11px;color:var(--warm-grey);">{{ rpost.published_at|date:"M d, Y" }}</div>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- CTA -->
+      <div style="background:var(--navy);padding:24px;margin-top:16px;text-align:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ivory);margin-bottom:10px;">Looking for a Property?</div>
+        <p style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px;line-height:1.6;">Let our experts find the perfect match for you.</p>
+        <a href="{% url 'enquiries:create' %}" class="btn-primary" style="background:var(--sky);width:100%;display:block;text-align:center;">Get in Touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

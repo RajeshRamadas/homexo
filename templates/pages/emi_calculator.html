@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}EMI Calculator — HOMEXO{% endblock %}
+
+{% block content %}
+<div style="background:var(--charcoal);padding:60px;text-align:center;">
+  <div class="section-eyebrow" style="justify-content:center;">Financial Tools</div>
+  <h1 class="section-title" style="color:var(--ivory);">EMI <em>Calculator</em></h1>
+  <p style="color:rgba(255,255,255,.5);margin-top:12px;font-size:14px;">Calculate your monthly home loan instalment instantly.</p>
+</div>
+
+<section class="section" style="background:var(--ivory);">
+  <div style="max-width:800px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">
+    <!-- Calculator Inputs -->
+    <div style="background:var(--white);padding:36px;border:1px solid var(--border);">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--charcoal);margin-bottom:28px;">Loan Details</h2>
+
+      <div class="form-group">
+        <label>Loan Amount (₹)</label>
+        <input type="number" id="principal" value="5000000" min="100000" step="100000">
+      </div>
+      <div style="font-size:13px;color:var(--sky);margin-top:-12px;margin-bottom:16px;" id="principalDisplay">₹50,00,000</div>
+
+      <div class="form-group">
+        <label>Annual Interest Rate (%)</label>
+        <input type="range" id="rate" value="8.5" min="5" max="20" step="0.1" style="width:100%;margin-top:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--warm-grey);margin-top:4px;"><span>5%</span><span id="rateDisplay" style="color:var(--sky);font-weight:500;">8.5%</span><span>20%</span></div>
+      </div>
+
+      <div class="form-group">
+        <label>Loan Tenure</label>
+        <input type="range" id="tenure" value="240" min="12" max="360" step="12" style="width:100%;margin-top:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--warm-grey);margin-top:4px;"><span>1 yr</span><span id="tenureDisplay" style="color:var(--sky);font-weight:500;">20 yrs</span><span>30 yrs</span></div>
+      </div>
+
+      <button onclick="calculateEMI()" class="btn-primary" style="width:100%;margin-top:8px;">Calculate EMI</button>
+    </div>
+
+    <!-- Results -->
+    <div>
+      <div style="background:var(--navy);padding:36px;color:white;margin-bottom:3px;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;">Monthly EMI</div>
+        <div id="emiResult" style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;">₹0</div>
+      </div>
+      <div style="background:var(--white);padding:28px;border:1px solid var(--border);">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;color:var(--warm-grey);">Principal Amount</span>
+            <span id="principalResult" style="font-size:14px;font-weight:500;color:var(--charcoal);">₹0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;color:var(--warm-grey);">Total Interest</span>
+            <span id="interestResult" style="font-size:14px;font-weight:500;color:var(--sky);">₹0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-size:13px;color:var(--warm-grey);">Total Payment</span>
+            <span id="totalResult" style="font-size:14px;font-weight:500;color:var(--navy);">₹0</span>
+          </div>
+        </div>
+        <!-- Simple pie chart canvas -->
+        <canvas id="emiChart" width="200" height="200" style="display:block;margin:24px auto 0;"></canvas>
+      </div>
+      <div style="margin-top:16px;text-align:center;">
+        <a href="{% url 'enquiries:create' %}?type=home_loan" class="btn-outline">Get Home Loan Assistance</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function fmt(n) {
+  if (n >= 1e7) return '₹' + (n/1e7).toFixed(2) + ' Cr';
+  if (n >= 1e5) return '₹' + (n/1e5).toFixed(2) + ' L';
+  return '₹' + Math.round(n).toLocaleString('en-IN');
+}
+
+document.getElementById('rate').addEventListener('input', function() {
+  document.getElementById('rateDisplay').textContent = this.value + '%';
+});
+document.getElementById('tenure').addEventListener('input', function() {
+  document.getElementById('tenureDisplay').textContent = (this.value/12) + ' yrs';
+});
+document.getElementById('principal').addEventListener('input', function() {
+  document.getElementById('principalDisplay').textContent = fmt(this.value);
+});
+
+function calculateEMI() {
+  const P = parseFloat(document.getElementById('principal').value);
+  const r = parseFloat(document.getElementById('rate').value) / (12 * 100);
+  const n = parseInt(document.getElementById('tenure').value);
+  const factor = Math.pow(1 + r, n);
+  const emi    = P * r * factor / (factor - 1);
+  const total  = emi * n;
+  const interest = total - P;
+
+  document.getElementById('emiResult').textContent      = fmt(emi);
+  document.getElementById('principalResult').textContent = fmt(P);
+  document.getElementById('interestResult').textContent  = fmt(interest);
+  document.getElementById('totalResult').textContent     = fmt(total);
+  drawChart(P, interest);
+}
+
+function drawChart(principal, interest) {
+  const canvas = document.getElementById('emiChart');
+  const ctx    = canvas.getContext('2d');
+  const total  = principal + interest;
+  const pAngle = (principal / total) * 2 * Math.PI;
+  const cx = 100, cy = 100, r = 80;
+
+  ctx.clearRect(0, 0, 200, 200);
+  ctx.beginPath(); ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + pAngle);
+  ctx.fillStyle = '#0D2B4E'; ctx.fill();
+
+  ctx.beginPath(); ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, r, -Math.PI/2 + pAngle, -Math.PI/2 + 2*Math.PI);
+  ctx.fillStyle = '#4A90C4'; ctx.fill();
+
+  ctx.beginPath(); ctx.arc(cx, cy, 40, 0, 2*Math.PI);
+  ctx.fillStyle = 'white'; ctx.fill();
+}
+
+// Initial calculation on load
+calculateEMI();
+</script>
+{% endblock %}

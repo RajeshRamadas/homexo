@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Properties — HOMEXO{% endblock %}
+
+{% block content %}
+<div style="background:var(--charcoal);padding:60px 60px 40px;">
+  <div class="section-eyebrow">{{ total }} Properties Found</div>
+  <h1 class="section-title" style="color:var(--ivory);">Browse <em>Properties</em></h1>
+</div>
+
+<!-- Filters bar -->
+<div style="background:var(--white);border-bottom:1px solid var(--border);padding:20px 60px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+  <form action="" method="GET" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;width:100%;">
+    <input type="text" name="location" value="{{ request.GET.location }}" placeholder="Location..." style="padding:10px 16px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;min-width:180px;">
+    <select name="type" style="padding:10px 16px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+      <option value="">All Types</option>
+      {% for val, label in listing_types %}<option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <select name="property_type" style="padding:10px 16px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+      <option value="">All Properties</option>
+      <option value="apartment" {% if request.GET.property_type == 'apartment' %}selected{% endif %}>Apartment</option>
+      <option value="villa"     {% if request.GET.property_type == 'villa' %}selected{% endif %}>Villa</option>
+      <option value="penthouse" {% if request.GET.property_type == 'penthouse' %}selected{% endif %}>Penthouse</option>
+      <option value="plot"      {% if request.GET.property_type == 'plot' %}selected{% endif %}>Plot / Land</option>
+      <option value="office"    {% if request.GET.property_type == 'office' %}selected{% endif %}>Office</option>
+    </select>
+    <select name="price" style="padding:10px 16px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+      <option value="">Any Price</option>
+      <option value="under50l"  {% if request.GET.price == 'under50l' %}selected{% endif %}>Under ₹50L</option>
+      <option value="50l-1cr"   {% if request.GET.price == '50l-1cr' %}selected{% endif %}>₹50L – ₹1Cr</option>
+      <option value="1cr-3cr"   {% if request.GET.price == '1cr-3cr' %}selected{% endif %}>₹1Cr – ₹3Cr</option>
+      <option value="3cr-10cr"  {% if request.GET.price == '3cr-10cr' %}selected{% endif %}>₹3Cr – ₹10Cr</option>
+      <option value="above10cr" {% if request.GET.price == 'above10cr' %}selected{% endif %}>Above ₹10Cr</option>
+    </select>
+    <select name="sort" style="padding:10px 16px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+      <option value="newest"     {% if current_sort == 'newest' %}selected{% endif %}>Newest First</option>
+      <option value="price_asc"  {% if current_sort == 'price_asc' %}selected{% endif %}>Price ↑</option>
+      <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price ↓</option>
+      <option value="popular"    {% if current_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+    </select>
+    <button type="submit" class="btn-primary" style="padding:11px 28px;">Apply Filters</button>
+    <a href="{% url 'properties:list' %}" style="font-size:12px;color:var(--warm-grey);text-decoration:none;letter-spacing:1px;">Clear</a>
+  </form>
+</div>
+
+<!-- Grid -->
+<section class="section" style="background:var(--ivory);">
+  {% if properties %}
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:40px;">
+    {% for prop in properties %}
+    <div class="property-card">
+      <div class="property-card-img">
+        {% if prop.primary_image %}
+        <img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}">
+        {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>
+        {% endif %}
+        {% if prop.is_signature %}<div class="property-tag signature">Signature</div>
+        {% elif prop.is_featured %}<div class="property-tag featured">Featured</div>
+        {% elif prop.is_new %}<div class="property-tag new">New</div>{% endif %}
+        {% if user.is_authenticated %}
+        <button class="property-fav" onclick="toggleWishlist(this, {{ prop.id }})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        {% endif %}
+      </div>
+      <div class="property-body">
+        <div class="property-price">{{ prop.display_price }}{% if prop.price_label %} <span>{{ prop.price_label }}</span>{% endif %}</div>
+        <div class="property-name"><a href="{{ prop.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ prop.title }}</a></div>
+        <div class="property-location">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          {{ prop.locality }}, {{ prop.city }}
+        </div>
+        <div class="property-specs">
+          <span class="spec">{{ prop.bedrooms }} Beds</span>
+          <span class="spec">{{ prop.bathrooms }} Baths</span>
+          {% if prop.area_sqft %}<span class="spec">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if properties.has_other_pages %}
+  <div style="display:flex;justify-content:center;gap:8px;align-items:center;">
+    {% if properties.has_previous %}
+    <a href="?{% for k,v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ properties.previous_page_number }}" style="padding:10px 18px;border:1px solid var(--border);text-decoration:none;color:var(--navy);font-size:13px;">← Prev</a>
+    {% endif %}
+    {% for num in properties.paginator.page_range %}
+    <a href="?{% for k,v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ num }}" style="padding:10px 16px;border:1px solid {% if num == properties.number %}var(--navy){% else %}var(--border){% endif %};background:{% if num == properties.number %}var(--navy){% else %}white{% endif %};color:{% if num == properties.number %}white{% else %}var(--navy){% endif %};text-decoration:none;font-size:13px;">{{ num }}</a>
+    {% endfor %}
+    {% if properties.has_next %}
+    <a href="?{% for k,v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ properties.next_page_number }}" style="padding:10px 18px;border:1px solid var(--border);text-decoration:none;color:var(--navy);font-size:13px;">Next →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div style="text-align:center;padding:80px 20px;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--charcoal);margin-bottom:16px;">No Properties Found</div>
+    <p style="color:var(--warm-grey);margin-bottom:28px;">Try adjusting your filters or <a href="{% url 'properties:list' %}" style="color:var(--sky);">clear all filters</a>.</p>
+    <a href="{% url 'properties:create' %}" class="btn-primary">List Your Property</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

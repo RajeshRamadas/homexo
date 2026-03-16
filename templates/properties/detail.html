@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ property.title }} — HOMEXO{% endblock %}
+{% block meta_description %}{{ property.title }} in {{ property.locality }}, {{ property.city }}. {{ property.display_price }}.{% endblock %}
+
+{% block content %}
+<section class="section" style="background:var(--ivory);padding-bottom:0;">
+  <!-- Breadcrumb -->
+  <div style="font-size:12px;color:var(--warm-grey);margin-bottom:24px;display:flex;gap:8px;align-items:center;">
+    <a href="{% url 'pages:home' %}" style="color:var(--sky);text-decoration:none;">Home</a> /
+    <a href="{% url 'properties:list' %}" style="color:var(--sky);text-decoration:none;">Properties</a> /
+    <span>{{ property.title }}</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:40px;align-items:start;">
+    <!-- Left: Images + Details -->
+    <div>
+      <!-- Main image -->
+      <div style="height:480px;overflow:hidden;margin-bottom:3px;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);">
+        {% if property.primary_image %}
+        <img src="{{ property.primary_image.image.url }}" alt="{{ property.title }}" style="width:100%;height:100%;object-fit:cover;">
+        {% endif %}
+      </div>
+      <!-- Thumbnails -->
+      {% if images.count > 1 %}
+      <div style="display:flex;gap:3px;overflow-x:auto;">
+        {% for img in images %}
+        <div style="width:100px;height:70px;flex-shrink:0;overflow:hidden;background:var(--charcoal);">
+          <img src="{{ img.image.url }}" alt="Photo {{ forloop.counter }}" style="width:100%;height:100%;object-fit:cover;cursor:pointer;opacity:{% if img.is_primary %}1{% else %}.7{% endif %};">
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Description -->
+      <div style="background:var(--white);padding:32px;margin-top:3px;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--charcoal);margin-bottom:16px;">About This Property</h2>
+        <p style="font-size:14px;line-height:1.9;color:var(--soft-brown);">{{ property.description|default:"No description provided." }}</p>
+      </div>
+
+      <!-- Specs grid -->
+      <div style="background:var(--white);padding:32px;margin-top:3px;">
+        <h3 style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Property Details</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+          {% if property.bedrooms %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Bedrooms</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.bedrooms }}</div></div>{% endif %}
+          {% if property.bathrooms %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Bathrooms</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.bathrooms }}</div></div>{% endif %}
+          {% if property.area_sqft %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Area</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.area_sqft|floatformat:0 }} sq.ft</div></div>{% endif %}
+          {% if property.carpet_area %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Carpet Area</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.carpet_area|floatformat:0 }} sq.ft</div></div>{% endif %}
+          {% if property.floor_no %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Floor</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.floor_no }}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div></div>{% endif %}
+          {% if property.furnishing %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Furnishing</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.get_furnishing_display }}</div></div>{% endif %}
+          {% if property.facing %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Facing</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.facing }}</div></div>{% endif %}
+          {% if property.parking_slots %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Parking</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.parking_slots }} Slots</div></div>{% endif %}
+          {% if property.age_years is not None %}<div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">Age</div><div style="font-size:15px;color:var(--charcoal);font-weight:500;">{{ property.age_years }} Yrs</div></div>{% endif %}
+        </div>
+      </div>
+
+      <!-- Features / Amenities -->
+      {% if features %}
+      <div style="background:var(--white);padding:32px;margin-top:3px;">
+        <h3 style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:20px;">Amenities</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+          {% for f in features %}
+          <span style="padding:8px 16px;border:1px solid var(--border);font-size:13px;color:var(--soft-brown);">✓ {{ f.name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right: Price card + Enquiry form -->
+    <div style="position:sticky;top:90px;">
+      <div style="background:var(--white);padding:32px;margin-bottom:3px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:500;color:var(--navy);">{{ property.display_price }}</div>
+        {% if property.price_label %}<div style="font-size:13px;color:var(--warm-grey);">{{ property.price_label }}</div>{% endif %}
+        <div style="font-size:20px;font-weight:500;color:var(--charcoal);margin:12px 0 6px;">{{ property.title }}</div>
+        <div style="font-size:13px;color:var(--warm-grey);margin-bottom:20px;">📍 {{ property.address }}</div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;">
+          {% if property.listing_type %}<span style="padding:5px 14px;background:var(--navy);color:white;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;">{{ property.get_listing_type_display }}</span>{% endif %}
+          {% if property.bhk %}<span style="padding:5px 14px;border:1px solid var(--border);font-size:11px;letter-spacing:1px;color:var(--soft-brown);text-transform:uppercase;">{{ property.bhk|upper }}</span>{% endif %}
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:24px;">
+          <a href="{% url 'enquiries:create' %}?property={{ property.id }}" class="btn-primary" style="flex:1;text-align:center;">Enquire Now</a>
+          {% if user.is_authenticated %}
+          <button onclick="toggleWishlist(this, {{ property.id }})" style="padding:16px;border:1px solid var(--border);background:white;cursor:pointer;">♡</button>
+          {% endif %}
+        </div>
+        {% if property.agent %}
+        <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;gap:14px;align-items:center;">
+          {% if property.agent.photo %}<img src="{{ property.agent.photo.url }}" alt="{{ property.agent.full_name }}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
+          {% else %}<div style="width:48px;height:48px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">{{ property.agent.full_name|first }}</div>{% endif %}
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--charcoal);">{{ property.agent.full_name }}</div>
+            <div style="font-size:12px;color:var(--sky);">{{ property.agent.specialization }}</div>
+            <a href="tel:{{ property.agent.phone }}" style="font-size:12px;color:var(--navy);text-decoration:none;">{{ property.agent.phone }}</a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Inline enquiry form -->
+      <div style="background:var(--charcoal);padding:28px;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:20px;">Send Enquiry</div>
+        <form action="{% url 'enquiries:create' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="property" value="{{ property.id }}">
+          <input type="text" name="name" placeholder="Your Name" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:10px;">
+          <input type="tel" name="phone" placeholder="Phone" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:10px;">
+          <input type="email" name="email" placeholder="Email" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:10px;">
+          <textarea name="message" placeholder="I'm interested in this property..." rows="3" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:none;margin-bottom:14px;"></textarea>
+          <button type="submit" style="width:100%;background:var(--sky);color:white;padding:14px;border:none;cursor:pointer;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;">Submit Enquiry</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Similar Properties -->
+{% if similar %}
+<section class="section" style="background:var(--cream);">
+  <div class="section-eyebrow">You May Also Like</div>
+  <h2 class="section-title">Similar <em>Properties</em></h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:28px;">
+    {% for prop in similar %}
+    <div class="property-card">
+      <div class="property-card-img">
+        {% if prop.primary_image %}<img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}">{% else %}<div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>{% endif %}
+      </div>
+      <div class="property-body">
+        <div class="property-price">{{ prop.display_price }}</div>
+        <div class="property-name"><a href="{{ prop.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ prop.title }}</a></div>
+        <div class="property-location"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>{{ prop.locality }}, {{ prop.city }}</div>
+        <div class="property-specs"><span class="spec">{{ prop.bedrooms }} Beds</span><span class="spec">{{ prop.bathrooms }} Baths</span></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
