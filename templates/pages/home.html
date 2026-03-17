@@ -5,11 +5,6 @@
 
 {% block extra_head %}
 <style>
-  /* ═══ CURSOR (desktop) ═══ */
-  .cursor { width:10px;height:10px;background:var(--navy);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:10000;transition:transform .15s ease;mix-blend-mode:multiply; }
-  .cursor-ring { width:36px;height:36px;border:1.5px solid var(--navy);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform .4s cubic-bezier(.23,1,.32,1),width .3s,height .3s,opacity .3s;opacity:.7; }
-  .cursor-ring.expand { width:60px;height:60px;opacity:.4; }
-
   /* ═══ STATS COUNTER ═══ */
   .stats-section { background:var(--navy);padding:48px 60px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(74,144,196,.15); }
   .stat-item { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 0;border-right:1px solid rgba(255,255,255,.08);text-align:center; }
@@ -337,8 +332,6 @@
 {% endblock %}
 
 {% block content %}
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursor-ring"></div>
 
 <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
 <section class="hero">
@@ -830,25 +823,7 @@ function handleSave(btn, propId) {
   toggleWishlist(btn, propId);
 }
 
-// ── Custom cursor (desktop only) ──
-const cursor = document.getElementById('cursor');
-const ring   = document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-if (cursor && ring) {
-  document.addEventListener('mousemove', e => {
-    mx=e.clientX; my=e.clientY;
-    cursor.style.transform=`translate(${mx-5}px,${my-5}px)`;
-  });
-  (function animateRing() {
-    rx+=(mx-rx-18)*.12; ry+=(my-ry-18)*.12;
-    ring.style.transform=`translate(${rx}px,${ry}px)`;
-    requestAnimationFrame(animateRing);
-  })();
-  document.querySelectorAll('a,button,.property-fav,.service-item-card,.prop-arrow,.news-arrow').forEach(el => {
-    el.addEventListener('mouseenter',()=>ring.classList.add('expand'));
-    el.addEventListener('mouseleave',()=>ring.classList.remove('expand'));
-  });
-}
+
 
 // ── Search tab switcher ──
 function setSearchTab(btn, type) {
