@@ -85,21 +85,54 @@
 
   /* ═══ SIGNATURE / FEATURED LARGE GRID ═══ */
   .property-grid-featured { display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:2px; }
-  .property-card-large { grid-row:1/3;background:var(--white);overflow:hidden;position:relative;opacity:0;transform:translateX(-30px);transition:all .8s cubic-bezier(.23,1,.32,1); }
+
+  /* Large card */
+  .property-card-large { grid-row:1/3;background:var(--charcoal);overflow:hidden;position:relative;opacity:0;transform:translateX(-30px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1); }
   .property-card-large.visible { opacity:1;transform:translateX(0); }
-  .property-card-large .property-card-img { height:100%;min-height:600px; }
-  .property-card-large .property-body { position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(28,28,26,.85));padding:60px 36px 36px; }
-  .property-card-large .property-price { color:var(--gold-light); }
-  .property-card-large .property-price span { color:rgba(255,255,255,.5); }
-  .property-card-large .property-name { color:var(--white);font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:400;margin-bottom:6px; }
-  .property-card-large .property-location { color:rgba(255,255,255,.6); }
-  .property-card-large .property-specs { border-top-color:rgba(255,255,255,.1); }
-  .property-card-large .spec { color:rgba(255,255,255,.7); }
-  .property-card-sm { background:var(--white);overflow:hidden;display:flex;opacity:0;transform:translateX(30px);transition:all .8s cubic-bezier(.23,1,.32,1); }
+  .property-card-large .property-card-img { height:100%;min-height:600px;overflow:hidden; }
+  .property-card-large .property-card-img img,
+  .property-card-large .property-card-img > div { transition:transform .8s cubic-bezier(.23,1,.32,1); }
+  .property-card-large:hover .property-card-img img,
+  .property-card-large:hover .property-card-img > div { transform:scale(1.06); }
+  .property-card-large .property-body { position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent 0%,rgba(7,25,41,.55) 30%,rgba(7,25,41,.95) 100%);padding:80px 36px 36px;transition:padding .4s cubic-bezier(.23,1,.32,1); }
+  .property-card-large:hover .property-body { padding-bottom:52px; }
+  .property-card-large .property-price { color:var(--gold-light);margin-bottom:6px; }
+  .property-card-large .property-price span { color:rgba(255,255,255,.45); }
+  .property-card-large .property-name { color:var(--white);font-size:clamp(22px,2.2vw,32px);font-family:'Cormorant Garamond',serif;font-weight:400;line-height:1.2;margin-bottom:8px; }
+  .property-card-large .property-location { color:rgba(255,255,255,.55); }
+  .property-card-large .property-specs { border-top-color:rgba(255,255,255,.12); }
+  .property-card-large .spec { color:rgba(255,255,255,.65); }
+  /* Gold accent line on left edge */
+  .property-card-large::before { content:'';position:absolute;left:0;bottom:0;width:3px;height:0;background:linear-gradient(to top,var(--gold-light),transparent);transition:height .6s cubic-bezier(.23,1,.32,1);z-index:2; }
+  .property-card-large:hover::before { height:60%; }
+  /* "View Property" reveal button */
+  .property-card-large .card-cta { position:absolute;top:28px;right:28px;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:var(--white);padding:9px 18px;font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:0;transform:translateY(-8px);transition:all .4s cubic-bezier(.23,1,.32,1);pointer-events:none; }
+  .property-card-large:hover .card-cta { opacity:1;transform:translateY(0);pointer-events:auto; }
+
+  /* Small cards — full image overlay */
+  .property-card-sm { background:var(--charcoal);overflow:hidden;display:block;position:relative;opacity:0;transform:translateX(30px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1),box-shadow .35s;min-height:295px; }
   .property-card-sm.visible { opacity:1;transform:translateX(0); }
-  .property-card-sm:nth-child(3) { transition-delay:.15s; }
-  .property-card-sm .property-card-img { width:200px;flex-shrink:0;height:auto;min-height:200px; }
-  .property-card-sm .property-body { padding:24px;flex:1;display:flex;flex-direction:column;justify-content:center; }
+  .property-card-sm:nth-child(3) { transition-delay:.18s; }
+  .property-card-sm:hover { box-shadow:0 0 0 2px var(--sky) inset; }
+  .property-card-sm .property-card-img { position:absolute;inset:0;width:100%;height:100%;overflow:hidden; }
+  .property-card-sm .property-card-img img,
+  .property-card-sm .property-card-img > div { width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.23,1,.32,1); }
+  .property-card-sm:hover .property-card-img img,
+  .property-card-sm:hover .property-card-img > div { transform:scale(1.07); }
+  .property-card-sm .property-body { position:relative;z-index:2;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent 0%,rgba(7,25,41,.6) 30%,rgba(7,25,41,.95) 100%);padding:48px 24px 24px;border-left:none;transition:padding .4s cubic-bezier(.23,1,.32,1); }
+  .property-card-sm:hover .property-body { padding-bottom:32px; }
+  .property-card-sm .property-name { font-size:17px;font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--white);margin-bottom:4px;transition:color .3s; }
+  .property-card-sm:hover .property-name { color:var(--gold-light); }
+  .property-card-sm .property-price { color:var(--gold-light);font-size:13px;margin-bottom:4px; }
+  .property-card-sm .property-location { color:rgba(255,255,255,.55); }
+  .property-card-sm .property-specs { border-top-color:rgba(255,255,255,.12); }
+  .property-card-sm .spec { color:rgba(255,255,255,.65); }
+  /* Gold accent line */
+  .property-card-sm::before { content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold-light);transition:width .5s cubic-bezier(.23,1,.32,1);z-index:3; }
+  .property-card-sm:hover::before { width:100%; }
+  /* Arrow reveal */
+  .property-card-sm .sm-arrow { display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--sky);margin-top:12px;opacity:0;transform:translateX(-6px);transition:all .35s cubic-bezier(.23,1,.32,1); }
+  .property-card-sm:hover .sm-arrow { opacity:1;transform:translateX(0); }
 
   /* ═══ ABOUT ═══ */
   .about-section { background:var(--charcoal);display:grid;grid-template-columns:1fr 1fr;min-height:600px;overflow:hidden; }
@@ -455,6 +488,7 @@
         <div style="width:100%;height:100%;background:linear-gradient(160deg,#071929,#0D2B4E,#1A3A5C);"></div>
         {% endif %}
         <div class="property-tag" style="background:linear-gradient(90deg,var(--deep-brown),var(--navy));color:var(--gold-light);">Signature</div>
+        <div class="card-cta">View Property &rarr;</div>
         {% if user.is_authenticated %}
         <button class="property-fav" onclick="event.preventDefault();toggleWishlist(this, {{ prop.id }})" title="Save">
           <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
@@ -477,13 +511,18 @@
     </a>
     {% else %}
     <a href="{{ prop.get_absolute_url }}" class="property-card-sm" style="text-decoration:none;">
-      <div class="property-card-img" style="width:200px;flex-shrink:0;">
+      <div class="property-card-img">
         {% if prop.primary_image %}
         <img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" style="width:100%;height:100%;object-fit:cover;">
         {% else %}
-        <div style="width:100%;height:100%;min-height:200px;background:linear-gradient(135deg,#1A3A5C,#2E6FA8,#0D2240);"></div>
+        <div style="width:100%;height:100%;min-height:295px;background:linear-gradient(135deg,#1A3A5C,#2E6FA8,#0D2240);"></div>
         {% endif %}
       </div>
+      {% if user.is_authenticated %}
+      <button class="property-fav" onclick="event.preventDefault();toggleWishlist(this, {{ prop.id }})" title="Save">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+      {% endif %}
       <div class="property-body">
         <div class="property-price">{{ prop.display_price }}</div>
         <div class="property-name">{{ prop.title }}</div>
@@ -495,6 +534,10 @@
           <span class="spec">{{ prop.bedrooms }} Beds</span>
           <span class="spec">{{ prop.bathrooms }} Baths</span>
           {% if prop.area_sqft %}<span class="spec">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
+        </div>
+        <div class="sm-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          View Details
         </div>
       </div>
     </a>
