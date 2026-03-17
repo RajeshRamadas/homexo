@@ -3,174 +3,501 @@
 
 {% block title %}HOMEXO — Find Your Perfect Sanctuary{% endblock %}
 
+{% block extra_head %}
+<style>
+  /* ═══ CURSOR (desktop) ═══ */
+  .cursor { width:10px;height:10px;background:var(--navy);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:10000;transition:transform .15s ease;mix-blend-mode:multiply; }
+  .cursor-ring { width:36px;height:36px;border:1.5px solid var(--navy);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform .4s cubic-bezier(.23,1,.32,1),width .3s,height .3s,opacity .3s;opacity:.7; }
+  .cursor-ring.expand { width:60px;height:60px;opacity:.4; }
+  @media(max-width:768px){.cursor,.cursor-ring{display:none!important;}body{cursor:auto;}}
+
+  /* ═══ HERO ═══ */
+  .hero { min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden; }
+  .hero-left { display:flex;flex-direction:column;justify-content:center;padding:80px 60px 60px;position:relative;z-index:2;animation:fadeInUp 1s .3s both; }
+  @keyframes fadeInUp { from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1} }
+  .hero-eyebrow { font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--sky);margin-bottom:28px;display:flex;align-items:center;gap:16px; }
+  .hero-eyebrow::before { content:'';display:block;width:40px;height:1px;background:var(--sky); }
+  .hero-title { font-family:'Cormorant Garamond',serif;font-size:clamp(60px,6vw,88px);font-weight:300;line-height:1.05;color:var(--charcoal);margin-bottom:32px; }
+  .hero-title em { font-style:italic;color:var(--sky); }
+  .hero-subtitle { font-size:15px;line-height:1.8;color:var(--warm-grey);max-width:400px;margin-bottom:52px;font-weight:300; }
+  .hero-actions { display:flex;gap:20px;align-items:center; }
+  .btn-ghost { color:var(--soft-brown);font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:12px;transition:color .3s; }
+  .btn-ghost:hover { color:var(--navy); }
+  .btn-ghost-arrow { width:40px;height:40px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .3s;border-radius:50%; }
+  .btn-ghost:hover .btn-ghost-arrow { border-color:var(--navy);background:var(--navy);color:white; }
+  .hero-right { position:relative;overflow:hidden;animation:fadeIn 1.2s .5s both; }
+  @keyframes fadeIn { from{opacity:0}to{opacity:1} }
+  .hero-img { width:100%;height:100%;object-fit:cover;transform:scale(1.05);animation:zoomOut 8s ease-out forwards; }
+  @keyframes zoomOut { to{transform:scale(1)} }
+  .hero-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,rgba(28,28,26,.15) 0%,transparent 60%); }
+
+  /* ═══ SEARCH SECTION ═══ */
+  .search-section { background:linear-gradient(180deg,var(--charcoal) 0%,var(--navy) 100%); }
+  .search-wrapper { padding:40px 60px 48px; }
+  .search-header-label { font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--sky);margin-bottom:28px;display:flex;align-items:center;gap:14px; }
+  .search-header-label::before { content:'';display:block;width:28px;height:1px;background:var(--sky); }
+  .search-tabs { display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap; }
+  .search-tab { display:flex;align-items:center;gap:8px;padding:10px 22px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);cursor:pointer;color:rgba(255,255,255,.55);font-family:'DM Sans',sans-serif;transition:all .3s;white-space:nowrap; }
+  .search-tab.active { background:var(--sky);border-color:var(--sky);color:var(--white); }
+  .search-tab:hover:not(.active) { background:rgba(255,255,255,.12);color:var(--white); }
+  .search-fields { display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
+  .field-group { display:flex;align-items:center;background:rgba(255,255,255,.05);border-right:1px solid rgba(255,255,255,.08);transition:background .2s;position:relative; }
+  .field-group:hover { background:rgba(255,255,255,.09); }
+  .field-group:last-of-type { border-right:none; }
+  .field-icon { padding:0 14px;color:var(--sky);flex-shrink:0;display:flex;align-items:center;opacity:.7; }
+  .field-inner { flex:1;padding:14px 16px 14px 0;display:flex;flex-direction:column;gap:4px; }
+  .field-group label { display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:0; }
+  .field-group select,.field-group input { width:100%;padding:0;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--white);appearance:none;outline:none; }
+  .field-group input::placeholder { color:rgba(255,255,255,.3); }
+  .field-group select option { background:var(--charcoal);color:var(--white); }
+  .search-btn { display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sky);color:var(--white);padding:0 36px;border:none;cursor:pointer;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .3s;white-space:nowrap; }
+  .search-btn:hover { background:#3A7FB5; }
+
+  /* ═══ LOAN BANNER ═══ */
+  .loan-banner { background:linear-gradient(90deg,var(--navy) 0%,#1A4A7A 100%);padding:14px 60px;border-bottom:1px solid rgba(74,144,196,.2); }
+  .loan-banner-inner { display:flex;align-items:center;justify-content:center;gap:16px; }
+  .loan-banner-text { font-size:14px;color:rgba(255,255,255,.85);font-weight:300; }
+  .loan-banner-text strong { color:var(--white);font-weight:600; }
+  .loan-banner-btn { background:var(--white);color:var(--navy);padding:7px 18px;font-size:12px;font-weight:500;border:none;cursor:pointer;text-decoration:none;letter-spacing:.5px;transition:all .3s;white-space:nowrap;flex-shrink:0; }
+  .loan-banner-btn:hover { background:var(--sky);color:var(--white); }
+
+  /* ═══ SERVICES STRIP ═══ */
+  .services-strip { background:var(--white);display:flex;justify-content:center;padding:32px 60px;border-bottom:1px solid rgba(13,43,78,.07);gap:0; }
+  .service-item-card { flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;padding:20px 16px;border-right:1px solid rgba(13,43,78,.07);transition:background .3s;cursor:pointer; }
+  .service-item-card:last-child { border-right:none; }
+  .service-item-card:hover { background:var(--ivory); }
+  .service-icon { width:72px;height:72px;background:var(--white);border-radius:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;opacity:.9;transition:opacity .3s,transform .3s; }
+  .service-icon img { width:52px;height:52px;object-fit:contain;display:block; }
+  .service-item-card:hover .service-icon { opacity:1;transform:scale(1.08);background:var(--ivory); }
+  .service-label { font-size:13px;color:var(--charcoal);font-weight:400;text-align:center;line-height:1.4; }
+  .service-item-card:hover .service-label { color:var(--navy);font-weight:500; }
+
+  /* ═══ PROPERTY SLIDER ═══ */
+  .prop-slider-wrapper { overflow:hidden;width:100%; }
+  .prop-slider { display:flex;gap:2px;will-change:transform;transition:transform .55s cubic-bezier(.23,1,.32,1); }
+  .prop-slider .property-card { width:calc((100% - 4px) / 3);min-width:calc((100% - 4px) / 3);flex-shrink:0; }
+  .prop-slider-controls { display:flex;justify-content:center;align-items:center;gap:16px;margin-top:32px; }
+  .prop-arrow { width:40px;height:40px;border-radius:50%;border:1px solid rgba(13,43,78,.25);background:var(--white);color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 2px 10px rgba(0,0,0,.07); }
+  .prop-arrow:hover { background:var(--navy);color:var(--white);border-color:var(--navy); }
+  .prop-dots { display:flex;align-items:center;gap:8px; }
+  .prop-dot { width:6px;height:6px;border-radius:50%;background:rgba(13,43,78,.2);cursor:pointer;transition:all .3s; }
+  .prop-dot.active { background:var(--navy);width:20px;border-radius:3px; }
+
+  /* ═══ SIGNATURE / FEATURED LARGE GRID ═══ */
+  .property-grid-featured { display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:2px; }
+  .property-card-large { grid-row:1/3;background:var(--white);overflow:hidden;position:relative;opacity:0;transform:translateX(-30px);transition:all .8s cubic-bezier(.23,1,.32,1); }
+  .property-card-large.visible { opacity:1;transform:translateX(0); }
+  .property-card-large .property-card-img { height:100%;min-height:600px; }
+  .property-card-large .property-body { position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(28,28,26,.85));padding:60px 36px 36px; }
+  .property-card-large .property-price { color:var(--gold-light); }
+  .property-card-large .property-price span { color:rgba(255,255,255,.5); }
+  .property-card-large .property-name { color:var(--white);font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:400;margin-bottom:6px; }
+  .property-card-large .property-location { color:rgba(255,255,255,.6); }
+  .property-card-large .property-specs { border-top-color:rgba(255,255,255,.1); }
+  .property-card-large .spec { color:rgba(255,255,255,.7); }
+  .property-card-sm { background:var(--white);overflow:hidden;display:flex;opacity:0;transform:translateX(30px);transition:all .8s cubic-bezier(.23,1,.32,1); }
+  .property-card-sm.visible { opacity:1;transform:translateX(0); }
+  .property-card-sm:nth-child(3) { transition-delay:.15s; }
+  .property-card-sm .property-card-img { width:200px;flex-shrink:0;height:auto;min-height:200px; }
+  .property-card-sm .property-body { padding:24px;flex:1;display:flex;flex-direction:column;justify-content:center; }
+
+  /* ═══ ABOUT ═══ */
+  .about-section { background:var(--charcoal);display:grid;grid-template-columns:1fr 1fr;min-height:600px;overflow:hidden; }
+  .about-img { position:relative;overflow:hidden; }
+  .about-img img,.about-img>div { width:100%;height:100%;object-fit:cover;opacity:.7; }
+  .about-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(28,28,26,.6)); }
+  .about-content { padding:60px 80px;display:flex;flex-direction:column;justify-content:center; }
+  .about-eyebrow { font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--sky);margin-bottom:28px;display:flex;align-items:center;gap:16px; }
+  .about-eyebrow::before { content:'';display:block;width:32px;height:1px;background:var(--navy); }
+  .about-title { font-family:'Cormorant Garamond',serif;font-size:clamp(36px,3.5vw,52px);font-weight:300;color:var(--ivory);line-height:1.1;margin-bottom:28px; }
+  .about-title em { font-style:italic;color:var(--sky); }
+  .about-text { font-size:15px;line-height:1.9;color:rgba(245,240,232,.6);margin-bottom:48px;font-weight:300; }
+  .services-list { display:flex;flex-direction:column;gap:20px; }
+  .service-item { display:flex;align-items:flex-start;gap:20px;padding-bottom:20px;border-bottom:1px solid rgba(10,46,92,.12); }
+  .service-num { font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--sky);opacity:.4;line-height:1;flex-shrink:0; }
+  .service-info h4 { font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cream);margin-bottom:6px; }
+  .service-info p { font-size:13px;color:rgba(245,240,232,.45);line-height:1.7; }
+
+  /* ═══ NEWS ═══ */
+  .news-section { padding:60px;background:var(--white); }
+  .news-header { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px; }
+  .news-title { font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3vw,40px);font-weight:400;color:var(--charcoal);margin-bottom:6px; }
+  .news-subtitle { font-size:13px;color:var(--warm-grey);font-weight:300; }
+  .news-see-all { font-size:12px;color:var(--navy);border:1px solid var(--navy);padding:8px 18px;text-decoration:none;white-space:nowrap;transition:all .3s;letter-spacing:.5px; }
+  .news-see-all:hover { background:var(--navy);color:var(--white); }
+  .news-carousel-wrapper { position:relative;overflow:hidden; }
+  .news-carousel { display:flex;gap:20px;width:100%;will-change:transform; }
+  .news-card { width:calc((100% - 40px)/3);min-width:calc((100% - 40px)/3);flex-shrink:0;background:var(--ivory);overflow:hidden;border:1px solid rgba(13,43,78,.07);transition:box-shadow .3s,transform .5s cubic-bezier(.23,1,.32,1); }
+  .news-card:hover { box-shadow:0 12px 36px rgba(13,27,42,.1); }
+  .news-img { height:140px;position:relative;overflow:hidden; }
+  .news-img>div,.news-img>img { width:100%;height:100%;transition:transform .6s cubic-bezier(.23,1,.32,1);object-fit:cover; }
+  .news-card:hover .news-img>div,.news-card:hover .news-img>img { transform:scale(1.05); }
+  .news-img-overlay { position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(13,27,42,.25)); }
+  .news-body { padding:16px; }
+  .news-card-title { font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--charcoal);line-height:1.35;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+  .news-card-excerpt { font-size:12px;line-height:1.6;color:var(--warm-grey);font-weight:300;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+  .news-meta { display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border); }
+  .news-author { font-size:11px;color:var(--charcoal);font-weight:500; }
+  .news-date { font-size:11px;color:var(--warm-grey); }
+  .news-arrows { display:flex;justify-content:center;align-items:center;gap:16px;margin-top:28px; }
+  .news-arrow { width:40px;height:40px;border-radius:50%;border:1px solid rgba(13,43,78,.25);background:var(--white);color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 2px 10px rgba(0,0,0,.07); }
+  .news-arrow:hover { background:var(--navy);color:var(--white);border-color:var(--navy); }
+  .news-dots { display:flex;align-items:center;gap:8px; }
+  .news-dot { width:6px;height:6px;border-radius:50%;background:rgba(13,43,78,.2);cursor:pointer;transition:all .3s; }
+  .news-dot.active { background:var(--navy);width:20px;border-radius:3px; }
+
+  /* ═══ TESTIMONIALS ═══ */
+  .testimonials-section { padding:60px;background:var(--cream); }
+  .testimonial-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px; }
+  .testimonial-card { background:var(--white);padding:48px 40px;opacity:0;transform:translateY(20px);transition:all .6s; }
+  .testimonial-card.visible { opacity:1;transform:translateY(0); }
+  .testimonial-card:nth-child(2) { transition-delay:.1s; }
+  .testimonial-card:nth-child(3) { transition-delay:.2s; }
+  .quote-mark { font-family:'Cormorant Garamond',serif;font-size:80px;color:var(--sky);line-height:.5;margin-bottom:24px;opacity:.4; }
+  .testimonial-text { font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;line-height:1.7;color:var(--charcoal);margin-bottom:32px; }
+  .testimonial-author { display:flex;align-items:center;gap:16px; }
+  .author-avatar { width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-light); }
+  .author-avatar img { width:100%;height:100%;object-fit:cover; }
+  .author-name { font-size:13px;font-weight:500;color:var(--charcoal); }
+  .author-role { font-size:11px;color:var(--warm-grey);letter-spacing:1px; }
+  .stars { color:var(--sky);font-size:14px;margin-bottom:20px; }
+
+  /* ═══ CTA BANNER ═══ */
+  .cta-banner { background:var(--deep-brown);padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;overflow:hidden; }
+  .cta-bg-text { position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-size:200px;font-weight:300;color:rgba(10,46,92,.04);line-height:1;pointer-events:none;white-space:nowrap; }
+  .cta-title { font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4vw,60px);font-weight:300;color:var(--ivory);line-height:1.1; }
+  .cta-title em { font-style:italic;color:var(--sky); }
+  .cta-form-row { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px; }
+  .cta-form input,.cta-form select { width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .3s; }
+  .cta-form input::placeholder { color:rgba(245,240,232,.3); }
+  .cta-form input:focus,.cta-form select:focus { border-color:var(--sky); }
+  .cta-form select option { background:var(--deep-brown); }
+  .cta-submit { width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:500;margin-top:16px;transition:all .3s; }
+  .cta-submit:hover { background:var(--sky); }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:1024px){
+    .hero-left{padding:80px 36px 56px;}
+    .search-wrapper{padding:32px 28px 40px;}
+    .search-fields{grid-template-columns:1fr 1fr auto;gap:0;}
+    .search-fields .field-group:first-child{grid-column:1/-1;}
+    .loan-banner{padding:14px 28px;}
+    .services-strip{padding:24px 28px;}
+    .about-content{padding:48px 40px;}
+    .news-section{padding:48px 28px;}
+    .testimonials-section{padding:48px 28px;}
+    .testimonial-grid{grid-template-columns:repeat(2,1fr);}
+    .testimonial-card{padding:32px 24px;}
+    .cta-banner{padding:60px 28px;gap:40px;}
+  }
+  @media(max-width:768px){
+    .hero{display:flex;flex-direction:column;min-height:auto;}
+    .hero-right{width:100%;height:55vw;min-height:220px;order:1;flex-shrink:0;position:relative;}
+    .hero-left{order:2;width:100%;padding:28px 16px 36px;}
+    .hero-eyebrow{font-size:10px;letter-spacing:3px;margin-bottom:16px;}
+    .hero-title{font-size:clamp(36px,10vw,56px);margin-bottom:14px;}
+    .hero-subtitle{font-size:14px;margin-bottom:28px;max-width:100%;}
+    .hero-actions{flex-direction:column;align-items:stretch;gap:12px;}
+    .btn-ghost{justify-content:center;}
+    .section-flex{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:24px;}
+    .search-wrapper{padding:24px 16px 28px;}
+    .search-header-label{font-size:9px;letter-spacing:3px;margin-bottom:18px;}
+    .search-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none;margin-bottom:20px;}
+    .search-tabs::-webkit-scrollbar{display:none;}
+    .search-tab{flex-shrink:0;border-radius:100px;padding:8px 16px;font-size:10px;}
+    .search-fields{flex-direction:column;display:flex;}
+    .field-group{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);}
+    .field-group:last-of-type{border-bottom:none;}
+    .search-btn{width:100%;padding:16px;}
+    .loan-banner{padding:12px 16px;}
+    .services-strip{display:grid!important;grid-template-columns:repeat(5,1fr);padding:0;}
+    .service-item-card{padding:16px 4px;gap:8px;}
+    .service-icon{width:44px;height:44px;border-radius:10px;}
+    .service-icon img{width:28px;height:28px;}
+    .service-label{font-size:9px;}
+    .prop-slider .property-card{width:100%!important;min-width:100%!important;}
+    .property-grid-featured{display:flex;flex-direction:column;gap:2px;}
+    .property-card-large .property-card-img{min-height:58vw!important;}
+    .property-card-sm{flex-direction:column!important;}
+    .property-card-sm .property-card-img{width:100%!important;height:44vw!important;min-height:160px!important;}
+    .about-section{display:flex;flex-direction:column;min-height:auto;}
+    .about-img{width:100%;height:52vw;min-height:200px;}
+    .about-content{padding:28px 16px 36px;}
+    .about-title{font-size:clamp(26px,7.5vw,40px);}
+    .about-text{font-size:14px;margin-bottom:28px;}
+    .news-section{padding:32px 16px;}
+    .news-header{flex-direction:column;align-items:flex-start;gap:12px;}
+    .news-carousel{gap:0;}
+    .news-card{width:100%!important;min-width:100%!important;}
+    .testimonials-section{padding:32px 16px;}
+    .testimonial-grid{grid-template-columns:1fr;margin-top:24px;}
+    .testimonial-card{padding:28px 16px;}
+    .testimonial-text{font-size:16px;}
+    .cta-banner{display:flex!important;flex-direction:column;padding:40px 16px;gap:28px;}
+    .cta-title{font-size:clamp(30px,8.5vw,48px);}
+    .cta-bg-text{display:none;}
+    .cta-form-row{grid-template-columns:1fr!important;gap:10px;margin-bottom:10px;}
+  }
+  @media(max-width:480px){
+    .hero-right{height:62vw;}
+    .hero-left{padding:22px 14px 28px;}
+    .services-strip{grid-template-columns:repeat(3,1fr)!important;}
+    .service-item-card{padding:14px 4px;border-right:none;border-bottom:1px solid rgba(13,43,78,.07);}
+    .service-item-card:nth-child(3n){border-right:none;}
+    .service-icon{width:40px;height:40px;}
+    .service-icon img{width:26px;height:26px;}
+    .news-section{padding:24px 12px;}
+    .news-header{gap:10px;}
+    .news-see-all{font-size:11px;padding:6px 12px;}
+    .testimonials-section{padding:24px 12px;}
+    .cta-banner{padding:32px 12px;}
+    .about-content{padding:22px 14px 28px;}
+    .search-tab{padding:7px 12px;font-size:9px;}
+    .prop-slider-controls,.news-arrows{gap:10px;}
+  }
+</style>
+{% endblock %}
+
 {% block content %}
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
 
 <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
-<section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;">
-  <div style="display:flex;flex-direction:column;justify-content:center;padding:80px 60px 60px;animation:fadeInUp .9s .2s both;">
-    <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--sky);margin-bottom:28px;display:flex;align-items:center;gap:14px;">
-      <span style="display:block;width:40px;height:1px;background:var(--sky);"></span>
-      Curated Luxury Living
-    </div>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(58px,6vw,86px);font-weight:300;line-height:1.05;color:var(--charcoal);margin-bottom:28px;">
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Curated Luxury Living</div>
+    <h1 class="hero-title">
       Find Your<br>
-      <em style="font-style:italic;color:var(--sky);">Perfect</em><br>
+      <em>Perfect</em><br>
       Sanctuary
     </h1>
-    <p style="font-size:15px;line-height:1.8;color:var(--warm-grey);max-width:400px;margin-bottom:48px;font-weight:300;">
+    <p class="hero-subtitle">
       We curate the world's most extraordinary properties — from serene countryside retreats to iconic urban penthouses — matched to the most discerning clientele.
     </p>
-    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+    <div class="hero-actions">
       <a href="{% url 'properties:list' %}" class="btn-primary">Explore Properties</a>
-      <a href="{% url 'agents:list' %}" style="color:var(--soft-brown);font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:12px;transition:color .3s;">
-        <span style="width:40px;height:40px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;">→</span>
+      {% comment %}
+      <a href="{% url 'agents:list' %}" class="btn-ghost">
+        <div class="btn-ghost-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:16px;height:16px;">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
         Meet Agents
       </a>
+      {% endcomment %}
     </div>
   </div>
-  <div style="position:relative;overflow:hidden;background:linear-gradient(160deg,#071929 0%,#0D2B4E 50%,#1A3A5C 100%);">
-    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.22" viewBox="0 0 600 800">
+  <div class="hero-right">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#071929 0%,#0D2B4E 50%,#1A3A5C 100%);"></div>
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.18" viewBox="0 0 600 800">
       <rect width="600" height="800" fill="#0D1B2A"/>
       <rect x="80" y="200" width="440" height="380" fill="#1A3A5C"/>
       <polygon points="60,200 300,80 540,200" fill="#0D2B4E"/>
       <rect x="120" y="300" width="80" height="120" fill="#1E4A78"/>
       <rect x="260" y="360" width="80" height="140" fill="#0D2B4E"/>
       <rect x="400" y="300" width="80" height="120" fill="#1E4A78"/>
-      <rect x="130" y="310" width="20" height="40" rx="1" fill="#4A90C4" opacity=".3"/>
-      <rect x="160" y="310" width="20" height="40" rx="1" fill="#4A90C4" opacity=".2"/>
-      <rect x="410" y="310" width="20" height="40" rx="1" fill="#4A90C4" opacity=".3"/>
-      <circle cx="300" cy="140" r="5" fill="#4A90C4" opacity=".4"/>
+      <rect x="130" y="310" width="20" height="40" rx="1" fill="#0D2B4E" opacity=".4"/>
+      <rect x="160" y="310" width="20" height="40" rx="1" fill="#0D2B4E" opacity=".3"/>
+      <rect x="410" y="310" width="20" height="40" rx="1" fill="#0D2B4E" opacity=".4"/>
+      <circle cx="300" cy="140" r="6" fill="#0D2B4E" opacity=".5"/>
     </svg>
-    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,27,42,.2) 0%,transparent 60%);"></div>
-    <!-- Stats overlay -->
-    <div style="position:absolute;bottom:40px;left:0;right:0;display:flex;justify-content:center;gap:40px;padding:0 40px;">
-      {% for label, value in stats.items %}
-      <div style="text-align:center;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--white);" data-count="{{ value }}">0</div>
-        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);">{{ label|title }}</div>
-      </div>
-      {% endfor %}
-    </div>
+    <div class="hero-img-overlay"></div>
   </div>
 </section>
 
 <!-- ════════════════════════ SEARCH BAR ════════════════════════ -->
-<div style="background:linear-gradient(180deg,var(--charcoal) 0%,var(--navy) 100%);padding:40px 60px 48px;">
-  <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;display:flex;align-items:center;gap:12px;">
-    <span style="width:28px;height:1px;background:var(--sky);display:block;"></span>Find Your Perfect Property
-  </div>
-  <!-- Tabs -->
-  <div style="display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;" id="searchTabs">
-    <button class="search-tab active" data-type="buy" onclick="setSearchTab(this,'buy')" style="padding:10px 22px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;background:var(--sky);border:1px solid var(--sky);color:white;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .3s;">Buy</button>
-    <button class="search-tab" data-type="rent" onclick="setSearchTab(this,'rent')" style="padding:10px 22px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.55);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .3s;">Rent</button>
-    <button class="search-tab" data-type="new_project" onclick="setSearchTab(this,'new_project')" style="padding:10px 22px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.55);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .3s;">New Projects</button>
-    <button class="search-tab" data-type="commercial" onclick="setSearchTab(this,'commercial')" style="padding:10px 22px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.55);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .3s;">Commercial</button>
-  </div>
-  <!-- Search Form -->
-  <form action="{% url 'properties:list' %}" method="GET" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
-    <input type="hidden" name="type" id="listingTypeInput" value="buy">
-    <div style="display:flex;align-items:center;border-right:1px solid rgba(255,255,255,.08);padding:0 16px;background:rgba(255,255,255,.05);">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5" style="flex-shrink:0;opacity:.7;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      <div style="flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:3px;">
-        <label style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);">Location</label>
-        <input type="text" name="location" placeholder="City, locality..." style="border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;color:white;outline:none;" placeholder="City, locality...">
+<div class="search-section">
+  <div class="search-wrapper">
+    <div class="search-header-label">Find Your Perfect Property</div>
+    <div class="search-tabs" id="searchTabs">
+      <button class="search-tab active" data-type="buy" onclick="setSearchTab(this,'buy')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Buy
+      </button>
+      <button class="search-tab" data-type="rent" onclick="setSearchTab(this,'rent')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
+        Rent
+      </button>
+      <button class="search-tab" data-type="new_project" onclick="setSearchTab(this,'new_project')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        New Projects
+      </button>
+      <button class="search-tab" data-type="commercial" onclick="setSearchTab(this,'commercial')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Commercial
+      </button>
+    </div>
+    <form action="{% url 'properties:list' %}" method="GET">
+      <input type="hidden" name="type" id="listingTypeInput" value="buy">
+      <div class="search-fields">
+        <div class="field-group">
+          <div class="field-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="field-inner">
+            <label>Location</label>
+            <input type="text" name="location" placeholder="City, neighbourhood…">
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          </div>
+          <div class="field-inner">
+            <label>Property Type</label>
+            <select name="property_type">
+              <option value="">All Types</option>
+              {% for val, label in property_types %}
+              <option value="{{ val }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4v16M22 4v16M2 8h20M2 16h20M6 8v8M10 8v8M14 8v8M18 8v8"/></svg>
+          </div>
+          <div class="field-inner">
+            <label>BHK</label>
+            <select name="bhk">
+              <option value="">Any BHK</option>
+              {% for val, label in bhk_choices %}
+              <option value="{{ val }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><text x="1" y="19" font-size="20" font-family="Arial,sans-serif" font-weight="600">₹</text></svg>
+          </div>
+          <div class="field-inner">
+            <label>Price Range</label>
+            <select name="price">
+              <option value="">Any Price</option>
+              <option value="under50l">Under ₹50L</option>
+              <option value="50l-1cr">₹50L – ₹1Cr</option>
+              <option value="1cr-3cr">₹1Cr – ₹3Cr</option>
+              <option value="3cr-10cr">₹3Cr – ₹10Cr</option>
+              <option value="above10cr">Above ₹10Cr</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="search-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          Search
+        </button>
       </div>
-    </div>
-    <div style="border-right:1px solid rgba(255,255,255,.08);padding:14px 16px;background:rgba(255,255,255,.05);">
-      <label style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);display:block;margin-bottom:4px;">Property Type</label>
-      <select name="property_type" style="border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;color:white;outline:none;appearance:none;width:100%;">
-        <option value="" style="background:#0D1B2A;">Any Type</option>
-        {% for val, label in property_types %}
-        <option value="{{ val }}" style="background:#0D1B2A;">{{ label }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div style="border-right:1px solid rgba(255,255,255,.08);padding:14px 16px;background:rgba(255,255,255,.05);">
-      <label style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);display:block;margin-bottom:4px;">BHK</label>
-      <select name="bhk" style="border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;color:white;outline:none;appearance:none;width:100%;">
-        <option value="" style="background:#0D1B2A;">Any BHK</option>
-        {% for val, label in bhk_choices %}
-        <option value="{{ val }}" style="background:#0D1B2A;">{{ label }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div style="padding:14px 16px;background:rgba(255,255,255,.05);">
-      <label style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);display:block;margin-bottom:4px;">Price Range</label>
-      <select name="price" style="border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;color:white;outline:none;appearance:none;width:100%;">
-        <option value="" style="background:#0D1B2A;">Any Price</option>
-        <option value="under50l" style="background:#0D1B2A;">Under ₹50L</option>
-        <option value="50l-1cr"  style="background:#0D1B2A;">₹50L – ₹1Cr</option>
-        <option value="1cr-3cr"  style="background:#0D1B2A;">₹1Cr – ₹3Cr</option>
-        <option value="3cr-10cr" style="background:#0D1B2A;">₹3Cr – ₹10Cr</option>
-        <option value="above10cr"style="background:#0D1B2A;">Above ₹10Cr</option>
-      </select>
-    </div>
-    <button type="submit" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sky);color:white;padding:0 36px;border:none;cursor:pointer;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .3s;white-space:nowrap;" onmouseover="this.style.background='#3A7FB5'" onmouseout="this.style.background='var(--sky)'">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      Search
-    </button>
-  </form>
+    </form>
+  </div>
 </div>
 
-<!-- ═══════════════════ SERVICES STRIP ═══════════════════════ -->
-<div style="background:var(--white);display:flex;justify-content:center;padding:28px 60px;border-bottom:1px solid rgba(13,43,78,.07);">
-  {% with services="Builder Projects,Sale Agreement,Home Loan,Property Legal Services,Security & Surveillance" %}
-  {% for svc in services.split %}
-  <a href="{% url 'enquiries:create' %}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;padding:16px;border-right:1px solid rgba(13,43,78,.07);transition:background .3s;" onmouseover="this.style.background='var(--ivory)'" onmouseout="this.style.background='transparent'">
-    <div style="width:64px;height:64px;border:1px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+<!-- ═══════════════════ LOAN BANNER + SERVICES ═══════════════════ -->
+<div class="loan-banner">
+  <div class="loan-banner-inner">
+    <p class="loan-banner-text">Find out how much <strong>home loan</strong> you're eligible for — instantly.</p>
+    <a href="{% url 'enquiries:create' %}?type=home_loan" class="loan-banner-btn">Check Eligibility</a>
+  </div>
+</div>
+
+<div class="services-strip">
+  <a href="{% url 'properties:list' %}?type=new_project" class="service-item-card">
+    <div class="service-icon">
+      <img src="{% static 'icons/home.png' %}" alt="Builder Projects">
     </div>
-    <span style="font-size:12px;color:var(--charcoal);text-align:center;">{{ svc }}</span>
+    <span class="service-label">Builder Projects</span>
   </a>
-  {% endfor %}
-  {% endwith %}
+  <a href="{% url 'enquiries:create' %}?type=sale_agreement" class="service-item-card">
+    <div class="service-icon">
+      <img src="{% static 'icons/registation.png' %}" alt="Sale Agreement">
+    </div>
+    <span class="service-label">Sale Agreement</span>
+  </a>
+  <a href="{% url 'enquiries:create' %}?type=home_loan" class="service-item-card">
+    <div class="service-icon">
+      <img src="{% static 'icons/loan.png' %}" alt="Home Loan">
+    </div>
+    <span class="service-label">Home Loan</span>
+  </a>
+  <a href="{% url 'enquiries:create' %}?type=legal" class="service-item-card">
+    <div class="service-icon">
+      <img src="{% static 'icons/legal.png' %}" alt="Property Legal Services">
+    </div>
+    <span class="service-label">Property Legal Services</span>
+  </a>
+  <a href="{% url 'enquiries:create' %}?type=security" class="service-item-card">
+    <div class="service-icon">
+      <img src="{% static 'icons/survalence.png' %}" alt="Security &amp; Surveillance">
+    </div>
+    <span class="service-label">Security &amp; Surveillance</span>
+  </a>
 </div>
 
 <!-- ══════════════════ SIGNATURE COLLECTION ═══════════════════ -->
 {% if signature_properties %}
-<section class="section" style="background:var(--cream);">
+<section class="section" style="padding-top:0;background:var(--cream);">
   <div class="section-flex">
     <div>
       <div class="section-eyebrow">Ultra Premium</div>
       <h2 class="section-title">Signature<br><em>Collections</em></h2>
     </div>
-    <a href="{% url 'properties:list' %}" class="view-all"><span></span> Explore All</a>
+    <a href="{% url 'properties:list' %}" class="view-all"><span></span> Explore Collection</a>
   </div>
-  <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:3px;">
+  <div class="property-grid-featured">
     {% for prop in signature_properties %}
     {% if forloop.first %}
-    <a href="{{ prop.get_absolute_url }}" style="text-decoration:none;display:block;background:var(--white);overflow:hidden;grid-row:span 2;">
-      <div style="position:relative;height:480px;overflow:hidden;background:linear-gradient(160deg,#071929,#0D2B4E,#1A3A5C);">
-        {% if prop.primary_image %}<img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
-        <div style="position:absolute;top:20px;left:20px;background:linear-gradient(90deg,var(--deep-brown),var(--navy));color:var(--gold-light);padding:5px 14px;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Signature</div>
+    <div class="property-card-large">
+      <div class="property-card-img">
+        {% if prop.primary_image %}
+        <img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" style="width:100%;height:100%;object-fit:cover;">
+        {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(160deg,#071929,#0D2B4E,#1A3A5C);"></div>
+        {% endif %}
+        <div class="property-tag" style="background:linear-gradient(90deg,var(--deep-brown),var(--navy));color:var(--gold-light);">Signature</div>
+        {% if user.is_authenticated %}
+        <button class="property-fav" onclick="toggleWishlist(this, {{ prop.id }})" title="Save">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        {% endif %}
       </div>
-      <div style="padding:24px;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--navy);">{{ prop.display_price }}{% if prop.price_label %} <span style="font-size:14px;color:var(--warm-grey);font-family:'DM Sans',sans-serif;">{{ prop.price_label }}</span>{% endif %}</div>
-        <div style="font-size:16px;font-weight:500;color:var(--charcoal);margin:6px 0;">{{ prop.title }}</div>
-        <div style="font-size:12px;color:var(--warm-grey);">{{ prop.locality }}, {{ prop.city }}</div>
-        <div style="display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
-          <span style="font-size:12px;color:var(--soft-brown);">{{ prop.bedrooms }} Beds</span>
-          <span style="font-size:12px;color:var(--soft-brown);">{{ prop.bathrooms }} Baths</span>
-          {% if prop.area_sqft %}<span style="font-size:12px;color:var(--soft-brown);">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
+      <div class="property-body">
+        <div class="property-price">{{ prop.display_price }}{% if prop.price_label %} <span>{{ prop.price_label }}</span>{% endif %}</div>
+        <div class="property-name"><a href="{{ prop.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ prop.title }}</a></div>
+        <div class="property-location">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          {{ prop.locality }}, {{ prop.city }}
+        </div>
+        <div class="property-specs">
+          <span class="spec">{{ prop.bedrooms }} Beds</span>
+          <span class="spec">{{ prop.bathrooms }} Baths</span>
+          {% if prop.area_sqft %}<span class="spec">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
         </div>
       </div>
-    </a>
+    </div>
     {% else %}
-    <a href="{{ prop.get_absolute_url }}" style="text-decoration:none;display:flex;background:var(--white);overflow:hidden;">
-      <div style="width:180px;flex-shrink:0;background:linear-gradient(135deg,#1A3A5C,#2E6FA8,#0D2240);min-height:180px;">
-        {% if prop.primary_image %}<img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
+    <div class="property-card-sm">
+      <div class="property-card-img" style="width:200px;flex-shrink:0;">
+        {% if prop.primary_image %}
+        <img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" style="width:100%;height:100%;object-fit:cover;">
+        {% else %}
+        <div style="width:100%;height:100%;min-height:200px;background:linear-gradient(135deg,#1A3A5C,#2E6FA8,#0D2240);"></div>
+        {% endif %}
       </div>
-      <div style="padding:20px;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);">{{ prop.display_price }}</div>
-        <div style="font-size:14px;font-weight:500;margin:4px 0;">{{ prop.title }}</div>
-        <div style="font-size:12px;color:var(--warm-grey);margin-bottom:10px;">{{ prop.locality }}, {{ prop.city }}</div>
-        <div style="display:flex;gap:12px;">
-          <span style="font-size:12px;color:var(--soft-brown);">{{ prop.bedrooms }} Beds</span>
-          <span style="font-size:12px;color:var(--soft-brown);">{{ prop.bathrooms }} Baths</span>
-          {% if prop.area_sqft %}<span style="font-size:12px;color:var(--soft-brown);">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
+      <div class="property-body">
+        <div class="property-price">{{ prop.display_price }}</div>
+        <div class="property-name"><a href="{{ prop.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ prop.title }}</a></div>
+        <div class="property-location" style="margin-bottom:12px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;color:var(--sky)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          {{ prop.locality }}, {{ prop.city }}
+        </div>
+        <div class="property-specs">
+          <span class="spec">{{ prop.bedrooms }} Beds</span>
+          <span class="spec">{{ prop.bathrooms }} Baths</span>
+          {% if prop.area_sqft %}<span class="spec">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
         </div>
       </div>
-    </a>
+    </div>
     {% endif %}
     {% endfor %}
   </div>
@@ -184,10 +511,10 @@
       <div class="section-eyebrow">Handpicked For You</div>
       <h2 class="section-title">Featured<br><em>Properties</em></h2>
     </div>
-    <a href="{% url 'properties:list' %}" class="view-all"><span></span> View All</a>
+    <a href="{% url 'properties:list' %}" class="view-all"><span></span> View All Listings</a>
   </div>
-  <div style="overflow:hidden;">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;" id="propGrid">
+  <div class="prop-slider-wrapper">
+    <div class="prop-slider" id="propSlider">
       {% for prop in featured_properties %}
       <div class="property-card">
         <div class="property-card-img">
@@ -196,10 +523,10 @@
           {% else %}
           <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A,#071929);"></div>
           {% endif %}
-          {% if prop.is_signature %}<div class="property-tag signature">Signature</div>
+          {% if prop.is_signature %}<div class="property-tag" style="background:linear-gradient(90deg,var(--deep-brown),var(--navy));color:var(--gold-light);">Signature</div>
           {% elif prop.is_featured %}<div class="property-tag featured">Featured</div>
-          {% elif prop.is_new %}<div class="property-tag new">New</div>
-          {% elif prop.is_exclusive %}<div class="property-tag exclusive">Exclusive</div>{% endif %}
+          {% elif prop.is_new %}<div class="property-tag">New</div>
+          {% elif prop.is_exclusive %}<div class="property-tag">Exclusive</div>{% endif %}
           {% if user.is_authenticated %}
           <button class="property-fav" onclick="toggleWishlist(this, {{ prop.id }})" title="Save to wishlist">
             <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
@@ -210,128 +537,197 @@
           <div class="property-price">{{ prop.display_price }}{% if prop.price_label %} <span>{{ prop.price_label }}</span>{% endif %}</div>
           <div class="property-name"><a href="{{ prop.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ prop.title }}</a></div>
           <div class="property-location">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
             {{ prop.locality }}, {{ prop.city }}
           </div>
           <div class="property-specs">
-            <span class="spec">{{ prop.bedrooms }} Beds</span>
-            <span class="spec">{{ prop.bathrooms }} Baths</span>
-            {% if prop.area_sqft %}<span class="spec">{{ prop.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              {{ prop.bedrooms }} Beds
+            </div>
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><path d="M21 10H7M21 6H3m18 8H3m18 4H7"/></svg>
+              {{ prop.bathrooms }} Baths
+            </div>
+            {% if prop.area_sqft %}
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              {{ prop.area_sqft|floatformat:0 }} sq.ft
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
       {% empty %}
-      <div style="grid-column:span 3;text-align:center;padding:60px;color:var(--warm-grey);">
+      <div style="width:100%;text-align:center;padding:60px;color:var(--warm-grey);">
         No featured properties yet. <a href="{% url 'properties:create' %}" style="color:var(--sky);">List your property</a>.
       </div>
       {% endfor %}
     </div>
   </div>
+  <!-- Slider controls -->
+  <div class="prop-slider-controls">
+    <button class="prop-arrow" onclick="slideProp(-1)" aria-label="Previous">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="prop-dots" id="propDots">
+      <div class="prop-dot active"></div>
+      <div class="prop-dot"></div>
+      <div class="prop-dot"></div>
+      <div class="prop-dot"></div>
+    </div>
+    <button class="prop-arrow" onclick="slideProp(1)" aria-label="Next">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
 </section>
 
-<!-- ══════════════════════ AGENTS ════════════════════════════ -->
-{% if agents %}
-<section class="section" style="background:var(--cream);">
-  <div class="section-flex">
-    <div>
-      <div class="section-eyebrow">Expert Team</div>
-      <h2 class="section-title">Our <em>Agents</em></h2>
-    </div>
-    <a href="{% url 'agents:list' %}" class="view-all"><span></span> All Agents</a>
+<!-- ══════════════════ ABOUT SECTION ═════════════════════════ -->
+<div class="about-section">
+  <div class="about-img">
+    <div style="width:100%;height:100%;background:linear-gradient(160deg,#071929,#0D2B4E,#1A3A5C);min-height:600px;"></div>
+    <div class="about-img-overlay"></div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;">
-    {% for agent in agents %}
-    <a href="{% url 'agents:detail' agent.pk %}" style="text-decoration:none;background:var(--white);overflow:hidden;display:block;transition:all .3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(13,43,78,.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-      <div style="height:220px;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);overflow:hidden;">
-        {% if agent.photo %}<img src="{{ agent.photo.url }}" alt="{{ agent.full_name }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
-      </div>
-      <div style="padding:20px;">
-        <div style="font-size:15px;font-weight:500;color:var(--charcoal);margin-bottom:4px;">{{ agent.full_name }}</div>
-        <div style="font-size:12px;color:var(--sky);margin-bottom:8px;">{{ agent.specialization|truncatewords:5 }}</div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--warm-grey);">
-          <span>{{ agent.listings_count }} Listings</span>
-          <span>{{ agent.rating }}★</span>
+  <div class="about-content">
+    <div class="about-eyebrow">Why Choose Homexo</div>
+    <h2 class="about-title">Luxury Is Our<br><em>Standard,</em><br>Not Our Exception</h2>
+    <p class="about-text">
+      For over a decade, HOMEXO has been the trusted partner for those seeking not just a property, but a home that reflects their vision of an extraordinary life. We curate, we counsel, we deliver.
+    </p>
+    <div class="services-list">
+      <div class="service-item">
+        <div class="service-num">01</div>
+        <div class="service-info">
+          <h4>Exclusive Listings</h4>
+          <p>Access to off-market and pre-launch properties unavailable elsewhere.</p>
         </div>
       </div>
-    </a>
-    {% endfor %}
+      <div class="service-item">
+        <div class="service-num">02</div>
+        <div class="service-info">
+          <h4>White Glove Service</h4>
+          <p>Dedicated advisors, 360° virtual tours, and concierge property management.</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">03</div>
+        <div class="service-info">
+          <h4>Investment Intelligence</h4>
+          <p>Data-driven market insights to help you buy at the right moment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ NEWS ════════════════════════════ -->
+{% if news_posts %}
+<section class="news-section">
+  <div class="news-header">
+    <div>
+      <h2 class="news-title">News and Articles</h2>
+      <p class="news-subtitle">Read what's happening in Real Estate</p>
+    </div>
+    <a href="{% url 'blog:list' %}" class="news-see-all">See all news and articles &rsaquo;</a>
+  </div>
+  <div class="news-carousel-wrapper">
+    <div class="news-carousel" id="newsCarousel">
+      {% for post in news_posts %}
+      <article class="news-card">
+        <div class="news-img">
+          {% if post.cover_image %}
+          <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;">
+          {% else %}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A,#2E6FA8);"></div>
+          {% endif %}
+          <div class="news-img-overlay"></div>
+        </div>
+        <div class="news-body">
+          <h3 class="news-card-title"><a href="{{ post.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ post.title }}</a></h3>
+          <p class="news-card-excerpt">{{ post.excerpt }}</p>
+          <div class="news-meta">
+            <span class="news-author">{% if post.author %}{{ post.author.get_full_name|default:post.author.email }}{% else %}HOMEXO Desk{% endif %}</span>
+            <span class="news-date">{{ post.published_at|date:"M Y" }}</span>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="news-arrows">
+    <button class="news-arrow" onclick="slideNews(-1)" aria-label="Previous">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="news-dots" id="newsDots">
+      <div class="news-dot active"></div>
+      <div class="news-dot"></div>
+      <div class="news-dot"></div>
+    </div>
+    <button class="news-arrow" onclick="slideNews(1)" aria-label="Next">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
 </section>
 {% endif %}
 
 <!-- ══════════════════ TESTIMONIALS ══════════════════════════ -->
 {% if testimonials %}
-<section class="section" style="background:var(--white);">
-  <div style="text-align:center;margin-bottom:40px;">
-    <div class="section-eyebrow" style="justify-content:center;">Client Stories</div>
-    <h2 class="section-title">What Our <em>Clients</em> Say</h2>
+<div class="testimonials-section">
+  <div class="section-flex">
+    <div>
+      <div class="section-eyebrow">Client Stories</div>
+      <h2 class="section-title">What Our<br><em>Clients Say</em></h2>
+    </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+  <div class="testimonial-grid">
     {% for t in testimonials %}
-    <div style="background:var(--ivory);padding:32px;border:1px solid var(--border);">
-      <div style="color:var(--sky);font-size:20px;margin-bottom:16px;">{% for i in "12345" %}{% if forloop.counter <= t.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
-      <p style="font-size:14px;line-height:1.8;color:var(--soft-brown);margin-bottom:20px;font-style:italic;">"{{ t.review }}"</p>
-      <div style="display:flex;align-items:center;gap:12px;">
-        {% if t.avatar %}<img src="{{ t.avatar.url }}" alt="{{ t.client_name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-        {% else %}<div style="width:40px;height:40px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;">{{ t.client_name|first }}</div>{% endif %}
+    <div class="testimonial-card">
+      <div class="stars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+      <div class="quote-mark">&ldquo;</div>
+      <p class="testimonial-text">{{ t.review }}</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">
+          {% if t.avatar %}
+          <img src="{{ t.avatar.url }}" alt="{{ t.client_name }}">
+          {% else %}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#1A3A5C,#4A90C4);display:flex;align-items:center;justify-content:center;color:white;font-size:16px;">{{ t.client_name|first }}</div>
+          {% endif %}
+        </div>
         <div>
-          <div style="font-size:14px;font-weight:500;color:var(--charcoal);">{{ t.client_name }}</div>
-          <div style="font-size:11px;color:var(--warm-grey);">{{ t.client_location }}</div>
+          <div class="author-name">{{ t.client_name }}</div>
+          <div class="author-role">{{ t.client_location }}</div>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
-</section>
-{% endif %}
-
-<!-- ══════════════════════ NEWS ════════════════════════════ -->
-{% if news_posts %}
-<section class="section">
-  <div class="section-flex">
-    <div>
-      <div class="section-eyebrow">Latest Updates</div>
-      <h2 class="section-title">News &<br><em>Insights</em></h2>
-    </div>
-    <a href="{% url 'blog:list' %}" class="view-all"><span></span> View All Posts</a>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
-    {% for post in news_posts|slice:":3" %}
-    <a href="{{ post.get_absolute_url }}" style="text-decoration:none;background:var(--white);overflow:hidden;display:block;border:1px solid var(--border);transition:all .3s;" onmouseover="this.style.boxShadow='0 8px 30px rgba(13,43,78,.1)'" onmouseout="this.style.boxShadow=''">
-      <div style="height:200px;overflow:hidden;background:linear-gradient(135deg,#0D2B4E,#1A3A5C);">
-        {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
-      </div>
-      <div style="padding:20px;">
-        {% if post.category %}<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sky);margin-bottom:10px;">{{ post.category.name }}</div>{% endif %}
-        <div style="font-size:15px;font-weight:500;color:var(--charcoal);margin-bottom:8px;line-height:1.4;">{{ post.title }}</div>
-        <div style="font-size:12px;color:var(--warm-grey);">{{ post.published_at|date:"M d, Y" }}</div>
-      </div>
-    </a>
-    {% endfor %}
-  </div>
-</section>
+</div>
 {% endif %}
 
 <!-- ═══════════════════════ CTA BANNER ════════════════════════ -->
-<div style="background:var(--deep-brown);padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+<div class="cta-banner">
+  <div class="cta-bg-text">HOMEXO</div>
   <div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4vw,58px);font-weight:300;color:var(--ivory);line-height:1.1;">
-      Ready to Find Your<br><em style="font-style:italic;color:var(--sky);">Dream Home?</em>
-    </h2>
+    <h2 class="cta-title">Ready To Find<br>Your <em>Dream</em><br>Property?</h2>
     <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Let our expert team guide you to the perfect property. Reach out today.</p>
   </div>
-  <form action="{% url 'enquiries:create' %}" method="POST">
+  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
     {% csrf_token %}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-      <input type="text" name="name" placeholder="Your Name" required style="padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
-      <input type="tel" name="phone" placeholder="Phone Number" required style="padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
-      <input type="email" name="email" placeholder="Email Address" required style="padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
-      <input type="text" name="budget" placeholder="Budget (e.g. ₹1Cr–₹3Cr)" style="padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
+    <div class="cta-form-row">
+      <input type="text" name="name" placeholder="Your Full Name" required>
+      <input type="tel" name="phone" placeholder="Phone Number" required>
     </div>
-    <textarea name="message" placeholder="Tell us what you're looking for..." rows="3" style="width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:none;margin-bottom:14px;"></textarea>
-    <button type="submit" style="width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:all .3s;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--navy)'">
-      Get In Touch
-    </button>
+    <div class="cta-form-row">
+      <input type="email" name="email" placeholder="Email Address" required>
+      <select name="enquiry_type">
+        <option value="">I'm Looking To&hellip;</option>
+        <option value="buy">Buy a Property</option>
+        <option value="rent">Rent a Property</option>
+        <option value="sell">Sell My Property</option>
+        <option value="invest">Real Estate Investment</option>
+      </select>
+    </div>
+    <button type="submit" class="cta-submit">Request Consultation &rarr;</button>
   </form>
 </div>
 
@@ -339,57 +735,94 @@
 
 {% block extra_js %}
 <script>
-// Search tab switcher
-function setSearchTab(btn, type) {
-  document.querySelectorAll('.search-tab').forEach(t => {
-    t.style.background = 'rgba(255,255,255,.07)';
-    t.style.borderColor = 'rgba(255,255,255,.12)';
-    t.style.color = 'rgba(255,255,255,.55)';
+// ── Custom cursor (desktop only) ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+if (cursor && ring) {
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cursor.style.transform=`translate(${mx-5}px,${my-5}px)`;
   });
-  btn.style.background = 'var(--sky)';
-  btn.style.borderColor = 'var(--sky)';
-  btn.style.color = 'white';
+  (function animateRing() {
+    rx+=(mx-rx-18)*.12; ry+=(my-ry-18)*.12;
+    ring.style.transform=`translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(animateRing);
+  })();
+  document.querySelectorAll('a,button,.property-fav,.service-item-card,.prop-arrow,.news-arrow').forEach(el => {
+    el.addEventListener('mouseenter',()=>ring.classList.add('expand'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('expand'));
+  });
+}
+
+// ── Search tab switcher ──
+function setSearchTab(btn, type) {
+  document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
   document.getElementById('listingTypeInput').value = type;
 }
 
-// Animated counters
-const countObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const el  = e.target;
-      const target = parseInt(el.dataset.count);
-      let start = 0;
-      const dur = 1800;
-      const step = ts => {
-        if (!start) start = ts;
-        const prog = Math.min((ts - start) / dur, 1);
-        const ease = 1 - Math.pow(1 - prog, 3);
-        el.textContent = Math.floor(ease * target).toLocaleString();
-        if (prog < 1) requestAnimationFrame(step);
-        else el.textContent = target.toLocaleString() + '+';
-      };
-      requestAnimationFrame(step);
-      countObserver.unobserve(el);
-    }
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
-
-// Intersection observer — fade in cards
+// ── Intersection observer — reveal animations ──
 const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.property-card,.property-card-large,.property-card-sm,.testimonial-card,.agent-card').forEach(el => revealObserver.observe(el));
 
-document.querySelectorAll('.property-card').forEach((el, i) => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(30px)';
-  el.style.transition = `all 0.5s cubic-bezier(.23,1,.32,1) ${i * 0.08}s`;
-  revealObserver.observe(el);
+// ── Property slider ──
+let propIndex = 0;
+const totalProps = document.querySelectorAll('#propSlider .property-card').length;
+
+function slideProp(dir) {
+  const slider  = document.getElementById('propSlider');
+  if (!slider) return;
+  const wrapper = slider.parentElement;
+  const isMobile = window.innerWidth <= 768;
+  const visCount = isMobile ? 1 : 3;
+  const maxIdx   = Math.max(0, totalProps - visCount);
+  propIndex = Math.max(0, Math.min(propIndex + dir, maxIdx));
+  const card = slider.querySelector('.property-card');
+  if (!card) return;
+  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 2);
+  slider.style.transform = `translateX(-${propIndex * cardW}px)`;
+  slider.style.transition = 'transform 0.55s cubic-bezier(.23,1,.32,1)';
+  document.querySelectorAll('.prop-dot').forEach((d, i) => d.classList.toggle('active', i === propIndex));
+}
+
+// ── News carousel ──
+let newsIndex = 0;
+const totalNewsCards = document.querySelectorAll('#newsCarousel .news-card').length;
+
+function slideNews(dir) {
+  const carousel = document.getElementById('newsCarousel');
+  if (!carousel) return;
+  const wrapper  = carousel.parentElement;
+  const isMobile = window.innerWidth <= 768;
+  const visCount = isMobile ? 1 : 3;
+  const maxIdx   = Math.max(0, totalNewsCards - visCount);
+  newsIndex = Math.max(0, Math.min(newsIndex + dir, maxIdx));
+  const card = carousel.querySelector('.news-card');
+  if (!card) return;
+  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 20);
+  carousel.style.transform = `translateX(-${newsIndex * cardW}px)`;
+  carousel.style.transition = 'transform 0.5s cubic-bezier(.23,1,.32,1)';
+  document.querySelectorAll('.news-dot').forEach((d, i) => d.classList.toggle('active', i === newsIndex));
+}
+
+// ── Reset sliders on resize ──
+window.addEventListener('resize', () => {
+  propIndex = 0; newsIndex = 0;
+  const s = document.getElementById('propSlider');
+  const n = document.getElementById('newsCarousel');
+  if (s) s.style.transform = 'translateX(0)';
+  if (n) n.style.transform = 'translateX(0)';
+  document.querySelectorAll('.prop-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
+  document.querySelectorAll('.news-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
 });
+
+// Fix news carousel overflow
+(function() {
+  const c = document.getElementById('newsCarousel');
+  if (c) { c.style.overflow='visible'; c.style.flexShrink='0'; }
+})();
 </script>
 {% endblock %}
