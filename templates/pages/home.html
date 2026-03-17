@@ -9,6 +9,40 @@
   .cursor { width:10px;height:10px;background:var(--navy);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:10000;transition:transform .15s ease;mix-blend-mode:multiply; }
   .cursor-ring { width:36px;height:36px;border:1.5px solid var(--navy);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform .4s cubic-bezier(.23,1,.32,1),width .3s,height .3s,opacity .3s;opacity:.7; }
   .cursor-ring.expand { width:60px;height:60px;opacity:.4; }
+
+  /* ═══ STATS COUNTER ═══ */
+  .stats-section { background:var(--navy);padding:48px 60px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(74,144,196,.15); }
+  .stat-item { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 0;border-right:1px solid rgba(255,255,255,.08);text-align:center; }
+  .stat-item:last-child { border-right:none; }
+  .stat-value { font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,52px);font-weight:300;color:var(--white);line-height:1;margin-bottom:8px; }
+  .stat-value span { font-size:.6em;color:var(--sky); }
+  .stat-label { font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:400; }
+
+  /* ═══ AGENTS STRIP ═══ */
+  .agents-section { background:var(--ivory);padding:60px; }
+  .agents-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:40px; }
+  .agent-card { background:var(--white);overflow:hidden;position:relative;text-decoration:none;display:block;transition:box-shadow .3s; }
+  .agent-card:hover { box-shadow:0 16px 48px rgba(13,43,78,.12); }
+  .agent-photo { height:240px;overflow:hidden;position:relative; }
+  .agent-photo img,.agent-photo>div { width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.23,1,.32,1); }
+  .agent-card:hover .agent-photo img,.agent-card:hover .agent-photo>div { transform:scale(1.06); }
+  .agent-photo-overlay { position:absolute;inset:0;background:linear-gradient(to top,rgba(7,25,41,.7) 0%,transparent 60%); }
+  .agent-body { padding:20px 24px 24px; }
+  .agent-name { font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--charcoal);margin-bottom:4px; }
+  .agent-title { font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--sky);margin-bottom:12px; }
+  .agent-meta { display:flex;gap:16px;font-size:12px;color:var(--warm-grey); }
+  .agent-rera { display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--sky);background:rgba(74,144,196,.08);border:1px solid rgba(74,144,196,.2);padding:4px 10px;margin-top:10px; }
+  .agent-rera svg { flex-shrink:0; }
+
+  /* ═══ FLOATING ACTIONS ═══ */
+  .floating-actions { position:fixed;right:20px;bottom:32px;z-index:1000;display:flex;flex-direction:column;gap:12px;align-items:flex-end; }
+  .fab { width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:all .3s cubic-bezier(.23,1,.32,1);text-decoration:none; }
+  .fab:hover { transform:scale(1.1) translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.28); }
+  .fab-emi { background:var(--navy);color:var(--white); }
+  .fab-wa { background:#25D366;color:var(--white); }
+  .fab-label { font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--white);background:var(--charcoal);padding:5px 12px;border-radius:4px;opacity:0;transform:translateX(8px);transition:all .25s;pointer-events:none;white-space:nowrap; }
+  .fab-wrap { display:flex;align-items:center;gap:10px; }
+  .fab-wrap:hover .fab-label { opacity:1;transform:translateX(0); }
   @media(max-width:768px){.cursor,.cursor-ring{display:none!important;}body{cursor:auto;}}
 
   /* ═══ HERO ═══ */
@@ -222,8 +256,19 @@
     .testimonial-grid{grid-template-columns:repeat(2,1fr);}
     .testimonial-card{padding:32px 24px;}
     .cta-banner{padding:60px 28px;gap:40px;}
+    .agents-section{padding:48px 28px;}
+    .agents-grid{grid-template-columns:repeat(2,1fr);}
+    .stats-section{padding:32px 28px;}
   }
   @media(max-width:768px){
+    .stats-section{grid-template-columns:repeat(2,1fr);padding:28px 16px;}
+    .stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);padding:20px 0;}
+    .stat-item:nth-child(2n){border-right:none;}
+    .agents-section{padding:32px 16px;}
+    .agents-grid{grid-template-columns:1fr 1fr;gap:2px;}
+    .agent-photo{height:180px;}
+    .floating-actions{right:12px;bottom:20px;}
+    .fab{width:46px;height:46px;}
     .hero{display:flex;flex-direction:column;min-height:auto;}
     .hero-right{width:100%;height:55vw;min-height:220px;order:1;flex-shrink:0;position:relative;}
     .hero-left{order:2;width:100%;padding:28px 16px 36px;}
@@ -309,32 +354,10 @@
     </p>
     <div class="hero-actions">
       <a href="{% url 'properties:list' %}" class="btn-primary">Explore Properties</a>
-      {% comment %}
-      <a href="{% url 'agents:list' %}" class="btn-ghost">
-        <div class="btn-ghost-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:16px;height:16px;">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </div>
-        Meet Agents
-      </a>
-      {% endcomment %}
     </div>
   </div>
   <div class="hero-right">
-    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#071929 0%,#0D2B4E 50%,#1A3A5C 100%);"></div>
-    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.18" viewBox="0 0 600 800">
-      <rect width="600" height="800" fill="#0D1B2A"/>
-      <rect x="80" y="200" width="440" height="380" fill="#1A3A5C"/>
-      <polygon points="60,200 300,80 540,200" fill="#0D2B4E"/>
-      <rect x="120" y="300" width="80" height="120" fill="#1E4A78"/>
-      <rect x="260" y="360" width="80" height="140" fill="#0D2B4E"/>
-      <rect x="400" y="300" width="80" height="120" fill="#1E4A78"/>
-      <rect x="130" y="310" width="20" height="40" rx="1" fill="#0D2B4E" opacity=".4"/>
-      <rect x="160" y="310" width="20" height="40" rx="1" fill="#0D2B4E" opacity=".3"/>
-      <rect x="410" y="310" width="20" height="40" rx="1" fill="#0D2B4E" opacity=".4"/>
-      <circle cx="300" cy="140" r="6" fill="#0D2B4E" opacity=".5"/>
-    </svg>
+    <img src="{% static 'images/hero_luxury.jpg' %}" alt="Luxury Property" class="hero-img">
     <div class="hero-img-overlay"></div>
   </div>
 </section>
@@ -346,19 +369,19 @@
     <div class="search-tabs" id="searchTabs">
       <button class="search-tab active" data-type="buy" onclick="setSearchTab(this,'buy')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        Buy
+        Buy{% if type_counts.buy %} <span style="opacity:.6;font-size:10px;">({{ type_counts.buy }})</span>{% endif %}
       </button>
       <button class="search-tab" data-type="rent" onclick="setSearchTab(this,'rent')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
-        Rent
+        Rent{% if type_counts.rent %} <span style="opacity:.6;font-size:10px;">({{ type_counts.rent }})</span>{% endif %}
       </button>
       <button class="search-tab" data-type="new_project" onclick="setSearchTab(this,'new_project')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        New Projects
+        New Projects{% if type_counts.new_project %} <span style="opacity:.6;font-size:10px;">({{ type_counts.new_project }})</span>{% endif %}
       </button>
       <button class="search-tab" data-type="commercial" onclick="setSearchTab(this,'commercial')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-        Commercial
+        Commercial{% if type_counts.commercial %} <span style="opacity:.6;font-size:10px;">({{ type_counts.commercial }})</span>{% endif %}
       </button>
     </div>
     <form action="{% url 'properties:list' %}" method="GET">
@@ -489,11 +512,9 @@
         {% endif %}
         <div class="property-tag" style="background:linear-gradient(90deg,var(--deep-brown),var(--navy));color:var(--gold-light);">Signature</div>
         <div class="card-cta">View Property &rarr;</div>
-        {% if user.is_authenticated %}
-        <button class="property-fav" onclick="event.preventDefault();toggleWishlist(this, {{ prop.id }})" title="Save">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        <button class="property-fav" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
         </button>
-        {% endif %}
       </div>
       <div class="property-body">
         <div class="property-price">{{ prop.display_price }}{% if prop.price_label %} <span>{{ prop.price_label }}</span>{% endif %}</div>
@@ -518,11 +539,9 @@
         <div style="width:100%;height:100%;min-height:295px;background:linear-gradient(135deg,#1A3A5C,#2E6FA8,#0D2240);"></div>
         {% endif %}
       </div>
-      {% if user.is_authenticated %}
-      <button class="property-fav" onclick="event.preventDefault();toggleWishlist(this, {{ prop.id }})" title="Save">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      <button class="property-fav" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </button>
-      {% endif %}
       <div class="property-body">
         <div class="property-price">{{ prop.display_price }}</div>
         <div class="property-name">{{ prop.title }}</div>
@@ -570,11 +589,9 @@
           {% elif prop.is_featured %}<div class="property-tag featured">Featured</div>
           {% elif prop.is_new %}<div class="property-tag">New</div>
           {% elif prop.is_exclusive %}<div class="property-tag">Exclusive</div>{% endif %}
-          {% if user.is_authenticated %}
-          <button class="property-fav" onclick="toggleWishlist(this, {{ prop.id }})" title="Save to wishlist">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0D2B4E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <button class="property-fav" onclick="handleSave(this, {{ prop.id }})" title="Save to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           </button>
-          {% endif %}
         </div>
         <div class="property-body">
           <div class="property-price">{{ prop.display_price }}{% if prop.price_label %} <span>{{ prop.price_label }}</span>{% endif %}</div>
@@ -614,10 +631,9 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <div class="prop-dots" id="propDots">
-      <div class="prop-dot active"></div>
-      <div class="prop-dot"></div>
-      <div class="prop-dot"></div>
-      <div class="prop-dot"></div>
+      {% for prop in featured_properties %}
+      <div class="prop-dot{% if forloop.first %} active{% endif %}"></div>
+      {% endfor %}
     </div>
     <button class="prop-arrow" onclick="slideProp(1)" aria-label="Next">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -628,7 +644,7 @@
 <!-- ══════════════════ ABOUT SECTION ═════════════════════════ -->
 <div class="about-section">
   <div class="about-img">
-    <div style="width:100%;height:100%;background:linear-gradient(160deg,#071929,#0D2B4E,#1A3A5C);min-height:600px;"></div>
+    <img src="{% static 'images/about_luxury.jpg' %}" alt="Luxury Interior" style="width:100%;height:100%;object-fit:cover;opacity:.85;">
     <div class="about-img-overlay"></div>
   </div>
   <div class="about-content">
@@ -702,9 +718,9 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <div class="news-dots" id="newsDots">
-      <div class="news-dot active"></div>
-      <div class="news-dot"></div>
-      <div class="news-dot"></div>
+      {% for post in news_posts %}
+      <div class="news-dot{% if forloop.first %} active{% endif %}"></div>
+      {% endfor %}
     </div>
     <button class="news-arrow" onclick="slideNews(1)" aria-label="Next">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -774,10 +790,46 @@
   </form>
 </div>
 
+<!-- ══════════════════ FLOATING ACTIONS ═══════════════════════ -->
+<div class="floating-actions">
+  <div class="fab-wrap">
+    <div class="fab-label">EMI Calculator</div>
+    <a href="{% url 'pages:emi_calculator' %}" class="fab fab-emi" title="EMI Calculator">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="4" y="2" width="16" height="20" rx="2"/>
+        <line x1="8" y1="8" x2="16" y2="8"/>
+        <line x1="8" y1="12" x2="10" y2="12"/>
+        <line x1="14" y1="12" x2="16" y2="12"/>
+        <line x1="8" y1="16" x2="10" y2="16"/>
+        <line x1="14" y1="16" x2="16" y2="16"/>
+      </svg>
+    </a>
+  </div>
+  <div class="fab-wrap">
+    <div class="fab-label">Chat on WhatsApp</div>
+    <a href="https://wa.me/919999999999?text=Hi%2C%20I%20am%20interested%20in%20a%20property%20from%20Homexo." target="_blank" rel="noopener" class="fab fab-wa" title="WhatsApp">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// ── Wishlist save handler (works for guests too) ──
+const IS_AUTHENTICATED = {{ user.is_authenticated|yesno:"true,false" }};
+const LOGIN_URL = "{% url 'accounts:login' %}";
+function handleSave(btn, propId) {
+  if (!IS_AUTHENTICATED) {
+    window.location.href = LOGIN_URL + '?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  toggleWishlist(btn, propId);
+}
+
 // ── Custom cursor (desktop only) ──
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursor-ring');
@@ -850,6 +902,53 @@ function slideNews(dir) {
   carousel.style.transition = 'transform 0.5s cubic-bezier(.23,1,.32,1)';
   document.querySelectorAll('.news-dot').forEach((d, i) => d.classList.toggle('active', i === newsIndex));
 }
+
+// ── Autoplay featured properties slider ──
+let propAutoplay;
+function startPropAutoplay() {
+  propAutoplay = setInterval(() => {
+    const isMobile = window.innerWidth <= 768;
+    const visCount = isMobile ? 1 : 3;
+    const maxIdx = Math.max(0, totalProps - visCount);
+    if (propIndex >= maxIdx) { propIndex = -1; }
+    slideProp(1);
+  }, 4000);
+}
+function stopPropAutoplay() { clearInterval(propAutoplay); }
+const propSliderEl = document.getElementById('propSlider');
+if (propSliderEl && totalProps > 3) {
+  startPropAutoplay();
+  propSliderEl.parentElement.addEventListener('mouseenter', stopPropAutoplay);
+  propSliderEl.parentElement.addEventListener('mouseleave', startPropAutoplay);
+}
+
+// ── Animated stats counter ──
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target, 10);
+  if (isNaN(target)) return;
+  const suffix = el.querySelector('span') ? el.querySelector('span').outerHTML : '';
+  const duration = 1800;
+  const start = performance.now();
+  (function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out expo
+    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    const value = Math.floor(ease * target);
+    el.innerHTML = value.toLocaleString('en-IN') + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+  })(start);
+}
+const statsObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.stat-value[data-target]').forEach(animateCounter);
+      statsObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) statsObserver.observe(statsSection);
 
 // ── Reset sliders on resize ──
 window.addEventListener('resize', () => {

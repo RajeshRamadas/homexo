@@ -4,6 +4,7 @@ Static + dynamic pages: Home, About, FAQ, EMI Calculator, Area Guides.
 """
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.db.models import Count
 
 from properties.models import Property
 from agents.models import Agent
@@ -14,11 +15,25 @@ from enquiries.forms import EnquiryForm
 
 def home(request):
     """Homepage — assembles all sections from the HOMEXO HTML design."""
+
+    # Count active properties per listing type for search tab badges
+    type_counts = {
+        item['listing_type']: item['count']
+        for item in Property.objects.filter(status='active')
+                                    .values('listing_type')
+                                    .annotate(count=Count('id'))
+    }
+
+    total_active = Property.objects.filter(status='active').count()
+    total_agents = Agent.objects.filter(is_active=True, is_verified=True).count()
+    total_cities  = Property.objects.filter(status='active').values('city').distinct().count()
+
     context = {
         # Search form tabs
         'listing_types': Property.ListingType.choices,
         'property_types': Property.PropertyType.choices,
         'bhk_choices': Property.BHK.choices,
+        'type_counts': type_counts,
 
         # Signature / ultra-premium collection (top 3)
         'signature_properties': Property.objects.filter(
@@ -48,10 +63,11 @@ def home(request):
 
         # Stats for animated counters
         'stats': {
-            'properties':  Property.objects.filter(status='active').count() or 1200,
-            'happy_clients': 4800,
-            'cities': 12,
-            'years': 10,
+            'properties':   total_active or 1200,
+            'happy_clients': max(total_active * 4, 4800),
+            'cities':       total_cities or 12,
+            'agents':       total_agents or 48,
+            'years':        10,
         },
     }
     return render(request, 'pages/home.html', context)
