@@ -60,27 +60,209 @@
   @keyframes zoomOut { to{transform:scale(1)} }
   .hero-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,rgba(28,28,26,.15) 0%,transparent 60%); }
 
-  /* ═══ SEARCH SECTION ═══ */
-  .search-section { background:linear-gradient(180deg,var(--charcoal) 0%,var(--navy) 100%); }
-  .search-wrapper { padding:40px 60px 48px; }
-  .search-header-label { font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--sky);margin-bottom:28px;display:flex;align-items:center;gap:14px; }
-  .search-header-label::before { content:'';display:block;width:28px;height:1px;background:var(--sky); }
-  .search-tabs { display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap; }
-  .search-tab { display:flex;align-items:center;gap:8px;padding:10px 22px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);cursor:pointer;color:rgba(255,255,255,.55);font-family:'DM Sans',sans-serif;transition:all .3s;white-space:nowrap; }
-  .search-tab.active { background:var(--sky);border-color:var(--sky);color:var(--white); }
-  .search-tab:hover:not(.active) { background:rgba(255,255,255,.12);color:var(--white); }
-  .search-fields { display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
-  .field-group { display:flex;align-items:center;background:rgba(255,255,255,.05);border-right:1px solid rgba(255,255,255,.08);transition:background .2s;position:relative; }
-  .field-group:hover { background:rgba(255,255,255,.09); }
+  /* ═══ SEARCH SECTION (redesigned) ═══ */
+  .search-section {
+    background: linear-gradient(160deg,#061522 0%,#0D2B4E 55%,#0a2040 100%);
+    padding: 64px 40px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .search-section::before {
+    content:'';
+    position:absolute;inset:0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,144,196,.18) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .search-section::after {
+    content:'';
+    position:absolute;
+    left:50%;top:0;transform:translateX(-50%);
+    width:300px;height:1px;
+    background:linear-gradient(90deg,transparent,var(--sky),transparent);
+  }
+
+  /* Centre heading */
+  .search-heading {
+    text-align:center;
+    margin-bottom:36px;
+  }
+  .search-heading-eyebrow {
+    font-size:10px;letter-spacing:5px;text-transform:uppercase;
+    color:var(--sky);opacity:.8;margin-bottom:14px;
+  }
+  .search-heading-title {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(28px,3vw,40px);
+    font-weight:300;color:var(--white);
+    line-height:1.15;
+  }
+  .search-heading-title em { font-style:italic;color:var(--sky); }
+
+  /* Floating card */
+  .search-card {
+    max-width:1080px;margin:0 auto;
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:4px;
+    box-shadow:0 32px 80px rgba(0,0,0,.35),0 0 0 1px rgba(74,144,196,.08);
+    overflow:hidden;
+  }
+
+  /* Tab row */
+  .search-tabs {
+    display:flex;gap:0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    padding:0 4px;
+  }
+  .search-tab {
+    display:flex;align-items:center;gap:8px;
+    padding:18px 28px;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    background:transparent;border:none;
+    cursor:pointer;color:rgba(255,255,255,.4);
+    font-family:'DM Sans',sans-serif;
+    transition:all .3s;
+    position:relative;
+    white-space:nowrap;
+  }
+  .search-tab::after {
+    content:'';
+    position:absolute;bottom:0;left:20px;right:20px;
+    height:2px;background:var(--sky);
+    transform:scaleX(0);transition:transform .3s cubic-bezier(.23,1,.32,1);
+    border-radius:2px 2px 0 0;
+  }
+  .search-tab.active { color:var(--white); }
+  .search-tab.active::after { transform:scaleX(1); }
+  .search-tab:hover:not(.active) { color:rgba(255,255,255,.7); }
+  .search-tab svg { opacity:.7; }
+  .search-tab.active svg { opacity:1; }
+  .tab-count {
+    font-size:10px;padding:2px 7px;
+    background:rgba(74,144,196,.18);
+    border:1px solid rgba(74,144,196,.3);
+    border-radius:20px;
+    color:var(--sky);letter-spacing:0;
+  }
+
+  .search-fields {
+    display:grid;
+    grid-template-columns:2fr 1.2fr 1fr 1fr;
+    min-height:84px;
+  }
+  .field-group {
+    display:flex;align-items:center;
+    padding:0 24px;
+    border-right:1px solid rgba(255,255,255,.07);
+    transition:background .2s;
+    position:relative;
+    min-height:84px;
+  }
   .field-group:last-of-type { border-right:none; }
-  .field-icon { padding:0 14px;color:var(--sky);flex-shrink:0;display:flex;align-items:center;opacity:.7; }
-  .field-inner { flex:1;padding:14px 16px 14px 0;display:flex;flex-direction:column;gap:4px; }
-  .field-group label { display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:0; }
-  .field-group select,.field-group input { width:100%;padding:0;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--white);appearance:none;outline:none; }
-  .field-group input::placeholder { color:rgba(255,255,255,.3); }
-  .field-group select option { background:var(--charcoal);color:var(--white); }
-  .search-btn { display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sky);color:var(--white);padding:0 36px;border:none;cursor:pointer;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .3s;white-space:nowrap; }
-  .search-btn:hover { background:#3A7FB5; }
+  .field-group:hover { background:rgba(255,255,255,.04); }
+  .field-icon {
+    margin-right:14px;color:var(--sky);
+    flex-shrink:0;display:flex;align-items:center;opacity:.75;
+  }
+  .field-inner {
+    flex:1;
+    display:flex;flex-direction:column;
+    justify-content:center;
+    gap:6px;
+    min-width:0;
+  }
+  .field-group label {
+    display:block;font-size:9px;letter-spacing:2.5px;
+    text-transform:uppercase;color:rgba(255,255,255,.4);margin:0;
+    line-height:1;
+  }
+  .field-group select,.field-group input {
+    width:100%;padding:0;border:none;
+    background:transparent;font-family:'DM Sans',sans-serif;
+    font-size:15px;color:var(--white);
+    appearance:none;
+    outline:none !important;
+    box-shadow:none !important;
+    -webkit-appearance:none;
+    line-height:1.3;
+  }
+  .field-group select:focus,
+  .field-group input:focus {
+    outline:none !important;
+    box-shadow:none !important;
+    border:none !important;
+  }
+  /* Remove Firefox select focus ring */
+  .field-group select:-moz-focusring {
+    color:transparent;
+    text-shadow:0 0 0 var(--white);
+  }
+  .field-group input::placeholder { color:rgba(255,255,255,.28); }
+  .field-group select option { background:#0D2B4E;color:var(--white); }
+  /* Kill browser autofill white background */
+  .field-group input:-webkit-autofill,
+  .field-group input:-webkit-autofill:hover,
+  .field-group input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #0D2B4E inset !important;
+    -webkit-text-fill-color: var(--white) !important;
+    caret-color: var(--white);
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
+  /* Search button — full bottom row */
+  .search-btn-row {
+    padding:16px 20px;
+    border-top:1px solid rgba(255,255,255,.07);
+    display:flex;align-items:center;justify-content:space-between;
+    gap:16px;
+  }
+  .search-hint {
+    font-size:12px;color:rgba(255,255,255,.3);
+    display:flex;align-items:center;gap:8px;
+  }
+  .search-hint svg { color:var(--sky);opacity:.7; }
+  .search-btn {
+    display:flex;align-items:center;gap:12px;
+    background:linear-gradient(90deg,var(--sky) 0%,#2E6FA8 100%);
+    color:var(--white);padding:14px 40px;
+    border:none;cursor:pointer;
+    font-size:12px;letter-spacing:2.5px;text-transform:uppercase;
+    font-family:'DM Sans',sans-serif;font-weight:600;
+    border-radius:2px;
+    transition:all .35s cubic-bezier(.23,1,.32,1);
+    box-shadow:0 4px 24px rgba(74,144,196,.3);
+    white-space:nowrap;
+  }
+  .search-btn:hover {
+    background:linear-gradient(90deg,#3A8AC4 0%,#1A5A9A 100%);
+    box-shadow:0 8px 32px rgba(74,144,196,.45);
+    transform:translateY(-1px);
+  }
+
+  /* Quick cities */
+  .popular-cities {
+    max-width:1080px;margin:24px auto 0;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+  .popular-cities-label {
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    color:rgba(255,255,255,.3);white-space:nowrap;
+  }
+  .city-chip {
+    font-size:12px;color:rgba(255,255,255,.55);
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    padding:6px 16px;border-radius:20px;
+    cursor:pointer;transition:all .25s;
+    text-decoration:none;
+    font-family:'DM Sans',sans-serif;
+  }
+  .city-chip:hover {
+    background:rgba(74,144,196,.15);
+    border-color:rgba(74,144,196,.4);
+    color:var(--white);
+  }
 
   /* ═══ LOAN BANNER ═══ */
   .loan-banner { background:linear-gradient(90deg,var(--navy) 0%,#1A4A7A 100%);padding:14px 60px;border-bottom:1px solid rgba(74,144,196,.2); }
@@ -240,9 +422,14 @@
   /* ═══ RESPONSIVE ═══ */
   @media(max-width:1024px){
     .hero-left{padding:80px 36px 56px;}
-    .search-wrapper{padding:32px 28px 40px;}
-    .search-fields{grid-template-columns:1fr 1fr auto;gap:0;}
-    .search-fields .field-group:first-child{grid-column:1/-1;}
+    /* Search section — tablet: 2×2 grid */
+    .search-section{padding:48px 24px 56px;}
+    .search-heading-title{font-size:clamp(22px,3vw,32px);}
+    .search-fields{grid-template-columns:1fr 1fr;}
+    .field-group:nth-child(2){border-right:none;}
+    .field-group:nth-child(3){border-top:1px solid rgba(255,255,255,.07);}
+    .field-group:nth-child(4){border-top:1px solid rgba(255,255,255,.07);border-right:none;}
+    .popular-cities{padding:0 4px;}
     .loan-banner{padding:14px 28px;}
     .services-strip{padding:24px 28px;}
     .about-content{padding:48px 40px;}
@@ -273,15 +460,26 @@
     .hero-actions{flex-direction:column;align-items:stretch;gap:12px;}
     .btn-ghost{justify-content:center;}
     .section-flex{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:24px;}
-    .search-wrapper{padding:24px 16px 28px;}
-    .search-header-label{font-size:9px;letter-spacing:3px;margin-bottom:18px;}
-    .search-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none;margin-bottom:20px;}
+    /* Search — mobile: full stack */
+    .search-section{padding:36px 16px 44px;}
+    .search-heading{margin-bottom:24px;}
+    .search-heading-eyebrow{font-size:9px;letter-spacing:4px;}
+    .search-heading-title{font-size:clamp(20px,6vw,28px);}
+    .search-card{border-radius:4px;}
+    .search-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;padding:0 2px;}
     .search-tabs::-webkit-scrollbar{display:none;}
-    .search-tab{flex-shrink:0;border-radius:100px;padding:8px 16px;font-size:10px;}
-    .search-fields{flex-direction:column;display:flex;}
-    .field-group{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);}
-    .field-group:last-of-type{border-bottom:none;}
-    .search-btn{width:100%;padding:16px;}
+    .search-tab{flex-shrink:0;padding:14px 18px;font-size:10px;letter-spacing:1.5px;}
+    .search-tab::after{left:12px;right:12px;}
+    .search-fields{grid-template-columns:1fr;}
+    .field-group{min-height:68px;border-right:none !important;border-top:none;padding:0 18px;}
+    .field-group + .field-group{border-top:1px solid rgba(255,255,255,.07) !important;}
+    .field-group:nth-child(2){border-right:none;}
+    .field-group:nth-child(3){border-top:1px solid rgba(255,255,255,.07);}
+    .field-group:nth-child(4){border-top:1px solid rgba(255,255,255,.07);border-right:none;}
+    .search-btn-row{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px;}
+    .search-btn{width:100%;justify-content:center;padding:16px 24px;}
+    .search-hint{font-size:11px;justify-content:center;}
+    .popular-cities{gap:8px;justify-content:center;}
     .loan-banner{padding:12px 16px;}
     .services-strip{display:grid!important;grid-template-columns:repeat(5,1fr);padding:0;}
     .service-item-card{padding:16px 4px;gap:8px;}
@@ -314,6 +512,14 @@
   @media(max-width:480px){
     .hero-right{height:62vw;}
     .hero-left{padding:22px 14px 28px;}
+    /* Search — small mobile */
+    .search-section{padding:28px 12px 36px;}
+    .search-tab{padding:12px 14px;font-size:9px;}
+    .field-group{min-height:60px;padding:0 14px;}
+    .field-group select,.field-group input{font-size:14px;}
+    .search-btn-row{padding:12px 14px;}
+    .popular-cities{gap:6px;}
+    .city-chip{font-size:11px;padding:5px 12px;}
     .services-strip{grid-template-columns:repeat(3,1fr)!important;}
     .service-item-card{padding:14px 4px;border-right:none;border-bottom:1px solid rgba(13,43,78,.07);}
     .service-item-card:nth-child(3n){border-right:none;}
@@ -325,7 +531,6 @@
     .testimonials-section{padding:24px 12px;}
     .cta-banner{padding:32px 12px;}
     .about-content{padding:22px 14px 28px;}
-    .search-tab{padding:7px 12px;font-size:9px;}
     .prop-slider-controls,.news-arrows{gap:10px;}
   }
 </style>
@@ -355,43 +560,61 @@
   </div>
 </section>
 
-<!-- ════════════════════════ SEARCH BAR ════════════════════════ -->
+<!-- ══════════════════════ SEARCH SECTION ═══════════════════════ -->
 <div class="search-section">
-  <div class="search-wrapper">
-    <div class="search-header-label">Find Your Perfect Property</div>
+
+  <!-- Heading -->
+  <div class="search-heading">
+    <div class="search-heading-eyebrow">Discover Your Next Home</div>
+    <h2 class="search-heading-title">Search <em>Thousands</em> of Properties</h2>
+  </div>
+
+  <!-- Floating Card -->
+  <div class="search-card">
+
+    <!-- Tabs -->
     <div class="search-tabs" id="searchTabs">
       <button class="search-tab active" data-type="buy" onclick="setSearchTab(this,'buy')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        Buy{% if type_counts.buy %} <span style="opacity:.6;font-size:10px;">({{ type_counts.buy }})</span>{% endif %}
+        Buy
+        {% if type_counts.buy %}<span class="tab-count">{{ type_counts.buy }}</span>{% endif %}
       </button>
       <button class="search-tab" data-type="rent" onclick="setSearchTab(this,'rent')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
-        Rent{% if type_counts.rent %} <span style="opacity:.6;font-size:10px;">({{ type_counts.rent }})</span>{% endif %}
+        Rent
+        {% if type_counts.rent %}<span class="tab-count">{{ type_counts.rent }}</span>{% endif %}
       </button>
       <button class="search-tab" data-type="new_project" onclick="setSearchTab(this,'new_project')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        New Projects{% if type_counts.new_project %} <span style="opacity:.6;font-size:10px;">({{ type_counts.new_project }})</span>{% endif %}
+        New Projects
+        {% if type_counts.new_project %}<span class="tab-count">{{ type_counts.new_project }}</span>{% endif %}
       </button>
       <button class="search-tab" data-type="commercial" onclick="setSearchTab(this,'commercial')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-        Commercial{% if type_counts.commercial %} <span style="opacity:.6;font-size:10px;">({{ type_counts.commercial }})</span>{% endif %}
+        Commercial
+        {% if type_counts.commercial %}<span class="tab-count">{{ type_counts.commercial }}</span>{% endif %}
       </button>
     </div>
+
+    <!-- Form Fields -->
     <form action="{% url 'properties:list' %}" method="GET">
       <input type="hidden" name="type" id="listingTypeInput" value="buy">
+
       <div class="search-fields">
+        <!-- Location -->
         <div class="field-group">
           <div class="field-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
           <div class="field-inner">
             <label>Location</label>
-            <input type="text" name="location" placeholder="City, neighbourhood…">
+            <input type="text" name="location" placeholder="City, neighbourhood, pincode…" id="locationInput">
           </div>
         </div>
+        <!-- Property Type -->
         <div class="field-group">
           <div class="field-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
           </div>
           <div class="field-inner">
             <label>Property Type</label>
@@ -403,9 +626,10 @@
             </select>
           </div>
         </div>
+        <!-- BHK -->
         <div class="field-group">
           <div class="field-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4v16M22 4v16M2 8h20M2 16h20M6 8v8M10 8v8M14 8v8M18 8v8"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
           </div>
           <div class="field-inner">
             <label>BHK</label>
@@ -417,12 +641,13 @@
             </select>
           </div>
         </div>
+        <!-- Budget -->
         <div class="field-group">
           <div class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><text x="1" y="19" font-size="20" font-family="Arial,sans-serif" font-weight="600">₹</text></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
           </div>
           <div class="field-inner">
-            <label>Price Range</label>
+            <label>Budget</label>
             <select name="price">
               <option value="">Any Price</option>
               <option value="under50l">Under ₹50L</option>
@@ -433,9 +658,17 @@
             </select>
           </div>
         </div>
+      </div>
+
+      <!-- Search Button Row -->
+      <div class="search-btn-row">
+        <div class="search-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Tip: Leave fields empty to browse all listings
+        </div>
         <button type="submit" class="search-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          Search
+          Search Properties
         </button>
       </div>
     </form>
