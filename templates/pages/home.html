@@ -356,8 +356,8 @@
 
   /* ═══ SERVICES STRIP ═══ */
   .services-strip { background:var(--white);display:flex;justify-content:center;padding:32px 60px;border-bottom:1px solid rgba(13,43,78,.07);gap:0; }
-  .service-item-card { flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;padding:20px 16px;border-right:1px solid rgba(13,43,78,.07);transition:background .3s;cursor:pointer; }
-  .service-item-card:last-child { border-right:none; }
+  .service-item-card { flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;padding:20px 16px;transition:background .3s;cursor:pointer; }
+  @media(min-width: 769px) { .service-item-card { max-width: 180px; } }
   .service-item-card:hover { background:var(--ivory); }
   .service-icon { width:72px;height:72px;background:var(--white);border-radius:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;opacity:.9;transition:opacity .3s,transform .3s;flex-shrink:0; }
   .service-icon img { width:52px;height:52px;max-width:100%;max-height:100%;object-fit:contain;display:block; }
@@ -562,7 +562,7 @@
     .search-hint{font-size:11px;justify-content:center;}
     .popular-cities{gap:8px;justify-content:center;}
     .loan-banner{padding:12px 16px;}
-    .services-strip{display:grid!important;grid-template-columns:repeat(5,1fr);padding:0;}
+    .services-strip{display:grid!important;grid-template-columns:repeat(3,1fr);padding:0;}
     .service-item-card{padding:16px 6px;gap:9px;}
     .service-icon{width:46px;height:46px;border-radius:10px;}
     .service-icon img{width:30px;height:30px;}
@@ -602,8 +602,7 @@
     .popular-cities{gap:6px;}
     .city-chip{font-size:11px;padding:5px 12px;}
     .services-strip{grid-template-columns:repeat(3,1fr)!important;}
-    .service-item-card{padding:14px 6px;border-right:none;border-bottom:1px solid rgba(13,43,78,.07);}
-    .service-item-card:nth-child(3n){border-right:none;}
+    .service-item-card{padding:14px 6px;border-bottom:1px solid rgba(13,43,78,.07);}
     .service-icon{width:42px;height:42px;}
     .service-icon img{width:28px;height:28px;}
     .service-label{font-size:10px;line-height:1.35;max-width:11ch;}
@@ -791,6 +790,12 @@
       <img src="{% static 'icons/survalence.png' %}" alt="Security &amp; Surveillance" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Security &amp; Surveillance</span>
+  </a>
+  <a href="{% url 'enquiries:create' %}?type=home_services" class="service-item-card">
+    <div class="service-icon">
+      <img src="{% static 'icons/home_services.png' %}" alt="Home Services" width="52" height="52" decoding="async">
+    </div>
+    <span class="service-label">Home Services</span>
   </a>
 </div>
 
