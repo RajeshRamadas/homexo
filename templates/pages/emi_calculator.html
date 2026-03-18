@@ -1,127 +1,1166 @@
 {% extends 'base.html' %}
 {% block title %}EMI Calculator — HOMEXO{% endblock %}
 
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  .emi-page {
+    background: var(--navy-deep);
+    font-family: "DM Sans", sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    --emi-number-color: #1a4468;
+    --emi-number-weight: 500;
+  }
+
+  .emi-hero {
+    background: var(--charcoal);
+    padding: 60px 60px 72px;
+  }
+  .emi-hero-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .emi-hero h1 {
+    margin-bottom: 8px;
+  }
+  .emi-card-shell {
+    background: linear-gradient(180deg, #071929 0%, var(--navy-deep) 100%);
+    padding: 0 36px 78px;
+  }
+  .emi-card {
+    max-width: 1160px;
+    margin: -42px auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(74, 144, 196, 0.15);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(74, 144, 196, 0.08);
+  }
+  .emi-panel {
+    padding: 46px;
+    display: flex;
+    flex-direction: column;
+  }
+  .emi-panel-left {
+    background: var(--white);
+  }
+  .emi-panel-right {
+    background: var(--ivory);
+    border-left: 1px solid var(--border);
+  }
+  .emi-panel-title {
+    font-size: 10px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--sky);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 34px;
+  }
+  .emi-panel-title::before {
+    content: "";
+    width: 26px;
+    height: 1px;
+    background: var(--sky);
+  }
+
+  .emi-slider-list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    flex: 1;
+  }
+  .emi-slider-row {
+    border-bottom: 1px solid rgba(13, 43, 78, 0.07);
+    padding-bottom: 20px;
+  }
+  .emi-slider-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .emi-slider-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+    gap: 14px;
+  }
+  .emi-slider-label {
+    font-size: 12px;
+    color: #5f7182;
+    line-height: 1.45;
+  }
+  .emi-slider-value {
+    font-family: "DM Sans", sans-serif;
+    font-size: 23px;
+    line-height: 1;
+    color: var(--emi-number-color);
+    font-weight: var(--emi-number-weight);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    white-space: nowrap;
+  }
+  .emi-slider-value small {
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    color: var(--warm-grey);
+    margin-left: 4px;
+  }
+  .emi-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(13, 43, 78, 0.18);
+    cursor: pointer;
+  }
+  .emi-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid var(--white);
+    background: var(--navy);
+    box-shadow: 0 0 0 1px var(--navy), 0 5px 14px rgba(13, 43, 78, 0.22);
+  }
+  .emi-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid var(--white);
+    background: var(--navy);
+    box-shadow: 0 0 0 1px var(--navy), 0 5px 14px rgba(13, 43, 78, 0.22);
+  }
+  .emi-slider-bounds {
+    margin-top: 9px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(122, 138, 153, 0.7);
+    letter-spacing: 0.2px;
+  }
+
+  .emi-primary-btn {
+    margin-top: auto;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 20px;
+    border: none;
+    background: var(--navy);
+    color: var(--white);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    transition: background 0.28s ease;
+    font-family: "DM Sans", sans-serif;
+  }
+  .emi-primary-btn:hover {
+    background: var(--navy-mid);
+  }
+  .emi-apply-btn {
+    order: 2;
+  }
+
+  .emi-kpi {
+    margin-bottom: 26px;
+    border-bottom: 1px solid rgba(13, 43, 78, 0.11);
+    padding-bottom: 22px;
+  }
+  .emi-kpi-label {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    margin-bottom: 10px;
+  }
+  .emi-kpi-value {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(34px, 3.2vw, 46px);
+    color: var(--emi-number-color);
+    line-height: 1.08;
+    font-weight: var(--emi-number-weight);
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+
+  .emi-donut-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid rgba(13, 43, 78, 0.11);
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+  .emi-donut-wrap {
+    position: relative;
+    width: 124px;
+    height: 124px;
+    flex-shrink: 0;
+  }
+  .emi-donut-wrap canvas {
+    width: 124px !important;
+    height: 124px !important;
+  }
+  .emi-donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .emi-donut-pct {
+    font-family: "DM Sans", sans-serif;
+    font-size: 21px;
+    color: var(--emi-number-color);
+    line-height: 1;
+    font-weight: var(--emi-number-weight);
+    font-variant-numeric: tabular-nums;
+  }
+  .emi-donut-sub {
+    margin-top: 4px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .emi-donut-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .emi-leg-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .emi-leg-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--warm-grey);
+  }
+  .emi-leg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .emi-leg-val {
+    font-family: "DM Sans", sans-serif;
+    font-size: 21px;
+    color: var(--emi-number-color);
+    font-weight: var(--emi-number-weight);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .emi-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+  }
+  .emi-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border-bottom: 1px solid var(--border-light);
+    padding: 14px 0;
+  }
+  .emi-summary-row:last-child {
+    border-bottom: none;
+  }
+  .emi-summary-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--warm-grey);
+  }
+  .emi-summary-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .emi-summary-value {
+    font-family: "DM Sans", sans-serif;
+    font-size: 20px;
+    color: var(--emi-number-color);
+    font-weight: var(--emi-number-weight);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .emi-summary-value.total {
+    color: var(--emi-number-color);
+  }
+  .emi-disclaimer {
+    order: 1;
+    margin-top: 18px;
+    font-size: 11px;
+    line-height: 1.72;
+    color: rgba(122, 138, 153, 0.72);
+    font-style: italic;
+  }
+
+  .emi-section-light {
+    padding: 72px 36px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+  }
+  .emi-section-cream {
+    padding: 72px 36px;
+    background: var(--cream);
+    border-top: 1px solid var(--border);
+  }
+  .emi-section-dark {
+    padding: 48px 36px;
+    background: var(--charcoal);
+  }
+  .emi-section-navy {
+    padding: 58px 36px;
+    background: var(--navy);
+  }
+  .emi-section-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .emi-section-title {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(28px, 3.2vw, 42px);
+    line-height: 1.2;
+    color: var(--charcoal);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 30px;
+  }
+  .emi-section-title em {
+    color: var(--sky);
+    font-style: italic;
+  }
+  .emi-section-title.light {
+    color: var(--ivory);
+  }
+  .emi-breakdown-eyebrow,
+  .emi-overview-title,
+  .emi-schedule-eyebrow,
+  .emi-schedule-title {
+    font-family: "Cormorant Garamond", serif;
+  }
+  .emi-section-dark .emi-section-title.light,
+  .emi-section-navy .emi-section-title.light {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .emi-chart-legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .emi-chart-leg {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .emi-chart-leg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+  .emi-bar-wrap {
+    height: 310px;
+    position: relative;
+  }
+
+  .emi-toggle-row {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    margin-bottom: 26px;
+    background: var(--white);
+  }
+  .emi-toggle-btn {
+    border: none;
+    background: transparent;
+    color: var(--warm-grey);
+    cursor: pointer;
+    padding: 10px 24px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-family: "DM Sans", sans-serif;
+  }
+  .emi-toggle-btn.active {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .emi-tbl-gate {
+    position: relative;
+  }
+  .emi-tbl-gate.expanded .emi-tbl-fade {
+    display: none;
+  }
+  .emi-tbl-gate.expanded .emi-tbl-more-wrap {
+    position: static;
+    background: none;
+    padding-top: 22px;
+  }
+  .emi-table-wrap {
+    overflow-x: auto;
+  }
+  .emi-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .emi-table thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .emi-table th {
+    text-align: right;
+    padding: 10px 12px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .emi-table th:first-child,
+  .emi-table td:first-child {
+    text-align: left;
+  }
+  .emi-table td {
+    text-align: right;
+    padding: 13px 12px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--charcoal);
+    font-size: 14px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .emi-table td:first-child {
+    color: var(--warm-grey);
+    font-size: 12px;
+  }
+  .emi-td-prin {
+    color: var(--navy) !important;
+  }
+  .emi-td-int {
+    color: var(--sky) !important;
+  }
+  .emi-tbl-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 220px;
+    background: linear-gradient(
+      to bottom,
+      rgba(240, 244, 248, 0) 0%,
+      rgba(240, 244, 248, 0.72) 38%,
+      rgba(240, 244, 248, 0.97) 72%,
+      #f0f4f8 100%
+    );
+    pointer-events: none;
+  }
+  .emi-tbl-more-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 28px;
+  }
+  .emi-tbl-more-label {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: rgba(13, 43, 78, 0.72);
+    font-weight: 600;
+  }
+  .emi-tbl-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(13, 43, 78, 0.18);
+    background: linear-gradient(135deg, #123b69 0%, #0d2b4e 65%, #0a2440 100%);
+    color: var(--white);
+    cursor: pointer;
+    padding: 13px 30px;
+    font-size: 12px;
+    letter-spacing: 1.1px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: "DM Sans", sans-serif;
+    box-shadow: 0 10px 24px rgba(13, 43, 78, 0.2);
+    transition: background 0.26s ease, transform 0.2s ease, box-shadow 0.26s ease;
+  }
+  .emi-tbl-more-btn:hover {
+    background: linear-gradient(135deg, #1b4f82 0%, #114172 65%, #0d2b4e 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(13, 43, 78, 0.26);
+  }
+
+  .emi-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 38px;
+  }
+  .emi-info-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(74, 144, 196, 0.1);
+    padding: 30px 26px;
+    transition: background 0.28s ease;
+  }
+  .emi-info-card:hover {
+    background: rgba(74, 144, 196, 0.06);
+  }
+  .emi-info-num {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 38px;
+    color: var(--sky);
+    opacity: 0.26;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .emi-info-card h3 {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--ivory);
+    margin-bottom: 9px;
+    font-weight: 500;
+  }
+  .emi-info-card p {
+    font-size: 13px;
+    line-height: 1.75;
+    color: rgba(200, 216, 236, 0.56);
+  }
+
+  .emi-formula-eq {
+    margin: 22px 0 26px;
+    border: 1px solid rgba(200, 216, 236, 0.38);
+    border-left: 4px solid #9ad1f3;
+    background: linear-gradient(135deg, rgba(200, 216, 236, 0.2) 0%, rgba(126, 178, 219, 0.26) 52%, rgba(74, 144, 196, 0.16) 100%);
+    padding: 24px 28px;
+    color: #eaf4fb;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(20px, 2.3vw, 27px);
+    font-weight: 600;
+    letter-spacing: 0.05px;
+    text-shadow: none;
+    line-height: 1.55;
+  }
+  .emi-formula-eq sup {
+    font-size: 0.72em;
+    font-weight: 600;
+    color: #f5fbff;
+  }
+  .emi-formula-vars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 34px;
+  }
+  .emi-formula-var {
+    border-bottom: 1px solid rgba(74, 144, 196, 0.12);
+    padding-bottom: 11px;
+    color: rgba(200, 216, 236, 0.68);
+    font-size: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .emi-formula-var strong {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 26px;
+    color: var(--sky);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .emi-formula-section .emi-section-title.light,
+  .emi-formula-section .emi-formula-eq,
+  .emi-formula-section .emi-formula-var,
+  .emi-formula-section .emi-formula-var strong {
+    font-family: "Cormorant Garamond", serif;
+  }
+
+  @media (max-width: 1024px) {
+    .emi-hero,
+    .emi-card-shell,
+    .emi-section-light,
+    .emi-section-cream,
+    .emi-section-dark,
+    .emi-section-navy {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .emi-hero {
+      padding: 48px 28px 50px;
+    }
+    .emi-card {
+      grid-template-columns: 1fr;
+      margin-top: -30px;
+    }
+    .emi-panel-right {
+      border-left: none;
+      border-top: 1px solid var(--border);
+    }
+    .emi-info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .emi-hero {
+      padding: 34px 16px 34px;
+    }
+    .emi-card {
+      margin-top: -20px;
+      border-radius: 18px;
+    }
+    .emi-panel {
+      padding: 30px 20px;
+    }
+    .emi-slider-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+    .emi-slider-value {
+      font-size: 22px;
+    }
+    .emi-kpi-value {
+      font-size: clamp(34px, 11vw, 46px);
+    }
+    .emi-donut-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+    .emi-leg-val,
+    .emi-summary-value {
+      font-size: 20px;
+    }
+    .emi-chart-legend {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .emi-bar-wrap {
+      height: 250px;
+    }
+    .emi-formula-vars {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div style="background:var(--charcoal);padding:60px;text-align:center;">
-  <div class="section-eyebrow" style="justify-content:center;">Financial Tools</div>
-  <h1 class="section-title" style="color:var(--ivory);">EMI <em>Calculator</em></h1>
-  <p style="color:rgba(255,255,255,.5);margin-top:12px;font-size:14px;">Calculate your monthly home loan instalment instantly.</p>
-</div>
-
-<section class="section" style="background:var(--ivory);">
-  <div style="max-width:800px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">
-    <!-- Calculator Inputs -->
-    <div style="background:var(--white);padding:36px;border:1px solid var(--border);">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--charcoal);margin-bottom:28px;">Loan Details</h2>
-
-      <div class="form-group">
-        <label>Loan Amount (₹)</label>
-        <input type="number" id="principal" value="5000000" min="100000" step="100000">
-      </div>
-      <div style="font-size:13px;color:var(--sky);margin-top:-12px;margin-bottom:16px;" id="principalDisplay">₹50,00,000</div>
-
-      <div class="form-group">
-        <label>Annual Interest Rate (%)</label>
-        <input type="range" id="rate" value="8.5" min="5" max="20" step="0.1" style="width:100%;margin-top:8px;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--warm-grey);margin-top:4px;"><span>5%</span><span id="rateDisplay" style="color:var(--sky);font-weight:500;">8.5%</span><span>20%</span></div>
-      </div>
-
-      <div class="form-group">
-        <label>Loan Tenure</label>
-        <input type="range" id="tenure" value="240" min="12" max="360" step="12" style="width:100%;margin-top:8px;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--warm-grey);margin-top:4px;"><span>1 yr</span><span id="tenureDisplay" style="color:var(--sky);font-weight:500;">20 yrs</span><span>30 yrs</span></div>
-      </div>
-
-      <button onclick="calculateEMI()" class="btn-primary" style="width:100%;margin-top:8px;">Calculate EMI</button>
+<div class="emi-page">
+  <section class="emi-hero">
+    <div class="emi-hero-inner">
+      <div class="section-eyebrow">Financial Tools</div>
+      <h1 class="section-title" style="color:var(--ivory);">EMI <em>Calculator</em></h1>
     </div>
+  </section>
 
-    <!-- Results -->
-    <div>
-      <div style="background:var(--navy);padding:36px;color:white;margin-bottom:3px;">
-        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;">Monthly EMI</div>
-        <div id="emiResult" style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;">₹0</div>
-      </div>
-      <div style="background:var(--white);padding:28px;border:1px solid var(--border);">
-        <div style="display:flex;flex-direction:column;gap:16px;">
-          <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border);">
-            <span style="font-size:13px;color:var(--warm-grey);">Principal Amount</span>
-            <span id="principalResult" style="font-size:14px;font-weight:500;color:var(--charcoal);">₹0</span>
+  <section class="emi-card-shell">
+    <div class="emi-card">
+      <div class="emi-panel emi-panel-left">
+        <div class="emi-panel-title">Loan Parameters</div>
+        <div class="emi-slider-list">
+          <div class="emi-slider-row">
+            <div class="emi-slider-head">
+              <div class="emi-slider-label">Property Value</div>
+              <div class="emi-slider-value" id="v-principal">&#8377;1.92 Cr</div>
+            </div>
+            <input class="emi-range" type="range" id="sl-principal" min="500000" max="1000000000" step="1000000" value="19200000">
+            <div class="emi-slider-bounds"><span>&#8377;5L</span><span>&#8377;100 Cr</span></div>
           </div>
-          <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border);">
-            <span style="font-size:13px;color:var(--warm-grey);">Total Interest</span>
-            <span id="interestResult" style="font-size:14px;font-weight:500;color:var(--sky);">₹0</span>
+
+          <div class="emi-slider-row">
+            <div class="emi-slider-head">
+              <div class="emi-slider-label">Annual Interest Rate</div>
+              <div class="emi-slider-value"><span id="v-rate">10.4</span><small>%</small></div>
+            </div>
+            <input class="emi-range" type="range" id="sl-rate" min="5" max="20" step="0.1" value="10.4">
+            <div class="emi-slider-bounds"><span>5%</span><span>20%</span></div>
           </div>
-          <div style="display:flex;justify-content:space-between;">
-            <span style="font-size:13px;color:var(--warm-grey);">Total Payment</span>
-            <span id="totalResult" style="font-size:14px;font-weight:500;color:var(--navy);">₹0</span>
+
+          <div class="emi-slider-row">
+            <div class="emi-slider-head">
+              <div class="emi-slider-label">Loan Tenure</div>
+              <div class="emi-slider-value"><span id="v-tenure">27</span><small>Years</small></div>
+            </div>
+            <input class="emi-range" type="range" id="sl-tenure" min="1" max="30" step="1" value="27">
+            <div class="emi-slider-bounds"><span>1 yr</span><span>30 yr</span></div>
+          </div>
+
+          <div class="emi-slider-row">
+            <div class="emi-slider-head">
+              <div class="emi-slider-label">Down Payment</div>
+              <div class="emi-slider-value"><span id="v-down">20</span><small>%</small></div>
+            </div>
+            <input class="emi-range" type="range" id="sl-down" min="10" max="90" step="1" value="20">
+            <div class="emi-slider-bounds"><span>10%</span><span>90%</span></div>
           </div>
         </div>
-        <!-- Simple pie chart canvas -->
-        <canvas id="emiChart" width="200" height="200" style="display:block;margin:24px auto 0;"></canvas>
+
+        <button id="emi-recalculate-btn" class="emi-primary-btn" type="button">Recalculate EMI</button>
       </div>
-      <div style="margin-top:16px;text-align:center;">
-        <a href="{% url 'enquiries:create' %}?type=home_loan" class="btn-outline">Get Home Loan Assistance</a>
+
+      <div class="emi-panel emi-panel-right">
+        <div class="emi-panel-title">Loan Summary</div>
+
+        <div class="emi-kpi">
+          <div class="emi-kpi-label">Monthly EMI</div>
+          <div class="emi-kpi-value" id="r-emi">&#8377;&#x2014;</div>
+        </div>
+
+        <div class="emi-donut-row">
+          <div class="emi-donut-wrap">
+            <canvas id="emi-donut-chart"></canvas>
+            <div class="emi-donut-center">
+              <div class="emi-donut-pct" id="donut-pct">&#x2014;</div>
+              <div class="emi-donut-sub">Principal</div>
+            </div>
+          </div>
+          <div class="emi-donut-legend">
+            <div class="emi-leg-row">
+              <div class="emi-leg-left"><span class="emi-leg-dot" style="background:var(--navy);"></span>Principal</div>
+              <div class="emi-leg-val" id="leg-prin">&#x2014;</div>
+            </div>
+            <div class="emi-leg-row">
+              <div class="emi-leg-left"><span class="emi-leg-dot" style="background:var(--sky);"></span>Interest</div>
+              <div class="emi-leg-val" id="leg-int">&#x2014;</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="emi-summary-list">
+          <div class="emi-summary-row">
+            <div class="emi-summary-label"><span class="emi-summary-dot" style="background:rgba(122,138,153,.38);"></span>Property Value</div>
+            <div class="emi-summary-value" id="r-propval">&#x2014;</div>
+          </div>
+          <div class="emi-summary-row">
+            <div class="emi-summary-label"><span class="emi-summary-dot" style="background:var(--navy);"></span>Principal (Loan)</div>
+            <div class="emi-summary-value" id="r-principal">&#x2014;</div>
+          </div>
+          <div class="emi-summary-row">
+            <div class="emi-summary-label"><span class="emi-summary-dot" style="background:var(--sky);"></span>Total Interest</div>
+            <div class="emi-summary-value" id="r-interest">&#x2014;</div>
+          </div>
+          <div class="emi-summary-row">
+            <div class="emi-summary-label"><span class="emi-summary-dot" style="background:var(--charcoal);"></span>Total Payment</div>
+            <div class="emi-summary-value total" id="r-total">&#x2014;</div>
+          </div>
+        </div>
+
+        <a href="{% url 'enquiries:create' %}?type=home_loan" class="emi-primary-btn emi-apply-btn">Apply for Home Loan</a>
+        <p class="emi-disclaimer">* Indicative values only. Final EMI can vary by lender policy, processing fees, and your credit profile.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="emi-section-light">
+    <div class="emi-section-inner">
+      <div class="emi-eyebrow emi-breakdown-eyebrow">Repayment Breakdown</div>
+      <h2 class="emi-section-title emi-overview-title">Yearly <em>Amortization</em> Overview</h2>
+      <div class="emi-chart-legend">
+        <div class="emi-chart-leg"><span class="emi-chart-leg-dot" style="background:#0D2B4E;"></span>Principal Repaid</div>
+        <div class="emi-chart-leg"><span class="emi-chart-leg-dot" style="background:#4A90C4;"></span>Interest Paid</div>
+      </div>
+      <div class="emi-bar-wrap">
+        <canvas id="emi-bar-chart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section class="emi-section-cream">
+    <div class="emi-section-inner">
+      <div class="emi-eyebrow emi-schedule-eyebrow">Schedule</div>
+      <h2 class="emi-section-title emi-schedule-title">Amortization <em>Details</em></h2>
+
+      <div class="emi-toggle-row">
+        <button class="emi-toggle-btn active" id="emi-btn-yr" type="button">Yearly</button>
+        <button class="emi-toggle-btn" id="emi-btn-mo" type="button">Monthly</button>
+      </div>
+
+      <div class="emi-tbl-gate" id="emi-tbl-gate">
+        <div class="emi-table-wrap">
+          <table class="emi-table">
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>EMI Total</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="emi-tbl-body"></tbody>
+          </table>
+        </div>
+
+        <div class="emi-tbl-fade"></div>
+        <div class="emi-tbl-more-wrap" id="emi-tbl-more-wrap">
+          <span class="emi-tbl-more-label" id="emi-tbl-more-label">Showing 5 of &#x2014; periods</span>
+          <button id="emi-tbl-more-btn" class="emi-tbl-more-btn" type="button">
+            View More
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="emi-section-dark">
+    <div class="emi-section-inner">
+      <div class="emi-eyebrow">Understanding Your Loan</div>
+      <h2 class="emi-section-title light">What every home buyer should <em>know</em></h2>
+      <div class="emi-info-grid">
+        <article class="emi-info-card">
+          <div class="emi-info-num">01</div>
+          <h3>What is EMI?</h3>
+          <p>An Equated Monthly Instalment is the fixed monthly amount paid to your lender, covering both principal and interest.</p>
+        </article>
+        <article class="emi-info-card">
+          <div class="emi-info-num">02</div>
+          <h3>Front-Loaded Interest</h3>
+          <p>In early years, a larger part of EMI goes to interest. Over time, the principal component gradually increases.</p>
+        </article>
+        <article class="emi-info-card">
+          <div class="emi-info-num">03</div>
+          <h3>Prepayment Benefit</h3>
+          <p>Early part-prepayments can significantly reduce total interest and shorten tenure, often saving substantial cost.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="emi-section-navy emi-formula-section">
+    <div class="emi-section-inner">
+      <div class="emi-eyebrow">The Formula</div>
+      <h2 class="emi-section-title light">How EMI is <em>calculated</em></h2>
+      <div class="emi-formula-eq">EMI = [ P x R x (1+R)<sup>N</sup> ] / [ (1+R)<sup>N</sup> - 1 ]</div>
+      <div class="emi-formula-vars">
+        <div class="emi-formula-var"><strong>E</strong>Equated monthly instalment</div>
+        <div class="emi-formula-var"><strong>P</strong>Principal loan amount</div>
+        <div class="emi-formula-var"><strong>R</strong>Monthly interest rate (Annual / 12)</div>
+        <div class="emi-formula-var"><strong>N</strong>Tenure in months</div>
+      </div>
+    </div>
+  </section>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function fmt(n) {
-  if (n >= 1e7) return '₹' + (n/1e7).toFixed(2) + ' Cr';
-  if (n >= 1e5) return '₹' + (n/1e5).toFixed(2) + ' L';
-  return '₹' + Math.round(n).toLocaleString('en-IN');
-}
+  let emiDonutChart = null;
+  let emiBarChart = null;
+  let emiViewMode = "yearly";
+  let emiRows = [];
+  let emiExpanded = false;
+  const EMI_PREVIEW_ROWS = 5;
 
-document.getElementById('rate').addEventListener('input', function() {
-  document.getElementById('rateDisplay').textContent = this.value + '%';
-});
-document.getElementById('tenure').addEventListener('input', function() {
-  document.getElementById('tenureDisplay').textContent = (this.value/12) + ' yrs';
-});
-document.getElementById('principal').addEventListener('input', function() {
-  document.getElementById('principalDisplay').textContent = fmt(this.value);
-});
+  function fmtCompact(value) {
+    const abs = Math.abs(value);
+    if (abs >= 10000000) {
+      const v = abs / 10000000;
+      return "\u20B9" + (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2)) + " Cr";
+    }
+    if (abs >= 100000) {
+      const v = abs / 100000;
+      return "\u20B9" + (v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)) + " L";
+    }
+    if (abs >= 1000) {
+      return "\u20B9" + (abs / 1000).toFixed(1) + "K";
+    }
+    return "\u20B9" + Math.round(abs).toLocaleString("en-IN");
+  }
 
-function calculateEMI() {
-  const P = parseFloat(document.getElementById('principal').value);
-  const r = parseFloat(document.getElementById('rate').value) / (12 * 100);
-  const n = parseInt(document.getElementById('tenure').value);
-  const factor = Math.pow(1 + r, n);
-  const emi    = P * r * factor / (factor - 1);
-  const total  = emi * n;
-  const interest = total - P;
+  function fmtFull(value) {
+    return "\u20B9" + Math.round(value).toLocaleString("en-IN");
+  }
 
-  document.getElementById('emiResult').textContent      = fmt(emi);
-  document.getElementById('principalResult').textContent = fmt(P);
-  document.getElementById('interestResult').textContent  = fmt(interest);
-  document.getElementById('totalResult').textContent     = fmt(total);
-  drawChart(P, interest);
-}
+  function calculateEMI() {
+    const propertyValue = parseFloat(document.getElementById("sl-principal").value);
+    const downPercent = parseFloat(document.getElementById("sl-down").value);
+    const principal = propertyValue * (1 - downPercent / 100);
+    const annualRate = parseFloat(document.getElementById("sl-rate").value);
+    const years = parseInt(document.getElementById("sl-tenure").value, 10);
 
-function drawChart(principal, interest) {
-  const canvas = document.getElementById('emiChart');
-  const ctx    = canvas.getContext('2d');
-  const total  = principal + interest;
-  const pAngle = (principal / total) * 2 * Math.PI;
-  const cx = 100, cy = 100, r = 80;
+    const months = years * 12;
+    const monthlyRate = annualRate / 1200;
+    const growth = Math.pow(1 + monthlyRate, months);
+    const emi = monthlyRate === 0 ? principal / months : principal * monthlyRate * growth / (growth - 1);
+    const totalPayment = emi * months;
+    const totalInterest = totalPayment - principal;
 
-  ctx.clearRect(0, 0, 200, 200);
-  ctx.beginPath(); ctx.moveTo(cx, cy);
-  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + pAngle);
-  ctx.fillStyle = '#0D2B4E'; ctx.fill();
+    const principalPct = Math.round((principal / totalPayment) * 100);
+    const interestPct = Math.round((totalInterest / totalPayment) * 100);
 
-  ctx.beginPath(); ctx.moveTo(cx, cy);
-  ctx.arc(cx, cy, r, -Math.PI/2 + pAngle, -Math.PI/2 + 2*Math.PI);
-  ctx.fillStyle = '#4A90C4'; ctx.fill();
+    document.getElementById("v-principal").textContent = fmtCompact(propertyValue);
+    document.getElementById("v-rate").textContent = annualRate.toFixed(1);
+    document.getElementById("v-tenure").textContent = years;
+    document.getElementById("v-down").textContent = downPercent.toFixed(0);
 
-  ctx.beginPath(); ctx.arc(cx, cy, 40, 0, 2*Math.PI);
-  ctx.fillStyle = 'white'; ctx.fill();
-}
+    document.getElementById("r-emi").textContent = fmtFull(emi);
+    document.getElementById("r-propval").textContent = fmtCompact(propertyValue);
+    document.getElementById("r-principal").textContent = fmtCompact(principal);
+    document.getElementById("r-interest").textContent = fmtCompact(totalInterest);
+    document.getElementById("r-total").textContent = fmtCompact(totalPayment);
 
-// Initial calculation on load
-calculateEMI();
+    document.getElementById("donut-pct").textContent = principalPct + "%";
+    document.getElementById("leg-prin").textContent = principalPct + "%";
+    document.getElementById("leg-int").textContent = interestPct + "%";
+
+    const monthlyRows = [];
+    let balance = principal;
+    for (let month = 1; month <= months; month += 1) {
+      const intPart = balance * monthlyRate;
+      const prinPart = emi - intPart;
+      balance = Math.max(0, balance - prinPart);
+      monthlyRows.push({
+        period: "Month " + month,
+        emi: emi,
+        prin: prinPart,
+        int: intPart,
+        bal: balance
+      });
+    }
+
+    const yearlyRows = [];
+    for (let year = 1; year <= years; year += 1) {
+      const slice = monthlyRows.slice((year - 1) * 12, year * 12);
+      yearlyRows.push({
+        period: "Year " + year,
+        emi: slice.reduce((sum, row) => sum + row.emi, 0),
+        prin: slice.reduce((sum, row) => sum + row.prin, 0),
+        int: slice.reduce((sum, row) => sum + row.int, 0),
+        bal: slice.length ? slice[slice.length - 1].bal : 0
+      });
+    }
+
+    renderDonut(principal, totalInterest);
+    renderBar(yearlyRows);
+    renderTable(emiViewMode === "yearly" ? yearlyRows : monthlyRows);
+  }
+
+  function renderDonut(principal, interest) {
+    if (typeof Chart === "undefined") {
+      return;
+    }
+    const canvas = document.getElementById("emi-donut-chart");
+    if (!canvas) {
+      return;
+    }
+    const ctx = canvas.getContext("2d");
+    if (emiDonutChart) {
+      emiDonutChart.destroy();
+    }
+    emiDonutChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        datasets: [{
+          data: [Math.round(principal), Math.round(interest)],
+          backgroundColor: ["#0D2B4E", "#4A90C4"],
+          borderColor: "#F7F9FC",
+          borderWidth: 3,
+          hoverOffset: 2
+        }]
+      },
+      options: {
+        cutout: "68%",
+        responsive: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return " " + fmtFull(context.raw);
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function renderBar(rows) {
+    if (typeof Chart === "undefined") {
+      return;
+    }
+    const canvas = document.getElementById("emi-bar-chart");
+    if (!canvas) {
+      return;
+    }
+    const ctx = canvas.getContext("2d");
+    if (emiBarChart) {
+      emiBarChart.destroy();
+    }
+    emiBarChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: rows.map((row) => row.period.replace("Year ", "Yr ")),
+        datasets: [
+          {
+            label: "Principal",
+            data: rows.map((row) => Math.round(row.prin)),
+            backgroundColor: "#0D2B4E",
+            stack: "stack1"
+          },
+          {
+            label: "Interest",
+            data: rows.map((row) => Math.round(row.int)),
+            backgroundColor: "#4A90C4",
+            stack: "stack1"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return " " + context.dataset.label + ": " + fmtFull(context.raw);
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+            ticks: {
+              color: "#7A8A99",
+              font: { family: "DM Sans", size: 10 },
+              autoSkip: true,
+              maxRotation: 45
+            }
+          },
+          y: {
+            stacked: true,
+            grid: { color: "rgba(10,46,92,0.05)" },
+            ticks: {
+              color: "#7A8A99",
+              font: { family: "DM Sans", size: 10 },
+              callback: function(value) {
+                return fmtCompact(value);
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function paintRows(rows) {
+    const body = document.getElementById("emi-tbl-body");
+    body.innerHTML = rows.map((row) => (
+      "<tr>" +
+      "<td>" + row.period + "</td>" +
+      "<td>" + fmtCompact(row.emi) + "</td>" +
+      "<td class='emi-td-prin'>" + fmtCompact(row.prin) + "</td>" +
+      "<td class='emi-td-int'>" + fmtCompact(row.int) + "</td>" +
+      "<td>" + fmtCompact(row.bal) + "</td>" +
+      "</tr>"
+    )).join("");
+  }
+
+  function renderTable(rows) {
+    emiRows = rows;
+    emiExpanded = false;
+    document.getElementById("emi-tbl-gate").classList.remove("expanded");
+    paintRows(rows.slice(0, EMI_PREVIEW_ROWS));
+    document.getElementById("emi-tbl-more-label").textContent =
+      "Showing " + EMI_PREVIEW_ROWS + " of " + rows.length + " periods";
+    document.getElementById("emi-tbl-more-btn").innerHTML =
+      "View More " +
+      "<svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>" +
+      "<polyline points='6 9 12 15 18 9'></polyline></svg>";
+  }
+
+  function toggleTableRows() {
+    emiExpanded = !emiExpanded;
+    const gate = document.getElementById("emi-tbl-gate");
+    gate.classList.toggle("expanded", emiExpanded);
+    if (emiExpanded) {
+      paintRows(emiRows);
+      document.getElementById("emi-tbl-more-label").textContent =
+        "Showing all " + emiRows.length + " periods";
+      document.getElementById("emi-tbl-more-btn").innerHTML =
+        "View Less " +
+        "<svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>" +
+        "<polyline points='6 15 12 9 18 15'></polyline></svg>";
+    } else {
+      paintRows(emiRows.slice(0, EMI_PREVIEW_ROWS));
+      document.getElementById("emi-tbl-more-label").textContent =
+        "Showing " + EMI_PREVIEW_ROWS + " of " + emiRows.length + " periods";
+      document.getElementById("emi-tbl-more-btn").innerHTML =
+        "View More " +
+        "<svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>" +
+        "<polyline points='6 9 12 15 18 9'></polyline></svg>";
+    }
+  }
+
+  function setView(view) {
+    emiViewMode = view;
+    document.getElementById("emi-btn-yr").classList.toggle("active", view === "yearly");
+    document.getElementById("emi-btn-mo").classList.toggle("active", view === "monthly");
+    calculateEMI();
+  }
+
+  document.getElementById("emi-btn-yr").addEventListener("click", function() {
+    setView("yearly");
+  });
+  document.getElementById("emi-btn-mo").addEventListener("click", function() {
+    setView("monthly");
+  });
+  document.getElementById("emi-tbl-more-btn").addEventListener("click", toggleTableRows);
+  document.getElementById("emi-recalculate-btn").addEventListener("click", calculateEMI);
+
+  ["sl-principal", "sl-rate", "sl-tenure", "sl-down"].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", calculateEMI);
+    }
+  });
+
+  calculateEMI();
 </script>
 {% endblock %}
