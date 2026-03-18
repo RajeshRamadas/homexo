@@ -240,7 +240,7 @@
     color:transparent;
     text-shadow:0 0 0 var(--white);
   }
-  .field-group input::placeholder { color:rgba(255,255,255,.28); }
+  .field-group input::placeholder { color:var(--navy); opacity:1; }
   .field-group input {
     padding:10px 12px;
     border:1px solid rgba(255,255,255,.08);
@@ -696,7 +696,7 @@
           </div>
           <div class="field-inner input-field">
             <label>Location</label>
-            <input type="text" name="location" placeholder="City, neighbourhood, pincode…" id="locationInput">
+            <input type="text" name="location" placeholder="City" id="locationInput">
           </div>
         </div>
         <!-- Property Type -->
