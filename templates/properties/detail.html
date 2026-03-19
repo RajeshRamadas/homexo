@@ -4,6 +4,23 @@
 {% block title %}{{ property.title }} — HOMEXO{% endblock %}
 {% block meta_description %}{{ property.title }} in {{ property.locality }}, {{ property.city }}. {{ property.display_price }}.{% endblock %}
 
+{% block extra_head %}
+<style>
+  .prop-slider-wrapper { overflow:hidden;width:100%;margin-top:28px; }
+  .prop-slider { display:flex;gap:2px;will-change:transform;transition:transform .55s cubic-bezier(.23,1,.32,1); }
+  .prop-slider .property-card { width:calc((100% - 4px) / 3);min-width:calc((100% - 4px) / 3);flex-shrink:0; cursor:pointer; }
+  .prop-slider-controls { display:flex;justify-content:center;align-items:center;gap:16px;margin-top:32px; }
+  .prop-arrow { width:40px;height:40px;border-radius:50%;border:1px solid rgba(13,43,78,.25);background:var(--white);color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 2px 10px rgba(0,0,0,.07); }
+  .prop-arrow:hover { background:var(--navy);color:var(--white);border-color:var(--navy); }
+  .prop-dots { display:flex;align-items:center;gap:8px; }
+  .prop-dot { width:6px;height:6px;border-radius:50%;background:rgba(13,43,78,.2);cursor:pointer;transition:all .3s; }
+  .prop-dot.active { background:var(--navy);width:20px;border-radius:3px; }
+  @media(max-width:768px){
+    .prop-slider .property-card { width:100%!important;min-width:100%!important; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="section" style="background:var(--ivory);padding-bottom:0;">
   <!-- Breadcrumb -->
@@ -120,21 +137,116 @@
 <section class="section" style="background:var(--cream);">
   <div class="section-eyebrow">You May Also Like</div>
   <h2 class="section-title">Similar <em>Properties</em></h2>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:28px;">
-    {% for prop in similar %}
-    <div class="property-card">
-      <div class="property-card-img">
-        {% if prop.primary_image %}<img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}">{% else %}<div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>{% endif %}
+  <div class="prop-slider-wrapper">
+    <div class="prop-slider" id="similarCarousel">
+      {% for prop in similar %}
+      <div class="property-card" onclick="window.location.href='{{ prop.get_absolute_url }}'">
+        <div class="property-card-img">
+          {% if prop.primary_image %}<img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}">{% else %}<div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>{% endif %}
+        </div>
+        <div class="property-body">
+          <div class="property-price">{{ prop.display_price }}</div>
+          <div class="property-name">{{ prop.title }}</div>
+          <div class="property-location"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>{{ prop.locality }}, {{ prop.city }}</div>
+          <div class="property-specs"><span class="spec">{{ prop.bedrooms }} Beds</span><span class="spec">{{ prop.bathrooms }} Baths</span></div>
+        </div>
       </div>
-      <div class="property-body">
-        <div class="property-price">{{ prop.display_price }}</div>
-        <div class="property-name"><a href="{{ prop.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ prop.title }}</a></div>
-        <div class="property-location"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>{{ prop.locality }}, {{ prop.city }}</div>
-        <div class="property-specs"><span class="spec">{{ prop.bedrooms }} Beds</span><span class="spec">{{ prop.bathrooms }} Baths</span></div>
-      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
+  </div>
+
+  <div class="prop-slider-controls">
+    <button class="prop-arrow" onclick="slideSimilar(-1)" aria-label="Previous">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="prop-dots" id="similarDots">
+      {% for prop in similar %}
+      <div class="prop-dot{% if forloop.first %} active{% endif %}"></div>
+      {% endfor %}
+    </div>
+    <button class="prop-arrow" onclick="slideSimilar(1)" aria-label="Next">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
 </section>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const slider = document.getElementById('similarCarousel');
+  if (!slider) return;
+  const originalItems = Array.from(slider.children);
+  const realCount = originalItems.length;
+  if (realCount === 0) return;
+
+  // Infinite loop logic: Clone items to exactly mirror on left and right
+  originalItems.forEach(item => slider.appendChild(item.cloneNode(true)));
+  const prependedClones = originalItems.map(item => item.cloneNode(true));
+  prependedClones.reverse().forEach(clone => slider.insertBefore(clone, slider.firstChild));
+
+  const wrapper = slider.parentElement;
+  let similarIndex = realCount; // Start looking at the 'middle' original batch
+  let isAnimating = false;
+
+  function applyTransform(duration = 0) {
+    const isMobile = window.innerWidth <= 768;
+    const card = slider.children[0];
+    const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 2);
+    
+    slider.style.transition = duration ? `transform ${duration}s ease-in-out` : 'none';
+    slider.style.transform = `translateX(-${similarIndex * cardW}px)`;
+    
+    const dotIndex = similarIndex % realCount;
+    document.querySelectorAll('#similarDots .prop-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === dotIndex);
+    });
+  }
+
+  // Initial render
+  setTimeout(() => applyTransform(0), 10);
+
+  window.slideSimilar = function(dir) {
+    if (isAnimating) return;
+    isAnimating = true;
+    
+    similarIndex += dir;
+    applyTransform(0.5);
+
+    setTimeout(() => {
+      if (similarIndex >= realCount * 2) {
+        similarIndex -= realCount;
+        applyTransform(0);
+      } else if (similarIndex < realCount) {
+        similarIndex += realCount;
+        applyTransform(0);
+      }
+      isAnimating = false;
+    }, 500);
+  };
+
+  let similarAutoplay;
+  function startAutoplay() {
+    similarAutoplay = setInterval(() => {
+      slideSimilar(1);
+    }, 4000);
+  }
+  function stopAutoplay() { clearInterval(similarAutoplay); }
+
+  startAutoplay();
+  wrapper.parentElement.addEventListener('mouseenter', stopAutoplay);
+  wrapper.parentElement.addEventListener('mouseleave', startAutoplay);
+  
+  window.addEventListener('resize', () => applyTransform(0));
+
+  let startX = 0;
+  slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; stopAutoplay(); }, { passive: true });
+  slider.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) slideSimilar(diff > 0 ? 1 : -1);
+    startAutoplay();
+  }, { passive: true });
+});
+</script>
 {% endblock %}
