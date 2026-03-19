@@ -673,7 +673,7 @@
       {# Property Grid #}
       <div class="lx-grid" id="propertyGrid">
         {% for prop in properties %}
-        <div class="prop-card">
+        <div class="prop-card" onclick="window.location.href='{{ prop.get_absolute_url }}'" style="cursor: pointer;">
           <div class="prop-card-img">
             {% if prop.primary_image %}
             <img class="prop-card-img-inner" src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}">

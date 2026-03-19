@@ -23,6 +23,11 @@ class PostAdmin(admin.ModelAdmin):
     list_editable  = ('status', 'is_featured')
     date_hierarchy = 'published_at'
     readonly_fields = ('views_count', 'created_at', 'updated_at')
+    fieldsets = (
+        ('Content', {'fields': ('title', 'slug', 'author', 'category', 'excerpt', 'key_takeaways', 'body', 'cover_image')}),
+        ('Publishing', {'fields': ('status', 'is_featured', 'published_at')}),
+        ('Stats', {'fields': ('views_count', 'created_at', 'updated_at'), 'classes': ('collapse',)}),
+    )
 
     @admin.display(description='Cover')
     def cover_thumb(self, obj):

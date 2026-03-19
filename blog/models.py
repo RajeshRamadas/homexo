@@ -40,7 +40,11 @@ class Post(models.Model):
     slug        = models.SlugField(max_length=240, unique=True, blank=True)
     excerpt     = models.TextField(max_length=300, blank=True)
     body        = models.TextField()
-    cover_image = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
+    cover_image    = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
+    key_takeaways  = models.TextField(
+        blank=True,
+        help_text='One takeaway per line. Displayed as a bullet list at the start of the article.'
+    )
     status      = models.CharField(max_length=15, choices=Status.choices, default=Status.DRAFT)
     is_featured = models.BooleanField(default=False)
     views_count = models.PositiveIntegerField(default=0, editable=False)
@@ -58,6 +62,11 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={'slug': self.slug})
+
+    @property
+    def reading_time(self):
+        words = len(self.body.split())
+        return max(1, round(words / 200))
 
     def save(self, *args, **kwargs):
         if not self.slug:

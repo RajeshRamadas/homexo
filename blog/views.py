@@ -32,5 +32,19 @@ def post_detail(request, slug):
     Post.objects.filter(pk=post.pk).update(views_count=post.views_count + 1)
     related = Post.objects.filter(
         status='published', category=post.category
-    ).exclude(pk=post.pk)[:3]
-    return render(request, 'blog/detail.html', {'post': post, 'related': related})
+    ).exclude(pk=post.pk).select_related('category')[:3]
+    prev_post = None
+    next_post = None
+    if post.published_at:
+        prev_post = Post.objects.filter(
+            status='published', published_at__lt=post.published_at
+        ).order_by('-published_at').first()
+        next_post = Post.objects.filter(
+            status='published', published_at__gt=post.published_at
+        ).order_by('published_at').first()
+    return render(request, 'blog/detail.html', {
+        'post': post,
+        'related': related,
+        'prev_post': prev_post,
+        'next_post': next_post,
+    })
