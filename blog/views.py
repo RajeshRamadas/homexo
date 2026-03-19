@@ -8,13 +8,23 @@ from .models import Post, Category
 
 def post_list(request):
     posts = Post.objects.filter(status='published').select_related('author', 'category')
-    category_slug = request.GET.get('category')
+    category_slug = request.GET.get('category', '').strip()
+    query = request.GET.get('q', '').strip()
     if category_slug:
         posts = posts.filter(category__slug=category_slug)
-    paginator = Paginator(posts, 9)
-    posts = paginator.get_page(request.GET.get('page'))
+    if query:
+        posts = posts.filter(title__icontains=query)
+    paginator = Paginator(posts, 8)
+    page_obj = paginator.get_page(request.GET.get('page'))
     categories = Category.objects.all()
-    return render(request, 'blog/list.html', {'posts': posts, 'categories': categories})
+    popular_posts = Post.objects.filter(status='published').select_related('category').order_by('-views_count')[:4]
+    return render(request, 'blog/list.html', {
+        'posts': page_obj,
+        'categories': categories,
+        'popular_posts': popular_posts,
+        'category_slug': category_slug,
+        'query': query,
+    })
 
 
 def post_detail(request, slug):
