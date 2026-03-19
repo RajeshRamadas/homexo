@@ -86,11 +86,20 @@ def property_detail(request, slug):
     prop = get_object_or_404(Property, slug=slug, status='active')
     prop.increment_views()
 
-    similar = Property.objects.filter(
+    similar_qs = Property.objects.filter(
         status='active',
         listing_type=prop.listing_type,
         city=prop.city,
-    ).exclude(pk=prop.pk)[:3]
+    ).exclude(pk=prop.pk).order_by('-created_at')[:3]
+
+    similar = list(similar_qs)
+    if len(similar) < 3:
+        needed = 3 - len(similar)
+        existing_ids = [p.pk for p in similar] + [prop.pk]
+        fallback = Property.objects.filter(
+            status='active'
+        ).exclude(pk__in=existing_ids).order_by('-views_count')[:needed]
+        similar.extend(list(fallback))
 
     context = {
         'property': prop,
