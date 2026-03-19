@@ -492,18 +492,7 @@
   .author-role { font-size:11px;color:var(--warm-grey);letter-spacing:1px; }
   .stars { color:var(--sky);font-size:14px;margin-bottom:20px; }
 
-  /* ═══ CTA BANNER ═══ */
-  .cta-banner { background:var(--deep-brown);padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;overflow:hidden; }
-  .cta-bg-text { position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-size:200px;font-weight:300;color:rgba(10,46,92,.04);line-height:1;pointer-events:none;white-space:nowrap; }
-  .cta-title { font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4vw,60px);font-weight:300;color:var(--ivory);line-height:1.1; }
-  .cta-title em { font-style:italic;color:var(--sky); }
-  .cta-form-row { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px; }
-  .cta-form input,.cta-form select { width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .3s; }
-  .cta-form input::placeholder { color:rgba(245,240,232,.3); }
-  .cta-form input:focus,.cta-form select:focus { border-color:var(--sky); }
-  .cta-form select option { background:var(--deep-brown); }
-  .cta-submit { width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:500;margin-top:16px;transition:all .3s; }
-  .cta-submit:hover { background:var(--sky); }
+  /* ═══ CTA BANNER ═══ (styles in base.html) */
 
   /* ═══ RESPONSIVE ═══ */
   @media(max-width:1024px){
@@ -523,7 +512,7 @@
     .testimonials-section{padding:48px 28px;}
     .testimonial-carousel{gap:0;}
     .testimonial-card{width:100%!important;min-width:100%!important;padding:32px 24px;}
-    .cta-banner{padding:60px 28px;gap:40px;}
+
     .agents-section{padding:48px 28px;}
     .agents-grid{grid-template-columns:repeat(2,1fr);}
     .stats-section{padding:32px 28px;}
@@ -590,10 +579,7 @@
     .testimonial-card{padding:28px 16px;}
     .testimonial-arrows{gap:10px;}
     .testimonial-text{font-size:16px;}
-    .cta-banner{display:flex!important;flex-direction:column;padding:40px 16px;gap:28px;}
-    .cta-title{font-size:clamp(30px,8.5vw,48px);}
-    .cta-bg-text{display:none;}
-    .cta-form-row{grid-template-columns:1fr!important;gap:10px;margin-bottom:10px;}
+
   }
   @media(max-width:480px){
     .hero-right{height:62vw;}
@@ -615,7 +601,7 @@
     .news-header{gap:10px;}
     .news-see-all{font-size:11px;padding:6px 12px;}
     .testimonials-section{padding:24px 12px;}
-    .cta-banner{padding:32px 12px;}
+
     .about-content{padding:22px 14px 28px;}
     .prop-slider-controls,.news-arrows{gap:10px;}
   }
@@ -1103,32 +1089,6 @@
 {% endif %}
 
 <!-- ═══════════════════════ CTA BANNER ════════════════════════ -->
-<div class="cta-banner">
-  <div class="cta-bg-text">HOMEXO</div>
-  <div>
-    <h2 class="cta-title">Ready To Find<br>Your <em>Dream</em><br>Property?</h2>
-    <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Let our expert team guide you to the perfect property. Reach out today.</p>
-  </div>
-  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
-    {% csrf_token %}
-    <div class="cta-form-row">
-      <input type="text" name="name" placeholder="Your Full Name" required>
-      <input type="tel" name="phone" placeholder="Phone Number" required>
-    </div>
-    <div class="cta-form-row">
-      <input type="email" name="email" placeholder="Email Address" required>
-      <select name="enquiry_type">
-        <option value="">I'm Looking To&hellip;</option>
-        <option value="buy">Buy a Property</option>
-        <option value="rent">Rent a Property</option>
-        <option value="sell">Sell My Property</option>
-        <option value="invest">Real Estate Investment</option>
-      </select>
-    </div>
-    <button type="submit" class="cta-submit">Request Consultation &rarr;</button>
-  </form>
-</div>
-
 {% endblock %}
 
 {% block extra_js %}
