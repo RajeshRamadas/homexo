@@ -70,6 +70,10 @@ def property_list(request):
     page      = request.GET.get('page')
     properties = paginator.get_page(page)
 
+    page_range = paginator.get_elided_page_range(
+        properties.number, on_each_side=2, on_ends=1
+    )
+
     context = {
         'properties':    properties,
         'form':          form,
@@ -77,6 +81,8 @@ def property_list(request):
         'listing_type':  listing_type,
         'current_sort':  sort,
         'tags':          PropertyTag.objects.all(),
+        'page_range':    page_range,
+        'ELLIPSIS':      paginator.ELLIPSIS,
     }
     return render(request, 'properties/list.html', context)
 
