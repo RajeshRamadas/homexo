@@ -179,7 +179,7 @@
   @media(max-width:480px){ .cta-banner{padding:32px 12px;} }
 </style>
 </head>
-<body>
+<body data-auth="{{ user.is_authenticated|yesno:'true,false' }}" data-login="{% url 'accounts:login' %}" data-wishlist-ids="{% for id in wishlist_ids %}{{ id }}{% if not forloop.last %},{% endif %}{% endfor %}">
 
 <div class="scroll-progress" id="scroll-progress"></div>
 
@@ -385,7 +385,14 @@ setTimeout(() => {
 }, 5000);
 
 // Wishlist toggle AJAX
-function toggleWishlist(btn, propertyId) {
+const IS_AUTHENTICATED = document.body.dataset.auth === 'true';
+const LOGIN_URL = document.body.dataset.login;
+
+function handleSave(btn, propertyId) {
+  if (!IS_AUTHENTICATED) {
+    window.location.href = LOGIN_URL + '?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
   const csrfToken = document.cookie.split(';')
     .find(c => c.trim().startsWith('csrftoken='))?.split('=')[1];
   fetch(`/wishlist/toggle/${propertyId}/`, {
@@ -394,11 +401,32 @@ function toggleWishlist(btn, propertyId) {
   })
   .then(r => r.json())
   .then(data => {
-    const svg = btn.querySelector('path');
-    if (svg) svg.setAttribute('fill', data.saved ? '#0D2B4E' : 'none');
+    const path = btn.querySelector('path');
+    if (path) path.setAttribute('fill', data.saved ? '#0D2B4E' : 'none');
     btn.dataset.saved = data.saved;
+    btn.title = data.saved ? 'Saved' : 'Save';
+    // update nav badge
+    const badge = document.querySelector('.nav-wishlist-count');
+    if (badge) {
+      badge.textContent = data.count;
+      badge.style.display = data.count > 0 ? 'flex' : 'none';
+    }
   });
 }
+
+// Initialise filled state for already-saved properties on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const saved = (document.body.dataset.wishlistIds || '').split(',').filter(Boolean);
+  if (!saved.length) return;
+  document.querySelectorAll('[data-prop-id]').forEach(function(btn) {
+    if (saved.includes(String(btn.dataset.propId))) {
+      const path = btn.querySelector('path');
+      if (path) path.setAttribute('fill', '#0D2B4E');
+      btn.dataset.saved = 'true';
+      btn.title = 'Saved';
+    }
+  });
+});
 </script>
 
 {% block extra_js %}{% endblock %}

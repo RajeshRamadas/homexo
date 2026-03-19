@@ -812,7 +812,7 @@
         {% endif %}
         <div class="property-tag" style="background:linear-gradient(90deg,var(--deep-brown),var(--navy));color:var(--gold-light);">Signature</div>
         <div class="card-cta">View Property &rarr;</div>
-        <button class="property-fav" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
+        <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
         </button>
       </div>
@@ -839,7 +839,7 @@
         <div style="width:100%;height:100%;min-height:295px;background:linear-gradient(135deg,#1A3A5C,#2E6FA8,#0D2240);"></div>
         {% endif %}
       </div>
-      <button class="property-fav" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
+      <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </button>
       <div class="property-body">
@@ -889,7 +889,7 @@
           {% elif prop.is_featured %}<div class="property-tag featured">Featured</div>
           {% elif prop.is_new %}<div class="property-tag">New</div>
           {% elif prop.is_exclusive %}<div class="property-tag">Exclusive</div>{% endif %}
-          <button class="property-fav" onclick="event.stopPropagation(); handleSave(this, {{ prop.id }})" title="Save to wishlist">
+          <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.stopPropagation(); handleSave(this, {{ prop.id }})" title="Save to wishlist">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           </button>
         </div>
@@ -1093,19 +1093,6 @@
 
 {% block extra_js %}
 <script>
-// ── Wishlist save handler (works for guests too) ──
-const IS_AUTHENTICATED = {{ user.is_authenticated|yesno:"true,false" }};
-const LOGIN_URL = "{% url 'accounts:login' %}";
-function handleSave(btn, propId) {
-  if (!IS_AUTHENTICATED) {
-    window.location.href = LOGIN_URL + '?next=' + encodeURIComponent(window.location.pathname);
-    return;
-  }
-  toggleWishlist(btn, propId);
-}
-
-
-
 // ── Search tab switcher ──
 function setSearchTab(btn, type) {
   document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));

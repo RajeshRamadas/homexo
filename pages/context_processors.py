@@ -10,9 +10,12 @@ from properties.models import Property
 
 def global_context(request):
     wishlist_count = 0
+    wishlist_ids = []
     if request.user.is_authenticated:
         try:
-            wishlist_count = request.user.wishlist.count()
+            qs = request.user.wishlist.values_list('property_id', flat=True)
+            wishlist_ids = list(qs)
+            wishlist_count = len(wishlist_ids)
         except Exception:
             pass
 
@@ -21,4 +24,5 @@ def global_context(request):
         'SITE_TAGLINE':   'Luxury Real Estate',
         'LISTING_TYPES':  Property.ListingType.choices,
         'wishlist_count': wishlist_count,
+        'wishlist_ids':   wishlist_ids,
     }
