@@ -24,6 +24,7 @@ urlpatterns = [
     path('enquiries/',     include('enquiries.urls',     namespace='enquiries')),
     path('wishlist/',      include('wishlist.urls',      namespace='wishlist')),
     path('accounts/',      include('accounts.urls',      namespace='accounts')),
+    path('campaigns/',     include('campaigns.urls',      namespace='campaigns')),
 
     # REST API (v1)
     path('api/v1/',        include('homexo.api_urls',   namespace='api')),

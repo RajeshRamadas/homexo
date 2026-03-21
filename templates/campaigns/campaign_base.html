@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ campaign.title }} — {{ campaign.developer_name }}{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Main site CSS -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/homexo.css' %}">
+
+  <style>
+    :root {
+      --navy:    #0D2B4E;
+      --sky:     #4A90C4;
+      --charcoal:#0D1B2A;
+      --ivory:   #F7F9FC;
+      --border:  rgba(10,46,92,0.15);
+      --accent:  {{ campaign.accent_color }};
+    }
+
+    /* ── Campaign Nav overrides ─────────────────────────────── */
+    .camp-nav {
+      position: sticky; top: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+    }
+    .camp-nav .logos { display: flex; align-items: center; gap: .75rem; }
+    .camp-nav .logos .divider { width: 1px; height: 28px; background: rgba(255,255,255,.3); }
+    .camp-nav .dev-initials {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: .9rem;
+    }
+    .camp-nav .dev-name-label {
+      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .9rem;
+    }
+    .camp-nav .homexo-wordmark {
+      font-family: 'Cormorant Garamond', serif; font-weight: 700;
+      font-size: 1.35rem; letter-spacing: .04em; text-decoration: none;
+    }
+    .camp-nav .nav-links { display: flex; gap: 1.5rem; }
+    .camp-nav .nav-links a {
+      font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 500;
+      text-decoration: none; opacity: .85; transition: opacity .2s;
+    }
+    .camp-nav .nav-links a:hover { opacity: 1; }
+    .camp-nav .nav-cta {
+      display: inline-block; padding: .45rem 1.15rem;
+      background: var(--accent); color: #fff; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 600;
+      text-decoration: none; letter-spacing: .03em;
+      transition: opacity .2s;
+    }
+    .camp-nav .nav-cta:hover { opacity: .88; }
+
+    /* Nav style variants */
+    .camp-nav--cobranded { background: var(--navy); color: #fff; }
+    .camp-nav--cobranded .homexo-wordmark { color: #fff; }
+    .camp-nav--cobranded .dev-name-label  { color: rgba(255,255,255,.9); }
+    .camp-nav--cobranded .nav-links a     { color: rgba(255,255,255,.85); }
+
+    .camp-nav--branded { background: var(--charcoal); color: #fff; border-bottom: 2px solid var(--accent); }
+    .camp-nav--branded .homexo-wordmark { color: rgba(255,255,255,.55); font-size: 1rem; }
+    .camp-nav--branded .dev-name-label  { color: #fff; font-size: 1rem; }
+    .camp-nav--branded .nav-links a     { color: rgba(255,255,255,.8); }
+
+    .camp-nav--minimal { background: #0a0a0a; color: #fff; }
+    .camp-nav--minimal .dev-name-label { color: #fff; font-size: 1rem; }
+    .camp-nav--minimal .nav-links { display: none !important; }
+
+    .camp-nav--homexo { background: var(--navy); color: #fff; }
+    .camp-nav--homexo .homexo-wordmark { color: #fff; }
+    .camp-nav--homexo .nav-links a     { color: rgba(255,255,255,.85); }
+
+    /* ── Campaign Footer overrides ──────────────────────────── */
+    .camp-footer { font-family: 'DM Sans', sans-serif; }
+
+    .camp-footer--branded {
+      background: var(--charcoal); color: rgba(255,255,255,.8);
+    }
+    .camp-footer--branded .footer-inner {
+      max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 1.5rem;
+      display: grid; gap: 2rem;
+      grid-template-columns: 2fr repeat(3, 1fr);
+    }
+    .camp-footer--branded .footer-brand .dev-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.1rem;
+      margin-bottom: .75rem;
+    }
+    .camp-footer--branded .footer-brand .tagline {
+      font-size: .85rem; line-height: 1.6; opacity: .75; margin: .5rem 0 1rem;
+    }
+    .camp-footer--branded .footer-brand .contact-detail {
+      font-size: .82rem; opacity: .7; margin-bottom: .3rem;
+    }
+    .camp-footer--branded .social-links { display: flex; gap: .75rem; margin-top: 1rem; }
+    .camp-footer--branded .social-links a {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,.1); color: #fff;
+      text-decoration: none; font-size: .8rem;
+      transition: background .2s;
+    }
+    .camp-footer--branded .social-links a:hover { background: var(--accent); }
+    .camp-footer--branded .footer-col h5 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 600;
+      font-size: 1rem; color: #fff; margin-bottom: .75rem;
+    }
+    .camp-footer--branded .footer-col ul { list-style: none; margin: 0; padding: 0; }
+    .camp-footer--branded .footer-col ul li { margin-bottom: .4rem; }
+    .camp-footer--branded .footer-col ul a {
+      color: rgba(255,255,255,.65); text-decoration: none; font-size: .82rem;
+      transition: color .2s;
+    }
+    .camp-footer--branded .footer-col ul a:hover { color: #fff; }
+    .camp-footer--branded .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding: 1rem 2rem; text-align: center;
+      font-size: .75rem; opacity: .5;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .camp-footer--branded .powered-by {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .72rem; opacity: .6; margin-top: .3rem;
+    }
+    .camp-footer--branded .powered-by a {
+      color: var(--accent); text-decoration: none;
+    }
+
+    .camp-footer--minimal {
+      background: #111; color: rgba(255,255,255,.5);
+      padding: 1rem 2rem; text-align: center; font-size: .78rem;
+    }
+
+    @media (max-width: 768px) {
+      .camp-footer--branded .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+      .camp-nav .nav-links { display: none; }
+    }
+    @media (max-width: 480px) {
+      .camp-footer--branded .footer-inner { grid-template-columns: 1fr; }
+      .camp-nav { padding: 0 1rem; }
+    }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# NAV                                                                         #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% with ns=campaign.nav_style %}
+
+{% if ns == 'cobranded' %}
+<nav class="camp-nav camp-nav--cobranded">
+  <div class="logos">
+    <a href="/" class="homexo-wordmark">HOMEXO</a>
+    <span class="divider"></span>
+    {% if campaign.developer_logo %}
+      <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:30px; object-fit:contain;">
+    {% else %}
+      <span class="dev-initials">{{ campaign.developer_name|slice:":2"|upper }}</span>
+    {% endif %}
+    <span class="dev-name-label">{{ campaign.developer_name }}</span>
+  </div>
+  {% if campaign.nav_show_links %}
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#properties">Properties</a>
+    <a href="#contact">Contact</a>
+  </div>
+  {% endif %}
+  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+</nav>
+
+{% elif ns == 'branded' %}
+<nav class="camp-nav camp-nav--branded">
+  <div class="logos">
+    {% if campaign.developer_logo %}
+      <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:30px; object-fit:contain; margin-right:.5rem;">
+    {% else %}
+      <span class="dev-initials">{{ campaign.developer_name|slice:":2"|upper }}</span>
+    {% endif %}
+    <span class="dev-name-label">{{ campaign.developer_name }}</span>
+    <span class="divider"></span>
+    <a href="/" class="homexo-wordmark">HOMEXO</a>
+  </div>
+  {% if campaign.nav_show_links %}
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#properties">Properties</a>
+    <a href="#contact">Contact</a>
+  </div>
+  {% endif %}
+  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+</nav>
+
+{% elif ns == 'minimal' %}
+<nav class="camp-nav camp-nav--minimal">
+  <div class="logos">
+    {% if campaign.developer_logo %}
+      <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:30px; object-fit:contain; margin-right:.5rem;">
+    {% else %}
+      <span class="dev-initials">{{ campaign.developer_name|slice:":2"|upper }}</span>
+    {% endif %}
+    <span class="dev-name-label">{{ campaign.developer_name }}</span>
+  </div>
+  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+</nav>
+
+{% else %}{# homexo default #}
+<nav class="camp-nav camp-nav--homexo">
+  <div class="logos">
+    <a href="/" class="homexo-wordmark">HOMEXO</a>
+  </div>
+  {% if campaign.nav_show_links %}
+  <div class="nav-links">
+    <a href="{% url 'properties:list' %}">Properties</a>
+    <a href="{% url 'agents:list' %}">Agents</a>
+    <a href="{% url 'pages:contact' %}">Contact</a>
+  </div>
+  {% endif %}
+  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+</nav>
+{% endif %}
+
+{% endwith %}
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# PAGE CONTENT                                                                #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# FOOTER                                                                      #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% with fs=campaign.footer_style %}
+
+{% if fs == 'minimal' %}
+<footer class="camp-footer camp-footer--minimal">
+  {{ campaign.effective_copyright }}
+</footer>
+
+{% elif fs == 'homexo' %}
+{# Reuse the standard HOMEXO footer markup, injecting an extra campaign column #}
+<footer class="camp-footer" style="background:var(--charcoal); color:rgba(255,255,255,.75); font-family:'DM Sans',sans-serif;">
+  <div style="max-width:1200px; margin:0 auto; padding:3rem 2rem 1.5rem; display:grid; gap:2rem; grid-template-columns:2fr repeat(3,1fr);">
+    <div>
+      <a href="/" style="font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:#fff; text-decoration:none;">HOMEXO</a>
+      <p style="font-size:.85rem; opacity:.65; margin:.75rem 0; line-height:1.6;">India's premium real estate portal. Find your perfect home with expert guidance.</p>
+    </div>
+    <div>
+      <h5 style="font-family:'Cormorant Garamond',serif; color:#fff; font-size:1rem; margin-bottom:.75rem;">Campaign</h5>
+      <ul style="list-style:none; padding:0; margin:0;">
+        <li style="margin-bottom:.4rem;"><a href="#about" style="color:rgba(255,255,255,.65); text-decoration:none; font-size:.82rem;">About {{ campaign.developer_name }}</a></li>
+        <li style="margin-bottom:.4rem;"><a href="#properties" style="color:rgba(255,255,255,.65); text-decoration:none; font-size:.82rem;">Featured Properties</a></li>
+        <li style="margin-bottom:.4rem;"><a href="#contact" style="color:rgba(255,255,255,.65); text-decoration:none; font-size:.82rem;">Book a Visit</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 style="font-family:'Cormorant Garamond',serif; color:#fff; font-size:1rem; margin-bottom:.75rem;">Properties</h5>
+      <ul style="list-style:none; padding:0; margin:0;">
+        <li style="margin-bottom:.4rem;"><a href="{% url 'properties:list' %}" style="color:rgba(255,255,255,.65); text-decoration:none; font-size:.82rem;">All Listings</a></li>
+        <li style="margin-bottom:.4rem;"><a href="{% url 'agents:list' %}" style="color:rgba(255,255,255,.65); text-decoration:none; font-size:.82rem;">Our Agents</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 style="font-family:'Cormorant Garamond',serif; color:#fff; font-size:1rem; margin-bottom:.75rem;">Contact</h5>
+      <p style="font-size:.82rem; opacity:.65;">{% url 'pages:contact' %}</p>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.1); padding:1rem 2rem; text-align:center; font-size:.75rem; opacity:.45; max-width:1200px; margin:0 auto;">
+    {{ campaign.effective_copyright }}
+  </div>
+</footer>
+
+{% else %}{# branded footer (default) #}
+<footer class="camp-footer camp-footer--branded">
+  <div class="footer-inner">
+
+    {# Brand column #}
+    <div class="footer-brand">
+      {% if campaign.developer_logo %}
+        <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:38px; margin-bottom:.75rem; object-fit:contain;">
+      {% else %}
+        <div class="dev-icon">{{ campaign.developer_name|slice:":2"|upper }}</div>
+      {% endif %}
+      <div style="font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.15rem; color:#fff;">{{ campaign.developer_name }}</div>
+      {% if campaign.footer_tagline %}
+        <p class="tagline">{{ campaign.footer_tagline }}</p>
+      {% endif %}
+      {% if campaign.footer_address %}
+        <p class="contact-detail">📍 {{ campaign.footer_address }}</p>
+      {% endif %}
+      {% if campaign.footer_email %}
+        <p class="contact-detail">✉️ <a href="mailto:{{ campaign.footer_email }}" style="color:rgba(255,255,255,.7); text-decoration:none;">{{ campaign.footer_email }}</a></p>
+      {% endif %}
+      {% if campaign.footer_facebook or campaign.footer_instagram or campaign.footer_youtube %}
+      <div class="social-links">
+        {% if campaign.footer_facebook %}
+          <a href="{{ campaign.footer_facebook }}" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+        {% endif %}
+        {% if campaign.footer_instagram %}
+          <a href="{{ campaign.footer_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">in</a>
+        {% endif %}
+        {% if campaign.footer_youtube %}
+          <a href="{{ campaign.footer_youtube }}" target="_blank" rel="noopener" aria-label="YouTube">▶</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    {# Campaign links #}
+    <div class="footer-col">
+      <h5>Campaign</h5>
+      <ul>
+        <li><a href="#about">About {{ campaign.developer_name }}</a></li>
+        <li><a href="#properties">Featured Properties</a></li>
+        <li><a href="#highlights">Highlights</a></li>
+        <li><a href="#contact">Book a Site Visit</a></li>
+      </ul>
+    </div>
+
+    {# HOMEXO links #}
+    <div class="footer-col">
+      <h5>HOMEXO</h5>
+      <ul>
+        <li><a href="{% url 'properties:list' %}">All Listings</a></li>
+        <li><a href="{% url 'agents:list' %}">Our Agents</a></li>
+        <li><a href="{% url 'blog:list' %}">Blog</a></li>
+        <li><a href="{% url 'pages:contact' %}">Contact</a></li>
+      </ul>
+    </div>
+
+    {# Legal #}
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <ul>
+        <li><a href="{% url 'pages:legal' %}">Legal Services</a></li>
+        <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
+        <li><a href="{% url 'campaigns:list' %}">Campaigns</a></li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    {{ campaign.effective_copyright }}
+    <div class="powered-by">
+      Powered by <a href="/">HOMEXO</a>
+    </div>
+  </div>
+</footer>
+{% endif %}
+
+{% endwith %}
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
