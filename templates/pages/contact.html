@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us — HOMEXO Real Estate Advisory{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .ct-hero {
+    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
+    padding: 80px 40px 70px; position: relative; overflow: hidden;
+  }
+  .ct-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 75% 50%, rgba(74,144,196,.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ct-hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .ct-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 24px;
+  }
+  .ct-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .ct-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4.5vw, 56px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 20px;
+  }
+  .ct-hero h1 em { font-style: italic; color: var(--sky); }
+  .ct-hero p { font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.55); font-weight: 300; max-width: 500px; }
+  .ct-hero-hours { margin-top: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .ct-hour-row { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+  .ct-hour-icon { color: var(--sky); flex-shrink: 0; }
+  .ct-hour-text { color: rgba(255,255,255,.65); font-weight: 300; }
+  .ct-hour-text strong { color: rgba(255,255,255,.85); font-weight: 500; }
+  /* Hero stats */
+  .ct-hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .ct-hero-stat { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15); padding: 22px 20px; }
+  .ct-hero-stat-val { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: #fff; margin-bottom: 6px; }
+  .ct-hero-stat-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+
+  /* ── Contact methods strip ──────────────────────────────────── */
+  .ct-methods { background: #fff; border-bottom: 1px solid var(--border); padding: 0 40px; }
+  .ct-methods-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .ct-method {
+    display: flex; align-items: flex-start; gap: 20px; padding: 36px 28px;
+    border-right: 1px solid var(--border); text-decoration: none;
+    transition: background .25s; color: inherit;
+  }
+  .ct-method:last-child { border-right: none; }
+  .ct-method:hover { background: var(--ivory); }
+  .ct-method-icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(74,144,196,.12), rgba(13,43,78,.06));
+    border: 1px solid rgba(74,144,196,.2);
+    display: flex; align-items: center; justify-content: center; color: var(--sky);
+  }
+  .ct-method-body { flex: 1; }
+  .ct-method-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sky); margin-bottom: 8px; }
+  .ct-method-primary { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal); font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+  .ct-method-secondary { font-size: 11px; color: var(--warm-grey); font-weight: 300; line-height: 1.6; }
+
+  /* ── Main body ──────────────────────────────────────────────── */
+  .ct-body { padding: 72px 40px; background: var(--ivory); }
+  .ct-body-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: start; }
+
+  /* ── Left — extended info ───────────────────────────────────── */
+  .ct-left { display: flex; flex-direction: column; gap: 56px; }
+
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 16px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 3vw, 36px); font-weight: 300; line-height: 1.2;
+    color: var(--charcoal); margin-bottom: 12px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .ct-body-text { font-size: 14px; line-height: 1.9; color: var(--warm-grey); font-weight: 300; }
+
+  /* Office cards */
+  .ct-offices { display: flex; flex-direction: column; gap: 2px; }
+  .ct-office {
+    background: #fff; border: 1px solid var(--border); padding: 24px 28px;
+    display: flex; align-items: flex-start; gap: 20px;
+  }
+  .ct-office-icon { color: var(--sky); flex-shrink: 0; margin-top: 2px; }
+  .ct-office-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 500; color: var(--charcoal); margin-bottom: 6px; }
+  .ct-office-desc { font-size: 12.5px; color: var(--warm-grey); line-height: 1.7; font-weight: 300; }
+
+  /* City grid */
+  .ct-cities { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .ct-city {
+    padding: 12px 16px; background: #fff; border: 1px solid var(--border);
+    font-size: 12px; color: var(--charcoal);
+  }
+  .ct-city-name { font-weight: 500; margin-bottom: 2px; }
+  .ct-city-ph { font-size: 11px; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── Contact form (right card) ──────────────────────────────── */
+  .ct-form-card {
+    background: #fff; border: 1px solid var(--border);
+    position: sticky; top: calc(var(--nav-h) + 24px);
+  }
+  .ct-form-header { background: var(--charcoal); padding: 28px 28px 22px; }
+  .ct-form-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: #fff; margin-bottom: 6px; }
+  .ct-form-header p { font-size: 12px; color: rgba(255,255,255,.5); font-weight: 300; }
+  .ct-form { padding: 28px; }
+  .ct-field { margin-bottom: 18px; }
+  .ct-field label { display: block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--charcoal); margin-bottom: 8px; font-weight: 500; }
+  .ct-field input,
+  .ct-field select,
+  .ct-field textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1px solid var(--border); background: var(--ivory);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--charcoal);
+    outline: none; transition: border-color .25s; box-sizing: border-box;
+  }
+  .ct-field input:focus, .ct-field select:focus, .ct-field textarea:focus { border-color: var(--sky); background: #fff; }
+  .ct-field textarea { resize: vertical; min-height: 100px; }
+  .ct-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A8A99' d='M2 4l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+  .ct-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ct-submit {
+    width: 100%; padding: 14px; background: var(--sky); color: #fff;
+    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; transition: background .25s;
+  }
+  .ct-submit:hover { background: #3a7ab0; }
+  .ct-form-footer { border-top: 1px solid var(--border); padding: 16px 28px; background: var(--ivory); }
+  .ct-form-note { font-size: 11px; color: var(--warm-grey); font-weight: 300; line-height: 1.6; }
+  .ct-form-note a { color: var(--sky); text-decoration: none; }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .ct-hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .ct-body-inner { grid-template-columns: 1fr; }
+    .ct-form-card { position: static; }
+  }
+  @media (max-width: 800px) {
+    .ct-methods-inner { grid-template-columns: 1fr; }
+    .ct-method { border-right: none; border-bottom: 1px solid var(--border); }
+    .ct-method:last-child { border-bottom: none; }
+    .ct-cities { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .ct-hero, .ct-methods, .ct-body { padding-left: 24px; padding-right: 24px; }
+    .ct-field-row { grid-template-columns: 1fr; }
+    .ct-cities { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+
+  <!-- ══════════════════ HERO ══════════════════════════════════ -->
+  <div class="ct-hero">
+    <div class="ct-hero-inner">
+      <div>
+        <div class="ct-eyebrow">Get in Touch</div>
+        <h1>We're Here to <em>Help You</em></h1>
+        <p>Whether you have a quick question or need in-depth property guidance, our team is ready. Reach out through any channel — expect a response within 2 hours during business hours.</p>
+        <div class="ct-hero-hours">
+          <div class="ct-hour-row">
+            <span class="ct-hour-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="ct-hour-text"><strong>Mon – Sat, 9 am – 7 pm IST</strong> &nbsp;·&nbsp; Appointments available outside hours</span>
+          </div>
+          <div class="ct-hour-row">
+            <span class="ct-hour-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.8 19.8 0 013.2 4.18 2 2 0 015.18 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 9.91a16 16 0 006.99 6.99l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+            <span class="ct-hour-text"><strong>+91 98765 43210</strong> &nbsp;·&nbsp; WhatsApp available</span>
+          </div>
+        </div>
+      </div>
+      <div class="ct-hero-stats">
+        <div class="ct-hero-stat">
+          <div class="ct-hero-stat-val">2 hrs</div>
+          <div class="ct-hero-stat-lbl">Response Time</div>
+        </div>
+        <div class="ct-hero-stat">
+          <div class="ct-hero-stat-val">150+</div>
+          <div class="ct-hero-stat-lbl">Expert Advisors</div>
+        </div>
+        <div class="ct-hero-stat">
+          <div class="ct-hero-stat-val">12+</div>
+          <div class="ct-hero-stat-lbl">Cities</div>
+        </div>
+        <div class="ct-hero-stat">
+          <div class="ct-hero-stat-val">98%</div>
+          <div class="ct-hero-stat-lbl">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CONTACT METHODS ═══════════════════════ -->
+  <div class="ct-methods">
+    <div class="ct-methods-inner">
+      <a href="tel:+919876543210" class="ct-method">
+        <div class="ct-method-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.8 19.8 0 013.2 4.18 2 2 0 015.18 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 9.91a16 16 0 006.99 6.99l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div class="ct-method-body">
+          <div class="ct-method-label">Call Us</div>
+          <div class="ct-method-primary">+91 98765 43210</div>
+          <div class="ct-method-secondary">Available Mon–Sat, 9 am – 7 pm IST<br>WhatsApp supported</div>
+        </div>
+      </a>
+      <a href="mailto:hello@homexo.in" class="ct-method">
+        <div class="ct-method-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="ct-method-body">
+          <div class="ct-method-label">Email Us</div>
+          <div class="ct-method-primary">hello@homexo.in</div>
+          <div class="ct-method-secondary">General enquiries &amp; advisory<br>Response within 4 business hours</div>
+        </div>
+      </a>
+      <div class="ct-method">
+        <div class="ct-method-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="ct-method-body">
+          <div class="ct-method-label">Head Office</div>
+          <div class="ct-method-primary">Bengaluru, Karnataka</div>
+          <div class="ct-method-secondary">Level 4, Prestige Tower, MG Road<br>Bengaluru – 560 001</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BODY ═══════════════════════════════════ -->
+  <div class="ct-body">
+    <div class="ct-body-inner">
+
+      <!-- Left column -->
+      <div class="ct-left">
+
+        <!-- Offices -->
+        <div>
+          <div class="section-eyebrow">Our Offices</div>
+          <h2 class="section-heading">Find Us <em>Near You</em></h2>
+          <p class="ct-body-text" style="margin-bottom: 28px;">Walk in or schedule an appointment at our offices across India. All offices are open Monday through Saturday, 9 am to 6 pm.</p>
+          <div class="ct-offices">
+            <div class="ct-office">
+              <span class="ct-office-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div>
+                <div class="ct-office-title">Bengaluru — Head Office</div>
+                <div class="ct-office-desc">Level 4, Prestige Tower, MG Road, Bengaluru – 560 001<br>Phone: +91 80 4567 8900</div>
+              </div>
+            </div>
+            <div class="ct-office">
+              <span class="ct-office-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div>
+                <div class="ct-office-title">Mumbai</div>
+                <div class="ct-office-desc">8th Floor, One BKC, Bandra Kurla Complex, Mumbai – 400 051<br>Phone: +91 22 6789 0123</div>
+              </div>
+            </div>
+            <div class="ct-office">
+              <span class="ct-office-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div>
+                <div class="ct-office-title">Delhi NCR — Gurgaon</div>
+                <div class="ct-office-desc">Unit 302, DLF Cyber Hub, Gurgaon – 122 002<br>Phone: +91 124 456 7890</div>
+              </div>
+            </div>
+            <div class="ct-office">
+              <span class="ct-office-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div>
+                <div class="ct-office-title">Hyderabad</div>
+                <div class="ct-office-desc">5th Floor, Salarpuria Sattva Knowledge City, Hyderabad – 500 081<br>Phone: +91 40 6789 1234</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cities we serve -->
+        <div>
+          <div class="section-eyebrow">Our Reach</div>
+          <h2 class="section-heading">Cities We <em>Serve</em></h2>
+          <p class="ct-body-text" style="margin-bottom: 24px;">HOMEXO advisors operate in 12+ cities. Select your city when you fill the contact form and we'll connect you with a local specialist.</p>
+          <div class="ct-cities">
+            <div class="ct-city"><div class="ct-city-name">Bengaluru</div><div class="ct-city-ph">+91 80 4567 8900</div></div>
+            <div class="ct-city"><div class="ct-city-name">Mumbai</div><div class="ct-city-ph">+91 22 6789 0123</div></div>
+            <div class="ct-city"><div class="ct-city-name">Delhi NCR</div><div class="ct-city-ph">+91 124 456 7890</div></div>
+            <div class="ct-city"><div class="ct-city-name">Hyderabad</div><div class="ct-city-ph">+91 40 6789 1234</div></div>
+            <div class="ct-city"><div class="ct-city-name">Pune</div><div class="ct-city-ph">+91 20 4567 8901</div></div>
+            <div class="ct-city"><div class="ct-city-name">Chennai</div><div class="ct-city-ph">+91 44 6789 0124</div></div>
+            <div class="ct-city"><div class="ct-city-name">Kolkata</div><div class="ct-city-ph">+91 33 4567 8902</div></div>
+            <div class="ct-city"><div class="ct-city-name">Ahmedabad</div><div class="ct-city-ph">+91 79 6789 0125</div></div>
+            <div class="ct-city"><div class="ct-city-name">Kochi</div><div class="ct-city-ph">+91 484 456 7891</div></div>
+            <div class="ct-city"><div class="ct-city-name">Coimbatore</div><div class="ct-city-ph">+91 422 456 7892</div></div>
+            <div class="ct-city"><div class="ct-city-name">Chandigarh</div><div class="ct-city-ph">+91 172 456 7893</div></div>
+            <div class="ct-city"><div class="ct-city-name">Mysuru</div><div class="ct-city-ph">+91 821 456 7894</div></div>
+          </div>
+        </div>
+
+      </div><!-- /ct-left -->
+
+      <!-- Right — contact form -->
+      <div class="ct-form-card">
+        <div class="ct-form-header">
+          <h3>Send Us a Message</h3>
+          <p>Fill in your details and the right advisor will be in touch</p>
+        </div>
+        <form class="ct-form" action="{% url 'enquiries:create' %}" method="POST" novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="enquiry_type" value="general">
+          <div class="ct-field-row">
+            <div class="ct-field">
+              <label for="ct-name">Full Name *</label>
+              <input type="text" id="ct-name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="ct-field">
+              <label for="ct-phone">Phone *</label>
+              <input type="tel" id="ct-phone" name="phone" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+          <div class="ct-field">
+            <label for="ct-email">Email Address</label>
+            <input type="email" id="ct-email" name="email" placeholder="you@example.com">
+          </div>
+          <div class="ct-field">
+            <label for="ct-subject">I Need Help With</label>
+            <select id="ct-subject" name="enquiry_type">
+              <option value="general">General Enquiry</option>
+              <option value="buy">Buying a Property</option>
+              <option value="sell">Selling a Property</option>
+              <option value="rent">Renting / Leasing</option>
+              <option value="home_loan">Home Loan</option>
+              <option value="legal">Legal Services</option>
+              <option value="security">Security Solutions</option>
+              <option value="home_service">Home Services</option>
+            </select>
+          </div>
+          <div class="ct-field">
+            <label for="ct-city">Your City</label>
+            <select id="ct-city" name="city">
+              <option value="">Select city</option>
+              <option>Bengaluru</option>
+              <option>Mumbai</option>
+              <option>Delhi NCR</option>
+              <option>Hyderabad</option>
+              <option>Pune</option>
+              <option>Chennai</option>
+              <option>Kolkata</option>
+              <option>Ahmedabad</option>
+              <option>Kochi</option>
+              <option>Coimbatore</option>
+              <option>Chandigarh</option>
+              <option>Mysuru</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="ct-field">
+            <label for="ct-message">Message</label>
+            <textarea id="ct-message" name="message" placeholder="Tell us what you're looking for…"></textarea>
+          </div>
+          <button type="submit" class="ct-submit">Send Message →</button>
+        </form>
+        <div class="ct-form-footer">
+          <p class="ct-form-note">By submitting you agree to our <a href="#">Privacy Policy</a>. We never share your data with third parties without consent.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}

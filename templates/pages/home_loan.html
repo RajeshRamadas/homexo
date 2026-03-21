@@ -1,0 +1,590 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Loan Services — Best Rates & Fast Approvals | HOMEXO{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Base ──────────────────────────────────────────────────── */
+  .hl-page { font-family: 'DM Sans', sans-serif; }
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 18px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
+    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .hl-hero {
+    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
+    padding: 90px 40px 80px; position: relative; overflow: hidden;
+  }
+  .hl-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 65% 80% at 80% 50%, rgba(74,144,196,.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hl-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+  .hl-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 28px;
+  }
+  .hl-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .hl-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 20px; max-width: 700px;
+  }
+  .hl-hero h1 em { font-style: italic; color: var(--sky); }
+  .hl-hero-desc {
+    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
+    max-width: 560px; font-weight: 300; margin-bottom: 40px;
+  }
+  .hl-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hl-hero-cta {
+    padding: 14px 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none;
+    transition: all .3s; display: inline-block;
+  }
+  .hl-hero-cta.primary { background: var(--sky); color: #fff; }
+  .hl-hero-cta.primary:hover { background: #3a7ab0; }
+  .hl-hero-cta.outline { background: transparent; color: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.3); }
+  .hl-hero-cta.outline:hover { background: rgba(255,255,255,.1); }
+  /* Hero stat cards */
+  .hl-hero-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 64px; }
+  .hl-hero-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15);
+    padding: 24px 20px; transition: background .3s;
+  }
+  .hl-hero-card:hover { background: rgba(74,144,196,.12); }
+  .hl-hero-card-val { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .hl-hero-card-val span { font-size: .6em; color: var(--sky); }
+  .hl-hero-card-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
+
+  /* ── Rates Banner ──────────────────────────────────────────── */
+  .hl-rates-banner { background: var(--sky); padding: 20px 40px; }
+  .hl-rates-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .hl-rates-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.8); }
+  .hl-rates-row { display: flex; gap: 32px; flex-wrap: wrap; }
+  .hl-rate-item { display: flex; flex-direction: column; align-items: center; }
+  .hl-rate-val { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: #fff; line-height: 1; }
+  .hl-rate-bank { font-size: 10px; color: rgba(255,255,255,.7); margin-top: 3px; }
+  .hl-rates-cta {
+    padding: 10px 24px; background: #fff; color: var(--sky); text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-family: 'DM Sans', sans-serif;
+    transition: all .3s; white-space: nowrap;
+  }
+  .hl-rates-cta:hover { background: var(--navy); color: #fff; }
+
+  /* ── Loan Types ────────────────────────────────────────────── */
+  .hl-section { padding: 80px 40px; }
+  .hl-section-inner { max-width: 1200px; margin: 0 auto; }
+  .hl-loan-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .hl-loan-card {
+    background: var(--ivory); border: 1px solid var(--border); padding: 32px 28px;
+    transition: all .35s cubic-bezier(.23,1,.32,1); position: relative; overflow: hidden;
+  }
+  .hl-loan-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--sky), var(--navy));
+    transform: scaleY(0); transform-origin: top; transition: transform .35s cubic-bezier(.23,1,.32,1);
+  }
+  .hl-loan-card:hover { box-shadow: 0 12px 36px rgba(13,43,78,.09); transform: translateY(-3px); }
+  .hl-loan-card:hover::before { transform: scaleY(1); }
+  .hl-loan-card-icon { color: var(--sky); margin-bottom: 18px; }
+  .hl-loan-card-name { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--charcoal); margin-bottom: 8px; font-weight: 500; }
+  .hl-loan-rate { font-size: 24px; font-weight: 300; color: var(--sky); margin-bottom: 5px; font-family: 'Cormorant Garamond', serif; }
+  .hl-loan-rate span { font-size: 12px; color: var(--warm-grey); font-weight: 300; }
+  .hl-loan-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; margin-top: 12px; }
+  .hl-loan-tag { display: inline-block; margin-top: 16px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 10px; }
+
+  /* ── Process ───────────────────────────────────────────────── */
+  .hl-process { padding: 80px 40px; background: var(--charcoal); }
+  .hl-process-inner { max-width: 1100px; margin: 0 auto; }
+  .hl-process-header { text-align: center; margin-bottom: 56px; }
+  .hl-process-header .section-heading { color: #fff; }
+  .hl-process-header .section-heading em { color: var(--sky); }
+  .hl-process-header .section-sub { color: rgba(255,255,255,.5); margin: 0 auto; }
+  .hl-process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+  .hl-process-grid::before {
+    content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,144,196,.4), transparent);
+  }
+  .hl-proc-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 10px; position: relative; z-index: 1; }
+  .hl-proc-num {
+    width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(74,144,196,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
+    color: var(--sky); background: var(--charcoal); margin-bottom: 20px;
+  }
+  .hl-proc-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
+  .hl-proc-desc { font-size: 11px; line-height: 1.65; color: rgba(255,255,255,.4); font-weight: 300; }
+
+  /* ── Banks ─────────────────────────────────────────────────── */
+  .hl-banks { padding: 60px 40px; background: var(--ivory); }
+  .hl-banks-inner { max-width: 1100px; margin: 0 auto; }
+  .hl-banks-header { display: flex; align-items: center; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
+  .hl-banks-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--charcoal); }
+  .hl-banks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+  .hl-bank-pill {
+    background: #fff; border: 1px solid var(--border); padding: 18px 14px;
+    text-align: center; font-size: 12px; font-weight: 500; color: var(--charcoal); transition: all .3s;
+  }
+  .hl-bank-pill:hover { border-color: var(--sky); color: var(--sky); }
+  .hl-bank-pill small { display: block; font-size: 10px; color: var(--warm-grey); font-weight: 300; margin-top: 3px; }
+
+  /* ── Why Choose Us ─────────────────────────────────────────── */
+  .hl-why { padding: 80px 40px; background: #fff; }
+  .hl-why-inner { max-width: 1100px; margin: 0 auto; }
+  .hl-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
+  .hl-why-item { display: flex; flex-direction: column; gap: 14px; }
+  .hl-why-icon { width: 48px; height: 48px; border: 1px solid rgba(74,144,196,.25); display: flex; align-items: center; justify-content: center; color: var(--sky); }
+  .hl-why-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal); font-weight: 500; }
+  .hl-why-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── Eligibility Calculator ────────────────────────────────── */
+  .hl-eligibility { padding: 80px 40px; background: var(--ivory); }
+  .hl-elig-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .hl-elig-info { display: flex; flex-direction: column; gap: 28px; }
+  .hl-elig-info-item { display: flex; gap: 20px; align-items: flex-start; }
+  .hl-elig-info-icon { color: var(--sky); flex-shrink: 0; margin-top: 2px; }
+  .hl-elig-info-title { font-size: 14px; font-weight: 500; color: var(--charcoal); margin-bottom: 5px; }
+  .hl-elig-info-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+  .hl-emi-link {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--sky); text-decoration: none; margin-top: 24px;
+    border: 1px solid rgba(74,144,196,.3); padding: 12px 24px; transition: all .3s;
+  }
+  .hl-emi-link:hover { background: var(--sky); color: #fff; border-color: var(--sky); }
+  .hl-elig-form { background: #fff; border: 1px solid var(--border); padding: 36px; }
+  .hl-elig-form-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
+  .hl-elig-form-sub { font-size: 12px; color: var(--warm-grey); margin-bottom: 24px; }
+  .hl-elig-input {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
+    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--charcoal); background: var(--ivory); outline: none; transition: border-color .3s;
+  }
+  .hl-elig-input:focus { border-color: var(--sky); }
+  .hl-elig-select {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
+    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--charcoal); background: var(--ivory);
+    outline: none; appearance: none; cursor: pointer; transition: border-color .3s;
+  }
+  .hl-elig-select:focus { border-color: var(--sky); }
+  .hl-elig-btn {
+    width: 100%; padding: 14px; background: var(--navy); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: background .3s;
+  }
+  .hl-elig-btn:hover { background: var(--sky); }
+  .hl-elig-result { display: none; background: var(--navy); padding: 24px; margin-top: 20px; text-align: center; }
+  .hl-elig-result.show { display: block; }
+  .hl-elig-result-val { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: #fff; }
+  .hl-elig-result-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 6px; }
+
+  /* ── CTA + Form ────────────────────────────────────────────── */
+  .hl-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); }
+  .hl-cta-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start; }
+  .hl-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
+  .hl-cta h2 em { font-style: italic; color: var(--sky); }
+  .hl-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
+  .hl-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .hl-checklist li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.75); }
+  .hl-checklist li svg { color: var(--sky); flex-shrink: 0; }
+  .hl-cta-form { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2); padding: 32px; }
+  .hl-cta-form-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
+  .hl-cta-form-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 22px; }
+  .hl-cta-input {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.9); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+    transition: border-color .3s;
+  }
+  .hl-cta-input::placeholder { color: rgba(255,255,255,.35); }
+  .hl-cta-input:focus { border-color: var(--sky); }
+  .hl-cta-select {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; appearance: none; cursor: pointer;
+  }
+  .hl-cta-select option { background: #0D2B4E; color: #fff; }
+  .hl-cta-submit {
+    width: 100%; padding: 14px; background: var(--sky); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: background .3s;
+  }
+  .hl-cta-submit:hover { background: #3a7ab0; }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .hl-loan-types { grid-template-columns: repeat(2, 1fr); }
+    .hl-why-grid { grid-template-columns: repeat(2, 1fr); }
+    .hl-process-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .hl-process-grid::before { display: none; }
+    .hl-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hl-elig-inner { grid-template-columns: 1fr; }
+    .hl-banks-grid { grid-template-columns: repeat(3, 1fr); }
+    .hl-hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .hl-hero { padding: 60px 24px; }
+    .hl-section, .hl-process, .hl-banks, .hl-eligibility, .hl-cta, .hl-why { padding: 56px 24px; }
+    .hl-loan-types { grid-template-columns: 1fr; }
+    .hl-banks-grid { grid-template-columns: repeat(2, 1fr); }
+    .hl-rates-inner { flex-direction: column; align-items: flex-start; }
+    .hl-rates-banner { padding: 20px 24px; }
+  }
+  @media (max-width: 480px) {
+    .hl-process-grid { grid-template-columns: 1fr 1fr; }
+    .hl-why-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hl-page">
+
+  <!-- ══════════════════ HERO ══════════════════════════════════ -->
+  <section class="hl-hero">
+    <div class="hl-hero-inner">
+      <div class="hl-hero-eyebrow">HOMEXO Financial Services</div>
+      <h1>Get the Best <em>Home Loan</em><br>for Your Dream Home</h1>
+      <p class="hl-hero-desc">Compare rates from 25+ banks and NBFCs. Our loan advisors ensure you get the lowest interest rate, minimal documentation, and the fastest possible approval.</p>
+      <div class="hl-hero-actions">
+        <a href="#apply" class="hl-hero-cta primary">Apply Now →</a>
+        <a href="#eligibility" class="hl-hero-cta outline">Check Eligibility</a>
+      </div>
+      <div class="hl-hero-cards">
+        <div class="hl-hero-card">
+          <div class="hl-hero-card-val">8.40<span>%</span></div>
+          <div class="hl-hero-card-lbl">Rates from p.a.</div>
+        </div>
+        <div class="hl-hero-card">
+          <div class="hl-hero-card-val">25<span>+</span></div>
+          <div class="hl-hero-card-lbl">Bank &amp; NBFC Partners</div>
+        </div>
+        <div class="hl-hero-card">
+          <div class="hl-hero-card-val">48<span>hr</span></div>
+          <div class="hl-hero-card-lbl">In-Principle Approval</div>
+        </div>
+        <div class="hl-hero-card">
+          <div class="hl-hero-card-val">₹4200<span>Cr</span></div>
+          <div class="hl-hero-card-lbl">Loans Facilitated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ LIVE RATES BANNER ═════════════════════ -->
+  <div class="hl-rates-banner">
+    <div class="hl-rates-inner">
+      <div class="hl-rates-label">Today's Best Rates</div>
+      <div class="hl-rates-row">
+        <div class="hl-rate-item"><div class="hl-rate-val">8.40%</div><div class="hl-rate-bank">HDFC / ICICI</div></div>
+        <div class="hl-rate-item"><div class="hl-rate-val">8.50%</div><div class="hl-rate-bank">SBI / LIC HFL</div></div>
+        <div class="hl-rate-item"><div class="hl-rate-val">8.65%</div><div class="hl-rate-bank">Kotak / Axis</div></div>
+        <div class="hl-rate-item"><div class="hl-rate-val">8.35%</div><div class="hl-rate-bank">Balance Transfer</div></div>
+      </div>
+      <a href="#apply" class="hl-rates-cta">Get My Rate →</a>
+    </div>
+  </div>
+
+  <!-- ══════════════════ LOAN TYPES ════════════════════════════ -->
+  <section class="hl-section" style="background:#fff;">
+    <div class="hl-section-inner">
+      <div class="section-eyebrow">Loan Products</div>
+      <h2 class="section-heading">Find the Right <em>Loan</em> for Your Need</h2>
+      <p class="section-sub">From new purchase to renovation — we offer end-to-end assistance for all types of home loans across India.</p>
+      <div class="hl-loan-types">
+
+        <div class="hl-loan-card">
+          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="hl-loan-card-name">Home Purchase Loan</div>
+          <div class="hl-loan-rate">8.40% <span>p.a. onwards</span></div>
+          <p class="hl-loan-desc">Financing for buying a new or resale apartment, villa, or independent house. Up to 90% funding of property value, tenure up to 30 years.</p>
+          <span class="hl-loan-tag">Most Popular</span>
+        </div>
+
+        <div class="hl-loan-card">
+          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+          <div class="hl-loan-card-name">Under Construction</div>
+          <div class="hl-loan-rate">8.50% <span>p.a. onwards</span></div>
+          <p class="hl-loan-desc">Disbursement-linked loans for under-construction projects. Pay interest only during construction; full EMI begins at possession.</p>
+          <span class="hl-loan-tag">Pre-EMI Option</span>
+        </div>
+
+        <div class="hl-loan-card">
+          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="hl-loan-card-name">Balance Transfer</div>
+          <div class="hl-loan-rate">8.35% <span>p.a. onwards</span></div>
+          <p class="hl-loan-desc">Transfer your existing high-interest home loan to a lower-rate lender and reduce your monthly EMI burden significantly.</p>
+          <span class="hl-loan-tag">Lowest Rate</span>
+        </div>
+
+        <div class="hl-loan-card">
+          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="hl-loan-card-name">Home Renovation Loan</div>
+          <div class="hl-loan-rate">9.00% <span>p.a. onwards</span></div>
+          <p class="hl-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to ₹50L for existing home renovations without additional collateral.</p>
+          <span class="hl-loan-tag">No Collateral</span>
+        </div>
+
+        <div class="hl-loan-card">
+          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg></div>
+          <div class="hl-loan-card-name">Loan Against Property</div>
+          <div class="hl-loan-rate">9.50% <span>p.a. onwards</span></div>
+          <p class="hl-loan-desc">Unlock the equity in your existing property for business or personal needs. Up to 70% of current market value as a loan.</p>
+          <span class="hl-loan-tag">Up to 70% LTV</span>
+        </div>
+
+        <div class="hl-loan-card">
+          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.9-5.7a8.5 8.5 0 113.8 3.8z"/></svg></div>
+          <div class="hl-loan-card-name">NRI Home Loan</div>
+          <div class="hl-loan-rate">8.60% <span>p.a. onwards</span></div>
+          <p class="hl-loan-desc">Specially structured loans for Non-Resident Indians purchasing property in India. Compliant with FEMA and RBI regulations.</p>
+          <span class="hl-loan-tag">FEMA Compliant</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ PROCESS ═══════════════════════════════ -->
+  <section class="hl-process">
+    <div class="hl-process-inner">
+      <div class="hl-process-header">
+        <div class="section-eyebrow">Loan Journey</div>
+        <h2 class="section-heading" style="color:#fff;">How the <em>Loan Process</em> Works</h2>
+        <p class="section-sub" style="color:rgba(255,255,255,.5);margin:0 auto;">From enquiry to disbursement — our advisors handle everything so you can focus on your home.</p>
+      </div>
+      <div class="hl-process-grid">
+        <div class="hl-proc-step">
+          <div class="hl-proc-num">01</div>
+          <div class="hl-proc-title">Eligibility Check</div>
+          <p class="hl-proc-desc">Share income details and property information for an instant pre-qualification.</p>
+        </div>
+        <div class="hl-proc-step">
+          <div class="hl-proc-num">02</div>
+          <div class="hl-proc-title">Bank Comparison</div>
+          <p class="hl-proc-desc">We compare offers from 25+ lenders to find your best rate and terms.</p>
+        </div>
+        <div class="hl-proc-step">
+          <div class="hl-proc-num">03</div>
+          <div class="hl-proc-title">Documentation</div>
+          <p class="hl-proc-desc">Our team provides a precise document checklist and assists in collecting and verifying all papers.</p>
+        </div>
+        <div class="hl-proc-step">
+          <div class="hl-proc-num">04</div>
+          <div class="hl-proc-title">Sanction Letter</div>
+          <p class="hl-proc-desc">In-principle approval and sanction letter issued — typically within 48 hours for pre-approved profiles.</p>
+        </div>
+        <div class="hl-proc-step">
+          <div class="hl-proc-num">05</div>
+          <div class="hl-proc-title">Disbursement</div>
+          <p class="hl-proc-desc">Final verification completed and funds disbursed directly to seller or builder as per disbursement schedule.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ BANKS ═════════════════════════════════ -->
+  <section class="hl-banks" id="banks">
+    <div class="hl-banks-inner">
+      <div class="hl-banks-header">
+        <div>
+          <div class="section-eyebrow">Lending Partners</div>
+          <h3 class="section-heading" style="margin-bottom:0;">25+ Bank & <em>NBFC Partners</em></h3>
+        </div>
+      </div>
+      <div class="hl-banks-grid">
+        <div class="hl-bank-pill">HDFC Bank<small>From 8.40%</small></div>
+        <div class="hl-bank-pill">SBI<small>From 8.50%</small></div>
+        <div class="hl-bank-pill">ICICI Bank<small>From 8.40%</small></div>
+        <div class="hl-bank-pill">Axis Bank<small>From 8.75%</small></div>
+        <div class="hl-bank-pill">Kotak Mahindra<small>From 8.65%</small></div>
+        <div class="hl-bank-pill">LIC Housing<small>From 8.50%</small></div>
+        <div class="hl-bank-pill">PNB Housing<small>From 8.75%</small></div>
+        <div class="hl-bank-pill">Bank of Baroda<small>From 8.40%</small></div>
+        <div class="hl-bank-pill">Bajaj Finance<small>From 8.60%</small></div>
+        <div class="hl-bank-pill">Tata Capital<small>From 8.75%</small></div>
+        <div class="hl-bank-pill">Indiabulls<small>From 9.00%</small></div>
+        <div class="hl-bank-pill">+14 more<small>All verified</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ WHY US ════════════════════════════════ -->
+  <section class="hl-why">
+    <div class="hl-why-inner">
+      <div class="section-eyebrow">Why HOMEXO Loans</div>
+      <h2 class="section-heading">Advantages You <em>Won't Find</em> Elsewhere</h2>
+      <div class="hl-why-grid">
+        <div class="hl-why-item">
+          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="hl-why-title">Zero Processing Fee</div>
+          <p class="hl-why-desc">We have zero-fee partnerships with select banks. Clients save ₹5,000–₹30,000 on processing charges alone.</p>
+        </div>
+        <div class="hl-why-item">
+          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="hl-why-title">Rate Negotiation</div>
+          <p class="hl-why-desc">Our volume relationships with banks often yield rates 0.10–0.25% lower than walk-in rates, saving lakhs over the loan tenure.</p>
+        </div>
+        <div class="hl-why-item">
+          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="hl-why-title">48-Hour Approvals</div>
+          <p class="hl-why-desc">Pre-approved limits from partner banks mean many clients receive an in-principle sanction letter within 48 hours of applying.</p>
+        </div>
+        <div class="hl-why-item">
+          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="hl-why-title">Dedicated Advisor</div>
+          <p class="hl-why-desc">A single point of contact from eligibility check to disbursement. No handoffs, no confusion, no delays.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ ELIGIBILITY CALCULATOR ════════════════ -->
+  <section class="hl-eligibility" id="eligibility">
+    <div class="hl-elig-inner">
+      <div>
+        <div class="section-eyebrow">Loan Eligibility</div>
+        <h2 class="section-heading">Check Your <em>Loan Eligibility</em></h2>
+        <p class="section-sub">Get an instant estimate of how much home loan you are eligible for based on your income, existing obligations, and tenure preference.</p>
+        <div class="hl-elig-info">
+          <div class="hl-elig-info-item">
+            <div class="hl-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div>
+              <div class="hl-elig-info-title">Income Multiplier</div>
+              <p class="hl-elig-info-desc">Most banks offer 55–60× of your net monthly salary as the maximum loan. Adding a co-applicant (spouse/parent) can increase eligibility significantly.</p>
+            </div>
+          </div>
+          <div class="hl-elig-info-item">
+            <div class="hl-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div>
+              <div class="hl-elig-info-title">CIBIL Score Matters</div>
+              <p class="hl-elig-info-desc">A CIBIL score above 750 qualifies you for the best rates. Our advisors help you understand and improve your score before applying.</p>
+            </div>
+          </div>
+          <div class="hl-elig-info-item">
+            <div class="hl-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div>
+              <div class="hl-elig-info-title">Fast-Track Approvals</div>
+              <p class="hl-elig-info-desc">With pre-approved limits from our bank partners, many applicants receive in-principle sanction within 48 hours of document submission.</p>
+            </div>
+          </div>
+        </div>
+        <a href="{% url 'pages:emi_calculator' %}" class="hl-emi-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="13" rx="2"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+          Try the Full EMI Calculator →
+        </a>
+      </div>
+      <div class="hl-elig-form">
+        <div class="hl-elig-form-title">Instant Eligibility Check</div>
+        <p class="hl-elig-form-sub">Takes 30 seconds — no credit check required.</p>
+        <input class="hl-elig-input" type="number" id="eligSalary" placeholder="Net Monthly Salary (₹)" min="0">
+        <input class="hl-elig-input" type="number" id="eligObligation" placeholder="Existing Monthly EMIs (₹)" min="0">
+        <select class="hl-elig-select" id="eligTenure">
+          <option value="" disabled selected>Preferred Loan Tenure</option>
+          <option value="120">10 Years</option>
+          <option value="180">15 Years</option>
+          <option value="240">20 Years</option>
+          <option value="300">25 Years</option>
+          <option value="360">30 Years</option>
+        </select>
+        <button class="hl-elig-btn" id="eligCalcBtn">Check Eligibility →</button>
+        <div class="hl-elig-result" id="eligResult">
+          <div class="hl-elig-result-val" id="eligAmount">—</div>
+          <div class="hl-elig-result-lbl">Estimated Loan Eligibility</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ CTA + FORM ════════════════════════════ -->
+  <section class="hl-cta" id="apply">
+    <div class="hl-cta-inner">
+      <div>
+        <h2>Apply for Your <em>Home Loan</em> Today</h2>
+        <p>Our loan advisors will call you back within 2 business hours with the best rate options for your profile.</p>
+        <ul class="hl-checklist">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Zero processing fee on select partner banks</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Rates from 8.40% p.a. — lowest available</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>In-principle approval within 48 hours</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dedicated advisor from start to disbursement</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>NRI and resident clients across all cities</li>
+        </ul>
+      </div>
+      <div>
+        <form class="hl-cta-form" method="post" action="{% url 'enquiries:create' %}">
+          {% csrf_token %}
+          <input type="hidden" name="service" value="home_loan">
+          <div class="hl-cta-form-title">Get a Free Callback</div>
+          <p class="hl-cta-form-sub">Tell us about your requirement and we'll match you with the best offer.</p>
+          <input class="hl-cta-input" type="text" name="name" placeholder="Your Full Name" required>
+          <input class="hl-cta-input" type="tel" name="phone" placeholder="Phone Number" required>
+          <input class="hl-cta-input" type="email" name="email" placeholder="Email Address">
+          <select class="hl-cta-select" name="loan_type">
+            <option value="" disabled selected>Loan Type</option>
+            <option>Home Purchase Loan</option>
+            <option>Under Construction Loan</option>
+            <option>Balance Transfer</option>
+            <option>Home Renovation Loan</option>
+            <option>Loan Against Property</option>
+            <option>NRI Home Loan</option>
+          </select>
+          <input class="hl-cta-input" type="text" name="property_location" placeholder="Property City / Location">
+          <button type="submit" class="hl-cta-submit">Request Callback →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block extra_js %}
+<script>
+document.getElementById('eligCalcBtn').addEventListener('click', function () {
+  const salary      = parseFloat(document.getElementById('eligSalary').value) || 0;
+  const obligations = parseFloat(document.getElementById('eligObligation').value) || 0;
+  const tenureSelect = document.getElementById('eligTenure');
+  const tenure      = parseInt(tenureSelect.value) || 240;
+
+  if (!salary) { alert('Please enter your monthly salary.'); return; }
+
+  const availableEMI = salary * 0.55 - obligations;
+  if (availableEMI <= 0) {
+    alert('Your existing obligations exceed the FOIR limit. Consider reducing existing EMIs or adding a co-applicant.');
+    return;
+  }
+
+  // Reverse EMI formula: P = EMI × [(1+r)^n - 1] / [r × (1+r)^n]
+  const annualRate = 0.0875; // conservative 8.75%
+  const r = annualRate / 12;
+  const n = tenure;
+  const eligibleLoan = availableEMI * (Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n));
+
+  const resultEl = document.getElementById('eligResult');
+  const amountEl = document.getElementById('eligAmount');
+  if (eligibleLoan >= 10000000) {
+    amountEl.textContent = '₹' + (eligibleLoan / 10000000).toFixed(2) + ' Cr';
+  } else {
+    amountEl.textContent = '₹' + (eligibleLoan / 100000).toFixed(1) + ' L';
+  }
+  resultEl.classList.add('show');
+});
+</script>
+{% endblock %}

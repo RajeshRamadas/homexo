@@ -31,11 +31,30 @@ def property_list(request):
         qs = qs.filter(listing_type=listing_type)
 
     if location:
-        qs = qs.filter(
+        # Handle common city name aliases (e.g., Bangalore ↔ Bengaluru)
+        CITY_ALIASES = {
+            'bangalore': 'bengaluru',
+            'bengaluru': 'bangalore',
+            'bombay':    'mumbai',
+            'mumbai':    'bombay',
+            'madras':    'chennai',
+            'chennai':   'madras',
+            'calcutta':  'kolkata',
+            'kolkata':   'calcutta',
+        }
+        alias = CITY_ALIASES.get(location.lower(), '')
+        location_q = (
             Q(locality__icontains=location) |
             Q(city__icontains=location) |
             Q(address__icontains=location)
         )
+        if alias:
+            location_q |= (
+                Q(locality__icontains=alias) |
+                Q(city__icontains=alias) |
+                Q(address__icontains=alias)
+            )
+        qs = qs.filter(location_q)
 
     if prop_type:
         qs = qs.filter(property_type=prop_type)
@@ -57,7 +76,7 @@ def property_list(request):
             qs = qs.filter(price__lte=high)
 
     # ── Sorting ───────────────────────────────────────────────────────────────
-    sort = request.GET.get('sort', '-created_at')
+    sort = request.GET.get('sort', 'newest')
     sort_options = {
         'price_asc':  'price',
         'price_desc': '-price',
@@ -70,6 +89,10 @@ def property_list(request):
     page      = request.GET.get('page')
     properties = paginator.get_page(page)
 
+    page_range = paginator.get_elided_page_range(
+        properties.number, on_each_side=2, on_ends=1
+    )
+
     context = {
         'properties':    properties,
         'form':          form,
@@ -77,6 +100,8 @@ def property_list(request):
         'listing_type':  listing_type,
         'current_sort':  sort,
         'tags':          PropertyTag.objects.all(),
+        'page_range':    page_range,
+        'ELLIPSIS':      paginator.ELLIPSIS,
     }
     return render(request, 'properties/list.html', context)
 
@@ -86,11 +111,20 @@ def property_detail(request, slug):
     prop = get_object_or_404(Property, slug=slug, status='active')
     prop.increment_views()
 
-    similar = Property.objects.filter(
+    similar_qs = Property.objects.filter(
         status='active',
         listing_type=prop.listing_type,
         city=prop.city,
-    ).exclude(pk=prop.pk)[:3]
+    ).exclude(pk=prop.pk).order_by('-created_at')[:3]
+
+    similar = list(similar_qs)
+    if len(similar) < 3:
+        needed = 3 - len(similar)
+        existing_ids = [p.pk for p in similar] + [prop.pk]
+        fallback = Property.objects.filter(
+            status='active'
+        ).exclude(pk__in=existing_ids).order_by('-views_count')[:needed]
+        similar.extend(list(fallback))
 
     context = {
         'property': prop,

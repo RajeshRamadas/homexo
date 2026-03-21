@@ -1,59 +1,334 @@
 {% extends 'base.html' %}
-{% block title %}Blog & News — HOMEXO{% endblock %}
+{% load static %}
+
+{% block title %}Insights & Editorial — HOMEXO{% endblock %}
+{% block meta_description %}Real estate insights, market trends, investment guides and property news from HOMEXO.{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Page header ── */
+  .bl-header {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 34px 60px 28px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+  }
+  .bl-eyebrow {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .bl-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .bl-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 56px); font-weight: 300;
+    line-height: 1.05; color: var(--charcoal);
+  }
+  .bl-title em { font-style: italic; color: var(--sky); }
+  .bl-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; flex-shrink: 0; }
+  .bl-search {
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--border); background: var(--ivory); padding: 11px 18px; width: 280px;
+  }
+  .bl-search input {
+    flex: 1; border: none; outline: none; background: none;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--charcoal);
+  }
+  .bl-search input::placeholder { color: var(--warm-grey); }
+  .bl-cat-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .bl-pill {
+    padding: 7px 16px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    border: 1px solid var(--border); background: none; cursor: pointer;
+    color: var(--soft-brown); font-family: 'DM Sans', sans-serif; transition: all .25s;
+    text-decoration: none; display: inline-block;
+  }
+  .bl-pill.active, .bl-pill:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  /* ── Layout ── */
+  .bl-layout {
+    display: grid; grid-template-columns: 1fr 304px;
+    max-width: 1280px; margin: 0 auto; padding: 0 60px 80px; align-items: start;
+    background: var(--white);
+  }
+
+  /* ── Article list ── */
+  .bl-list { border-right: 1px solid var(--border); padding-right: 48px; padding-top: 40px; }
+  .bl-section-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--warm-grey); margin-bottom: 32px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .bl-count { font-size: 10px; color: var(--sky); letter-spacing: 1px; }
+
+  /* Article row */
+  .bl-row {
+    display: grid; grid-template-columns: 260px 1fr;
+    border-bottom: 1px solid var(--border); padding-bottom: 34px; margin-bottom: 34px;
+    text-decoration: none; color: inherit;
+  }
+  .bl-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .bl-thumb {
+    position: relative; overflow: hidden; height: 190px;
+    background: linear-gradient(135deg,#0D2B4E,#1A4A7A); flex-shrink: 0;
+  }
+  .bl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.23,1,.32,1); }
+  .bl-row:hover .bl-thumb img { transform: scale(1.06); }
+  .bl-cat-badge {
+    position: absolute; bottom: 0; left: 0;
+    background: var(--navy); color: var(--white);
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; padding: 5px 12px;
+  }
+  .bl-body { padding: 2px 0 0 28px; display: flex; flex-direction: column; }
+  .bl-byline {
+    font-size: 11px; color: var(--warm-grey); letter-spacing: .4px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 9px; margin-bottom: 10px;
+  }
+  .bl-byline strong { color: var(--soft-brown); font-weight: 500; }
+  .bl-byline-sep { display: inline-block; width: 1px; height: 11px; background: var(--border); flex-shrink: 0; }
+  .bl-post-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; line-height: 1.25;
+    color: var(--charcoal); margin-bottom: 12px; transition: color .25s;
+  }
+  .bl-row:hover .bl-post-title { color: var(--navy); }
+  .bl-excerpt {
+    font-size: 13px; line-height: 1.85; color: var(--warm-grey); font-weight: 300; flex: 1;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .bl-read {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--sky); display: inline-flex; align-items: center; gap: 8px;
+    align-self: flex-start; transition: gap .3s;
+  }
+  .bl-row:hover .bl-read { gap: 14px; }
+
+  /* Pagination */
+  .bl-pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 36px; border-top: 1px solid var(--border); margin-top: 36px; gap: 16px;
+  }
+  .bl-pg-info { font-size: 12px; color: var(--warm-grey); }
+  .bl-pg-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .bl-pg-btn {
+    padding: 9px 16px; font-size: 12px; border: 1px solid var(--border);
+    text-decoration: none; color: var(--navy); transition: all .25s; font-family: 'DM Sans', sans-serif;
+  }
+  .bl-pg-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .bl-pg-btn:hover:not(.active) { border-color: var(--navy); background: var(--ivory); }
+
+  /* Empty state */
+  .bl-empty { padding: 80px 0; text-align: center; color: var(--warm-grey); }
+  .bl-empty p { font-size: 16px; margin-bottom: 12px; }
+  .bl-empty a { font-size: 12px; color: var(--sky); text-decoration: none; letter-spacing: 1px; }
+
+  /* ── Sidebar ── */
+  .bl-sidebar { padding-left: 40px; padding-top: 40px; position: sticky; top: 94px; }
+  .bl-widget { margin-bottom: 40px; }
+  .bl-widget-title {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--charcoal); margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .bl-widget-title::before { content: ''; display: block; width: 18px; height: 2px; background: var(--sky); }
+
+  /* Popular list */
+  .bl-popular { display: flex; flex-direction: column; gap: 16px; }
+  .bl-pop-item { display: flex; gap: 12px; align-items: flex-start; text-decoration: none; color: inherit; }
+  .bl-pop-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--sky);
+    opacity: .22; line-height: 1; flex-shrink: 0; min-width: 22px;
+  }
+  .bl-pop-cat { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); margin-bottom: 3px; }
+  .bl-pop-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 400;
+    color: var(--charcoal); line-height: 1.3; margin-bottom: 4px; transition: color .25s;
+  }
+  .bl-pop-item:hover .bl-pop-title { color: var(--navy); }
+  .bl-pop-date { font-size: 10px; color: var(--warm-grey); }
+
+  /* Report promo */
+  .bl-promo {
+    background: var(--navy); padding: 26px 22px; position: relative; overflow: hidden;
+  }
+  .bl-promo::before {
+    content: '2026'; position: absolute;
+    font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300;
+    color: rgba(74,144,196,.07); bottom: -12px; right: -6px; line-height: 1; pointer-events: none;
+  }
+  .bl-promo-eye { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 10px; }
+  .bl-promo-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 10px; }
+  .bl-promo-desc { font-size: 11px; color: rgba(200,216,236,.42); line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
+  .bl-promo-btn {
+    display: inline-block; background: var(--sky); color: var(--white);
+    padding: 8px 18px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: background .25s;
+  }
+  .bl-promo-btn:hover { background: var(--white); color: var(--navy); }
+
+  /* Tag cloud */
+  .bl-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .bl-tag {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--soft-brown); border: 1px solid var(--border); padding: 6px 12px;
+    text-decoration: none; transition: all .25s;
+  }
+  .bl-tag:hover, .bl-tag.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .bl-layout { padding: 0 36px 60px; }
+    .bl-header { padding: 28px 36px 22px; }
+  }
+  @media (max-width: 900px) {
+    .bl-layout { grid-template-columns: 1fr; padding: 0 20px 48px; }
+    .bl-list { border-right: none; padding-right: 0; }
+    .bl-sidebar { display: none; }
+    .bl-header { flex-direction: column; align-items: flex-start; gap: 18px; padding: 24px 20px 18px; }
+    .bl-header-right { align-items: flex-start; width: 100%; }
+    .bl-search { width: 100%; }
+    .bl-cat-pills { justify-content: flex-start; }
+  }
+  @media (max-width: 640px) {
+    .bl-row { grid-template-columns: 1fr; }
+    .bl-thumb { height: 52vw; }
+    .bl-body { padding: 14px 0 0; }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div style="background:var(--charcoal);padding:60px;">
-  <div class="section-eyebrow">Insights & Updates</div>
-  <h1 class="section-title" style="color:var(--ivory);">News & <em>Blog</em></h1>
+
+{# PAGE HEADER #}
+<div class="bl-header">
+  <div>
+    <div class="bl-eyebrow">Editorial</div>
+    <h1 class="bl-title">Insights &amp; <em>Analysis</em></h1>
+  </div>
+  <div class="bl-header-right">
+    <form method="GET" action="{% url 'blog:list' %}" class="bl-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" name="q" value="{{ query }}" placeholder="Search articles…">
+    </form>
+    <div class="bl-cat-pills">
+      <a href="{% url 'blog:list' %}{% if query %}?q={{ query }}{% endif %}"
+         class="bl-pill{% if not category_slug %} active{% endif %}">All</a>
+      {% for cat in categories %}
+      <a href="?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}"
+         class="bl-pill{% if category_slug == cat.slug %} active{% endif %}">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 
-<!-- Category filter -->
-{% if categories %}
-<div style="background:var(--white);border-bottom:1px solid var(--border);padding:18px 60px;display:flex;gap:12px;flex-wrap:wrap;">
-  <a href="{% url 'blog:list' %}" style="padding:8px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid {% if not request.GET.category %}var(--navy){% else %}var(--border){% endif %};background:{% if not request.GET.category %}var(--navy){% else %}transparent{% endif %};color:{% if not request.GET.category %}white{% else %}var(--soft-brown){% endif %};">All</a>
-  {% for cat in categories %}
-  <a href="?category={{ cat.slug }}" style="padding:8px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid {% if request.GET.category == cat.slug %}var(--navy){% else %}var(--border){% endif %};background:{% if request.GET.category == cat.slug %}var(--navy){% else %}transparent{% endif %};color:{% if request.GET.category == cat.slug %}white{% else %}var(--soft-brown){% endif %};">{{ cat.name }}</a>
-  {% endfor %}
-</div>
-{% endif %}
+{# MAIN LAYOUT #}
+<div class="bl-layout">
 
-<section class="section" style="background:var(--ivory);">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+  {# ARTICLE LIST #}
+  <div class="bl-list">
+    <div class="bl-section-label">
+      <span>
+        {% if category_slug %}{{ category_slug|title }}
+        {% elif query %}Search: &ldquo;{{ query }}&rdquo;
+        {% else %}Latest Articles{% endif %}
+      </span>
+      <span class="bl-count">{{ posts.paginator.count }} stor{{ posts.paginator.count|pluralize:"y,ies" }}</span>
+    </div>
+
     {% for post in posts %}
-    <a href="{{ post.get_absolute_url }}" style="text-decoration:none;background:var(--white);overflow:hidden;display:block;border:1px solid var(--border);transition:all .4s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(13,43,78,.1)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-      <div style="height:220px;overflow:hidden;background:linear-gradient(135deg,#0D2B4E,#1A3A5C);">
+    <a href="{{ post.get_absolute_url }}" class="bl-row">
+      <div class="bl-thumb">
         {% if post.cover_image %}
-        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;transition:transform .5s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+        {% endif %}
+        {% if post.category %}
+        <span class="bl-cat-badge" style="background:{{ post.category.color }};">{{ post.category.name }}</span>
         {% endif %}
       </div>
-      <div style="padding:24px;">
-        {% if post.category %}
-        <div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--sky);margin-bottom:10px;">{{ post.category.name }}</div>
-        {% endif %}
-        <h2 style="font-size:16px;font-weight:500;color:var(--charcoal);line-height:1.4;margin-bottom:10px;">{{ post.title }}</h2>
-        {% if post.excerpt %}
-        <p style="font-size:13px;color:var(--warm-grey);line-height:1.7;margin-bottom:16px;">{{ post.excerpt|truncatewords:20 }}</p>
-        {% endif %}
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border);">
-          <span style="font-size:11px;color:var(--warm-grey);">{{ post.published_at|date:"M d, Y" }}</span>
-          <span style="font-size:11px;color:var(--sky);letter-spacing:1px;text-transform:uppercase;">Read →</span>
+      <div class="bl-body">
+        <div class="bl-byline">
+          {% if post.author %}<strong>By {{ post.author.get_full_name|default:post.author.email }}</strong><span class="bl-byline-sep"></span>{% endif %}
+          {% if post.published_at %}{{ post.published_at|date:"F j, Y" }}{% else %}{{ post.created_at|date:"F j, Y" }}{% endif %}
         </div>
+        <h2 class="bl-post-title">{{ post.title }}</h2>
+        {% if post.excerpt %}<p class="bl-excerpt">{{ post.excerpt }}</p>{% endif %}
+        <span class="bl-read">Read Full Story
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
       </div>
     </a>
     {% empty %}
-    <div style="grid-column:span 3;text-align:center;padding:80px;color:var(--warm-grey);">
-      <p style="font-size:18px;">No posts yet.</p>
+    <div class="bl-empty">
+      <p>{% if query %}No articles found for &ldquo;{{ query }}&rdquo;.{% elif category_slug %}No articles in this category yet.{% else %}No articles published yet.{% endif %}</p>
+      {% if query or category_slug %}<a href="{% url 'blog:list' %}">← Back to all articles</a>{% endif %}
     </div>
     {% endfor %}
+
+    {# PAGINATION #}
+    {% if posts.has_other_pages %}
+    <div class="bl-pagination">
+      <span class="bl-pg-info">Showing {{ posts.start_index }}–{{ posts.end_index }} of {{ posts.paginator.count }}</span>
+      <div class="bl-pg-btns">
+        {% if posts.has_previous %}
+        <a class="bl-pg-btn" href="?page={{ posts.previous_page_number }}{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}">← Prev</a>
+        {% endif %}
+        {% for num in posts.paginator.page_range %}
+        <a class="bl-pg-btn{% if num == posts.number %} active{% endif %}"
+           href="?page={{ num }}{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+        {% endfor %}
+        {% if posts.has_next %}
+        <a class="bl-pg-btn" href="?page={{ posts.next_page_number }}{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}">Next →</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 
-  <!-- Pagination -->
-  {% if posts.has_other_pages %}
-  <div style="display:flex;justify-content:center;gap:8px;margin-top:48px;">
-    {% if posts.has_previous %}<a href="?page={{ posts.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" style="padding:10px 18px;border:1px solid var(--border);text-decoration:none;color:var(--navy);font-size:13px;">← Prev</a>{% endif %}
-    {% for num in posts.paginator.page_range %}<a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" style="padding:10px 16px;border:1px solid {% if num == posts.number %}var(--navy){% else %}var(--border){% endif %};background:{% if num == posts.number %}var(--navy){% else %}white{% endif %};color:{% if num == posts.number %}white{% else %}var(--navy){% endif %};text-decoration:none;font-size:13px;">{{ num }}</a>{% endfor %}
-    {% if posts.has_next %}<a href="?page={{ posts.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" style="padding:10px 18px;border:1px solid var(--border);text-decoration:none;color:var(--navy);font-size:13px;">Next →</a>{% endif %}
-  </div>
-  {% endif %}
-</section>
+  {# SIDEBAR #}
+  <aside class="bl-sidebar">
+
+    {% if popular_posts %}
+    <div class="bl-widget">
+      <h4 class="bl-widget-title">Most Read</h4>
+      <div class="bl-popular">
+        {% for p in popular_posts %}
+        <a href="{{ p.get_absolute_url }}" class="bl-pop-item">
+          <span class="bl-pop-num">0{{ forloop.counter }}</span>
+          <div>
+            {% if p.category %}<div class="bl-pop-cat">{{ p.category.name }}</div>{% endif %}
+            <div class="bl-pop-title">{{ p.title }}</div>
+            <div class="bl-pop-date">{% if p.published_at %}{{ p.published_at|date:"M j, Y" }}{% endif %}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="bl-widget">
+      <div class="bl-promo">
+        <div class="bl-promo-eye">Q1 2026 Report</div>
+        <h4 class="bl-promo-title">India<br>Market Pulse</h4>
+        <p class="bl-promo-desc">Quarterly price movements, inventory levels, and demand indicators across key micro-markets.</p>
+        <a href="{% url 'blog:list' %}" class="bl-promo-btn">Explore Reports →</a>
+      </div>
+    </div>
+
+    {% if categories %}
+    <div class="bl-widget">
+      <h4 class="bl-widget-title">Browse Topics</h4>
+      <div class="bl-tags">
+        {% for cat in categories %}
+        <a href="?category={{ cat.slug }}"
+           class="bl-tag{% if category_slug == cat.slug %} active{% endif %}">{{ cat.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </aside>
+
+</div>
+
 {% endblock %}

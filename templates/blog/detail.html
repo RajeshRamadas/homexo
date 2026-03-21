@@ -1,82 +1,711 @@
 {% extends 'base.html' %}
-{% block title %}{{ post.title }} — HOMEXO Blog{% endblock %}
-{% block meta_description %}{{ post.excerpt }}{% endblock %}
+{% block title %}{{ post.title }} — HOMEXO Insights{% endblock %}
+{% block meta_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── PAGE BASE: white background for article pages ── */
+  body { background: var(--white); }
+
+  /* ── READING PROGRESS RING ── */
+  .reading-ring {
+    position: fixed; bottom: 36px; right: 36px;
+    width: 52px; height: 52px; z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .reading-ring svg { transform: rotate(-90deg); }
+  .reading-ring-track { fill: none; stroke: var(--border); stroke-width: 3; }
+  .reading-ring-fill {
+    fill: none; stroke: var(--sky); stroke-width: 3;
+    stroke-linecap: round; stroke-dasharray: 138; stroke-dashoffset: 138;
+    transition: stroke-dashoffset 0.2s;
+  }
+  .reading-ring-pct {
+    position: absolute; font-size: 9px; letter-spacing: 0.5px;
+    color: var(--soft-brown); font-weight: 500;
+  }
+
+  /* ── SHARE BAR ── */
+  .share-bar {
+    position: fixed; left: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    z-index: 400;
+  }
+  .share-label {
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--warm-grey); writing-mode: vertical-rl; margin-bottom: 6px;
+  }
+  .share-btn {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    background: var(--white); display: flex; align-items: center;
+    justify-content: center; cursor: pointer; transition: all 0.3s;
+    border-radius: 50%; color: var(--soft-brown); text-decoration: none;
+  }
+  .share-btn:hover { background: var(--navy); border-color: var(--navy); color: var(--white); }
+  .share-btn svg { width: 13px; height: 13px; }
+  .share-divider { width: 1px; height: 32px; background: var(--border); }
+
+  /* ── ARTICLE HERO ── */
+  .article-hero {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 60px 64px;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    animation: fadeInUp 0.9s 0.15s both;
+  }
+  @keyframes fadeInUp { from { transform: translateY(28px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .article-breadcrumb {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 32px;
+    font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--warm-grey); justify-content: center;
+  }
+  .article-breadcrumb a { color: var(--sky); text-decoration: none; transition: color 0.3s; }
+  .article-breadcrumb a:hover { color: var(--navy); }
+  .breadcrumb-sep { color: var(--border); }
+
+  .article-cat-badge {
+    display: inline-flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  }
+  .article-cat-pill {
+    color: var(--white);
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+    padding: 6px 16px;
+  }
+  .article-read-time {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--warm-grey); display: flex; align-items: center; gap: 8px;
+  }
+  .article-read-time::before { content: ''; display: block; width: 16px; height: 1px; background: var(--border); }
+
+  .article-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 3.8vw, 56px);
+    font-weight: 300; line-height: 1.1;
+    color: var(--charcoal); margin-bottom: 24px; max-width: 780px;
+    animation: fadeInUp 0.9s 0.3s both;
+  }
+  .article-hero-deck {
+    font-size: 16px; line-height: 1.85; color: var(--warm-grey);
+    font-weight: 300; max-width: 600px; margin-bottom: 40px;
+    animation: fadeInUp 0.9s 0.45s both;
+  }
+
+  .article-author-row {
+    display: flex; align-items: center; gap: 20px;
+    padding-top: 28px; border-top: 1px solid var(--border);
+    width: 100%; max-width: 600px; justify-content: center;
+    animation: fadeInUp 0.9s 0.6s both;
+  }
+  .author-avatar {
+    width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--gold-light); flex-shrink: 0;
+    background: var(--navy); display: flex; align-items: center;
+    justify-content: center;
+  }
+  .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .author-avatar-initials {
+    font-family: 'Cormorant Garamond', serif; font-size: 16px;
+    color: var(--gold-light); font-weight: 400;
+  }
+  .author-name { font-size: 13px; font-weight: 500; color: var(--charcoal); margin-bottom: 2px; }
+  .author-title { font-size: 11px; color: var(--warm-grey); letter-spacing: 0.5px; }
+  .author-meta-sep { width: 1px; height: 32px; background: var(--border); }
+  .article-date-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--warm-grey); margin-bottom: 3px; }
+  .article-date-val { font-size: 13px; color: var(--charcoal); font-weight: 400; }
+
+  /* ── ARTICLE COVER IMAGE ── */
+  .article-cover { height: 440px; overflow: hidden; background: var(--charcoal); }
+  .article-cover img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+
+  /* ── ARTICLE BODY ── */
+  .article-body-wrap {
+    display: grid; grid-template-columns: 1fr 300px;
+    gap: 0; padding: 0 60px 80px 80px;
+    background: var(--white); max-width: 1400px; margin: 0 auto;
+  }
+  .article-content { padding-top: 64px; padding-right: 64px; border-right: 1px solid var(--border); }
+
+  /* Pull quote intro */
+  .article-intro-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 2.2vw, 30px); font-weight: 300; font-style: italic;
+    line-height: 1.55; color: var(--navy);
+    padding: 0 0 40px; margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .article-intro-quote::before {
+    content: '\201C'; font-size: 120px; line-height: 0.6;
+    color: var(--sky); opacity: 0.15; position: absolute;
+    top: -10px; left: -16px; font-family: 'Cormorant Garamond', serif;
+    pointer-events: none;
+  }
+
+  /* Body prose */
+  .article-prose { max-width: 700px; }
+  .article-prose h2 {
+    font-family: 'Cormorant Garamond', serif; font-size: 32px;
+    font-weight: 400; color: var(--charcoal); line-height: 1.15;
+    margin: 52px 0 20px; padding-top: 52px; border-top: 1px solid var(--border);
+  }
+  .article-prose h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .article-prose h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-weight: 400; color: var(--charcoal); line-height: 1.2; margin: 36px 0 14px;
+  }
+  .article-prose p { font-size: 16px; line-height: 1.9; color: #2C3E50; font-weight: 300; margin-bottom: 24px; }
+  .article-prose strong { font-weight: 500; color: var(--charcoal); }
+  .article-prose a { color: var(--sky); text-decoration: underline; }
+  .article-prose ul, .article-prose ol { margin: 0 0 24px 20px; }
+  .article-prose li { font-size: 16px; line-height: 1.9; color: #2C3E50; font-weight: 300; margin-bottom: 8px; }
+  .article-prose blockquote {
+    margin: 48px 0; padding: 36px 40px;
+    border-left: 3px solid var(--sky); background: var(--ivory);
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-style: italic; font-weight: 400; color: var(--navy); line-height: 1.55;
+  }
+  .article-prose img { width: 100%; display: block; margin: 32px 0; }
+
+  /* Pull quote (rendered via .pull-quote class in admin-authored body HTML) */
+  .article-prose .pull-quote {
+    margin: 48px 0; padding: 36px 40px;
+    border-left: 3px solid var(--sky); background: var(--ivory);
+  }
+  .article-prose .pull-quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-style: italic; font-weight: 400;
+    color: var(--navy); line-height: 1.55; margin-bottom: 14px;
+  }
+  .article-prose .pull-quote cite {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--warm-grey); font-style: normal;
+  }
+
+  /* Inline article image block */
+  .article-prose .article-img-block { margin: 48px 0; }
+  .article-prose .article-img-block img { width: 100%; display: block; margin: 0; }
+  .article-prose .article-img-block figcaption {
+    font-size: 11px; color: var(--warm-grey); letter-spacing: 0.5px;
+    padding: 12px 0 0; border-top: 1px solid var(--border); margin-top: 1px;
+  }
+
+  /* 3-column stat callout */
+  .article-prose .stat-callout {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin: 48px 0;
+  }
+  .article-prose .stat-callout-item {
+    background: var(--navy); padding: 28px 24px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .article-prose .stat-callout-item:nth-child(2) { background: var(--soft-brown); }
+  .article-prose .stat-callout-item:nth-child(3) { background: var(--sky); }
+  .article-prose .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px; font-weight: 300; color: var(--white); line-height: 1;
+  }
+  .article-prose .stat-lbl {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Key takeaways box */
+  .article-prose .key-takeaways {
+    background: var(--ivory); padding: 36px 40px; margin: 48px 0;
+    border: 1px solid var(--border);
+  }
+  .article-prose .key-takeaways-title {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .article-prose .key-takeaways-title::before {
+    content: ''; display: block; width: 20px; height: 1px; background: var(--sky);
+  }
+  .article-prose .key-takeaways ul { list-style: none; display: flex; flex-direction: column; gap: 14px; margin: 0; }
+  .article-prose .key-takeaways ul li {
+    font-size: 14px; color: var(--charcoal); line-height: 1.7;
+    padding-left: 20px; position: relative; font-weight: 300; margin: 0;
+  }
+  .article-prose .key-takeaways ul li::before {
+    content: ''; position: absolute; left: 0; top: 10px;
+    width: 6px; height: 1px; background: var(--sky);
+  }
+
+  /* Views count badge */
+  .article-views {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--warm-grey); display: flex; align-items: center; gap: 8px;
+  }
+  .article-views::before { content: ''; display: block; width: 16px; height: 1px; background: var(--border); }
+
+  /* Tags */
+  .article-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 52px; padding-top: 36px; border-top: 1px solid var(--border);
+  }
+  .article-tag {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--soft-brown); border: 1px solid var(--border);
+    padding: 6px 14px; text-decoration: none; transition: all 0.3s;
+  }
+  .article-tag:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  /* Author bio */
+  .author-bio {
+    margin-top: 52px; padding: 40px;
+    background: var(--ivory); border: 1px solid var(--border);
+    display: flex; gap: 28px;
+  }
+  .author-bio-avatar {
+    width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--gold-light); flex-shrink: 0;
+    background: var(--navy); display: flex; align-items: center; justify-content: center;
+  }
+  .author-bio-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .author-bio-avatar-initials {
+    font-family: 'Cormorant Garamond', serif; font-size: 24px;
+    color: var(--gold-light); font-weight: 400;
+  }
+  .author-bio-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 8px; }
+  .author-bio-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--charcoal); margin-bottom: 8px; }
+  .author-bio-text { font-size: 13px; line-height: 1.8; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── SIDEBAR ── */
+  .article-sidebar { padding-left: 44px; padding-top: 64px; position: sticky; top: 100px; align-self: start; }
+  .sidebar-widget { margin-bottom: 44px; }
+  .sidebar-title {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--charcoal); margin-bottom: 20px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sidebar-title::before { content: ''; display: block; width: 18px; height: 2px; background: var(--sky); }
+
+  /* Table of contents */
+  .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .toc-item a {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; transition: all 0.3s;
+  }
+  .toc-item:last-child a { border-bottom: none; }
+  .toc-num { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--sky); opacity: 0.4; flex-shrink: 0; line-height: 1.4; }
+  .toc-text { font-size: 12px; color: var(--warm-grey); line-height: 1.5; transition: color 0.3s; font-weight: 300; }
+  .toc-item a:hover .toc-text { color: var(--navy); }
+  .toc-item a:hover .toc-num { opacity: 0.8; }
+  .toc-item.active a .toc-text { color: var(--navy); font-weight: 400; }
+  .toc-item.active a .toc-num { opacity: 1; }
+
+  /* Related articles */
+  .related-list { display: flex; flex-direction: column; gap: 18px; }
+  .related-item { display: flex; gap: 14px; text-decoration: none; }
+  .related-thumb { width: 72px; height: 54px; overflow: hidden; flex-shrink: 0; }
+  .related-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; display: block; }
+  .related-thumb-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--navy), #1A4A7A); }
+  .related-item:hover .related-thumb img { transform: scale(1.08); }
+  .related-cat { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); margin-bottom: 4px; }
+  .related-title { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 400; color: var(--charcoal); line-height: 1.35; transition: color 0.3s; }
+  .related-item:hover .related-title { color: var(--navy); }
+
+  /* Sidebar CTA card */
+  .sidebar-report { background: var(--navy); padding: 26px 22px; position: relative; overflow: hidden; }
+  .sidebar-report::before {
+    content: 'HOMEXO'; position: absolute; font-family: 'Cormorant Garamond', serif;
+    font-size: 60px; font-weight: 300; color: rgba(74,144,196,0.07);
+    bottom: -10px; right: -6px; line-height: 1; pointer-events: none;
+  }
+  .sidebar-report-eyebrow { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 10px; }
+  .sidebar-report-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 10px; }
+  .sidebar-report-desc { font-size: 11px; color: rgba(200,216,236,0.45); line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
+  .sidebar-report-btn {
+    display: inline-block; background: var(--sky); color: var(--white);
+    padding: 8px 18px; font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none; transition: background 0.3s;
+  }
+  .sidebar-report-btn:hover { background: var(--white); color: var(--navy); }
+
+  /* ── PREV / NEXT NAV ── */
+  .article-nav {
+    position: static; top: auto; left: auto; right: auto;
+    z-index: auto; background: none; backdrop-filter: none;
+    padding: 0;
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .article-nav-item {
+    padding: 36px 48px; text-decoration: none; display: block;
+    transition: background 0.3s; border-right: 1px solid var(--border);
+  }
+  .article-nav-item:last-child { border-right: none; }
+  .article-nav-item:hover { background: var(--ivory); }
+  .article-nav-dir {
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--warm-grey); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .article-nav-dir svg { color: var(--sky); }
+  .article-nav-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px;
+    font-weight: 400; color: var(--charcoal); line-height: 1.25; transition: color 0.3s;
+  }
+  .article-nav-item:hover .article-nav-title { color: var(--navy); }
+  .article-nav-item.next { text-align: right; }
+  .article-nav-item.next .article-nav-dir { justify-content: flex-end; }
+
+  /* ── CTA BANNER ── */
+  .article-cta {
+    background: var(--navy); padding: 80px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center; position: relative; overflow: hidden;
+  }
+  .article-cta-bg { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond', serif; font-size: 180px; font-weight: 300; color: rgba(74,144,196,0.05); pointer-events: none; letter-spacing: 10px; white-space: nowrap; line-height: 1; }
+  .article-cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 4.5vw, 64px); font-weight: 300; color: var(--ivory); line-height: 1.05; }
+  .article-cta-title em { font-style: italic; color: var(--sky); }
+  .article-cta-body { font-size: 15px; line-height: 1.8; color: rgba(200,216,236,0.5); font-weight: 300; margin-top: 20px; margin-bottom: 32px; }
+  .article-cta-btn {
+    display: inline-block; background: var(--sky); color: var(--white);
+    padding: 16px 36px; font-size: 11px; letter-spacing: 2.5px;
+    text-transform: uppercase; text-decoration: none; transition: background 0.3s;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+  }
+  .article-cta-btn:hover { background: #3A7FB5; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .article-hero { padding: 80px 40px 52px; }
+    .article-body-wrap { padding: 0 40px 60px 48px; }
+    .article-content { padding-right: 40px; }
+    .article-sidebar { padding-left: 32px; }
+    .share-bar { left: 12px; }
+    .article-nav-item { padding: 28px 32px; }
+    .article-cta { padding: 60px 40px; gap: 48px; }
+  }
+  @media (max-width: 768px) {
+    .share-bar { display: none; }
+    .reading-ring { bottom: 16px; right: 16px; width: 44px; height: 44px; }
+    .article-prose .stat-callout { grid-template-columns: 1fr; }
+    .article-prose .stat-num { font-size: clamp(32px, 9vw, 44px); }
+    .article-prose .pull-quote { padding: 24px 20px; margin: 32px 0; }
+    .article-prose .key-takeaways { padding: 24px 20px; margin: 32px 0; }
+    #toc-widget { display: none !important; }
+    .article-hero { padding: 36px 16px 32px; text-align: left; align-items: flex-start; }
+    .article-breadcrumb { justify-content: flex-start; margin-bottom: 20px; }
+    .article-author-row { flex-wrap: wrap; gap: 12px; justify-content: flex-start; padding-top: 20px; max-width: 100%; }
+    .author-meta-sep { display: none; }
+    .article-cover { height: 240px; }
+    .article-body-wrap { display: flex; flex-direction: column; padding: 0 16px 48px; }
+    .article-content { padding-top: 32px; padding-right: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 40px; }
+    .article-sidebar { position: static; padding: 36px 0 0 0; }
+    .article-intro-quote { font-size: clamp(17px, 4.5vw, 22px); padding: 0 0 28px; margin-bottom: 28px; }
+    .article-prose { max-width: 100%; }
+    .article-prose h2 { font-size: clamp(22px, 6vw, 30px); margin: 36px 0 14px; padding-top: 36px; }
+    .article-prose p { font-size: 15px; margin-bottom: 18px; }
+    .article-tags { margin-top: 36px; padding-top: 24px; }
+    .author-bio { flex-direction: column; gap: 16px; padding: 24px 20px; }
+    .article-nav { grid-template-columns: 1fr; }
+    .article-nav-item { padding: 20px 16px; border-right: none; border-bottom: 1px solid var(--border); }
+    .article-nav-item:last-child { border-bottom: none; }
+    .article-nav-item.next { text-align: left; }
+    .article-nav-item.next .article-nav-dir { justify-content: flex-start; }
+    .article-cta { grid-template-columns: 1fr; padding: 48px 16px 40px; gap: 32px; }
+    .article-cta-bg { display: none; }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<div style="background:var(--charcoal);padding:60px 60px 0;">
-  <div style="max-width:760px;">
-    {% if post.category %}
-    <div class="section-eyebrow">{{ post.category.name }}</div>
-    {% endif %}
-    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4.5vw,56px);font-weight:300;color:var(--ivory);line-height:1.1;margin-bottom:20px;">{{ post.title }}</h1>
-    <div style="display:flex;align-items:center;gap:20px;padding-bottom:32px;">
-      <span style="font-size:13px;color:rgba(255,255,255,.4);">{{ post.published_at|date:"F d, Y" }}</span>
-      {% if post.author %}
-      <span style="font-size:13px;color:rgba(255,255,255,.4);">By {{ post.author.get_full_name }}</span>
-      {% endif %}
-      <span style="font-size:13px;color:rgba(255,255,255,.3);">{{ post.views_count }} views</span>
-    </div>
-  </div>
+
+<!-- Reading progress ring -->
+<div class="reading-ring" id="reading-ring">
+  <svg width="52" height="52" viewBox="0 0 52 52">
+    <circle class="reading-ring-track" cx="26" cy="26" r="22"/>
+    <circle class="reading-ring-fill" id="ring-fill" cx="26" cy="26" r="22"/>
+  </svg>
+  <span class="reading-ring-pct" id="ring-pct">0%</span>
 </div>
 
+<!-- Share bar (fixed left, desktop only) -->
+<div class="share-bar">
+  <span class="share-label">Share</span>
+  <a class="share-btn"
+     href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}"
+     target="_blank" rel="noopener" title="Share on X / Twitter">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+  </a>
+  <a class="share-btn"
+     href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
+     target="_blank" rel="noopener" title="Share on LinkedIn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+  </a>
+  <button class="share-btn" id="copyLinkBtn" title="Copy link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+  </button>
+  <div class="share-divider"></div>
+  <a class="share-btn"
+     href="https://wa.me/?text={{ post.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}"
+     target="_blank" rel="noopener" title="Share on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:14px;height:14px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.173.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+</div>
+
+<!-- ARTICLE HERO -->
+<header class="article-hero">
+  <div class="article-breadcrumb">
+    <a href="{% url 'blog:list' %}">Insights</a>
+    {% if post.category %}
+    <span class="breadcrumb-sep">—</span>
+    <a href="{% url 'blog:list' %}?category={{ post.category.slug }}">{{ post.category.name }}</a>
+    {% endif %}
+  </div>
+
+  <div class="article-cat-badge">
+    {% if post.category %}
+    <span class="article-cat-pill" style="background:{{ post.category.color|default:'var(--navy)' }};">{{ post.category.name }}</span>
+    {% endif %}
+    <span class="article-read-time">{{ post.reading_time }} min read</span>
+    <span class="article-views">{{ post.views_count }} views</span>
+  </div>
+
+  <h1 class="article-hero-title">{{ post.title }}</h1>
+
+  {% if post.excerpt %}
+  <p class="article-hero-deck">{{ post.excerpt }}</p>
+  {% endif %}
+
+  {% if post.author %}
+  <div class="article-author-row">
+    <div class="author-avatar">
+      {% if post.author.avatar %}
+      <img src="{{ post.author.avatar.url }}" alt="{{ post.author.get_full_name }}">
+      {% else %}
+      <span class="author-avatar-initials">{{ post.author.first_name.0 }}{{ post.author.last_name.0 }}</span>
+      {% endif %}
+    </div>
+    <div class="author-info">
+      <div class="author-name">{{ post.author.get_full_name }}</div>
+      {% if post.author.role %}<div class="author-title">{{ post.author.get_role_display }}</div>{% endif %}
+    </div>
+    {% if post.published_at %}
+    <div class="author-meta-sep"></div>
+    <div class="article-date-block">
+      <div class="article-date-label">Published</div>
+      <div class="article-date-val">{{ post.published_at|date:"F j, Y" }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</header>
+
+<!-- COVER IMAGE -->
 {% if post.cover_image %}
-<div style="height:420px;overflow:hidden;background:var(--charcoal);">
-  <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;opacity:.85;">
+<div class="article-cover">
+  <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
 </div>
 {% endif %}
 
-<section class="section" style="background:var(--ivory);">
-  <div style="display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start;max-width:1100px;">
-    <!-- Article body -->
-    <div>
-      {% if post.excerpt %}
-      <div style="font-size:17px;line-height:1.8;color:var(--soft-brown);font-weight:400;margin-bottom:28px;padding:24px;background:var(--white);border-left:3px solid var(--sky);">{{ post.excerpt }}</div>
-      {% endif %}
-      <div style="background:var(--white);padding:36px;font-size:15px;line-height:1.9;color:var(--charcoal);">
-        {{ post.body|linebreaks }}
-      </div>
+<!-- ARTICLE BODY -->
+<div class="article-body-wrap">
 
-      <!-- Share -->
-      <div style="background:var(--white);padding:24px;margin-top:3px;display:flex;align-items:center;gap:16px;">
-        <span style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Share:</span>
-        <a href="https://wa.me/?text={{ post.title|urlencode }}" target="_blank" style="padding:8px 16px;background:#25d366;color:white;text-decoration:none;font-size:12px;">WhatsApp</a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" style="padding:8px 16px;background:#0077b5;color:white;text-decoration:none;font-size:12px;">LinkedIn</a>
-        <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" style="padding:8px 16px;background:var(--charcoal);color:white;text-decoration:none;font-size:12px;">X / Twitter</a>
+  <!-- MAIN CONTENT -->
+  <article class="article-content">
+
+    {% if post.excerpt %}
+    <div class="article-intro-quote">{{ post.excerpt }}</div>
+    {% endif %}
+
+    {% if post.key_takeaways %}
+    <div class="key-takeaways">
+      <div class="key-takeaways-title">Key Takeaways</div>
+      <ul>
+        {% for line in post.key_takeaways.splitlines %}
+          {% if line.strip %}
+          <li>{{ line.strip }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <div class="article-prose">
+      {{ post.body|safe }}
+    </div>
+
+    <!-- Tags -->
+    <div class="article-tags">
+      {% if post.category %}
+      <a href="{% url 'blog:list' %}?category={{ post.category.slug }}" class="article-tag">{{ post.category.name }}</a>
+      {% endif %}
+      <a href="{% url 'blog:list' %}" class="article-tag">All Insights</a>
+    </div>
+
+    <!-- Author bio -->
+    {% if post.author %}
+    <div class="author-bio">
+      <div class="author-bio-avatar">
+        {% if post.author.avatar %}
+        <img src="{{ post.author.avatar.url }}" alt="{{ post.author.get_full_name }}">
+        {% else %}
+        <span class="author-bio-avatar-initials">{{ post.author.first_name.0 }}{{ post.author.last_name.0 }}</span>
+        {% endif %}
+      </div>
+      <div>
+        <div class="author-bio-label">About the Author</div>
+        <div class="author-bio-name">{{ post.author.get_full_name }}</div>
+        {% if post.author.role %}
+        <p class="author-bio-text">{{ post.author.get_role_display }}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="article-sidebar">
+
+    <!-- TOC widget: hidden until JS finds 2+ h2 headings in the body -->
+    <div class="sidebar-widget" id="toc-widget" style="display:none;">
+      <h4 class="sidebar-title">In This Article</h4>
+      <ul class="toc-list" id="toc-list"></ul>
+    </div>
+
+    {% if related %}
+    <div class="sidebar-widget">
+      <h4 class="sidebar-title">Related Reads</h4>
+      <div class="related-list">
+        {% for rpost in related %}
+        <a href="{{ rpost.get_absolute_url }}" class="related-item">
+          <div class="related-thumb">
+            {% if rpost.cover_image %}
+            <img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}">
+            {% else %}
+            <div class="related-thumb-placeholder"></div>
+            {% endif %}
+          </div>
+          <div>
+            {% if rpost.category %}
+            <div class="related-cat">{{ rpost.category.name }}</div>
+            {% endif %}
+            <div class="related-title">{{ rpost.title|truncatewords:10 }}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- CTA card -->
+    <div class="sidebar-widget">
+      <div class="sidebar-report">
+        <div class="sidebar-report-eyebrow">Expert Guidance</div>
+        <h4 class="sidebar-report-title">Find Your<br>Dream Home</h4>
+        <p class="sidebar-report-desc">Our specialists guide you through every step of your property journey — from search to ownership.</p>
+        <a href="{% url 'enquiries:create' %}" class="sidebar-report-btn">Get in Touch →</a>
       </div>
     </div>
 
-    <!-- Sidebar -->
-    <div style="position:sticky;top:90px;">
-      <!-- Back -->
-      <a href="{% url 'blog:list' %}" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--soft-brown);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;">← Back to Blog</a>
+  </aside>
+</div>
 
-      {% if related %}
-      <div style="background:var(--white);padding:24px;border:1px solid var(--border);">
-        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:18px;">Related Posts</div>
-        <div style="display:flex;flex-direction:column;gap:16px;">
-          {% for rpost in related %}
-          <a href="{{ rpost.get_absolute_url }}" style="text-decoration:none;display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:64px;height:52px;flex-shrink:0;background:linear-gradient(135deg,#0D2B4E,#1A3A5C);overflow:hidden;">
-              {% if rpost.cover_image %}<img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
-            </div>
-            <div>
-              <div style="font-size:13px;color:var(--charcoal);font-weight:500;line-height:1.4;margin-bottom:4px;">{{ rpost.title|truncatewords:8 }}</div>
-              <div style="font-size:11px;color:var(--warm-grey);">{{ rpost.published_at|date:"M d, Y" }}</div>
-            </div>
-          </a>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
-
-      <!-- CTA -->
-      <div style="background:var(--navy);padding:24px;margin-top:16px;text-align:center;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ivory);margin-bottom:10px;">Looking for a Property?</div>
-        <p style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px;line-height:1.6;">Let our experts find the perfect match for you.</p>
-        <a href="{% url 'enquiries:create' %}" class="btn-primary" style="background:var(--sky);width:100%;display:block;text-align:center;">Get in Touch</a>
-      </div>
+<!-- PREV / NEXT NAV -->
+<nav class="article-nav" aria-label="Article navigation">
+  {% if prev_post %}
+  <a href="{{ prev_post.get_absolute_url }}" class="article-nav-item prev">
+    <div class="article-nav-dir">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Previous Article
     </div>
+    <div class="article-nav-title">{{ prev_post.title }}</div>
+  </a>
+  {% else %}
+  <a href="{% url 'blog:list' %}" class="article-nav-item prev">
+    <div class="article-nav-dir">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Blog
+    </div>
+    <div class="article-nav-title">All Insights &amp; Analysis</div>
+  </a>
+  {% endif %}
+
+  {% if next_post %}
+  <a href="{{ next_post.get_absolute_url }}" class="article-nav-item next">
+    <div class="article-nav-dir">
+      Next Article
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+    <div class="article-nav-title">{{ next_post.title }}</div>
+  </a>
+  {% else %}
+  <div class="article-nav-item next" style="opacity:0.35;pointer-events:none;">
+    <div class="article-nav-dir">Latest Article</div>
+    <div class="article-nav-title">You're reading the latest insight</div>
   </div>
-</section>
+  {% endif %}
+</nav>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Reading progress ring
+const ringFill = document.getElementById('ring-fill');
+const ringPct  = document.getElementById('ring-pct');
+const circumf  = 138;
+window.addEventListener('scroll', function() {
+  const s = document.documentElement.scrollTop;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = h > 0 ? s / h : 0;
+  if (ringFill) ringFill.style.strokeDashoffset = circumf - (circumf * pct);
+  if (ringPct)  ringPct.textContent = Math.round(pct * 100) + '%';
+}, { passive: true });
+
+// Copy link button
+const copyBtn = document.getElementById('copyLinkBtn');
+if (copyBtn) {
+  copyBtn.addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+      copyBtn.title = 'Copied!';
+      setTimeout(function() { copyBtn.title = 'Copy link'; }, 2000);
+    });
+  });
+}
+
+// Auto-generate Table of Contents from article h2 headings
+(function() {
+  var prose     = document.querySelector('.article-prose');
+  var tocList   = document.getElementById('toc-list');
+  var tocWidget = document.getElementById('toc-widget');
+  if (!prose || !tocList) return;
+  var headings  = prose.querySelectorAll('h2');
+  if (headings.length < 2) return;
+  headings.forEach(function(h, i) {
+    var id  = 'sec-' + (i + 1);
+    h.id    = id;
+    var li  = document.createElement('li');
+    li.className         = 'toc-item';
+    li.dataset.target    = id;
+    var num = (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1);
+    li.innerHTML = '<a href="#' + id + '"><span class="toc-num">' + num +
+                   '</span><span class="toc-text">' + h.textContent + '</span></a>';
+    tocList.appendChild(li);
+  });
+  if (tocWidget) tocWidget.style.display = '';
+  // Highlight active section on scroll
+  var items = tocList.querySelectorAll('.toc-item');
+  var obs   = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      items.forEach(function(t) { t.classList.remove('active'); });
+      var active = tocList.querySelector('.toc-item[data-target="' + e.target.id + '"]');
+      if (active) active.classList.add('active');
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  headings.forEach(function(h) { obs.observe(h); });
+})();
+</script>
 {% endblock %}

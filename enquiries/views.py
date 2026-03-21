@@ -13,6 +13,18 @@ def enquiry_create(request):
     property_id = request.GET.get('property')
     agent_id    = request.GET.get('agent')
 
+    # Map ?service= values that come from service pages to enquiry_type
+    _SERVICE_TYPE_MAP = {
+        'legal': 'legal', 'legal_homeloan': 'legal',
+        'security': 'security',
+        'plumbing': 'home_service', 'electrical': 'home_service',
+        'painting': 'home_service', 'cleaning': 'home_service',
+        'carpentry': 'home_service', 'ac': 'home_service',
+        'pest_control': 'home_service', 'renovation': 'home_service',
+        'home_service': 'home_service',
+        'home_loan': 'home_loan',
+    }
+
     form = EnquiryForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         enquiry = form.save(commit=False)
@@ -22,6 +34,12 @@ def enquiry_create(request):
             enquiry.property_id = property_id
         if agent_id:
             enquiry.agent_id = agent_id
+        # Append service detail to message if provided via hidden field
+        service_detail = request.POST.get('service_detail', '').strip()
+        if service_detail and enquiry.message:
+            enquiry.message = f'[Service: {service_detail}]\n\n{enquiry.message}'
+        elif service_detail:
+            enquiry.message = f'[Service: {service_detail}]'
         enquiry.save()
 
         # Email notification
