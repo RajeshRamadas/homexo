@@ -212,6 +212,7 @@
     <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
     <a href="{% url 'properties:list' %}?type=commercial">Commercial</a>
     <a href="{% url 'agents:list' %}">Agents</a>
+    <a href="{% url 'pages:developers' %}">Developers</a>
     <a href="{% url 'blog:list' %}">Blog</a>
     {% if user.is_authenticated %}
       <a href="{% url 'wishlist:list' %}" class="nav-wishlist">
@@ -329,6 +330,7 @@
       <ul>
         <li><a href="{% url 'pages:about' %}">About HOMEXO</a></li>
         <li><a href="{% url 'agents:list' %}">Our Agents</a></li>
+        <li><a href="{% url 'pages:developers' %}">Developers</a></li>
         <li><a href="{% url 'blog:list' %}">Blog &amp; News</a></li>
         <li><a href="{% url 'pages:area_guides' %}">Area Guides</a></li>
         <li><a href="{% url 'enquiries:create' %}">Contact</a></li>
