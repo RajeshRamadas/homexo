@@ -31,11 +31,30 @@ def property_list(request):
         qs = qs.filter(listing_type=listing_type)
 
     if location:
-        qs = qs.filter(
+        # Handle common city name aliases (e.g., Bangalore ↔ Bengaluru)
+        CITY_ALIASES = {
+            'bangalore': 'bengaluru',
+            'bengaluru': 'bangalore',
+            'bombay':    'mumbai',
+            'mumbai':    'bombay',
+            'madras':    'chennai',
+            'chennai':   'madras',
+            'calcutta':  'kolkata',
+            'kolkata':   'calcutta',
+        }
+        alias = CITY_ALIASES.get(location.lower(), '')
+        location_q = (
             Q(locality__icontains=location) |
             Q(city__icontains=location) |
             Q(address__icontains=location)
         )
+        if alias:
+            location_q |= (
+                Q(locality__icontains=alias) |
+                Q(city__icontains=alias) |
+                Q(address__icontains=alias)
+            )
+        qs = qs.filter(location_q)
 
     if prop_type:
         qs = qs.filter(property_type=prop_type)

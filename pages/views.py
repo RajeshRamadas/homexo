@@ -58,6 +58,14 @@ def home(request):
             status='published'
         ).select_related('category').order_by('-published_at')[:5],
 
+        # Popular cities for search chips (top cities by listing count)
+        'popular_cities': (
+            Property.objects.filter(status='active')
+            .values_list('city', flat=True)
+            .order_by('city')
+            .distinct()[:8]
+        ),
+
         # CTA / contact enquiry form
         'enquiry_form': EnquiryForm(),
 
