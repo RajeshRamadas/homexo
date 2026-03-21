@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Property Legal Services — Title Verification, Sale Agreement & Registration | HOMEXO{% endblock %}
+
+{% block extra_head %}
+<style>
+  .lg-page { font-family: 'DM Sans', sans-serif; }
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 18px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
+    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .lg-hero {
+    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
+    padding: 90px 40px 80px; position: relative; overflow: hidden;
+  }
+  .lg-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 65% 80% at 80% 50%, rgba(74,144,196,.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .lg-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+  .lg-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 28px;
+  }
+  .lg-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .lg-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 20px; max-width: 700px;
+  }
+  .lg-hero h1 em { font-style: italic; color: var(--sky); }
+  .lg-hero-desc {
+    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
+    max-width: 560px; font-weight: 300; margin-bottom: 40px;
+  }
+  .lg-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .lg-hero-cta {
+    padding: 14px 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none;
+    transition: all .3s; display: inline-block;
+  }
+  .lg-hero-cta.primary { background: var(--sky); color: #fff; }
+  .lg-hero-cta.primary:hover { background: #3a7ab0; }
+  .lg-hero-cta.outline { background: transparent; color: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.3); }
+  .lg-hero-cta.outline:hover { background: rgba(255,255,255,.1); }
+  .lg-hero-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 64px; }
+  .lg-hero-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15);
+    padding: 24px 20px; transition: background .3s;
+  }
+  .lg-hero-card:hover { background: rgba(74,144,196,.12); }
+  .lg-hero-card-val { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .lg-hero-card-val span { font-size: .6em; color: var(--sky); }
+  .lg-hero-card-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
+
+  /* ── Services Section ──────────────────────────────────────── */
+  .lg-section { padding: 80px 40px; }
+  .lg-section-inner { max-width: 1200px; margin: 0 auto; }
+  .lg-2col { display: grid; grid-template-columns: 1fr 360px; gap: 80px; align-items: start; }
+  .lg-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .lg-svc-card {
+    background: var(--ivory); padding: 32px 28px;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    transition: all .35s cubic-bezier(.23,1,.32,1);
+  }
+  .lg-svc-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--sky), var(--navy));
+    transform: scaleY(0); transform-origin: top; transition: transform .35s cubic-bezier(.23,1,.32,1);
+  }
+  .lg-svc-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.1); transform: translateY(-3px); }
+  .lg-svc-card:hover::before { transform: scaleY(1); }
+  .lg-svc-icon { color: var(--sky); margin-bottom: 18px; }
+  .lg-svc-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); margin-bottom: 10px; font-weight: 500; }
+  .lg-svc-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
+  .lg-svc-tag { display: inline-block; margin-top: 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 10px; }
+
+  /* ── Sidebar ───────────────────────────────────────────────── */
+  .lg-sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .lg-sidebar-card { background: var(--navy); padding: 28px; }
+  .lg-sidebar-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #fff; margin-bottom: 16px; }
+  .lg-sidebar-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(74,144,196,.12); }
+  .lg-sidebar-item:last-child { border-bottom: none; }
+  .lg-sidebar-item-icon { color: var(--sky); flex-shrink: 0; }
+  .lg-sidebar-item-text { font-size: 12px; color: rgba(255,255,255,.7); }
+  .lg-enquire-btn {
+    display: block; padding: 14px 24px; background: var(--sky); color: #fff;
+    text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;
+    transition: background .3s;
+  }
+  .lg-enquire-btn:hover { background: #3a7ab0; }
+  .lg-loan-link {
+    display: block; padding: 14px 24px; background: transparent; color: rgba(255,255,255,.7);
+    text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    border: 1px solid rgba(74,144,196,.3); transition: all .3s;
+  }
+  .lg-loan-link:hover { background: rgba(74,144,196,.15); color: #fff; }
+
+  /* ── Process ───────────────────────────────────────────────── */
+  .lg-process { padding: 80px 40px; background: var(--charcoal); }
+  .lg-process-inner { max-width: 1100px; margin: 0 auto; }
+  .lg-process-header { text-align: center; margin-bottom: 56px; }
+  .lg-process-header .section-heading { color: #fff; }
+  .lg-process-header .section-heading em { color: var(--sky); }
+  .lg-process-header .section-sub { color: rgba(255,255,255,.5); margin: 0 auto; }
+  .lg-process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+  .lg-process-grid::before {
+    content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,144,196,.4), transparent);
+  }
+  .lg-proc-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 10px; position: relative; z-index: 1; }
+  .lg-proc-num {
+    width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(74,144,196,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
+    color: var(--sky); background: var(--charcoal); margin-bottom: 20px;
+  }
+  .lg-proc-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
+  .lg-proc-desc { font-size: 11px; line-height: 1.65; color: rgba(255,255,255,.4); font-weight: 300; }
+
+  /* ── Why Us ────────────────────────────────────────────────── */
+  .lg-why { padding: 80px 40px; background: #fff; }
+  .lg-why-inner { max-width: 1100px; margin: 0 auto; }
+  .lg-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
+  .lg-why-item { display: flex; flex-direction: column; gap: 14px; }
+  .lg-why-icon { width: 48px; height: 48px; border: 1px solid rgba(74,144,196,.25); display: flex; align-items: center; justify-content: center; color: var(--sky); }
+  .lg-why-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal); font-weight: 500; }
+  .lg-why-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── CTA + Form ────────────────────────────────────────────── */
+  .lg-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); }
+  .lg-cta-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start; }
+  .lg-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
+  .lg-cta h2 em { font-style: italic; color: var(--sky); }
+  .lg-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
+  .lg-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .lg-checklist li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.75); }
+  .lg-checklist li svg { color: var(--sky); flex-shrink: 0; }
+  .lg-cta-form { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2); padding: 32px; }
+  .lg-cta-form-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
+  .lg-cta-form-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 22px; }
+  .lg-cta-input {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.9); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+    transition: border-color .3s;
+  }
+  .lg-cta-input::placeholder { color: rgba(255,255,255,.35); }
+  .lg-cta-input:focus { border-color: var(--sky); }
+  .lg-cta-select {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; appearance: none; cursor: pointer;
+  }
+  .lg-cta-select option { background: #0D2B4E; color: #fff; }
+  .lg-cta-submit {
+    width: 100%; padding: 14px; background: var(--sky); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: background .3s;
+  }
+  .lg-cta-submit:hover { background: #3a7ab0; }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .lg-2col { grid-template-columns: 1fr; }
+    .lg-sidebar { display: none; }
+    .lg-process-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .lg-process-grid::before { display: none; }
+    .lg-why-grid { grid-template-columns: repeat(2, 1fr); }
+    .lg-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+    .lg-hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .lg-hero { padding: 60px 24px; }
+    .lg-section, .lg-process, .lg-why, .lg-cta { padding: 56px 24px; }
+    .lg-services-grid { grid-template-columns: 1fr 1fr; }
+    .lg-process-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .lg-services-grid { grid-template-columns: 1fr; }
+    .lg-process-grid { grid-template-columns: 1fr; }
+    .lg-why-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+<div class="lg-page">
+
+  <!-- ══════════════════ HERO ══════════════════════════════════ -->
+  <section class="lg-hero">
+    <div class="lg-hero-inner">
+      <div class="lg-hero-eyebrow">HOMEXO Legal Services</div>
+      <h1>Complete <em>Legal Protection</em><br>for Your Property</h1>
+      <p class="lg-hero-desc">Our empanelled property lawyers provide end-to-end legal services — from title verification and sale agreement drafting to final registration — ensuring your investment is completely watertight.</p>
+      <div class="lg-hero-actions">
+        <a href="#consult" class="lg-hero-cta primary">Speak to a Lawyer →</a>
+        <a href="{% url 'pages:home_loan' %}" class="lg-hero-cta outline">Need a Home Loan?</a>
+      </div>
+      <div class="lg-hero-cards">
+        <div class="lg-hero-card">
+          <div class="lg-hero-card-val">2,500<span>+</span></div>
+          <div class="lg-hero-card-lbl">Legal Cases Handled</div>
+        </div>
+        <div class="lg-hero-card">
+          <div class="lg-hero-card-val">30<span>yr</span></div>
+          <div class="lg-hero-card-lbl">Title Search Depth</div>
+        </div>
+        <div class="lg-hero-card">
+          <div class="lg-hero-card-val">100<span>%</span></div>
+          <div class="lg-hero-card-lbl">RERA Verified Projects</div>
+        </div>
+        <div class="lg-hero-card">
+          <div class="lg-hero-card-val">48<span>hr</span></div>
+          <div class="lg-hero-card-lbl">First Legal Opinion</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SERVICES ══════════════════════════════ -->
+  <section class="lg-section" style="background:var(--ivory);" id="services">
+    <div class="lg-section-inner">
+      <div class="lg-2col">
+        <div>
+          <div class="section-eyebrow">Property Legal</div>
+          <h2 class="section-heading">Our <em>Legal Services</em> for Property Buyers</h2>
+          <p class="section-sub">Every service is handled by empanelled lawyers with deep expertise in property law, RERA, and registration procedures across India.</p>
+          <div class="lg-services-grid">
+
+            <div class="lg-svc-card">
+              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+              <div class="lg-svc-name">Title Verification</div>
+              <p class="lg-svc-desc">Comprehensive title search and verification to confirm clear ownership, absence of encumbrances, and legal right to sell.</p>
+              <span class="lg-svc-tag">30-Year Search</span>
+            </div>
+
+            <div class="lg-svc-card">
+              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+              <div class="lg-svc-name">Sale Agreement</div>
+              <p class="lg-svc-desc">Drafting and review of sale agreements, MOUs, and purchase contracts ensuring all terms are legally enforceable and buyer-protected.</p>
+              <span class="lg-svc-tag">Draft & Review</span>
+            </div>
+
+            <div class="lg-svc-card">
+              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="lg-svc-name">Property Registration</div>
+              <p class="lg-svc-desc">Complete assistance with sub-registrar office registration, stamp duty calculations, and document filing to legally transfer ownership.</p>
+              <span class="lg-svc-tag">E-Registration</span>
+            </div>
+
+            <div class="lg-svc-card">
+              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg></div>
+              <div class="lg-svc-name">RERA Compliance</div>
+              <p class="lg-svc-desc">Verification of builder RERA registration, project approvals, and compliance status — protecting you from stalled or illegal projects.</p>
+              <span class="lg-svc-tag">Builder Checks</span>
+            </div>
+
+            <div class="lg-svc-card">
+              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+              <div class="lg-svc-name">Encumbrance Certificate</div>
+              <p class="lg-svc-desc">Obtaining and verifying the Encumbrance Certificate (EC) to confirm the property has no mortgage, lien, or legal liability.</p>
+              <span class="lg-svc-tag">EC · Khatha</span>
+            </div>
+
+            <div class="lg-svc-card">
+              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0113 0"/></svg></div>
+              <div class="lg-svc-name">NRI Property Services</div>
+              <p class="lg-svc-desc">Specialised legal support for NRI buyers and sellers covering FEMA regulations, POA drafting, and repatriation of sale proceeds.</p>
+              <span class="lg-svc-tag">FEMA · POA</span>
+            </div>
+
+          </div>
+        </div>
+        <div class="lg-sidebar">
+          <div class="lg-sidebar-card">
+            <div class="lg-sidebar-title">What's Included</div>
+            <div class="lg-sidebar-item">
+              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lg-sidebar-item-text">30-year title search and verification report</div>
+            </div>
+            <div class="lg-sidebar-item">
+              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lg-sidebar-item-text">Sale agreement drafting & legal review</div>
+            </div>
+            <div class="lg-sidebar-item">
+              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lg-sidebar-item-text">Stamp duty & registration assistance</div>
+            </div>
+            <div class="lg-sidebar-item">
+              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lg-sidebar-item-text">RERA compliance verification</div>
+            </div>
+            <div class="lg-sidebar-item">
+              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lg-sidebar-item-text">Dedicated lawyer for every transaction</div>
+            </div>
+            <a href="#consult" class="lg-enquire-btn">Speak to a Lawyer →</a>
+          </div>
+          <div class="lg-sidebar-card">
+            <div class="lg-sidebar-title">Typical Fees</div>
+            <div class="lg-sidebar-item">
+              <div class="lg-sidebar-item-text" style="font-size:12px;color:rgba(255,255,255,.5);">Title Verification</div>
+            </div>
+            <div class="lg-sidebar-item" style="justify-content:space-between;">
+              <span style="font-size:12px;color:rgba(255,255,255,.5)">Up to 1 Cr</span>
+              <span style="font-size:13px;font-weight:500;color:#fff">₹5,000</span>
+            </div>
+            <div class="lg-sidebar-item" style="justify-content:space-between;">
+              <span style="font-size:12px;color:rgba(255,255,255,.5)">1 Cr – 5 Cr</span>
+              <span style="font-size:13px;font-weight:500;color:#fff">₹10,000</span>
+            </div>
+            <div class="lg-sidebar-item" style="justify-content:space-between;">
+              <span style="font-size:12px;color:rgba(255,255,255,.5)">Above 5 Cr</span>
+              <span style="font-size:13px;font-weight:500;color:#fff">Custom Quote</span>
+            </div>
+          </div>
+          <div class="lg-sidebar-card" style="background:rgba(74,144,196,.12);border:1px solid rgba(74,144,196,.25);">
+            <div class="lg-sidebar-title">Also Need a Home Loan?</div>
+            <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:16px;">Combine legal services with our home loan advisory — same team, zero coordination hassle.</p>
+            <a href="{% url 'pages:home_loan' %}" class="lg-loan-link">Explore Home Loans →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ PROCESS ═══════════════════════════════ -->
+  <section class="lg-process">
+    <div class="lg-process-inner">
+      <div class="lg-process-header">
+        <div class="section-eyebrow">Legal Process</div>
+        <h2 class="section-heading" style="color:#fff;">How the <em>Legal Journey</em> Works</h2>
+        <p class="section-sub" style="color:rgba(255,255,255,.5);margin:0 auto;">Our lawyers guide you through every stage of the property transaction — from document collection to final registration.</p>
+      </div>
+      <div class="lg-process-grid">
+        <div class="lg-proc-step">
+          <div class="lg-proc-num">01</div>
+          <div class="lg-proc-title">Document Collection</div>
+          <p class="lg-proc-desc">Gather all title documents, past sale deeds, and property records for review.</p>
+        </div>
+        <div class="lg-proc-step">
+          <div class="lg-proc-num">02</div>
+          <div class="lg-proc-title">Title Search</div>
+          <p class="lg-proc-desc">30-year ownership history verified at sub-registrar office and revenue department.</p>
+        </div>
+        <div class="lg-proc-step">
+          <div class="lg-proc-num">03</div>
+          <div class="lg-proc-title">Legal Opinion</div>
+          <p class="lg-proc-desc">Comprehensive written opinion on marketability, encumbrance, and risk factors.</p>
+        </div>
+        <div class="lg-proc-step">
+          <div class="lg-proc-num">04</div>
+          <div class="lg-proc-title">Agreement Drafting</div>
+          <p class="lg-proc-desc">Sale agreement drafted with buyer-protective clauses and clear timeline milestones.</p>
+        </div>
+        <div class="lg-proc-step">
+          <div class="lg-proc-num">05</div>
+          <div class="lg-proc-title">Registration</div>
+          <p class="lg-proc-desc">End-to-end assistance at the sub-registrar office until the sale deed is registered.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ WHY US ════════════════════════════════ -->
+  <section class="lg-why">
+    <div class="lg-why-inner">
+      <div class="section-eyebrow">Why HOMEXO Legal</div>
+      <h2 class="section-heading">Why Clients Trust Our <em>Legal Team</em></h2>
+      <div class="lg-why-grid">
+        <div class="lg-why-item">
+          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="lg-why-title">Empanelled Lawyers</div>
+          <p class="lg-why-desc">Every lawyer on our panel holds specialisation in property law with a minimum 10 years of registration-office experience.</p>
+        </div>
+        <div class="lg-why-item">
+          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="lg-why-title">48-Hour Opinion</div>
+          <p class="lg-why-desc">Receive your initial title opinion and risk assessment within 48 hours of document submission — so deals don't stall.</p>
+        </div>
+        <div class="lg-why-item">
+          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="lg-why-title">Zero Hidden Fees</div>
+          <p class="lg-why-desc">All fees are quoted upfront before engagement. No surprise charges at any stage of the legal process.</p>
+        </div>
+        <div class="lg-why-item">
+          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="lg-why-title">NRI Specialists</div>
+          <p class="lg-why-desc">Dedicated NRI legal desk available across time zones for POA, FEMA compliance, and overseas transaction support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ CTA + FORM ════════════════════════════ -->
+  <section class="lg-cta" id="consult">
+    <div class="lg-cta-inner">
+      <div>
+        <h2>Speak to a <em>Property Lawyer</em> Today</h2>
+        <p>Our legal advisors are available six days a week to help you navigate property documentation, title issues, and registration.</p>
+        <ul class="lg-checklist">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Free initial legal consultation</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Title opinion within 48 hours</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>End-to-end registration assistance</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>NRI clients supported across time zones</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Transparent, upfront fee structure</li>
+        </ul>
+      </div>
+      <div>
+        <form class="lg-cta-form" method="post" action="{% url 'enquiries:create' %}">
+          {% csrf_token %}
+          <input type="hidden" name="service" value="legal">
+          <div class="lg-cta-form-title">Get Free Legal Consultation</div>
+          <p class="lg-cta-form-sub">Tell us what you need — we'll assign the right lawyer for your case.</p>
+          <input class="lg-cta-input" type="text" name="name" placeholder="Your Full Name" required>
+          <input class="lg-cta-input" type="tel" name="phone" placeholder="Phone Number" required>
+          <input class="lg-cta-input" type="email" name="email" placeholder="Email Address">
+          <select class="lg-cta-select" name="service_type">
+            <option value="" disabled selected>Service Required</option>
+            <option>Title Verification</option>
+            <option>Sale Agreement Drafting</option>
+            <option>Property Registration</option>
+            <option>RERA Compliance Check</option>
+            <option>Encumbrance Certificate</option>
+            <option>NRI Property Services</option>
+            <option>Full Legal Package</option>
+          </select>
+          <input class="lg-cta-input" type="text" name="property_location" placeholder="Property Location (City)">
+          <button type="submit" class="lg-cta-submit">Request Callback →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

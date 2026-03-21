@@ -293,6 +293,31 @@ def developer_profile(request, slug):
     return render(request, 'pages/developer_profile.html', {'developer': developer})
 
 
+def security(request):
+    """Home security services landing page."""
+    return render(request, 'pages/security.html')
+
+
+def home_service(request):
+    """Home maintenance and services landing page."""
+    return render(request, 'pages/home_service.html')
+
+
+def legal(request):
+    """Dedicated property legal services landing page."""
+    return render(request, 'pages/legal.html')
+
+
+def legal_homeloan(request):
+    """Combined property legal and home loan landing page."""
+    return render(request, 'pages/legal_homeloan.html')
+
+
+def home_loan(request):
+    """Dedicated home loan landing page."""
+    return render(request, 'pages/home_loan.html')
+
+
 def emi_calculator(request):
     """Renders the EMI calculator page."""
     return render(request, 'pages/emi_calculator.html')

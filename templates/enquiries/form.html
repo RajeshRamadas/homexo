@@ -51,6 +51,9 @@
         {% if request.GET.property %}<input type="hidden" name="property" value="{{ request.GET.property }}">{% endif %}
         {% if request.GET.agent %}<input type="hidden" name="agent" value="{{ request.GET.agent }}">{% endif %}
 
+        {# Map ?service= values to enquiry_type slugs #}
+        {% with svc=request.GET.service qtype=request.GET.type %}
+
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-group">
             <label>Full Name *</label>
@@ -58,7 +61,7 @@
           </div>
           <div class="form-group">
             <label>Phone *</label>
-            <input type="tel" name="phone" required {% if user.is_authenticated %}value="{{ user.phone }}"{% endif %}>
+            <input type="tel" name="phone" required value="{% if user.is_authenticated %}{{ user.phone }}{% elif request.GET.phone %}{{ request.GET.phone }}{% endif %}">
           </div>
         </div>
         <div class="form-group">
@@ -69,11 +72,14 @@
           <div class="form-group">
             <label>Enquiry Type</label>
             <select name="enquiry_type">
-              <option value="general">General</option>
-              <option value="buy" {% if request.GET.type == 'buy' %}selected{% endif %}>Buy Property</option>
-              <option value="rent" {% if request.GET.type == 'rent' %}selected{% endif %}>Rent Property</option>
-              <option value="sell">Sell / List Property</option>
-              <option value="home_loan" {% if request.GET.type == 'home_loan' %}selected{% endif %}>Home Loan</option>
+              <option value="general"    {% if not qtype and not svc %}selected{% endif %}>General</option>
+              <option value="buy"        {% if qtype == 'buy' %}selected{% endif %}>Buy Property</option>
+              <option value="rent"       {% if qtype == 'rent' %}selected{% endif %}>Rent Property</option>
+              <option value="sell"       {% if qtype == 'sell' %}selected{% endif %}>Sell / List Property</option>
+              <option value="home_loan"  {% if qtype == 'home_loan' or svc == 'home_loan' %}selected{% endif %}>Home Loan</option>
+              <option value="legal"      {% if qtype == 'legal' or svc == 'legal' or svc == 'legal_homeloan' %}selected{% endif %}>Property Legal</option>
+              <option value="security"   {% if qtype == 'security' or svc == 'security' %}selected{% endif %}>Security Services</option>
+              <option value="home_service" {% if qtype == 'home_service' or svc == 'plumbing' or svc == 'electrical' or svc == 'painting' or svc == 'cleaning' or svc == 'carpentry' or svc == 'ac' or svc == 'pest_control' or svc == 'renovation' %}selected{% endif %}>Home Services</option>
             </select>
           </div>
           <div class="form-group">
@@ -81,12 +87,17 @@
             <input type="text" name="budget" placeholder="e.g. ₹50L – ₹1Cr">
           </div>
         </div>
+        {% if svc %}
+        <input type="hidden" name="service_detail" value="{{ svc }}">
+        {% endif %}
         <div class="form-group">
           <label>Message</label>
-          <textarea name="message" rows="4" placeholder="Tell us what you're looking for..."></textarea>
+          <textarea name="message" rows="4" placeholder="Tell us what you're looking for...">{% if request.GET.location %}Location / Area: {{ request.GET.location }}{% endif %}</textarea>
         </div>
         <button type="submit" class="btn-primary" style="width:100%;margin-top:8px;">Submit Enquiry</button>
         <p style="font-size:11px;color:var(--warm-grey);text-align:center;margin-top:14px;">We'll respond within 24 hours. No spam, ever.</p>
+
+        {% endwith %}
       </form>
     </div>
   </div>

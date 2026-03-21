@@ -341,7 +341,9 @@
       <ul>
         <li><a href="{% url 'pages:market_reports' %}">Market Reports</a></li>
         <li><a href="{% url 'pages:emi_calculator' %}">EMI Calculator</a></li>
-        <li><a href="{% url 'enquiries:create' %}?type=home_loan">Home Loan</a></li>
+        <li><a href="{% url 'pages:legal_homeloan' %}">Home Loan &amp; Legal</a></li>
+        <li><a href="{% url 'pages:security' %}">Security Services</a></li>
+        <li><a href="{% url 'pages:home_service' %}">Home Services</a></li>
         <li><a href="{% url 'pages:faq' %}">FAQs</a></li>
         {% if not user.is_authenticated %}
         <li><a href="{% url 'accounts:register' %}">Register</a></li>

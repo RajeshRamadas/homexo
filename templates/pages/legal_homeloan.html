@@ -1,0 +1,682 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Property Legal & Home Loan Services — HOMEXO{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Base ──────────────────────────────────────────────────── */
+  .ll-page { font-family: 'DM Sans', sans-serif; }
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 18px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
+    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .ll-hero {
+    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
+    padding: 90px 40px 80px; position: relative; overflow: hidden;
+  }
+  .ll-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 65% 80% at 80% 50%, rgba(74,144,196,.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ll-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .ll-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 28px;
+  }
+  .ll-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .ll-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 20px; max-width: 700px;
+  }
+  .ll-hero h1 em { font-style: italic; color: var(--sky); }
+  .ll-hero-desc {
+    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
+    max-width: 540px; font-weight: 300; margin-bottom: 40px;
+  }
+  /* Tab switcher in hero */
+  .ll-hero-tabs { display: flex; gap: 4px; margin-bottom: 40px; flex-wrap: wrap; }
+  .ll-hero-tab {
+    padding: 12px 28px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; border: none;
+    transition: all .3s; text-decoration: none; display: inline-block;
+  }
+  .ll-hero-tab.legal { background: var(--sky); color: #fff; }
+  .ll-hero-tab.loan  { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.2); }
+  .ll-hero-tab.legal[data-active="false"] { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.2); }
+  .ll-hero-tab.loan[data-active="true"]   { background: var(--sky); color: #fff; border-color: var(--sky); }
+  /* Hero bottom cards */
+  .ll-hero-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 60px; }
+  .ll-hero-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15);
+    padding: 24px 20px; transition: background .3s;
+  }
+  .ll-hero-card:hover { background: rgba(74,144,196,.12); }
+  .ll-hero-card-val { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .ll-hero-card-val span { font-size: .6em; color: var(--sky); }
+  .ll-hero-card-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
+
+  /* ── Tab Navigation ────────────────────────────────────────── */
+  .ll-tabs-bar {
+    background: #fff; border-bottom: 1px solid var(--border);
+    position: sticky; top: 77px; z-index: 100;
+  }
+  .ll-tabs-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: flex; gap: 0; }
+  .ll-tab-btn {
+    padding: 18px 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; background: none;
+    color: var(--warm-grey); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all .3s;
+  }
+  .ll-tab-btn.active, .ll-tab-btn:hover { color: var(--navy); border-bottom-color: var(--sky); }
+
+  /* ── Section Wrapper ───────────────────────────────────────── */
+  .ll-section { padding: 80px 40px; }
+  .ll-section-inner { max-width: 1200px; margin: 0 auto; }
+  .ll-2col { display: grid; grid-template-columns: 1fr 380px; gap: 80px; align-items: start; }
+
+  /* ── Legal Services Grid ───────────────────────────────────── */
+  .ll-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .ll-svc-card {
+    background: var(--ivory); padding: 32px 28px;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    transition: all .35s cubic-bezier(.23,1,.32,1);
+  }
+  .ll-svc-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--sky), var(--navy));
+    transform: scaleY(0); transform-origin: top; transition: transform .35s cubic-bezier(.23,1,.32,1);
+  }
+  .ll-svc-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.1); transform: translateY(-3px); }
+  .ll-svc-card:hover::before { transform: scaleY(1); }
+  .ll-svc-icon { color: var(--sky); margin-bottom: 18px; }
+  .ll-svc-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--charcoal); margin-bottom: 10px; font-weight: 500; }
+  .ll-svc-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
+  .ll-svc-tag { display: inline-block; margin-top: 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 10px; }
+
+  /* ── Legal Process ─────────────────────────────────────────── */
+  .ll-process-section { padding: 80px 40px; background: var(--charcoal); }
+  .ll-process-inner { max-width: 1100px; margin: 0 auto; }
+  .ll-process-header { text-align: center; margin-bottom: 56px; }
+  .ll-process-header .section-heading { color: #fff; }
+  .ll-process-header .section-heading em { color: var(--sky); }
+  .ll-process-header .section-sub { color: rgba(255,255,255,.5); margin: 0 auto; }
+  .ll-process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+  .ll-process-grid::before {
+    content: ''; position: absolute;
+    top: 28px; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,144,196,.4), transparent);
+  }
+  .ll-proc-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 10px; position: relative; z-index: 1; }
+  .ll-proc-num {
+    width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(74,144,196,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
+    color: var(--sky); background: var(--charcoal); margin-bottom: 20px;
+  }
+  .ll-proc-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
+  .ll-proc-desc { font-size: 11px; line-height: 1.65; color: rgba(255,255,255,.4); font-weight: 300; }
+
+  /* ── Loan Sidebar Card ─────────────────────────────────────── */
+  .ll-sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .ll-sidebar-card { background: var(--navy); padding: 28px; }
+  .ll-sidebar-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #fff; margin-bottom: 16px; }
+  .ll-sidebar-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(74,144,196,.12); }
+  .ll-sidebar-item:last-child { border-bottom: none; }
+  .ll-sidebar-item-icon { color: var(--sky); flex-shrink: 0; }
+  .ll-sidebar-item-text { font-size: 12px; color: rgba(255,255,255,.7); }
+  .ll-enquire-btn {
+    display: block; padding: 14px 24px; background: var(--sky); color: #fff;
+    text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;
+    transition: background .3s;
+  }
+  .ll-enquire-btn:hover { background: #3a7ab0; }
+
+  /* ── Loan Types ────────────────────────────────────────────── */
+  .ll-loan-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .ll-loan-card {
+    background: #fff; border: 1px solid var(--border); padding: 32px 28px;
+    transition: all .35s cubic-bezier(.23,1,.32,1);
+  }
+  .ll-loan-card:hover { box-shadow: 0 12px 36px rgba(13,43,78,.09); transform: translateY(-3px); }
+  .ll-loan-card-icon { color: var(--sky); margin-bottom: 18px; }
+  .ll-loan-card-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); margin-bottom: 8px; font-weight: 500; }
+  .ll-loan-rate { font-size: 22px; font-weight: 300; color: var(--sky); margin-bottom: 5px; font-family: 'Cormorant Garamond', serif; }
+  .ll-loan-rate span { font-size: 12px; color: var(--warm-grey); font-weight: 300; }
+  .ll-loan-desc { font-size: 12px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; margin-top: 12px; }
+
+  /* ── Banks strip ───────────────────────────────────────────── */
+  .ll-banks { padding: 60px 40px; background: var(--ivory); }
+  .ll-banks-inner { max-width: 1100px; margin: 0 auto; }
+  .ll-banks-header { display: flex; align-items: center; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
+  .ll-banks-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--charcoal); }
+  .ll-banks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+  .ll-bank-pill {
+    background: #fff; border: 1px solid var(--border); padding: 18px 14px;
+    text-align: center; font-size: 12px; font-weight: 500; color: var(--charcoal);
+    transition: all .3s;
+  }
+  .ll-bank-pill:hover { border-color: var(--sky); color: var(--sky); }
+  .ll-bank-pill small { display: block; font-size: 10px; color: var(--warm-grey); font-weight: 300; margin-top: 3px; }
+
+  /* ── Eligibility Calculator ────────────────────────────────── */
+  .ll-eligibility { padding: 80px 40px; background: #fff; }
+  .ll-elig-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .ll-elig-form { background: var(--ivory); border: 1px solid var(--border); padding: 36px; }
+  .ll-elig-form-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
+  .ll-elig-form-sub { font-size: 12px; color: var(--warm-grey); margin-bottom: 24px; }
+  .ll-elig-input {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
+    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--charcoal); background: #fff; outline: none;
+    transition: border-color .3s;
+  }
+  .ll-elig-input:focus { border-color: var(--sky); }
+  .ll-elig-select {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
+    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--charcoal); background: #fff; outline: none;
+    appearance: none; cursor: pointer; transition: border-color .3s;
+  }
+  .ll-elig-select:focus { border-color: var(--sky); }
+  .ll-elig-btn {
+    width: 100%; padding: 14px; background: var(--navy); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: background .3s;
+  }
+  .ll-elig-btn:hover { background: var(--sky); }
+  .ll-elig-result { display: none; background: var(--navy); padding: 24px; margin-top: 20px; text-align: center; }
+  .ll-elig-result.show { display: block; }
+  .ll-elig-result-val { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: #fff; }
+  .ll-elig-result-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 6px; }
+  /* Info side */
+  .ll-elig-info { display: flex; flex-direction: column; gap: 28px; padding-top: 8px; }
+  .ll-elig-info-item { display: flex; gap: 20px; align-items: flex-start; }
+  .ll-elig-info-icon { color: var(--sky); flex-shrink: 0; margin-top: 2px; }
+  .ll-elig-info-title { font-size: 14px; font-weight: 500; color: var(--charcoal); margin-bottom: 5px; }
+  .ll-elig-info-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+  .ll-emi-link {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--sky); text-decoration: none; margin-top: 24px;
+    border: 1px solid rgba(74,144,196,.3); padding: 12px 24px;
+    transition: all .3s;
+  }
+  .ll-emi-link:hover { background: var(--sky); color: #fff; border-color: var(--sky); }
+
+  /* ── CTA ───────────────────────────────────────────────────── */
+  .ll-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); }
+  .ll-cta-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start; }
+  .ll-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
+  .ll-cta h2 em { font-style: italic; color: var(--sky); }
+  .ll-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
+  .ll-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .ll-checklist li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.75); }
+  .ll-checklist li svg { color: var(--sky); flex-shrink: 0; }
+  .ll-cta-form { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2); padding: 32px; }
+  .ll-cta-form-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
+  .ll-cta-form-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 22px; }
+  .ll-cta-input {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.9); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+    transition: border-color .3s;
+  }
+  .ll-cta-input::placeholder { color: rgba(255,255,255,.35); }
+  .ll-cta-input:focus { border-color: var(--sky); }
+  .ll-cta-select {
+    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; appearance: none; cursor: pointer;
+  }
+  .ll-cta-select option { background: #0D2B4E; color: #fff; }
+  .ll-cta-submit {
+    width: 100%; padding: 14px; background: var(--sky); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: background .3s;
+  }
+  .ll-cta-submit:hover { background: #3a7ab0; }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .ll-2col { grid-template-columns: 1fr; }
+    .ll-sidebar { display: none; }
+    .ll-process-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .ll-process-grid::before { display: none; }
+    .ll-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+    .ll-elig-inner { grid-template-columns: 1fr; }
+    .ll-banks-grid { grid-template-columns: repeat(3, 1fr); }
+    .ll-loan-types { grid-template-columns: 1fr 1fr; }
+    .ll-hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .ll-hero { padding: 60px 24px 60px; }
+    .ll-section, .ll-process-section, .ll-banks, .ll-eligibility, .ll-cta { padding: 56px 24px; }
+    .ll-services-grid { grid-template-columns: 1fr; }
+    .ll-loan-types { grid-template-columns: 1fr; }
+    .ll-tabs-inner { padding: 0 24px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .ll-process-grid { grid-template-columns: 1fr 1fr; }
+    .ll-banks-grid { grid-template-columns: repeat(2, 1fr); }
+    .ll-hero-cards { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .ll-process-grid { grid-template-columns: 1fr; }
+    .ll-hero-tabs { gap: 8px; }
+    .ll-hero-cards { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+<div class="ll-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="ll-hero">
+    <div class="ll-hero-inner">
+      <div class="ll-hero-eyebrow">Legal & Home Loan Services</div>
+      <h1>Secure Your Property with <em>Expert Legal</em> & <em>Loan Support</em></h1>
+      <p class="ll-hero-desc">HOMEXO connects you with experienced property lawyers and leading bank partners to make your real estate transaction smooth, legally sound, and financially optimal.</p>
+      <div class="ll-hero-tabs">
+        <a href="#legal" class="ll-hero-tab legal" id="legalHeroTab">Property Legal</a>
+        <a href="#loan" class="ll-hero-tab loan" id="loanHeroTab">Home Loan</a>
+      </div>
+      <div class="ll-hero-cards">
+        <div class="ll-hero-card">
+          <div class="ll-hero-card-val">2,500<span>+</span></div>
+          <div class="ll-hero-card-lbl">Legal Cases</div>
+        </div>
+        <div class="ll-hero-card">
+          <div class="ll-hero-card-val">₹4,200<span>Cr</span></div>
+          <div class="ll-hero-card-lbl">Loans Processed</div>
+        </div>
+        <div class="ll-hero-card">
+          <div class="ll-hero-card-val">25<span>+</span></div>
+          <div class="ll-hero-card-lbl">Bank Partners</div>
+        </div>
+        <div class="ll-hero-card">
+          <div class="ll-hero-card-val">98<span>%</span></div>
+          <div class="ll-hero-card-lbl">Approval Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tab Navigation ─────────────────────────────────────── -->
+  <div class="ll-tabs-bar" id="llTabsBar">
+    <div class="ll-tabs-inner">
+      <button class="ll-tab-btn active" onclick="switchTab('legal', this)">Property Legal</button>
+      <button class="ll-tab-btn" onclick="switchTab('loan', this)">Home Loan</button>
+      <button class="ll-tab-btn" onclick="switchTab('eligibility', this)">Loan Eligibility</button>
+      <button class="ll-tab-btn" onclick="switchTab('contact', this)">Get Assistance</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       LEGAL SERVICES TAB
+  ══════════════════════════════════════════════════════════════ -->
+  <div id="section-legal">
+
+    <section class="ll-section" style="background:var(--ivory);" id="legal">
+      <div class="ll-section-inner">
+        <div class="ll-2col">
+          <div>
+            <div class="section-eyebrow">Property Legal</div>
+            <h2 class="section-heading">Complete <em>Legal Protection</em> for Your Property</h2>
+            <p class="section-sub">Our empanelled property lawyers provide end-to-end legal services — from initial title verification to final registration — ensuring your investment is legally watertight.</p>
+            <div class="ll-services-grid">
+
+              <div class="ll-svc-card">
+                <div class="ll-svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                <div class="ll-svc-name">Title Verification</div>
+                <p class="ll-svc-desc">Comprehensive title search and verification to confirm clear ownership, absence of encumbrances, and legal right to sell.</p>
+                <span class="ll-svc-tag">30-Year Search</span>
+              </div>
+
+              <div class="ll-svc-card">
+                <div class="ll-svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+                <div class="ll-svc-name">Sale Agreement</div>
+                <p class="ll-svc-desc">Drafting and review of sale agreements, MOUs, and purchase contracts ensuring all terms are legally enforceable and buyer-protected.</p>
+                <span class="ll-svc-tag">Draft & Review</span>
+              </div>
+
+              <div class="ll-svc-card">
+                <div class="ll-svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <div class="ll-svc-name">Property Registration</div>
+                <p class="ll-svc-desc">Complete assistance with sub-registrar office registration, stamp duty calculations, and document filing to legally transfer ownership.</p>
+                <span class="ll-svc-tag">E-Registration</span>
+              </div>
+
+              <div class="ll-svc-card">
+                <div class="ll-svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg></div>
+                <div class="ll-svc-name">RERA Compliance</div>
+                <p class="ll-svc-desc">Verification of builder RERA registration, project approvals, and compliance status — protecting you from stalled or illegal projects.</p>
+                <span class="ll-svc-tag">Builder Checks</span>
+              </div>
+
+              <div class="ll-svc-card">
+                <div class="ll-svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <div class="ll-svc-name">Encumbrance Certificate</div>
+                <p class="ll-svc-desc">Obtaining and verifying the Encumbrance Certificate (EC) to confirm the property has no mortgage, lien, or legal liability.</p>
+                <span class="ll-svc-tag">EC · Khatha</span>
+              </div>
+
+              <div class="ll-svc-card">
+                <div class="ll-svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0113 0"/></svg></div>
+                <div class="ll-svc-name">NRI Property Services</div>
+                <p class="ll-svc-desc">Specialised legal support for NRI buyers and sellers covering FEMA regulations, POA drafting, and repatriation of sale proceeds.</p>
+                <span class="ll-svc-tag">FEMA · POA</span>
+              </div>
+
+            </div>
+          </div>
+          <div class="ll-sidebar">
+            <div class="ll-sidebar-card">
+              <div class="ll-sidebar-title">What's Included</div>
+              <div class="ll-sidebar-item">
+                <div class="ll-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="ll-sidebar-item-text">30-year title search and verification report</div>
+              </div>
+              <div class="ll-sidebar-item">
+                <div class="ll-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="ll-sidebar-item-text">Sale agreement drafting & legal review</div>
+              </div>
+              <div class="ll-sidebar-item">
+                <div class="ll-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="ll-sidebar-item-text">Stamp duty & registration assistance</div>
+              </div>
+              <div class="ll-sidebar-item">
+                <div class="ll-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="ll-sidebar-item-text">RERA compliance verification</div>
+              </div>
+              <div class="ll-sidebar-item">
+                <div class="ll-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="ll-sidebar-item-text">Dedicated lawyer for every transaction</div>
+              </div>
+              <a href="{% url 'enquiries:create' %}?service=legal" class="ll-enquire-btn">Speak to a Lawyer →</a>
+            </div>
+            <div class="ll-sidebar-card">
+              <div class="ll-sidebar-title">Typical Fees</div>
+              <div class="ll-sidebar-item">
+                <div class="ll-sidebar-item-text">Title Verification</div>
+              </div>
+              <div class="ll-sidebar-item" style="justify-content:space-between;">
+                <span style="font-size:12px;color:rgba(255,255,255,.5)">Up to 1 Cr</span>
+                <span style="font-size:13px;font-weight:500;color:#fff">₹5,000</span>
+              </div>
+              <div class="ll-sidebar-item" style="justify-content:space-between;">
+                <span style="font-size:12px;color:rgba(255,255,255,.5)">1 Cr – 5 Cr</span>
+                <span style="font-size:13px;font-weight:500;color:#fff">₹10,000</span>
+              </div>
+              <div class="ll-sidebar-item" style="justify-content:space-between;">
+                <span style="font-size:12px;color:rgba(255,255,255,.5)">Above 5 Cr</span>
+                <span style="font-size:13px;font-weight:500;color:#fff">Custom Quote</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Legal Process -->
+    <section class="ll-process-section">
+      <div class="ll-process-inner">
+        <div class="ll-process-header">
+          <div class="section-eyebrow">Legal Process</div>
+          <h2 class="section-heading">How the <em>Legal Journey</em> Works</h2>
+          <p class="section-sub">Our lawyers guide you through every stage of the property transaction — from document collection to final registration.</p>
+        </div>
+        <div class="ll-process-grid">
+          <div class="ll-proc-step"><div class="ll-proc-num">01</div><div class="ll-proc-title">Document Collection</div><p class="ll-proc-desc">Gather all title documents, past sale deeds, and property records.</p></div>
+          <div class="ll-proc-step"><div class="ll-proc-num">02</div><div class="ll-proc-title">Title Search</div><p class="ll-proc-desc">30-year ownership history verified at sub-registrar office and revenue department.</p></div>
+          <div class="ll-proc-step"><div class="ll-proc-num">03</div><div class="ll-proc-title">Legal Opinion</div><p class="ll-proc-desc">Comprehensive written opinion on marketability, encumbrance, and risk factors.</p></div>
+          <div class="ll-proc-step"><div class="ll-proc-num">04</div><div class="ll-proc-title">Agreement Drafting</div><p class="ll-proc-desc">Sale agreement drafted with buyer-protective clauses and timeline milestones.</p></div>
+          <div class="ll-proc-step"><div class="ll-proc-num">05</div><div class="ll-proc-title">Registration</div><p class="ll-proc-desc">End-to-end assistance at the sub-registrar office until the sale deed is registered.</p></div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- end legal section -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       HOME LOAN TAB
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="ll-section" style="background:#fff;" id="loan">
+    <div class="ll-section-inner">
+      <div class="section-eyebrow">Home Loan</div>
+      <h2 class="section-heading">Get the Best <em>Home Loan</em> for Your Budget</h2>
+      <p class="section-sub">HOMEXO's loan advisors compare rates across 25+ banks and NBFCs to get you the lowest rate and fastest approval.</p>
+      <div class="ll-loan-types">
+
+        <div class="ll-loan-card">
+          <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="ll-loan-card-name">Home Purchase Loan</div>
+          <div class="ll-loan-rate">8.40% <span>p.a. onwards</span></div>
+          <p class="ll-loan-desc">Financing for buying a new or resale apartment, villa, or independent house. Up to 90% funding of property value, tenure up to 30 years.</p>
+        </div>
+
+        <div class="ll-loan-card">
+          <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+          <div class="ll-loan-card-name">Under Construction</div>
+          <div class="ll-loan-rate">8.50% <span>p.a. onwards</span></div>
+          <p class="ll-loan-desc">Disbursement-linked loans for under-construction projects. Pay interest only during construction; full EMI begins at possession.</p>
+        </div>
+
+        <div class="ll-loan-card">
+          <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="ll-loan-card-name">Balance Transfer</div>
+          <div class="ll-loan-rate">8.35% <span>p.a. onwards</span></div>
+          <p class="ll-loan-desc">Transfer your existing high-interest home loan to a lower-rate lender and reduce your monthly EMI burden significantly.</p>
+        </div>
+
+        <div class="ll-loan-card">
+          <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="ll-loan-card-name">Home Renovation Loan</div>
+          <div class="ll-loan-rate">9.00% <span>p.a. onwards</span></div>
+          <p class="ll-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to ₹50L for existing home renovations without additional collateral.</p>
+        </div>
+
+        <div class="ll-loan-card">
+          <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg></div>
+          <div class="ll-loan-card-name">Loan Against Property</div>
+          <div class="ll-loan-rate">9.50% <span>p.a. onwards</span></div>
+          <p class="ll-loan-desc">Unlock the equity in your existing property for business or personal needs. Up to 70% of current market value as a loan.</p>
+        </div>
+
+        <div class="ll-loan-card">
+          <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.9-5.7a8.5 8.5 0 113.8 3.8z"/></svg></div>
+          <div class="ll-loan-card-name">NRI Home Loan</div>
+          <div class="ll-loan-rate">8.60% <span>p.a. onwards</span></div>
+          <p class="ll-loan-desc">Specially structured loans for Non-Resident Indians purchasing property in India. Compliant with FEMA and RBI regulations.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Banks -->
+  <section class="ll-banks" id="banks">
+    <div class="ll-banks-inner">
+      <div class="ll-banks-header">
+        <div class="section-eyebrow">Lending Partners</div>
+        <h3 class="section-heading">25+ Bank & <em>NBFC Partners</em></h3>
+      </div>
+      <div class="ll-banks-grid">
+        <div class="ll-bank-pill">HDFC Bank<small>From 8.40%</small></div>
+        <div class="ll-bank-pill">SBI<small>From 8.50%</small></div>
+        <div class="ll-bank-pill">ICICI Bank<small>From 8.40%</small></div>
+        <div class="ll-bank-pill">Axis Bank<small>From 8.75%</small></div>
+        <div class="ll-bank-pill">Kotak Mahindra<small>From 8.65%</small></div>
+        <div class="ll-bank-pill">LIC Housing<small>From 8.50%</small></div>
+        <div class="ll-bank-pill">PNB Housing<small>From 8.75%</small></div>
+        <div class="ll-bank-pill">Bank of Baroda<small>From 8.40%</small></div>
+        <div class="ll-bank-pill">Bajaj Finance<small>From 8.60%</small></div>
+        <div class="ll-bank-pill">Tata Capital<small>From 8.75%</small></div>
+        <div class="ll-bank-pill">Indiabulls<small>From 9.00%</small></div>
+        <div class="ll-bank-pill">+14 more<small>All verified</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Eligibility Calculator ════════════════════════════ -->
+  <section class="ll-eligibility" id="eligibility">
+    <div class="ll-elig-inner">
+      <div>
+        <div class="section-eyebrow">Loan Eligibility</div>
+        <h2 class="section-heading">Check Your <em>Loan Eligibility</em></h2>
+        <p class="section-sub">Get an instant estimate of how much home loan you are eligible for based on your income, existing obligations, and tenure preference.</p>
+        <div class="ll-elig-info">
+          <div class="ll-elig-info-item">
+            <div class="ll-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div>
+              <div class="ll-elig-info-title">Income Multiplier</div>
+              <p class="ll-elig-info-desc">Most banks offer 55–60x of your net monthly salary as the maximum home loan amount. Co-applicants can enhance eligibility significantly.</p>
+            </div>
+          </div>
+          <div class="ll-elig-info-item">
+            <div class="ll-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div>
+              <div class="ll-elig-info-title">CIBIL Score Matters</div>
+              <p class="ll-elig-info-desc">A CIBIL score above 750 qualifies you for the best rates. Our advisors also help you improve your score before applying.</p>
+            </div>
+          </div>
+          <div class="ll-elig-info-item">
+            <div class="ll-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div>
+              <div class="ll-elig-info-title">Fast-Track Approvals</div>
+              <p class="ll-elig-info-desc">With pre-approved limits from our bank partners, many applicants receive in-principle sanction within 48 hours.</p>
+            </div>
+          </div>
+        </div>
+        <a href="{% url 'pages:emi_calculator' %}" class="ll-emi-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="13" rx="2"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+          Try the Full EMI Calculator →
+        </a>
+      </div>
+      <div class="ll-elig-form">
+        <div class="ll-elig-form-title">Instant Eligibility Check</div>
+        <p class="ll-elig-form-sub">Takes 30 seconds — no credit check required.</p>
+        <input class="ll-elig-input" type="number" id="eligSalary" placeholder="Net Monthly Salary (₹)" min="0">
+        <input class="ll-elig-input" type="number" id="eligObligation" placeholder="Existing Monthly EMIs (₹)" min="0">
+        <select class="ll-elig-select" id="eligTenure">
+          <option value="" disabled selected>Preferred Loan Tenure</option>
+          <option value="120">10 Years</option>
+          <option value="180">15 Years</option>
+          <option value="240">20 Years</option>
+          <option value="300">25 Years</option>
+          <option value="360">30 Years</option>
+        </select>
+        <button class="ll-elig-btn" id="eligCalcBtn">Check Eligibility →</button>
+        <div class="ll-elig-result" id="eligResult">
+          <div class="ll-elig-result-val" id="eligAmount">—</div>
+          <div class="ll-elig-result-lbl">Estimated Loan Eligibility</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA + Form ══════════════════════════════════════════ -->
+  <section class="ll-cta" id="contact">
+    <div class="ll-cta-inner">
+      <div>
+        <h2>Speak to a <em>Legal or Loan Expert</em> Today</h2>
+        <p>Our advisors are available six days a week to help you navigate property documentation or find the best loan deal.</p>
+        <ul class="ll-checklist">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Free initial legal consultation</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Zero processing fee on select bank loans</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Response within 2 business hours</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>NRI clients supported across time zones</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>End-to-end assistance — legal + loan in one place</li>
+        </ul>
+      </div>
+      <div>
+        <form class="ll-cta-form" method="post" action="{% url 'enquiries:create' %}">
+          {% csrf_token %}
+          <input type="hidden" name="service" value="legal_homeloan">
+          <div class="ll-cta-form-title">Get Expert Assistance</div>
+          <p class="ll-cta-form-sub">Tell us what you need — legal help, a loan, or both.</p>
+          <input class="ll-cta-input" type="text" name="name" placeholder="Your Full Name" required>
+          <input class="ll-cta-input" type="tel" name="phone" placeholder="Phone Number" required>
+          <input class="ll-cta-input" type="email" name="email" placeholder="Email Address">
+          <select class="ll-cta-select" name="assistance_type">
+            <option value="" disabled selected>I Need Help With</option>
+            <option>Property Title Verification</option>
+            <option>Sale Agreement / Registration</option>
+            <option>RERA Compliance Check</option>
+            <option>NRI Property Services</option>
+            <option>Home Loan — Best Rate</option>
+            <option>Balance Transfer</option>
+            <option>Loan Against Property</option>
+            <option>Both Legal + Loan Assistance</option>
+          </select>
+          <input class="ll-cta-input" type="text" name="property_location" placeholder="Property Location (City)">
+          <button type="submit" class="ll-cta-submit">Request Callback →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ── Tab navigation (non-destructive scroll) ─── */
+function switchTab(target, btn) {
+  document.querySelectorAll('.ll-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const el = document.getElementById(target === 'contact' ? 'contact' : target);
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+
+/* ── Eligibility Calculator ─── */
+document.getElementById('eligCalcBtn').addEventListener('click', function () {
+  const salary = parseFloat(document.getElementById('eligSalary').value) || 0;
+  const obligations = parseFloat(document.getElementById('eligObligation').value) || 0;
+  const tenureSelect = document.getElementById('eligTenure');
+  const tenure = parseInt(tenureSelect.value) || 240;
+
+  if (!salary) { alert('Please enter your monthly salary.'); return; }
+
+  // FOIR (Fixed Obligation to Income Ratio) — most banks allow up to 50–55%
+  const availableEMI = salary * 0.55 - obligations;
+  if (availableEMI <= 0) {
+    document.getElementById('eligAmount').textContent = '₹0';
+    document.getElementById('eligResult').classList.add('show');
+    return;
+  }
+
+  // Reverse-calculate principal from EMI using ~8.5% rate assumption
+  const monthlyRate = 8.5 / (12 * 100);
+  const factor = Math.pow(1 + monthlyRate, tenure);
+  const principal = availableEMI * (factor - 1) / (monthlyRate * factor);
+
+  const crore = principal / 10000000;
+  const lakh  = principal / 100000;
+  const display = crore >= 1
+    ? '₹' + crore.toFixed(2) + ' Cr'
+    : '₹' + lakh.toFixed(1) + ' L';
+
+  document.getElementById('eligAmount').textContent = display;
+  document.getElementById('eligResult').classList.add('show');
+  document.getElementById('eligResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+</script>
+{% endblock %}

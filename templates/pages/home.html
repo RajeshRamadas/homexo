@@ -768,7 +768,7 @@
 <div class="loan-banner">
   <div class="loan-banner-inner">
     <p class="loan-banner-text">Find out how much <strong>home loan</strong> you're eligible for — instantly.</p>
-    <a href="{% url 'enquiries:create' %}?type=home_loan" class="loan-banner-btn">Check Eligibility</a>
+    <a href="{% url 'pages:home_loan' %}#eligibility" class="loan-banner-btn">Check Eligibility</a>
   </div>
 </div>
 
@@ -779,31 +779,31 @@
     </div>
     <span class="service-label">Builder Projects</span>
   </a>
-  <a href="{% url 'enquiries:create' %}?type=sale_agreement" class="service-item-card">
+  <a href="{% url 'pages:legal' %}" class="service-item-card">
     <div class="service-icon">
       <img src="{% static 'icons/registation.png' %}" alt="Sale Agreement" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Sale Agreement</span>
   </a>
-  <a href="{% url 'enquiries:create' %}?type=home_loan" class="service-item-card">
+  <a href="{% url 'pages:home_loan' %}" class="service-item-card">
     <div class="service-icon">
       <img src="{% static 'icons/loan.png' %}" alt="Home Loan" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Home Loan</span>
   </a>
-  <a href="{% url 'enquiries:create' %}?type=legal" class="service-item-card">
+  <a href="{% url 'pages:legal' %}" class="service-item-card">
     <div class="service-icon">
       <img src="{% static 'icons/legal.png' %}" alt="Property Legal Services" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Property Legal Services</span>
   </a>
-  <a href="{% url 'enquiries:create' %}?type=security" class="service-item-card">
+  <a href="{% url 'pages:security' %}" class="service-item-card">
     <div class="service-icon">
       <img src="{% static 'icons/survalence.png' %}" alt="Security &amp; Surveillance" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Security &amp; Surveillance</span>
   </a>
-  <a href="{% url 'enquiries:create' %}?type=home_services" class="service-item-card">
+  <a href="{% url 'pages:home_service' %}" class="service-item-card">
     <div class="service-icon">
       <img src="{% static 'icons/home_services.png' %}" alt="Home Services" width="52" height="52" decoding="async">
     </div>

@@ -1,0 +1,543 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Security Services — HOMEXO{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Layout Helpers ────────────────────────────────────────── */
+  .sec-page { font-family: 'DM Sans', sans-serif; --white: #fff; }
+  .sec-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 18px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 4vw, 52px); font-weight: 300;
+    line-height: 1.15; color: var(--charcoal); margin-bottom: 18px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
+  .sec-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .sh-hero {
+    background: linear-gradient(140deg, #061522 0%, #0D2B4E 55%, #0e2d52 100%);
+    padding: 90px 40px 100px;
+    position: relative; overflow: hidden;
+  }
+  .sh-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 80% 50%, rgba(74,144,196,.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .sh-hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: center;
+  }
+  .sh-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 28px;
+  }
+  .sh-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .sh-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 24px;
+  }
+  .sh-hero h1 em { font-style: italic; color: var(--sky); }
+  .sh-hero-desc {
+    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.65);
+    max-width: 480px; font-weight: 300; margin-bottom: 40px;
+  }
+  .sh-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .sh-btn-primary {
+    display: inline-block; padding: 14px 32px;
+    background: var(--sky); color: #fff;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif;
+    transition: background .3s;
+  }
+  .sh-btn-primary:hover { background: #3a7ab0; }
+  .sh-btn-ghost {
+    display: inline-block; padding: 14px 32px;
+    background: transparent; color: rgba(255,255,255,.8);
+    border: 1px solid rgba(255,255,255,.25);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif;
+    transition: all .3s;
+  }
+  .sh-btn-ghost:hover { border-color: var(--sky); color: var(--sky); }
+
+  /* Hero shield visual */
+  .sh-hero-visual {
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .sh-shield-wrap {
+    width: 280px; height: 320px; position: relative; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .sh-shield-ring {
+    position: absolute; border-radius: 50%; border: 1px solid rgba(74,144,196,.2);
+    animation: shieldPulse 3s ease-in-out infinite;
+  }
+  .sh-shield-ring:nth-child(1) { width: 280px; height: 280px; animation-delay: 0s; }
+  .sh-shield-ring:nth-child(2) { width: 220px; height: 220px; animation-delay: .6s; }
+  .sh-shield-ring:nth-child(3) { width: 160px; height: 160px; animation-delay: 1.2s; }
+  @keyframes shieldPulse {
+    0%,100%  { opacity: .25; transform: scale(1);   }
+    50%      { opacity: .6;  transform: scale(1.04); }
+  }
+  .sh-shield-icon {
+    position: relative; z-index: 2;
+    width: 100px; height: 100px; background: rgba(74,144,196,.12);
+    border: 1.5px solid rgba(74,144,196,.35);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+  }
+  /* floating badge */
+  .sh-shield-badge {
+    position: absolute; bottom: 30px; right: 0;
+    background: var(--navy); border: 1px solid rgba(74,144,196,.3);
+    padding: 10px 18px; display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  .sh-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; animation: liveBlink .9s ease-in-out infinite; }
+  @keyframes liveBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .sh-badge-txt { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.8); }
+
+  /* ── Stats Bar ─────────────────────────────────────────────── */
+  .sh-stats {
+    background: var(--navy); padding: 36px 40px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid rgba(74,144,196,.12);
+  }
+  .sh-stat {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px 0; text-align: center;
+    border-right: 1px solid rgba(255,255,255,.07);
+  }
+  .sh-stat:last-child { border-right: none; }
+  .sh-stat-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px;
+  }
+  .sh-stat-val span { font-size: .55em; color: var(--sky); }
+  .sh-stat-lbl { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+
+  /* ── Services Grid ─────────────────────────────────────────── */
+  .sh-services { padding: 90px 40px; background: var(--ivory); }
+  .sh-services-header { text-align: center; margin-bottom: 56px; }
+  .sh-services-header .section-sub { margin: 0 auto; text-align: center; }
+  .sh-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  }
+  .sh-card {
+    background: #fff; padding: 40px 36px;
+    border: 1px solid var(--border);
+    transition: all .4s cubic-bezier(.23,1,.32,1);
+    position: relative; overflow: hidden;
+  }
+  .sh-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--sky), var(--navy));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .4s cubic-bezier(.23,1,.32,1);
+  }
+  .sh-card:hover { box-shadow: 0 20px 60px rgba(13,43,78,.1); transform: translateY(-4px); }
+  .sh-card:hover::before { transform: scaleX(1); }
+  .sh-card-icon {
+    width: 56px; height: 56px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sky); margin-bottom: 24px;
+    transition: all .3s;
+  }
+  .sh-card:hover .sh-card-icon { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .sh-card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--charcoal); margin-bottom: 10px; }
+  .sh-card-desc { font-size: 13px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
+  .sh-card-tag {
+    display: inline-block; margin-top: 18px;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 12px;
+  }
+
+  /* ── Process Steps ─────────────────────────────────────────── */
+  .sh-process { padding: 90px 40px; background: var(--charcoal); }
+  .sh-process-header { text-align: center; margin-bottom: 60px; }
+  .sh-process-header .section-eyebrow { color: var(--sky); }
+  .sh-process-header .section-heading { color: #fff; }
+  .sh-process-header .section-heading em { color: var(--sky); }
+  .sh-process-header .section-sub { color: rgba(255,255,255,.55); margin: 0 auto; }
+  .sh-process-track {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    position: relative;
+  }
+  .sh-process-track::before {
+    content: ''; position: absolute;
+    top: 28px; left: calc(12.5%); right: calc(12.5%); height: 1px;
+    background: linear-gradient(90deg, rgba(74,144,196,.15), rgba(74,144,196,.4), rgba(74,144,196,.15));
+    z-index: 0;
+  }
+  .sh-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; position: relative; z-index: 1; }
+  .sh-step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 1px solid rgba(74,144,196,.35);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300;
+    color: var(--sky); background: var(--charcoal);
+    margin-bottom: 24px;
+  }
+  .sh-step-title { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: #fff; margin-bottom: 10px; }
+  .sh-step-desc { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.45); font-weight: 300; }
+
+  /* ── Why Choose Us ─────────────────────────────────────────── */
+  .sh-why { padding: 90px 40px; background: #fff; }
+  .sh-why-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .sh-why-list { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-direction: column; gap: 24px; }
+  .sh-why-item { display: flex; gap: 20px; align-items: flex-start; }
+  .sh-why-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sky); margin-top: 5px; flex-shrink: 0; }
+  .sh-why-item-title { font-size: 15px; font-weight: 500; color: var(--charcoal); margin-bottom: 5px; }
+  .sh-why-item-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+  .sh-why-visual {
+    background: linear-gradient(140deg, var(--navy) 0%, #0a2040 100%);
+    padding: 48px; display: flex; flex-direction: column; gap: 24px;
+  }
+  .sh-cert-item {
+    display: flex; align-items: center; gap: 18px;
+    padding: 18px 22px; border: 1px solid rgba(74,144,196,.18);
+  }
+  .sh-cert-icon { color: var(--sky); flex-shrink: 0; }
+  .sh-cert-name { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 3px; }
+  .sh-cert-body { font-size: 11px; color: rgba(255,255,255,.45); }
+
+  /* ── CTA + Enquiry ─────────────────────────────────────────── */
+  .sh-cta { padding: 90px 40px; background: var(--ivory); }
+  .sh-cta-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: start;
+  }
+  .sh-cta-left .section-sub { margin-bottom: 32px; }
+  .sh-cta-points { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  .sh-cta-points li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--charcoal); }
+  .sh-cta-points li svg { color: var(--sky); flex-shrink: 0; }
+  .sh-form {
+    background: #fff; border: 1px solid var(--border); padding: 36px;
+  }
+  .sh-form-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
+  .sh-form-sub { font-size: 12px; color: var(--warm-grey); margin-bottom: 24px; }
+  .sh-form input, .sh-form select, .sh-form textarea {
+    width: 100%; box-sizing: border-box; padding: 12px 16px;
+    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--charcoal); background: var(--ivory);
+    margin-bottom: 14px; outline: none; transition: border-color .3s;
+  }
+  .sh-form input:focus, .sh-form select:focus, .sh-form textarea:focus { border-color: var(--sky); background: #fff; }
+  .sh-form textarea { resize: vertical; min-height: 80px; }
+  .sh-form-submit {
+    width: 100%; padding: 14px; background: var(--navy); color: #fff;
+    border: none; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+    transition: background .3s;
+  }
+  .sh-form-submit:hover { background: var(--sky); }
+
+  /* ── Responsive ────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .sh-hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .sh-hero-visual { display: none; }
+    .sh-grid { grid-template-columns: repeat(2, 1fr); }
+    .sh-why-inner { grid-template-columns: 1fr; }
+    .sh-why-visual { display: none; }
+    .sh-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+  }
+  @media (max-width: 768px) {
+    .sh-hero { padding: 60px 24px 70px; }
+    .sh-stats { grid-template-columns: repeat(2, 1fr); padding: 24px; }
+    .sh-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); padding: 16px 0; }
+    .sh-stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.07); }
+    .sh-stat:nth-child(3), .sh-stat:nth-child(4) { border-bottom: none; }
+    .sh-services, .sh-process, .sh-why, .sh-cta { padding: 56px 24px; }
+    .sh-grid { grid-template-columns: 1fr; }
+    .sh-process-track { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .sh-process-track::before { display: none; }
+  }
+  @media (max-width: 480px) {
+    .sh-process-track { grid-template-columns: 1fr; }
+    .sh-hero-actions { flex-direction: column; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+<div class="sec-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="sh-hero">
+    <div class="sh-hero-inner">
+      <div class="sh-hero-left">
+        <div class="sh-hero-eyebrow">Security Services</div>
+        <h1>Protect Your Home with <em>Smart Security</em></h1>
+        <p class="sh-hero-desc">From CCTV surveillance to smart access control, HOMEXO connects you with vetted security professionals who design, install, and monitor custom home security solutions.</p>
+        <div class="sh-hero-actions">
+          <a href="{% url 'enquiries:create' %}" class="sh-btn-primary">Get Free Audit</a>
+          <a href="#services" class="sh-btn-ghost">Explore Services</a>
+        </div>
+      </div>
+      <div class="sh-hero-visual">
+        <div class="sh-shield-wrap">
+          <div class="sh-shield-ring"></div>
+          <div class="sh-shield-ring"></div>
+          <div class="sh-shield-ring"></div>
+          <div class="sh-shield-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+          <div class="sh-shield-badge">
+            <div class="sh-badge-dot"></div>
+            <span class="sh-badge-txt">Live Monitoring</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ─────────────────────────────────────────────── -->
+  <div class="sh-stats">
+    <div class="sh-stat">
+      <div class="sh-stat-val">5,000<span>+</span></div>
+      <div class="sh-stat-lbl">Installations</div>
+    </div>
+    <div class="sh-stat">
+      <div class="sh-stat-val">24<span>/7</span></div>
+      <div class="sh-stat-lbl">Monitoring</div>
+    </div>
+    <div class="sh-stat">
+      <div class="sh-stat-val">98<span>%</span></div>
+      <div class="sh-stat-lbl">Satisfaction Rate</div>
+    </div>
+    <div class="sh-stat">
+      <div class="sh-stat-val">3<span> Yr</span></div>
+      <div class="sh-stat-lbl">Warranty</div>
+    </div>
+  </div>
+
+  <!-- ── Services Grid ─────────────────────────────────────── -->
+  <section class="sh-services" id="services">
+    <div class="sh-services-header">
+      <div class="section-eyebrow">What We Offer</div>
+      <h2 class="section-heading">Complete <em>Security Solutions</em></h2>
+      <p class="section-sub">A comprehensive suite of home security services designed for modern residences — from entry-level alarms to full smart-home integration.</p>
+    </div>
+    <div class="sh-grid">
+
+      <div class="sh-card">
+        <div class="sh-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <div class="sh-card-title">CCTV Surveillance</div>
+        <p class="sh-card-desc">HD and 4K camera systems covering indoor spaces, perimeters, and entry points. Night-vision and weatherproof cameras for round-the-clock recording.</p>
+        <span class="sh-card-tag">Indoor · Outdoor</span>
+      </div>
+
+      <div class="sh-card">
+        <div class="sh-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div class="sh-card-title">Smart Door Locks</div>
+        <p class="sh-card-desc">Biometric fingerprint, PIN-code, and app-controlled smart locks. Grant and revoke access remotely and receive real-time entry alerts on your phone.</p>
+        <span class="sh-card-tag">Biometric · App Control</span>
+      </div>
+
+      <div class="sh-card">
+        <div class="sh-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </div>
+        <div class="sh-card-title">Alarm Systems</div>
+        <p class="sh-card-desc">Motion-sensor triggered alarms with instant SMS and app notifications. Linked to local security response teams for rapid on-ground action.</p>
+        <span class="sh-card-tag">Motion · SMS Alert</span>
+      </div>
+
+      <div class="sh-card">
+        <div class="sh-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 0180 2.18 2 2 0 0111 4.07"/>
+          <path d="M12 2a10 10 0 010 20"/><path d="M12 6a6 6 0 010 12"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <div class="sh-card-title">Video Doorbell</div>
+        <p class="sh-card-desc">See, hear, and speak with visitors from anywhere in the world. Two-way audio and HD video lets you manage deliveries and screen visitors remotely.</p>
+        <span class="sh-card-tag">HD Video · Two-Way Audio</span>
+      </div>
+
+      <div class="sh-card">
+        <div class="sh-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="21" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
+        </div>
+        <div class="sh-card-title">Access Control</div>
+        <p class="sh-card-desc">Enterprise-grade access control for gated villas, apartments, and offices. RFID, card-based, and face-recognition systems with audit trails.</p>
+        <span class="sh-card-tag">RFID · Face Recognition</span>
+      </div>
+
+      <div class="sh-card">
+        <div class="sh-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="sh-card-title">Security Audit</div>
+        <p class="sh-card-desc">A free on-site security assessment identifies vulnerabilities and recommends the right combination of physical and digital security measures for your home.</p>
+        <span class="sh-card-tag">Free · On-Site</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Process Steps ─────────────────────────────────────── -->
+  <section class="sh-process">
+    <div class="sh-process-header">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-heading">Security in <em>4 Simple Steps</em></h2>
+      <p class="section-sub">From the first consultation to ongoing monitoring — we make protecting your home straightforward and stress-free.</p>
+    </div>
+    <div class="sh-process-track">
+      <div class="sh-step">
+        <div class="sh-step-num">01</div>
+        <div class="sh-step-title">Consultation</div>
+        <p class="sh-step-desc">Our security expert visits your property, assesses vulnerabilities, and recommends a tailored plan.</p>
+      </div>
+      <div class="sh-step">
+        <div class="sh-step-num">02</div>
+        <div class="sh-step-title">Custom Design</div>
+        <p class="sh-step-desc">We design a complete security blueprint — camera placement, alarm zones, and access control layout.</p>
+      </div>
+      <div class="sh-step">
+        <div class="sh-step-num">03</div>
+        <div class="sh-step-title">Installation</div>
+        <p class="sh-step-desc">Certified technicians install and test all equipment with minimal disruption to your daily routine.</p>
+      </div>
+      <div class="sh-step">
+        <div class="sh-step-num">04</div>
+        <div class="sh-step-title">Live Monitoring</div>
+        <p class="sh-step-desc">Ongoing 24/7 monitoring, annual maintenance checks, and a dedicated support line whenever you need us.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Choose Us ─────────────────────────────────────── -->
+  <section class="sh-why">
+    <div class="sh-why-inner">
+      <div>
+        <div class="section-eyebrow">Why HOMEXO Security</div>
+        <h2 class="section-heading">Built on <em>Trust & Technology</em></h2>
+        <p class="section-sub">We only work with certified security vendors who meet our quality and reliability benchmarks.</p>
+        <ul class="sh-why-list">
+          <li class="sh-why-item">
+            <div class="sh-why-dot"></div>
+            <div>
+              <div class="sh-why-item-title">RERA & NASSCOM Certified Partners</div>
+              <p class="sh-why-item-desc">All our security vendors are certified by industry bodies and carry full liability insurance for every installation.</p>
+            </div>
+          </li>
+          <li class="sh-why-item">
+            <div class="sh-why-dot"></div>
+            <div>
+              <div class="sh-why-item-title">Manufacturer-Backed Equipment</div>
+              <p class="sh-why-item-desc">We use only authorised products from Hikvision, Bosch, Yale, and Godrej Security — backed by full manufacturer warranties.</p>
+            </div>
+          </li>
+          <li class="sh-why-item">
+            <div class="sh-why-dot"></div>
+            <div>
+              <div class="sh-why-item-title">Single-Window Service</div>
+              <p class="sh-why-item-desc">One point of contact from audit through installation, monitoring, and annual maintenance — no chasing multiple vendors.</p>
+            </div>
+          </li>
+          <li class="sh-why-item">
+            <div class="sh-why-dot"></div>
+            <div>
+              <div class="sh-why-item-title">Transparent Pricing</div>
+              <p class="sh-why-item-desc">Detailed upfront quotes with no hidden costs. Choose from one-time purchase or affordable monthly monitoring plans.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="sh-why-visual">
+        <div class="sh-cert-item">
+          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div>
+            <div class="sh-cert-name">ISO 9001 Certified</div>
+            <div class="sh-cert-body">Quality management systems for installation</div>
+          </div>
+        </div>
+        <div class="sh-cert-item">
+          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div>
+            <div class="sh-cert-name">PSARA Licensed</div>
+            <div class="sh-cert-body">Private Security Agencies Regulation Act compliant</div>
+          </div>
+        </div>
+        <div class="sh-cert-item">
+          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div>
+            <div class="sh-cert-name">24/7 Control Room</div>
+            <div class="sh-cert-body">Centralised monitoring across all installations</div>
+          </div>
+        </div>
+        <div class="sh-cert-item">
+          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div>
+            <div class="sh-cert-name">Hikvision Authorised</div>
+            <div class="sh-cert-body">Certified partner for CCTV installations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA + Enquiry ─────────────────────────────────────── -->
+  <section class="sh-cta" id="enquire">
+    <div class="sh-cta-inner">
+      <div class="sh-cta-left">
+        <div class="section-eyebrow">Get Started</div>
+        <h2 class="section-heading">Request a <em>Free Security Audit</em></h2>
+        <p class="section-sub">Our security consultant will visit your property within 48 hours for a comprehensive, no-obligation security assessment.</p>
+        <ul class="sh-cta-points">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Free on-site consultation</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Detailed security proposal within 24 hours</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>No pressure, fully transparent pricing</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>3-year parts & labour warranty included</li>
+        </ul>
+      </div>
+      <div>
+        <form class="sh-form" method="post" action="{% url 'enquiries:create' %}">
+          {% csrf_token %}
+          <input type="hidden" name="service" value="security">
+          <div class="sh-form-title">Book Your Free Audit</div>
+          <p class="sh-form-sub">We'll get back to you within 2 business hours.</p>
+          <input type="text" name="name" placeholder="Your Full Name" required>
+          <input type="tel" name="phone" placeholder="Phone Number" required>
+          <input type="email" name="email" placeholder="Email Address">
+          <input type="text" name="address" placeholder="Property Address / Location">
+          <select name="property_type">
+            <option value="" disabled selected>Property Type</option>
+            <option>Apartment / Flat</option>
+            <option>Independent Villa</option>
+            <option>Gated Community</option>
+            <option>Commercial Space</option>
+          </select>
+          <textarea name="message" placeholder="Any specific security concerns?"></textarea>
+          <button type="submit" class="sh-form-submit">Request Free Audit →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

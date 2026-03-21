@@ -1,0 +1,580 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Services — HOMEXO{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Base ──────────────────────────────────────────────────── */
+  .hs-page { font-family: 'DM Sans', sans-serif; }
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 18px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
+    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; margin-bottom: 0; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .hs-hero {
+    background: linear-gradient(145deg, #071929 0%, #0D2B4E 50%, #122d4e 100%);
+    padding: 90px 40px 100px; position: relative; overflow: hidden;
+  }
+  .hs-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 90% at 85% 50%, rgba(74,144,196,.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hs-hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 380px; gap: 80px; align-items: center;
+  }
+  .hs-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 28px;
+  }
+  .hs-hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--sky); display: block; }
+  .hs-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 62px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 22px;
+  }
+  .hs-hero h1 em { font-style: italic; color: var(--sky); }
+  .hs-hero-desc {
+    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
+    max-width: 460px; font-weight: 300; margin-bottom: 40px;
+  }
+  .hs-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hs-btn-primary {
+    display: inline-block; padding: 14px 32px;
+    background: var(--sky); color: #fff;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif; transition: background .3s;
+  }
+  .hs-btn-primary:hover { background: #3a7ab0; }
+  .hs-btn-ghost {
+    display: inline-block; padding: 14px 32px;
+    background: transparent; color: rgba(255,255,255,.8);
+    border: 1px solid rgba(255,255,255,.25);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif; transition: all .3s;
+  }
+  .hs-btn-ghost:hover { border-color: var(--sky); color: var(--sky); }
+
+  /* Hero booking mini widget */
+  .hs-book-widget {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2);
+    padding: 32px 28px; backdrop-filter: blur(8px);
+  }
+  .hs-widget-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 20px; }
+  .hs-widget-select {
+    width: 100%; padding: 12px 14px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; appearance: none; cursor: pointer;
+  }
+  .hs-widget-select option { background: #0D2B4E; color: #fff; }
+  .hs-widget-input {
+    width: 100%; box-sizing: border-box; padding: 12px 14px; margin-bottom: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
+    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none;
+  }
+  .hs-widget-input::placeholder { color: rgba(255,255,255,.35); }
+  .hs-widget-btn {
+    width: 100%; padding: 13px; background: var(--sky); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: background .3s;
+  }
+  .hs-widget-btn:hover { background: #3a7ab0; }
+
+  /* ── Stats ─────────────────────────────────────────────────── */
+  .hs-stats {
+    background: var(--navy); padding: 36px 40px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid rgba(74,144,196,.1);
+  }
+  .hs-stat { display: flex; flex-direction: column; align-items: center; padding: 12px 0; text-align: center; border-right: 1px solid rgba(255,255,255,.07); }
+  .hs-stat:last-child { border-right: none; }
+  .hs-stat-val { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .hs-stat-val span { font-size: .55em; color: var(--sky); }
+  .hs-stat-lbl { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+
+  /* ── Services Categories ────────────────────────────────────── */
+  .hs-categories { padding: 90px 40px; background: var(--ivory); }
+  .hs-cat-header { text-align: center; margin-bottom: 56px; }
+  .hs-cat-header .section-sub { margin: 0 auto; }
+  .hs-cat-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  }
+  .hs-cat-card {
+    background: #fff; padding: 36px 28px;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    cursor: pointer; transition: all .4s cubic-bezier(.23,1,.32,1);
+    text-decoration: none; display: block;
+  }
+  .hs-cat-card::after {
+    content: ''; position: absolute; inset: 0;
+    border: 2px solid transparent; transition: border-color .3s;
+  }
+  .hs-cat-card:hover { box-shadow: 0 16px 50px rgba(13,43,78,.1); transform: translateY(-4px); }
+  .hs-cat-card:hover::after { border-color: var(--sky); }
+  .hs-cat-icon {
+    width: 52px; height: 52px; background: var(--ivory); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sky); margin-bottom: 20px; transition: all .3s;
+  }
+  .hs-cat-card:hover .hs-cat-icon { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .hs-cat-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; color: var(--charcoal); margin-bottom: 8px; }
+  .hs-cat-desc { font-size: 12px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+  .hs-cat-link { display: block; margin-top: 16px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); }
+
+  /* ── Featured / Popular Services ───────────────────────────── */
+  .hs-popular { padding: 80px 40px; background: #fff; }
+  .hs-pop-inner { max-width: 1200px; margin: 0 auto; }
+  .hs-pop-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+  .hs-pop-header a { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); text-decoration: none; }
+  .hs-pop-header a:hover { color: var(--navy); }
+  .hs-pop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .hs-pop-card {
+    border: 1px solid var(--border); overflow: hidden;
+    transition: box-shadow .3s;
+  }
+  .hs-pop-card:hover { box-shadow: 0 12px 36px rgba(13,43,78,.09); }
+  .hs-pop-visual {
+    height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; font-weight: 300;
+    font-family: 'Cormorant Garamond', serif; color: rgba(255,255,255,.5);
+  }
+  .hs-pop-body { padding: 24px; }
+  .hs-pop-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); margin-bottom: 8px; }
+  .hs-pop-desc { font-size: 12px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; margin-bottom: 16px; }
+  .hs-pop-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border); }
+  .hs-pop-price { font-size: 13px; font-weight: 500; color: var(--charcoal); }
+  .hs-pop-price span { font-size: 11px; color: var(--warm-grey); font-weight: 300; }
+  .hs-pop-btn {
+    display: inline-block; padding: 8px 20px;
+    background: var(--navy); color: #fff; text-decoration: none;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: background .3s;
+  }
+  .hs-pop-btn:hover { background: var(--sky); }
+
+  /* ── How to Book ────────────────────────────────────────────── */
+  .hs-howto { padding: 90px 40px; background: var(--charcoal); }
+  .hs-howto-header { text-align: center; margin-bottom: 60px; }
+  .hs-howto-header .section-eyebrow { color: var(--sky); }
+  .hs-howto-header .section-heading { color: #fff; }
+  .hs-howto-header .section-heading em { color: var(--sky); }
+  .hs-howto-header .section-sub { color: rgba(255,255,255,.5); margin: 0 auto; }
+  .hs-steps {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+  }
+  .hs-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .hs-step-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 1px solid rgba(74,144,196,.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sky); margin-bottom: 24px;
+    background: rgba(74,144,196,.06);
+  }
+  .hs-step-num { font-family: 'Cormorant Garamond', serif; font-size: 11px; color: var(--sky); letter-spacing: 2px; margin-bottom: 8px; }
+  .hs-step-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 10px; }
+  .hs-step-desc { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.45); font-weight: 300; }
+
+  /* ── Why Us ─────────────────────────────────────────────────── */
+  .hs-why { padding: 90px 40px; background: var(--ivory); }
+  .hs-why-inner { max-width: 1200px; margin: 0 auto; }
+  .hs-why-header { text-align: center; margin-bottom: 52px; }
+  .hs-why-header .section-sub { margin: 0 auto; }
+  .hs-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .hs-why-card { background: #fff; padding: 40px 32px; border: 1px solid var(--border); }
+  .hs-why-icon { color: var(--sky); margin-bottom: 20px; }
+  .hs-why-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); margin-bottom: 10px; }
+  .hs-why-desc { font-size: 13px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── CTA Banner ─────────────────────────────────────────────── */
+  .hs-cta-banner {
+    background: linear-gradient(135deg, #0D2B4E 0%, var(--sky) 100%);
+    padding: 72px 40px; text-align: center;
+  }
+  .hs-cta-banner h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 44px); font-weight: 300; color: #fff; margin-bottom: 16px; }
+  .hs-cta-banner h2 em { font-style: italic; }
+  .hs-cta-banner p { font-size: 15px; color: rgba(255,255,255,.7); margin-bottom: 36px; font-weight: 300; }
+  .hs-cta-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .hs-cta-btn-white {
+    display: inline-block; padding: 14px 36px; background: #fff; color: var(--navy);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none;
+    font-family: 'DM Sans', sans-serif; transition: all .3s;
+  }
+  .hs-cta-btn-white:hover { background: var(--ivory); }
+  .hs-cta-btn-outline {
+    display: inline-block; padding: 14px 36px; background: transparent;
+    color: #fff; border: 1px solid rgba(255,255,255,.4);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none;
+    font-family: 'DM Sans', sans-serif; transition: all .3s;
+  }
+  .hs-cta-btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .hs-hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hs-book-widget { max-width: 400px; }
+    .hs-cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .hs-pop-grid { grid-template-columns: repeat(2, 1fr); }
+    .hs-why-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .hs-hero { padding: 60px 24px 70px; }
+    .hs-stats { grid-template-columns: repeat(2, 1fr); padding: 24px; }
+    .hs-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); padding: 16px 0; }
+    .hs-stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.07); }
+    .hs-stat:nth-child(3), .hs-stat:nth-child(4) { border-bottom: none; }
+    .hs-categories, .hs-popular, .hs-howto, .hs-why, .hs-cta-banner { padding: 56px 24px; }
+    .hs-steps { grid-template-columns: 1fr; gap: 32px; }
+    .hs-why-grid { grid-template-columns: 1fr; }
+    .hs-pop-grid { grid-template-columns: 1fr; }
+    .hs-pop-header { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 480px) {
+    .hs-cat-grid { grid-template-columns: 1fr; }
+    .hs-hero-actions { flex-direction: column; }
+    .hs-cta-actions { flex-direction: column; align-items: center; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+<div class="hs-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="hs-hero">
+    <div class="hs-hero-inner">
+      <div>
+        <div class="hs-hero-eyebrow">Home Services</div>
+        <h1>Expert Help for <em>Every Corner</em> of Your Home</h1>
+        <p class="hs-hero-desc">Book verified professionals for plumbing, electrical, painting, cleaning, and more — all vetted by HOMEXO and backed by a service guarantee.</p>
+        <div class="hs-hero-actions">
+          <a href="#categories" class="hs-btn-primary">Browse Services</a>
+          <a href="{% url 'enquiries:create' %}" class="hs-btn-ghost">Talk to an Expert</a>
+        </div>
+      </div>
+      <div>
+        <div class="hs-book-widget">
+          <div class="hs-widget-title">Book a Service</div>
+          <select class="hs-widget-select" id="hsWidgetService">
+            <option value="" disabled selected>Select Service Category</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="electrical">Electrical Work</option>
+            <option value="painting">Painting &amp; Polishing</option>
+            <option value="cleaning">Deep Cleaning</option>
+            <option value="carpentry">Carpentry</option>
+            <option value="ac">AC &amp; Appliance Service</option>
+            <option value="pest_control">Pest Control</option>
+            <option value="renovation">Renovation &amp; Interiors</option>
+          </select>
+          <input class="hs-widget-input" type="text" id="hsWidgetLocation" placeholder="Your Location / Area">
+          <input class="hs-widget-input" type="tel" id="hsWidgetPhone" placeholder="Phone Number">
+          <button class="hs-widget-btn" id="hsBookNowBtn">Book Now →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ─────────────────────────────────────────────── -->
+  <div class="hs-stats">
+    <div class="hs-stat">
+      <div class="hs-stat-val">12,000<span>+</span></div>
+      <div class="hs-stat-lbl">Services Completed</div>
+    </div>
+    <div class="hs-stat">
+      <div class="hs-stat-val">500<span>+</span></div>
+      <div class="hs-stat-lbl">Verified Professionals</div>
+    </div>
+    <div class="hs-stat">
+      <div class="hs-stat-val">4.8<span>★</span></div>
+      <div class="hs-stat-lbl">Average Rating</div>
+    </div>
+    <div class="hs-stat">
+      <div class="hs-stat-val">48<span>Hr</span></div>
+      <div class="hs-stat-lbl">Response Time</div>
+    </div>
+  </div>
+
+  <!-- ── Service Categories ─────────────────────────────────── -->
+  <section class="hs-categories" id="categories">
+    <div class="hs-cat-header">
+      <div class="section-eyebrow">Services</div>
+      <h2 class="section-heading">What We <em>Can Help</em> With</h2>
+      <p class="section-sub">From routine maintenance to full-scale renovations, our network of professionals covers every home service need.</p>
+    </div>
+    <div class="hs-cat-grid">
+
+      <a href="{% url 'enquiries:create' %}?service=plumbing" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        </div>
+        <div class="hs-cat-name">Plumbing</div>
+        <p class="hs-cat-desc">Leak repairs, pipe fitting, bathroom fixtures, water heater installation, and drainage solutions.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=electrical" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="hs-cat-name">Electrical Work</div>
+        <p class="hs-cat-desc">Wiring, switchboard upgrades, light fixture installation, fan installation, and electrical fault repairs.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=painting" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h.01M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg>
+        </div>
+        <div class="hs-cat-name">Painting & Polishing</div>
+        <p class="hs-cat-desc">Interior and exterior painting, texture finishes, wood polishing, waterproofing, and epoxy flooring.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=cleaning" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="hs-cat-name">Deep Cleaning</div>
+        <p class="hs-cat-desc">Professional deep cleaning for homes, sofa & carpet shampooing, kitchen degreasing, and post-renovation cleanup.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=carpentry" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="hs-cat-name">Carpentry</div>
+        <p class="hs-cat-desc">Custom furniture, wardrobe fitting, door/window repairs, modular kitchen work, and false ceiling installation.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=ac" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+        </div>
+        <div class="hs-cat-name">AC & Appliance Service</div>
+        <p class="hs-cat-desc">AC installation, servicing, and repair. Washing machine, refrigerator, and kitchen appliance diagnostics and repair.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=pest_control" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        </div>
+        <div class="hs-cat-name">Pest Control</div>
+        <p class="hs-cat-desc">Termite treatment, cockroach control, rodent management, bed bug treatment, and annual AMC plans.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+      <a href="{% url 'enquiries:create' %}?service=renovation" class="hs-cat-card">
+        <div class="hs-cat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <div class="hs-cat-name">Renovation & Interiors</div>
+        <p class="hs-cat-desc">Complete home renovation, interior design, modular kitchen, bathroom upgrades, and flooring replacement.</p>
+        <span class="hs-cat-link">Book Now →</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Popular Services ────────────────────────────────────── -->
+  <section class="hs-popular">
+    <div class="hs-pop-inner">
+      <div class="hs-pop-header">
+        <div>
+          <div class="section-eyebrow">Most Booked</div>
+          <h2 class="section-heading">Popular <em>Services</em></h2>
+        </div>
+        <a href="{% url 'enquiries:create' %}">View All Services →</a>
+      </div>
+      <div class="hs-pop-grid">
+
+        <div class="hs-pop-card">
+          <div class="hs-pop-visual" style="background:linear-gradient(135deg,#071929,#1a4468);">Deep Clean</div>
+          <div class="hs-pop-body">
+            <div class="hs-pop-name">2BHK Deep Cleaning</div>
+            <p class="hs-pop-desc">Full apartment deep clean including kitchen, bathrooms, hall, and all rooms. Includes equipment and eco-friendly products.</p>
+            <div class="hs-pop-meta">
+              <div class="hs-pop-price">₹2,499 <span>onwards</span></div>
+              <a href="{% url 'enquiries:create' %}?service=cleaning" class="hs-pop-btn">Book →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hs-pop-card">
+          <div class="hs-pop-visual" style="background:linear-gradient(135deg,#1a3a5c,#0D2B4E);">AC Service</div>
+          <div class="hs-pop-body">
+            <div class="hs-pop-name">Split AC Servicing</div>
+            <p class="hs-pop-desc">Full service including coil cleaning, gas pressure check, drainage cleaning, and cooling optimisation. All brands.</p>
+            <div class="hs-pop-meta">
+              <div class="hs-pop-price">₹799 <span>per unit</span></div>
+              <a href="{% url 'enquiries:create' %}?service=ac" class="hs-pop-btn">Book →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hs-pop-card">
+          <div class="hs-pop-visual" style="background:linear-gradient(135deg,#0a2040,#1e4878);">Painting</div>
+          <div class="hs-pop-body">
+            <div class="hs-pop-name">Interior Painting — 2BHK</div>
+            <p class="hs-pop-desc">Top-quality Asian Paints / Dulux application with wall primer, two coats, and professional finishing. Walls & ceiling.</p>
+            <div class="hs-pop-meta">
+              <div class="hs-pop-price">₹18,000 <span>onwards</span></div>
+              <a href="{% url 'enquiries:create' %}?service=painting" class="hs-pop-btn">Book →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How to Book ─────────────────────────────────────────── -->
+  <section class="hs-howto">
+    <div class="hs-howto-header">
+      <div class="section-eyebrow">Booking Process</div>
+      <h2 class="section-heading">Get Help in <em>3 Easy Steps</em></h2>
+      <p class="section-sub">Booking a home service professional through HOMEXO takes less than 2 minutes.</p>
+    </div>
+    <div class="hs-steps">
+      <div class="hs-step">
+        <div class="hs-step-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="hs-step-num">Step 01</div>
+        <div class="hs-step-title">Choose a Service</div>
+        <p class="hs-step-desc">Select the service you need from our catalogue and describe the job requirements. Add your preferred date and time.</p>
+      </div>
+      <div class="hs-step">
+        <div class="hs-step-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="hs-step-num">Step 02</div>
+        <div class="hs-step-title">We Match a Pro</div>
+        <p class="hs-step-desc">We connect you with a vetted professional nearby. You'll receive their profile, ratings, and estimated arrival time.</p>
+      </div>
+      <div class="hs-step">
+        <div class="hs-step-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="hs-step-num">Step 03</div>
+        <div class="hs-step-title">Job Done, Guaranteed</div>
+        <p class="hs-step-desc">Your professional arrives on time and completes the work. Pay only after you're satisfied. 30-day service warranty included.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Choose Us ──────────────────────────────────────── -->
+  <section class="hs-why">
+    <div class="hs-why-inner">
+      <div class="hs-why-header">
+        <div class="section-eyebrow">Why HOMEXO</div>
+        <h2 class="section-heading">The <em>HOMEXO</em> Service Promise</h2>
+        <p class="section-sub">Every professional in our network is background-checked, trained, and rated by real customers.</p>
+      </div>
+      <div class="hs-why-grid">
+        <div class="hs-why-card">
+          <div class="hs-why-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="hs-why-title">Verified Professionals</div>
+          <p class="hs-why-desc">All service providers undergo rigorous background checks, skill assessment, and identity verification before being listed on HOMEXO.</p>
+        </div>
+        <div class="hs-why-card">
+          <div class="hs-why-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="hs-why-title">Service Guarantee</div>
+          <p class="hs-why-desc">Not satisfied with the work? We'll send another professional at no extra cost. Our 30-day workmanship warranty covers all jobs.</p>
+        </div>
+        <div class="hs-why-card">
+          <div class="hs-why-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div class="hs-why-title">Transparent Pricing</div>
+          <p class="hs-why-desc">Upfront quotes with no hidden charges. See the full cost before confirming and pay securely after the job is done to your satisfaction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Banner ─────────────────────────────────────────── -->
+  <section class="hs-cta-banner">
+    <h2>Ready to Schedule Your <em>Next Home Service?</em></h2>
+    <p>Join 12,000+ homeowners who trust HOMEXO professionals for their home care needs.</p>
+    <div class="hs-cta-actions">
+      <a href="{% url 'enquiries:create' %}" class="hs-cta-btn-white">Book a Service →</a>
+      <a href="tel:1800102XXXX" class="hs-cta-btn-outline">Call Us Now</a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Book Now widget — pass selected service + phone as query params
+document.getElementById('hsBookNowBtn').addEventListener('click', function () {
+  const service  = document.getElementById('hsWidgetService').value;
+  const phone    = document.getElementById('hsWidgetPhone').value.trim();
+  const location = document.getElementById('hsWidgetLocation').value.trim();
+  const base     = "{% url 'enquiries:create' %}";
+
+  const params = new URLSearchParams();
+  if (service)  params.set('service', service);
+  if (phone)    params.set('phone', phone);
+  if (location) params.set('location', location);
+
+  const qs = params.toString();
+  window.location.href = qs ? base + '?' + qs : base;
+});
+
+// Category card clicks — pre-select the widget + scroll to booking form
+document.querySelectorAll('.hs-cat-card').forEach(function (card) {
+  card.addEventListener('click', function (e) {
+    e.preventDefault();
+    const href     = card.getAttribute('href') || '';
+    const match    = href.match(/[?&]service=([^&]+)/);
+    const service  = match ? match[1] : '';
+    const sel      = document.getElementById('hsWidgetService');
+
+    if (service && sel) {
+      // Try to match option value
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === service) {
+          sel.selectedIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Scroll hero booking widget into view
+    const widget = document.getElementById('hsWidgetService');
+    if (widget) {
+      widget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function () { widget.focus(); }, 500);
+    }
+  });
+});
+</script>
+{% endblock %}
