@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About HOMEXO — India's Premium Real Estate Advisory{% endblock %}
+
+{% block extra_head %}
+<style>
+  .ab-page { font-family: 'DM Sans', sans-serif; }
+  .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 18px;
+  }
+  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
+    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
+  }
+  .section-heading em { font-style: italic; color: var(--sky); }
+  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .ab-hero {
+    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
+    padding: 100px 40px 90px; position: relative; overflow: hidden;
+  }
+  .ab-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 80% 50%, rgba(74,144,196,.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ab-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .ab-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 28px;
+  }
+  .ab-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
+  .ab-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 4.5vw, 60px); font-weight: 300; line-height: 1.1;
+    color: #fff; margin-bottom: 24px;
+  }
+  .ab-hero h1 em { font-style: italic; color: var(--sky); }
+  .ab-hero-desc { font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6); font-weight: 300; max-width: 520px; }
+  .ab-hero-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+  .ab-hero-stat {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15); padding: 24px 20px;
+  }
+  .ab-hero-stat-val { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .ab-hero-stat-val span { font-size: .55em; color: var(--sky); }
+  .ab-hero-stat-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
+
+  /* ── Story ─────────────────────────────────────────────────── */
+  .ab-story { padding: 80px 40px; background: var(--ivory); }
+  .ab-story-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .ab-story-text p { font-size: 15px; line-height: 1.9; color: var(--warm-grey); font-weight: 300; margin-bottom: 20px; }
+  .ab-story-text p:last-child { margin-bottom: 0; }
+  .ab-story-aside { display: flex; flex-direction: column; gap: 24px; }
+  .ab-milestone {
+    border-left: 2px solid rgba(74,144,196,.3); padding-left: 24px; position: relative;
+  }
+  .ab-milestone::before {
+    content: ''; position: absolute; left: -5px; top: 4px;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--sky);
+  }
+  .ab-milestone-year { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); margin-bottom: 6px; }
+  .ab-milestone-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal); font-weight: 500; margin-bottom: 4px; }
+  .ab-milestone-desc { font-size: 12px; line-height: 1.65; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── Values ────────────────────────────────────────────────── */
+  .ab-values { padding: 80px 40px; background: #fff; }
+  .ab-values-inner { max-width: 1100px; margin: 0 auto; }
+  .ab-values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 48px; }
+  .ab-value-card {
+    padding: 36px 28px; background: var(--ivory); border: 1px solid var(--border);
+    position: relative; overflow: hidden; transition: all .35s cubic-bezier(.23,1,.32,1);
+  }
+  .ab-value-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--sky), var(--navy));
+    transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.23,1,.32,1);
+  }
+  .ab-value-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(13,43,78,.09); }
+  .ab-value-card:hover::before { transform: scaleX(1); }
+  .ab-value-icon { color: var(--sky); margin-bottom: 20px; }
+  .ab-value-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); font-weight: 500; margin-bottom: 12px; }
+  .ab-value-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── Numbers ───────────────────────────────────────────────── */
+  .ab-numbers { padding: 80px 40px; background: var(--charcoal); }
+  .ab-numbers-inner { max-width: 1100px; margin: 0 auto; }
+  .ab-numbers-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 56px; flex-wrap: wrap; gap: 20px; }
+  .ab-numbers-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+  .ab-number-item { background: rgba(255,255,255,.04); border: 1px solid rgba(74,144,196,.12); padding: 32px 20px; text-align: center; }
+  .ab-number-val { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 8px; }
+  .ab-number-val span { font-size: .55em; color: var(--sky); }
+  .ab-number-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); line-height: 1.5; }
+
+  /* ── Services ──────────────────────────────────────────────── */
+  .ab-services { padding: 80px 40px; background: var(--ivory); }
+  .ab-services-inner { max-width: 1100px; margin: 0 auto; }
+  .ab-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .ab-service-card {
+    background: #fff; border: 1px solid var(--border); padding: 32px 28px;
+    text-decoration: none; display: block; transition: all .35s cubic-bezier(.23,1,.32,1);
+    position: relative; overflow: hidden;
+  }
+  .ab-service-card::after {
+    content: '→'; position: absolute; bottom: 28px; right: 28px;
+    font-size: 18px; color: var(--sky); opacity: 0; transform: translateX(-8px);
+    transition: all .3s;
+  }
+  .ab-service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(13,43,78,.09); }
+  .ab-service-card:hover::after { opacity: 1; transform: translateX(0); }
+  .ab-service-icon { color: var(--sky); margin-bottom: 18px; }
+  .ab-service-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); font-weight: 500; margin-bottom: 10px; }
+  .ab-service-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
+
+  /* ── Team ──────────────────────────────────────────────────── */
+  .ab-team { padding: 80px 40px; background: #fff; }
+  .ab-team-inner { max-width: 1100px; margin: 0 auto; }
+  .ab-team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 48px; }
+  .ab-agent-card { border: 1px solid var(--border); overflow: hidden; transition: all .35s; }
+  .ab-agent-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.09); transform: translateY(-3px); }
+  .ab-agent-avatar {
+    height: 200px; background: var(--charcoal); display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--sky);
+    overflow: hidden;
+  }
+  .ab-agent-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .ab-agent-body { padding: 20px; }
+  .ab-agent-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal); font-weight: 500; margin-bottom: 4px; }
+  .ab-agent-role { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); }
+
+  /* ── CTA ───────────────────────────────────────────────────── */
+  .ab-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); text-align: center; }
+  .ab-cta-inner { max-width: 700px; margin: 0 auto; }
+  .ab-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 44px); font-weight: 300; color: #fff; margin-bottom: 16px; }
+  .ab-cta h2 em { font-style: italic; color: var(--sky); }
+  .ab-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 40px; line-height: 1.8; }
+  .ab-cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .ab-cta-btn {
+    padding: 14px 36px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; text-decoration: none; transition: all .3s; display: inline-block;
+  }
+  .ab-cta-btn.primary { background: var(--sky); color: #fff; }
+  .ab-cta-btn.primary:hover { background: #3a7ab0; }
+  .ab-cta-btn.outline { border: 1px solid rgba(255,255,255,.3); color: rgba(255,255,255,.8); }
+  .ab-cta-btn.outline:hover { background: rgba(255,255,255,.1); }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .ab-hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .ab-story-inner { grid-template-columns: 1fr; gap: 48px; }
+    .ab-values-grid { grid-template-columns: repeat(2, 1fr); }
+    .ab-numbers-grid { grid-template-columns: repeat(3, 1fr); }
+    .ab-team-grid { grid-template-columns: repeat(3, 1fr); }
+    .ab-services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .ab-hero, .ab-story, .ab-values, .ab-numbers, .ab-services, .ab-team, .ab-cta { padding: 56px 24px; }
+    .ab-numbers-grid { grid-template-columns: repeat(2, 1fr); }
+    .ab-team-grid { grid-template-columns: repeat(2, 1fr); }
+    .ab-services-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .ab-values-grid { grid-template-columns: 1fr; }
+    .ab-team-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+<div class="ab-page">
+
+  <!-- ══════════════════ HERO ══════════════════════════════════ -->
+  <section class="ab-hero">
+    <div class="ab-hero-inner">
+      <div>
+        <div class="ab-hero-eyebrow">About HOMEXO</div>
+        <h1>India's Most Trusted <em>Luxury Real Estate</em> Advisory</h1>
+        <p class="ab-hero-desc">Founded on the belief that every client deserves exceptional guidance, HOMEXO has built a reputation for transparency, expertise, and results across India's most sought-after residential and commercial markets.</p>
+      </div>
+      <div class="ab-hero-stats">
+        <div class="ab-hero-stat">
+          <div class="ab-hero-stat-val">5,000<span>+</span></div>
+          <div class="ab-hero-stat-lbl">Properties Sold</div>
+        </div>
+        <div class="ab-hero-stat">
+          <div class="ab-hero-stat-val">₹8,500<span>Cr</span></div>
+          <div class="ab-hero-stat-lbl">Transaction Value</div>
+        </div>
+        <div class="ab-hero-stat">
+          <div class="ab-hero-stat-val">150<span>+</span></div>
+          <div class="ab-hero-stat-lbl">Expert Advisors</div>
+        </div>
+        <div class="ab-hero-stat">
+          <div class="ab-hero-stat-val">12<span>+</span></div>
+          <div class="ab-hero-stat-lbl">Cities Covered</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ STORY ══════════════════════════════════ -->
+  <section class="ab-story">
+    <div class="ab-story-inner">
+      <div class="ab-story-text">
+        <div class="section-eyebrow">Our Story</div>
+        <h2 class="section-heading">Built on <em>Trust</em>,<br>Driven by <em>Results</em></h2>
+        <p>HOMEXO was founded with a singular vision: to make premium property buying and selling as seamless as it is exciting. What began as a boutique advisory firm has grown into one of India's most respected real estate platforms — trusted by families, investors, and NRIs alike.</p>
+        <p>We understand that buying a home is one of life's most significant decisions. That's why every client relationship at HOMEXO is built on genuine understanding, meticulous research, and honest advice — not just sales targets. Our advisors are trained differently: they listen first, then guide.</p>
+        <p>Today, HOMEXO operates across 12 cities, representing premium projects from India's leading developers and maintaining an exclusive resale portfolio of vetted luxury properties. From first-time buyers to seasoned investors managing multi-crore portfolios, we serve every client with the same precision and care.</p>
+      </div>
+      <div class="ab-story-aside">
+        <div class="section-eyebrow">Our Journey</div>
+        <div class="ab-milestone">
+          <div class="ab-milestone-year">2015</div>
+          <div class="ab-milestone-title">Founded in Bengaluru</div>
+          <p class="ab-milestone-desc">Started as a boutique advisory with 5 advisors and a focus on premium residential properties in South India.</p>
+        </div>
+        <div class="ab-milestone">
+          <div class="ab-milestone-year">2017</div>
+          <div class="ab-milestone-title">Expanded to Mumbai & Delhi NCR</div>
+          <p class="ab-milestone-desc">Opened offices in Mumbai and Gurgaon, adding luxury resale and new project representation capabilities.</p>
+        </div>
+        <div class="ab-milestone">
+          <div class="ab-milestone-year">2019</div>
+          <div class="ab-milestone-title">Crossed ₹1,000 Cr in Transactions</div>
+          <p class="ab-milestone-desc">Milestone transaction volume achieved with the addition of commercial real estate and NRI services divisions.</p>
+        </div>
+        <div class="ab-milestone">
+          <div class="ab-milestone-year">2022</div>
+          <div class="ab-milestone-title">Digital Platform Launch</div>
+          <p class="ab-milestone-desc">Launched the HOMEXO digital platform, providing clients with real-time listings, legal support, home loans, and advisory — all in one place.</p>
+        </div>
+        <div class="ab-milestone">
+          <div class="ab-milestone-year">2025</div>
+          <div class="ab-milestone-title">Pan-India Presence</div>
+          <p class="ab-milestone-desc">Serving 12+ cities with 150+ advisors, ₹8,500+ Cr in cumulative transaction value and a Net Promoter Score of 78.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ VALUES ══════════════════════════════════ -->
+  <section class="ab-values">
+    <div class="ab-values-inner">
+      <div class="section-eyebrow">Our Values</div>
+      <h2 class="section-heading">The Principles That <em>Guide</em> Us</h2>
+      <div class="ab-values-grid">
+        <div class="ab-value-card">
+          <div class="ab-value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="ab-value-title">Integrity First</div>
+          <p class="ab-value-desc">We provide honest advice even when it means guiding you away from a transaction that isn't right for your goals. Our reputation is built on doing right by clients, not commissions.</p>
+        </div>
+        <div class="ab-value-card">
+          <div class="ab-value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="ab-value-title">Radical Transparency</div>
+          <p class="ab-value-desc">No hidden fees, no concealed terms, no conflicts of interest. Clients receive complete disclosure on commissions, legal status, and property history — always.</p>
+        </div>
+        <div class="ab-value-card">
+          <div class="ab-value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="ab-value-title">Client-Centric</div>
+          <p class="ab-value-desc">Every client gets a dedicated advisor and a personalised brief. We don't match properties to inventory — we match opportunities to your specific life goals.</p>
+        </div>
+        <div class="ab-value-card">
+          <div class="ab-value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="ab-value-title">Market Expertise</div>
+          <p class="ab-value-desc">Our advisors hold deep local knowledge backed by regular market data. Clients make decisions informed by real intelligence, not speculation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ NUMBERS ══════════════════════════════════ -->
+  <section class="ab-numbers">
+    <div class="ab-numbers-inner">
+      <div class="ab-numbers-header">
+        <div>
+          <div class="section-eyebrow" style="color:rgba(74,144,196,.7);">By the Numbers</div>
+          <h2 class="section-heading" style="color:#fff;margin-bottom:0;">HOMEXO <em>at a Glance</em></h2>
+        </div>
+      </div>
+      <div class="ab-numbers-grid">
+        <div class="ab-number-item">
+          <div class="ab-number-val">5,000<span>+</span></div>
+          <div class="ab-number-lbl">Properties Sold</div>
+        </div>
+        <div class="ab-number-item">
+          <div class="ab-number-val">₹8,500<span>Cr</span></div>
+          <div class="ab-number-lbl">Transaction Value</div>
+        </div>
+        <div class="ab-number-item">
+          <div class="ab-number-val">150<span>+</span></div>
+          <div class="ab-number-lbl">Certified Advisors</div>
+        </div>
+        <div class="ab-number-item">
+          <div class="ab-number-val">12<span>+</span></div>
+          <div class="ab-number-lbl">Cities</div>
+        </div>
+        <div class="ab-number-item">
+          <div class="ab-number-val">98<span>%</span></div>
+          <div class="ab-number-lbl">Client Satisfaction</div>
+        </div>
+        <div class="ab-number-item">
+          <div class="ab-number-val">11<span>yr</span></div>
+          <div class="ab-number-lbl">In Business</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SERVICES ══════════════════════════════════ -->
+  <section class="ab-services">
+    <div class="ab-services-inner">
+      <div class="section-eyebrow">What We Do</div>
+      <h2 class="section-heading">An End-to-End <em>Property Platform</em></h2>
+      <div class="ab-services-grid">
+        <a href="{% url 'properties:list' %}?type=buy" class="ab-service-card">
+          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="ab-service-name">Buy & Sell Property</div>
+          <p class="ab-service-desc">Access thousands of verified luxury listings across India's top cities with dedicated advisor support from search to registration.</p>
+        </a>
+        <a href="{% url 'pages:home_loan' %}" class="ab-service-card">
+          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="ab-service-name">Home Loan Advisory</div>
+          <p class="ab-service-desc">Compare rates from 25+ banks and NBFCs. Our loan advisors get you the lowest rate, zero processing fees, and fastest approvals.</p>
+        </a>
+        <a href="{% url 'pages:legal' %}" class="ab-service-card">
+          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="ab-service-name">Legal Services</div>
+          <p class="ab-service-desc">End-to-end legal protection — title verification, sale agreements, RERA compliance, and property registration handled by empanelled lawyers.</p>
+        </a>
+        <a href="{% url 'pages:security' %}" class="ab-service-card">
+          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="ab-service-name">Security Solutions</div>
+          <p class="ab-service-desc">CCTV, smart locks, alarm systems and 24/7 monitoring solutions for your home — installed by certified professionals.</p>
+        </a>
+        <a href="{% url 'pages:home_service' %}" class="ab-service-card">
+          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="ab-service-name">Home Services</div>
+          <p class="ab-service-desc">Plumbing, electrical, painting, AC service, and 5+ more home maintenance services — 500+ vetted professionals at your doorstep.</p>
+        </a>
+        <a href="{% url 'agents:list' %}" class="ab-service-card">
+          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="ab-service-name">Our Agent Network</div>
+          <p class="ab-service-desc">RERA-certified agents across India's top cities with deep local knowledge and a client-first approach to every transaction.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ TEAM ═══════════════════════════════════ -->
+  {% if agents %}
+  <section class="ab-team">
+    <div class="ab-team-inner">
+      <div class="section-eyebrow">Our People</div>
+      <h2 class="section-heading">Meet Some of Our <em>Expert Advisors</em></h2>
+      <div class="ab-team-grid">
+        {% for agent in agents %}
+        <div class="ab-agent-card">
+          <div class="ab-agent-avatar">
+            {% if agent.avatar %}
+              <img src="{{ agent.avatar.url }}" alt="{{ agent.user.get_full_name }}">
+            {% else %}
+              {{ agent.user.get_full_name|slice:":1"|upper }}
+            {% endif %}
+          </div>
+          <div class="ab-agent-body">
+            <div class="ab-agent-name">{{ agent.user.get_full_name }}</div>
+            <div class="ab-agent-role">{{ agent.specialization|default:"Property Advisor" }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ══════════════════ CTA ════════════════════════════════════ -->
+  <section class="ab-cta">
+    <div class="ab-cta-inner">
+      <h2>Ready to Start Your <em>Property Journey</em>?</h2>
+      <p>Whether you're buying your first home, expanding your investment portfolio, or selling a premium property — our advisors are ready to help.</p>
+      <div class="ab-cta-btns">
+        <a href="{% url 'properties:list' %}" class="ab-cta-btn primary">Browse Properties →</a>
+        <a href="{% url 'pages:contact' %}" class="ab-cta-btn outline">Talk to an Advisor</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,449 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FAQs — Frequently Asked Questions | HOMEXO{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .faq-hero {
+    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
+    padding: 80px 40px 70px; position: relative; overflow: hidden;
+  }
+  .faq-hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 70% at 70% 50%, rgba(74,144,196,.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .faq-hero-inner { max-width: 700px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+  .faq-eyebrow {
+    display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 24px;
+  }
+  .faq-eyebrow::before, .faq-eyebrow::after { content: ''; display: block; width: 24px; height: 1px; background: var(--sky); }
+  .faq-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px); font-weight: 300; line-height: 1.15;
+    color: #fff; margin-bottom: 18px;
+  }
+  .faq-hero h1 em { font-style: italic; color: var(--sky); }
+  .faq-hero p { font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.55); font-weight: 300; }
+
+  /* ── Search ─────────────────────────────────────────────────── */
+  .faq-search-bar { background: #fff; border-top: 1px solid var(--border); padding: 28px 40px; }
+  .faq-search-inner { max-width: 640px; margin: 0 auto; position: relative; }
+  .faq-search-inner input {
+    width: 100%; padding: 14px 48px 14px 20px;
+    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--charcoal); background: var(--ivory);
+    outline: none; transition: border-color .25s;
+  }
+  .faq-search-inner input:focus { border-color: var(--sky); }
+  .faq-search-inner input::placeholder { color: var(--warm-grey); }
+  .faq-search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--warm-grey); pointer-events: none; }
+
+  /* ── Layout ─────────────────────────────────────────────────── */
+  .faq-body { padding: 70px 40px; background: var(--ivory); }
+  .faq-body-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; gap: 56px; align-items: start; }
+
+  /* ── Nav ─────────────────────────────────────────────────────── */
+  .faq-nav { position: sticky; top: calc(var(--nav-h) + 24px); }
+  .faq-nav-title { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--warm-grey); margin-bottom: 16px; }
+  .faq-nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+  .faq-nav-list a {
+    display: block; padding: 10px 16px; font-size: 13px; color: var(--charcoal);
+    text-decoration: none; border-left: 2px solid transparent; transition: all .2s;
+  }
+  .faq-nav-list a:hover { color: var(--sky); border-left-color: var(--sky); background: rgba(74,144,196,.05); }
+  .faq-nav-list a.active { color: var(--sky); border-left-color: var(--sky); background: rgba(74,144,196,.08); }
+  .faq-count { display: inline-block; padding: 2px 7px; font-size: 10px; background: rgba(74,144,196,.12); color: var(--sky); margin-left: 6px; }
+
+  /* ── Accordion ──────────────────────────────────────────────── */
+  .faq-section { margin-bottom: 48px; }
+  .faq-section:last-child { margin-bottom: 0; }
+  .faq-section-heading {
+    font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300;
+    color: var(--charcoal); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .faq-section-heading::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .faq-item {
+    border: 1px solid var(--border); background: #fff; margin-bottom: 6px;
+    overflow: hidden; transition: box-shadow .25s;
+  }
+  .faq-item:hover { box-shadow: 0 4px 20px rgba(13,43,78,.05); }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px; cursor: pointer; list-style: none; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; color: var(--charcoal); font-weight: 500;
+    gap: 20px;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q-text { flex: 1; line-height: 1.5; }
+  .faq-q-arrow {
+    flex-shrink: 0; width: 20px; height: 20px; border: 1px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: var(--sky); transition: transform .3s;
+  }
+  details[open] .faq-q-arrow { transform: rotate(180deg); }
+  details[open] .faq-q { color: var(--sky); }
+  .faq-a { padding: 0 24px 20px; font-size: 13.5px; line-height: 1.85; color: var(--warm-grey); font-weight: 300; border-top: 1px solid var(--border); padding-top: 16px; }
+  .faq-a p { margin: 0 0 10px; }
+  .faq-a p:last-child { margin-bottom: 0; }
+  .faq-a ul { margin: 0 0 10px; padding-left: 18px; }
+  .faq-a ul li { margin-bottom: 5px; }
+  .faq-a a { color: var(--sky); text-decoration: none; }
+  .faq-a a:hover { text-decoration: underline; }
+
+  /* ── "Still Have Questions" card ─────────────────────────────── */
+  .faq-helpcard { background: linear-gradient(135deg, #0D2B4E, #1a4468); padding: 40px 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-top: 48px; }
+  .faq-helpcard-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; color: #fff; margin-bottom: 8px; }
+  .faq-helpcard-text h3 em { font-style: italic; color: var(--sky); }
+  .faq-helpcard-text p { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 300; max-width: 480px; }
+  .faq-helpcard-btn {
+    padding: 13px 32px; background: var(--sky); color: #fff; text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-family: 'DM Sans', sans-serif;
+    white-space: nowrap; transition: background .25s; flex-shrink: 0;
+  }
+  .faq-helpcard-btn:hover { background: #3a7ab0; }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .faq-body-inner { grid-template-columns: 1fr; gap: 40px; }
+    .faq-nav { position: static; }
+    .faq-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    .faq-nav-list a { border-left: none; border-bottom: 2px solid transparent; border-radius: 2px; font-size: 12px; padding: 7px 12px; background: rgba(13,43,78,.04); }
+  }
+  @media (max-width: 640px) {
+    .faq-hero, .faq-body { padding: 56px 24px; }
+    .faq-search-bar { padding: 20px 24px; }
+    .faq-helpcard { flex-direction: column; text-align: center; }
+  }
+</style>
+{% endblock %}
+
+{% block pre_footer %}{% endblock pre_footer %}
+
+{% block content %}
+
+  <!-- ══════════════════ HERO ══════════════════════════════════ -->
+  <div class="faq-hero">
+    <div class="faq-hero-inner">
+      <div class="faq-eyebrow">Help &amp; Support</div>
+      <h1>Frequently Asked <em>Questions</em></h1>
+      <p>Everything you need to know about buying, selling, renting, home loans, legal services, and more — answered by our expert team.</p>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="faq-search-bar">
+    <div class="faq-search-inner">
+      <input type="text" id="faq-search" placeholder="Search questions…" aria-label="Search FAQs">
+      <span class="faq-search-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BODY ═══════════════════════════════════ -->
+  <div class="faq-body">
+    <div class="faq-body-inner">
+
+      <!-- Sidebar nav -->
+      <nav class="faq-nav">
+        <div class="faq-nav-title">Categories</div>
+        <ul class="faq-nav-list">
+          <li><a href="#buying">Buying <span class="faq-count">6</span></a></li>
+          <li><a href="#selling">Selling <span class="faq-count">5</span></a></li>
+          <li><a href="#renting">Renting <span class="faq-count">5</span></a></li>
+          <li><a href="#home-loan">Home Loan <span class="faq-count">6</span></a></li>
+          <li><a href="#legal">Legal <span class="faq-count">5</span></a></li>
+          <li><a href="#homexo">About HOMEXO <span class="faq-count">5</span></a></li>
+        </ul>
+      </nav>
+
+      <!-- Accordion sections -->
+      <div id="faq-accordion">
+
+        <!-- ── BUYING ─────────────────────────────────────────── -->
+        <section class="faq-section" id="buying">
+          <h2 class="faq-section-heading">Buying a Property</h2>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How do I start my property search on HOMEXO?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Begin by visiting our <a href="{% url 'properties:list' %}">Properties</a> page and using the filters to narrow by city, budget, BHK configuration, and property type. You can also speak to a dedicated HOMEXO advisor who will prepare a shortlist based on your exact requirements — at no cost.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What documents do I need to buy a property in India?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a">
+              <p>For a residential purchase you'll typically need:</p>
+              <ul>
+                <li>PAN Card and Aadhaar Card (identity + address proof)</li>
+                <li>Passport-size photographs</li>
+                <li>Bank statements (last 6 months) for loan applicants</li>
+                <li>Income proof (salary slips / ITR for 2–3 years)</li>
+                <li>Property-related documents (sale deed, approved plan, OC/CC)</li>
+              </ul>
+              <p>Our legal team will guide you through every document required for your specific transaction.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is a sale agreement and why is it important?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>A sale agreement (also called Agreement for Sale) is a legally binding contract between buyer and seller that outlines the terms of the transaction — price, payment schedule, possession date, and default clauses. It precedes the final sale deed and protects both parties. HOMEXO's legal team can draft and review your sale agreement. <a href="{% url 'pages:legal' %}">Learn more →</a></p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is stamp duty and who pays it?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Stamp duty is a state government tax paid on the registration of the sale deed. Rates vary by state (typically 5–8% of the property value). As the buyer, you are responsible for paying stamp duty and registration charges. HOMEXO calculates the exact stamp duty applicable to your transaction before you proceed.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Can NRIs buy residential property in India?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Yes. NRIs and PIOs can purchase residential and commercial properties in India under FEMA regulations without special RBI permission. They cannot buy agricultural land, plantation property, or farmhouse. HOMEXO has a dedicated NRI desk that handles power of attorney, NRO/NRE fund transfers, repatriation, and tax compliance. <a href="{% url 'pages:legal' %}">NRI Services →</a></p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What checks should I do before buying an under-construction property?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a">
+              <ul>
+                <li>Verify RERA registration of the project</li>
+                <li>Check the developer's track record and delivery history</li>
+                <li>Review sale agreement clauses (possession date, penalty for delay, force majeure)</li>
+                <li>Confirm clear land title and absence of encumbrance</li>
+                <li>Review approved building plan from local authority</li>
+              </ul>
+              <p>Our advisory and legal teams perform all of the above as part of HOMEXO's property due diligence service.</p>
+            </div>
+          </details>
+        </section>
+
+        <!-- ── SELLING ────────────────────────────────────────── -->
+        <section class="faq-section" id="selling">
+          <h2 class="faq-section-heading">Selling a Property</h2>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How does HOMEXO help me sell my property faster?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>HOMEXO lists your property on our platform and promotes it to our database of pre-qualified buyers. We manage all inquiries, site visits, and negotiations on your behalf. Our professional photography, pricing analysis, and marketing ensure your listing receives maximum visibility and achieves the best possible price.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is capital gains tax on property sale?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>If you sell a property held for more than 2 years, you pay Long-Term Capital Gains (LTCG) tax at 20% with indexation. Short-term (held under 2 years) gains are taxed at your income slab rate. You can save LTCG tax by reinvesting in another property (Section 54) or in NHAI/REC bonds (Section 54EC) within specified timeframes. Our team can connect you with a tax consultant.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How do you determine the right asking price for my property?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>We use a Comparative Market Analysis (CMA) — studying recent sale prices of comparable properties in your micro-market, current listing prices, and market velocity data. We also account for the property's condition, floor, view, and amenities. This gives you a realistic price range that attracts serious buyers without underselling.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Do I need an OC (Occupancy Certificate) to sell my property?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>While not always a legal requirement for sale, most mortgage lenders require the OC before approving a home loan for the buyer, which significantly narrows your buyer pool. RERA-registered properties must have an OC. HOMEXO's legal team can advise on your specific situation and help obtain outstanding documentation if needed.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is HOMEXO's commission for selling a property?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Our brokerage is typically 1–2% of the transaction value, disclosed upfront in a written mandate before we begin any work. There are no hidden charges, no listing fees, and no payment until the transaction successfully closes. <a href="{% url 'pages:contact' %}">Talk to us</a> for a specific quote on your property.</p></div>
+          </details>
+        </section>
+
+        <!-- ── RENTING ─────────────────────────────────────────── -->
+        <section class="faq-section" id="renting">
+          <h2 class="faq-section-heading">Renting a Property</h2>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is the difference between a leave-and-licence agreement and a lease?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>A Leave and Licence (L&L) agreement is the most common residential rental agreement in India (typically 11 months). It creates a licence to occupy — not tenancy rights — making it easier for owners to recover possession. A lease grants stronger occupancy rights to the tenant for a fixed period and is more commonly used in long-term commercial arrangements. HOMEXO prepares both types of agreements through its legal team.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Is security deposit refundable?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Yes. The security deposit — typically 2–6 months' rent depending on the city — is fully refundable at the end of the tenancy, subject to deductions for damage (beyond normal wear and tear) and outstanding dues. Your rental agreement should clearly specify the deposit refund timeline (usually 15–30 days after vacating).</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What should I check before signing a rental agreement?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a">
+              <ul>
+                <li>Monthly rent and annual escalation percentage</li>
+                <li>Security deposit amount and refund conditions</li>
+                <li>Lock-in period duration</li>
+                <li>Notice period for vacating (typically 1–3 months)</li>
+                <li>Maintenance charges — who pays what</li>
+                <li>Pet and subletting policies</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Does HOMEXO help with rental agreement registration?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Yes. Rental agreements for 12 months or more should be registered with the Sub-Registrar's office. HOMEXO's legal team handles document preparation, biometric registration appointments, and delivery of the registered agreement — typically within 48–72 hours.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Can I negotiate rent on HOMEXO listings?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Absolutely. Every listed rent is a starting point for negotiation. HOMEXO advisors regularly negotiate better terms for tenants — including reduced rent, waived brokerage by landlord, extended notice periods, and fit-out contributions. Our knowledge of local rental trends is your strongest negotiating tool.</p></div>
+          </details>
+        </section>
+
+        <!-- ── HOME LOAN ───────────────────────────────────────── -->
+        <section class="faq-section" id="home-loan">
+          <h2 class="faq-section-heading">Home Loans</h2>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How does HOMEXO help me get a better home loan rate?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Because HOMEXO submits high loan volumes to partner banks, we receive preferential rate offers not available to retail borrowers. We compare offers from 25+ lenders in real time and present you the lowest available rate with zero processing fees. Our advisors handle the entire application, documentation, and follow-up — at no cost to you. <a href="{% url 'pages:home_loan' %}">Explore home loans →</a></p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is the maximum loan-to-value (LTV) ratio for home loans in India?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a">
+              <p>As per RBI guidelines:</p>
+              <ul>
+                <li>Up to ₹30 lakh: max 90% LTV</li>
+                <li>₹30–75 lakh: max 80% LTV</li>
+                <li>Above ₹75 lakh: max 75% LTV</li>
+              </ul>
+              <p>This means you'll need to arrange the balance (down payment) from own sources. Stamp duty and registration charges are generally not financed and must be paid separately.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is a fixed vs. floating interest rate home loan?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>A <strong>fixed rate</strong> loan has the same EMI throughout the tenure — predictable but typically slightly higher. A <strong>floating rate</strong> loan (linked to RBI repo rate or MCLR) changes when rates change — lower when rates fall, higher when they rise. Most borrowers currently prefer floating rates given the current rate environment. HOMEXO's loan advisors will recommend the right mix for your situation.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How long does home loan approval take?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>With complete documentation, most HOMEXO clients receive in-principle approval within 24–48 hours and full sanction within 3–5 working days. Disbursement typically happens within 7–14 days of sanction, depending on the bank and property documentation completeness. Our advisors track your application daily and resolve queries before they cause delays.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Can I prepay or foreclose my home loan without penalty?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>For floating rate home loans taken by individual borrowers, the RBI has mandated zero prepayment penalties. Fixed rate loans may have a 2–3% foreclosure charge, which varies by lender. HOMEXO ensures the loan terms around prepayment are clearly explained before you sign.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What tax benefits are available on home loans?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a">
+              <ul>
+                <li><strong>Section 80C:</strong> Deduction up to ₹1.5 lakh per year on principal repayment</li>
+                <li><strong>Section 24(b):</strong> Deduction up to ₹2 lakh per year on interest paid (self-occupied property)</li>
+                <li><strong>Section 80EEA:</strong> Additional ₹1.5 lakh deduction on interest for first-time buyers (subject to conditions)</li>
+              </ul>
+              <p>These deductions are available under the old tax regime. Consult a CA for guidance specific to your situation.</p>
+            </div>
+          </details>
+        </section>
+
+        <!-- ── LEGAL ──────────────────────────────────────────── -->
+        <section class="faq-section" id="legal">
+          <h2 class="faq-section-heading">Legal Services</h2>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is title verification and why is it essential?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Title verification is a legal search of the property's ownership history (typically last 30 years) to confirm the seller has a clear, marketable title and no encumbrances (mortgages, disputes, or court orders). It is the single most important legal step before buying any property. HOMEXO's empanelled lawyers complete this with a written opinion within 48 hours. <a href="{% url 'pages:legal' %}">Learn more →</a></p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is an Encumbrance Certificate (EC)?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>An EC is an official government document (from the Sub-Registrar's office) listing all registered transactions on a property for a specified period — mortgages, sale deeds, gift deeds, etc. A clean EC with no encumbrances indicates the property is free of legal or financial liabilities. Banks require a current EC before approving any home loan.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is RERA and how does it protect buyers?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>The Real Estate (Regulation and Development) Act, 2016 (RERA) mandates that all residential projects above 500 sqm or 8 apartments must be registered with the state's RERA authority. RERA requires developers to publish project details, timelines, and carpet area clearly, hold 70% of collections in an escrow account, and compensate buyers for delays. HOMEXO only recommends RERA-registered projects to buyers.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Do I need a lawyer or can HOMEXO handle all the legal work?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>HOMEXO works with a panel of experienced property lawyers who handle all documentation, title search, agreement drafting, and registration. For straightforward transactions, our legal service fully covers what's needed. For complex cases (disputed titles, NRI transactions, commercial properties), we'll recommend a suitable specialist from our network — fully transparent, no referral fees.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">What is Power of Attorney (PoA) and when do I need it?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>A Power of Attorney is a legal document authorising another person (the attorney) to act on your behalf for specified transactions. NRIs frequently use a notarised + apostilled PoA to complete property transactions in India without being physically present. HOMEXO assists with PoA preparation, attestation guidance, and coordination with local authorities.</p></div>
+          </details>
+        </section>
+
+        <!-- ── ABOUT HOMEXO ────────────────────────────────────── -->
+        <section class="faq-section" id="homexo">
+          <h2 class="faq-section-heading">About HOMEXO</h2>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Is HOMEXO a registered real estate agent?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>Yes. HOMEXO and all its operating advisors are RERA registered in every state we operate. Our registration numbers are available on request. We operate with full compliance of RERA guidelines, including mandatory disclosure of fees and conflict of interest.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Is HOMEXO's property advisory service free for buyers?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>For primary (new project) purchases, HOMEXO is paid by the developer — making our advisory completely free for buyers. For resale and rental transactions, our fee structure is disclosed in writing upfront before any work begins. We never charge buyers without prior written agreement.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">Which cities does HOMEXO operate in?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>HOMEXO currently operates in Bengaluru, Mumbai, Delhi NCR (Gurgaon, Noida, Delhi), Pune, Hyderabad, Chennai, Kolkata, Ahmedabad, Kochi, Coimbatore, Chandigarh, and Mysuru. We're expanding — if your city isn't listed, <a href="{% url 'pages:contact' %}">contact us</a> and we'll connect you with the nearest advisor.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How do I register a complaint or escalate an issue?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>You can raise a concern directly with your assigned advisor, or email our grievance team at <a href="mailto:support@homexo.in">support@homexo.in</a>. All complaints are acknowledged within 4 hours and resolved or escalated within 48 hours. Our target is 100% client satisfaction — if we fall short, we want to know.</p></div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-q"><span class="faq-q-text">How do I become a HOMEXO partner agent?</span><span class="faq-q-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg></span></summary>
+            <div class="faq-a"><p>HOMEXO regularly onboards experienced, RERA-certified agents to our network. Partners get access to exclusive inventory, leads, training, and co-brokerage opportunities. <a href="{% url 'pages:contact' %}">Contact us</a> with your profile and a member of our agent relations team will get in touch within 2 business days.</p></div>
+          </details>
+        </section>
+
+        <!-- Still have questions card -->
+        <div class="faq-helpcard">
+          <div class="faq-helpcard-text">
+            <h3>Still Have <em>Questions</em>?</h3>
+            <p>Our expert advisors are available Monday – Saturday, 9 am – 7 pm, and will respond to weekend messages on the first working day.</p>
+          </div>
+          <a href="{% url 'pages:contact' %}" class="faq-helpcard-btn">Talk to an Advisor →</a>
+        </div>
+
+      </div><!-- /faq-accordion -->
+    </div><!-- /faq-body-inner -->
+  </div><!-- /faq-body -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // ── Highlight active nav on scroll ───────────────────────────
+  const sections = document.querySelectorAll('.faq-section');
+  const links    = document.querySelectorAll('.faq-nav-list a');
+
+  function setActive() {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY + 120 >= s.offsetTop) current = s.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // ── Search / filter ───────────────────────────────────────────
+  const searchInput = document.getElementById('faq-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    });
+  }
+})();
+</script>
+{% endblock %}

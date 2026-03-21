@@ -264,6 +264,10 @@ def faq(request):
     return render(request, 'pages/faq.html')
 
 
+def contact(request):
+    return render(request, 'pages/contact.html')
+
+
 def area_guides(request):
     return render(request, 'pages/area_guides.html')
 
