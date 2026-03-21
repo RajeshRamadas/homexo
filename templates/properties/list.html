@@ -809,12 +809,13 @@ function quickFilter(field, value) {
   document.getElementById('filterForm').submit();
 }
 
-// Chip selection (sidebar)
+// Chip selection (sidebar) — updates hidden input then immediately filters
 function setChip(inputId, value, btn) {
   document.getElementById(inputId).value = value;
   const group = btn.closest('.lx-chips');
   if (group) group.querySelectorAll('.lx-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
+  document.getElementById('filterForm').submit();
 }
 
 // Sort drawer (mobile)
@@ -882,5 +883,15 @@ function closeMobileFilters() {
 function resetFilters() {
   window.location.href = "{% url 'properties:list' %}";
 }
+
+// Before submit: sync visible location input, strip empty params for clean URLs
+document.getElementById('filterForm').addEventListener('submit', function() {
+  const locVis = document.getElementById('locationText');
+  if (locVis) document.getElementById('iLocation').value = locVis.value.trim();
+  ['iType', 'iPropertyType', 'iBhk', 'iPrice', 'iLocation'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el && !el.value) el.disabled = true;
+  });
+});
 </script>
 {% endblock %}

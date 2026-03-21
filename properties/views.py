@@ -76,7 +76,7 @@ def property_list(request):
             qs = qs.filter(price__lte=high)
 
     # ── Sorting ───────────────────────────────────────────────────────────────
-    sort = request.GET.get('sort', '-created_at')
+    sort = request.GET.get('sort', 'newest')
     sort_options = {
         'price_asc':  'price',
         'price_desc': '-price',
