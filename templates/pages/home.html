@@ -649,22 +649,18 @@
       <button class="search-tab active" data-type="buy" onclick="setSearchTab(this,'buy')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
         Buy
-        {% if type_counts.buy %}<span class="tab-count">{{ type_counts.buy }}</span>{% endif %}
       </button>
       <button class="search-tab" data-type="rent" onclick="setSearchTab(this,'rent')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
         Rent
-        {% if type_counts.rent %}<span class="tab-count">{{ type_counts.rent }}</span>{% endif %}
       </button>
       <button class="search-tab" data-type="new_project" onclick="setSearchTab(this,'new_project')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         New Projects
-        {% if type_counts.new_project %}<span class="tab-count">{{ type_counts.new_project }}</span>{% endif %}
       </button>
       <button class="search-tab" data-type="commercial" onclick="setSearchTab(this,'commercial')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
         Commercial
-        {% if type_counts.commercial %}<span class="tab-count">{{ type_counts.commercial }}</span>{% endif %}
       </button>
     </div>
 
