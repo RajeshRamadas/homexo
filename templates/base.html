@@ -185,10 +185,8 @@
 
 <!-- Mobile nav overlay -->
 <div class="nav-mobile-overlay" id="navMobileOverlay">
-  <a href="{% url 'properties:list' %}?type=buy">Buy</a>
-  <a href="{% url 'properties:list' %}?type=rent">Rent</a>
+  <a href="{% url 'properties:list' %}">Properties</a>
   <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
-  <a href="{% url 'agents:list' %}">Agents</a>
   <a href="{% url 'blog:list' %}">Blog</a>
   {% if user.is_authenticated %}
     <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:12px 36px;">List Property</a>
@@ -207,11 +205,8 @@
     <span class="nav-logo-text">HOMEXO</span>
   </a>
   <div class="nav-links">
-    <a href="{% url 'properties:list' %}?type=buy">Buy</a>
-    <a href="{% url 'properties:list' %}?type=rent">Rent</a>
+    <a href="{% url 'properties:list' %}">Properties</a>
     <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
-    <a href="{% url 'properties:list' %}?type=commercial">Commercial</a>
-    <a href="{% url 'agents:list' %}">Agents</a>
     <a href="{% url 'pages:developers' %}">Developers</a>
     <a href="{% url 'blog:list' %}">Blog</a>
     {% if user.is_authenticated %}
