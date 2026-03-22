@@ -178,6 +178,8 @@ class Property(models.Model):
         if self.price_on_req:
             return 'Price on Request'
         p = self.price
+        if not p:
+            return '—'
         if p >= 1_00_00_000:
             return f'₹{p / 1_00_00_000:.2f} Cr'
         elif p >= 1_00_000:

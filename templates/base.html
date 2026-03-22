@@ -329,22 +329,17 @@
         <li><a href="{% url 'agents:list' %}">Our Agents</a></li>
         <li><a href="{% url 'pages:developers' %}">Developers</a></li>
         <li><a href="{% url 'blog:list' %}">Blog &amp; News</a></li>
-        <li><a href="{% url 'pages:area_guides' %}">Area Guides</a></li>
         <li><a href="{% url 'pages:contact' %}">Contact</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h5>Resources</h5>
       <ul>
-        <li><a href="{% url 'pages:market_reports' %}">Market Reports</a></li>
         <li><a href="{% url 'pages:emi_calculator' %}">EMI Calculator</a></li>
         <li><a href="{% url 'pages:legal_homeloan' %}">Home Loan &amp; Legal</a></li>
         <li><a href="{% url 'pages:security' %}">Security Services</a></li>
         <li><a href="{% url 'pages:home_service' %}">Home Services</a></li>
         <li><a href="{% url 'pages:faq' %}">FAQs</a></li>
-        {% if not user.is_authenticated %}
-        <li><a href="{% url 'accounts:register' %}">Register</a></li>
-        {% endif %}
       </ul>
     </div>
   </div>
