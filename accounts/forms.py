@@ -42,6 +42,12 @@ class LoginForm(forms.Form):
         if email and password:
             self.user = authenticate(username=email, password=password)
             if not self.user:
+                # Give a specific message if the account exists but email is unconfirmed
+                if User.objects.filter(email=email, is_active=False, is_verified=False).exists():
+                    raise forms.ValidationError(
+                        'Please confirm your email address before signing in. '
+                        'Check your inbox for the confirmation link.'
+                    )
                 raise forms.ValidationError('Invalid email or password.')
             if not self.user.is_active:
                 raise forms.ValidationError('This account has been deactivated.')

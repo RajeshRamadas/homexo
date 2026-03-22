@@ -64,7 +64,10 @@
         </div>
         <button type="submit" class="btn-primary" style="width:100%;margin-top:8px;text-align:center;">Sign In</button>
       </form>
-      <div style="text-align:center;margin-top:24px;font-size:13px;color:var(--warm-grey);">
+      <div style="text-align:center;margin-top:16px;font-size:13px;">
+        <a href="{% url 'accounts:password_reset' %}" style="color:var(--warm-grey);text-decoration:none;" onmouseover="this.style.color='var(--sky)'" onmouseout="this.style.color='var(--warm-grey)'">Forgot your password?</a>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:13px;color:var(--warm-grey);">
         Don't have an account? <a href="{% url 'accounts:register' %}" style="color:var(--sky);text-decoration:none;">Register here</a>
       </div>
     </div>

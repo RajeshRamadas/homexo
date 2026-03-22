@@ -8,7 +8,11 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.core import signing
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
 
 from .forms import RegisterForm, LoginForm, ProfileUpdateForm
 from .models import User
@@ -20,12 +24,45 @@ def register_view(request):
 
     form = RegisterForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        user = form.save()
-        login(request, user)
-        messages.success(request, f'Welcome to HOMEXO, {user.first_name}!')
-        return redirect('pages:home')
+        user = form.save(commit=False)
+        user.is_active = False   # inactive until email confirmed
+        user.save()
+
+        token = signing.dumps(user.pk, salt='email-confirm')
+        confirm_url = request.build_absolute_uri(
+            reverse('accounts:email_confirm', args=[token])
+        )
+        subject = render_to_string('accounts/email_confirm_subject.txt').strip()
+        message = render_to_string('accounts/email_confirm_email.html', {
+            'user': user,
+            'confirm_url': confirm_url,
+        })
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+
+        return redirect('accounts:email_confirm_sent')
 
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def email_confirm_sent_view(request):
+    return render(request, 'accounts/email_confirm_sent.html')
+
+
+def email_confirm_view(request, token):
+    try:
+        pk = signing.loads(token, salt='email-confirm', max_age=86400)  # 24 h
+        user = User.objects.get(pk=pk)
+        if not user.is_verified:
+            user.is_active = True
+            user.is_verified = True
+            user.save(update_fields=['is_active', 'is_verified'])
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        messages.success(request, f'Welcome to HOMEXO, {user.first_name}! Your email has been confirmed.')
+        return redirect('pages:home')
+    except (signing.BadSignature, User.DoesNotExist):
+        return render(request, 'accounts/email_confirm_done.html', {'invalid': True})
+    except signing.SignatureExpired:
+        return render(request, 'accounts/email_confirm_done.html', {'expired': True})
 
 
 def login_view(request):
