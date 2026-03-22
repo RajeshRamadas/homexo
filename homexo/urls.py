@@ -25,6 +25,7 @@ urlpatterns = [
     path('wishlist/',      include('wishlist.urls',      namespace='wishlist')),
     path('accounts/',      include('accounts.urls',      namespace='accounts')),
     path('campaigns/',     include('campaigns.urls',      namespace='campaigns')),
+    path('social-auth/',   include('social_django.urls',  namespace='social')),
 
     # REST API (v1)
     path('api/v1/',        include('homexo.api_urls',   namespace='api')),

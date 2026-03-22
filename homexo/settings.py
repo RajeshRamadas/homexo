@@ -29,6 +29,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'social_django',
 ]
 
 LOCAL_APPS = [
@@ -59,6 +60,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'homexo.urls'
 
+# ─── AUTHENTICATION BACKENDS ─────────────────────────────────────────────────
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # ─── TEMPLATES ────────────────────────────────────────────────────────────────
 TEMPLATES = [
     {
@@ -72,6 +80,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'pages.context_processors.global_context',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -112,6 +122,38 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# ─── SOCIAL AUTH (Google & Facebook OAuth) ───────────────────────────────────
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_OAUTH2_KEY', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OAUTH2_SECRET', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE  = ['openid', 'email', 'profile']
+
+SOCIAL_AUTH_FACEBOOK_KEY    = os.environ.get('FACEBOOK_APP_ID', '')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET', '')
+SOCIAL_AUTH_FACEBOOK_SCOPE  = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,email,first_name,last_name',
+}
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL      = '/accounts/profile/'
+SOCIAL_AUTH_LOGIN_ERROR_URL         = '/accounts/login/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL   = '/accounts/profile/'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/accounts/profile/'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'accounts.pipeline.get_or_create_user',          # custom: email-based lookup
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'accounts.pipeline.save_profile_data',           # custom: sync name fields
+)
+
+# Raise an error if GOOGLE/FB keys are missing in production
+SOCIAL_AUTH_RAISE_EXCEPTIONS = DEBUG
 
 # ─── INTERNATIONALISATION ─────────────────────────────────────────────────────
 LANGUAGE_CODE = 'en-us'
