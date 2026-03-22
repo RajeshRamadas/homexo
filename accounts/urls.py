@@ -16,8 +16,22 @@ urlpatterns = [
     path('phone-login/verify/', views.phone_login_verify_view,  name='phone_login_verify'),
 
     # ── Email Confirmation ────────────────────────────────────────────────────
-    path('email-confirm/sent/',     views.email_confirm_sent_view, name='email_confirm_sent'),
-    path('email-confirm/<str:token>/', views.email_confirm_view,   name='email_confirm'),
+    path('email-confirm/sent/',     views.email_confirm_sent_view,   name='email_confirm_sent'),
+    path('email-confirm/resend/',   views.resend_confirmation_view,  name='email_confirm_resend'),
+    path('email-confirm/<str:token>/', views.email_confirm_view,     name='email_confirm'),
+
+    # ── Change Password (logged-in) ───────────────────────────────────────────
+    path('password-change/',
+         auth_views.PasswordChangeView.as_view(
+             template_name='accounts/password_change.html',
+             success_url='/accounts/password-change/done/',
+         ),
+         name='password_change'),
+    path('password-change/done/',
+         auth_views.PasswordChangeDoneView.as_view(
+             template_name='accounts/password_change_done.html',
+         ),
+         name='password_change_done'),
 
     # ── Password Reset ────────────────────────────────────────────────────────
     path('password-reset/',

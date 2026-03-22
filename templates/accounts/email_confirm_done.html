@@ -16,10 +16,9 @@
         <h2 class="section-title" style="font-size:28px;">Confirmation Link Expired</h2>
         <p style="font-size:14px;color:var(--warm-grey);margin-top:16px;line-height:1.7;">
           This confirmation link has expired. Links are only valid for <strong>24 hours</strong>.
-          Please register again to receive a fresh link.
         </p>
         <div style="margin-top:32px;">
-          <a href="{% url 'accounts:register' %}" class="btn-primary" style="display:inline-block;">Register Again</a>
+          <a href="{% url 'accounts:email_confirm_resend' %}" class="btn-primary" style="display:inline-block;">Resend Confirmation Email</a>
         </div>
 
       {% elif invalid %}

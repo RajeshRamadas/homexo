@@ -13,8 +13,8 @@ class RegisterForm(UserCreationForm):
     email      = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address'}))
     first_name = forms.CharField(max_length=80, widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
     last_name  = forms.CharField(max_length=80, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
-    phone      = forms.CharField(max_length=20, required=False,
-                                 widget=forms.TextInput(attrs={'placeholder': 'Phone Number (optional)'}))
+    phone      = forms.CharField(max_length=20, required=True,
+                                 widget=forms.TextInput(attrs={'placeholder': 'Phone Number'}))
     role       = forms.ChoiceField(choices=[
                      ('buyer',  'I want to Buy / Rent'),
                      ('seller', 'I want to List / Sell'),
@@ -24,9 +24,22 @@ class RegisterForm(UserCreationForm):
         model  = User
         fields = ('email', 'first_name', 'last_name', 'phone', 'role', 'password1', 'password2')
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError('An account with this email address already exists.')
+        return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone', '').strip() or None
+        if phone and User.objects.filter(phone=phone).exists():
+            raise forms.ValidationError('An account with this phone number already exists.')
+        return phone
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
+        user.phone = self.cleaned_data.get('phone')
         if commit:
             user.save()
         return user
@@ -66,6 +79,12 @@ class ProfileUpdateForm(forms.ModelForm):
             'last_name':  forms.TextInput(attrs={'placeholder': 'Last Name'}),
             'phone':      forms.TextInput(attrs={'placeholder': 'Phone Number'}),
         }
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone', '').strip() or None
+        if phone and User.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('This phone number is already linked to another account.')
+        return phone
 
 
 # Admin forms

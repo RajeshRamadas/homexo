@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email        = models.EmailField(unique=True, db_index=True)
     first_name   = models.CharField(max_length=80)
     last_name    = models.CharField(max_length=80)
-    phone        = models.CharField(max_length=20, blank=True)
+    phone        = models.CharField(max_length=20, blank=True, null=True, unique=True, db_index=True)
     role         = models.CharField(max_length=10, choices=Role.choices, default=Role.BUYER)
     avatar       = models.ImageField(upload_to='avatars/', blank=True, null=True)
     is_verified  = models.BooleanField(default=False)

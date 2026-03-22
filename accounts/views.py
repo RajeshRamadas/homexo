@@ -66,6 +66,35 @@ def email_confirm_view(request, token):
         return render(request, 'accounts/email_confirm_done.html', {'expired': True})
 
 
+def resend_confirmation_view(request):
+    """Allow an unconfirmed user to request a new confirmation email."""
+    if request.user.is_authenticated:
+        return redirect('pages:home')
+
+    sent = False
+    error = None
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        try:
+            user = User.objects.get(email=email, is_active=False, is_verified=False)
+            token = signing.dumps(user.pk, salt='email-confirm')
+            confirm_url = request.build_absolute_uri(
+                reverse('accounts:email_confirm', args=[token])
+            )
+            subject = render_to_string('accounts/email_confirm_subject.txt').strip()
+            message = render_to_string('accounts/email_confirm_email.html', {
+                'user': user,
+                'confirm_url': confirm_url,
+            })
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            sent = True
+        except User.DoesNotExist:
+            # Don't reveal whether the email exists
+            sent = True
+
+    return render(request, 'accounts/resend_confirmation.html', {'sent': sent, 'error': error})
+
+
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('pages:home')
