@@ -185,14 +185,16 @@
 
 <!-- Mobile nav overlay -->
 <div class="nav-mobile-overlay" id="navMobileOverlay">
-  <a href="{% url 'properties:list' %}">Properties</a>
   <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
+  <a href="{% url 'properties:list' %}">Properties</a>
+  <a href="{% url 'pages:developers' %}">Developers</a>
   <a href="{% url 'blog:list' %}">Blog</a>
   {% if user.is_authenticated %}
+    <a href="{% url 'accounts:profile' %}">{{ user.first_name }}</a>
     <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:12px 36px;">List Property</a>
-    <a href="{% url 'accounts:logout' %}" style="font-size:12px;opacity:.6;">Logout</a>
   {% else %}
-    <a href="{% url 'accounts:register' %}" style="background:var(--navy);color:white;padding:12px 36px;">Get Started</a>
+    <a href="{% url 'accounts:login' %}">Login</a>
+    <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:12px 36px;">List Property</a>
   {% endif %}
 </div>
 
@@ -205,8 +207,8 @@
     <span class="nav-logo-text">HOMEXO</span>
   </a>
   <div class="nav-links">
-    <a href="{% url 'properties:list' %}">Properties</a>
     <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
+    <a href="{% url 'properties:list' %}">Properties</a>
     <a href="{% url 'pages:developers' %}">Developers</a>
     <a href="{% url 'blog:list' %}">Blog</a>
     {% if user.is_authenticated %}
