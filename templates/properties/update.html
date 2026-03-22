@@ -1,5 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Edit {{ property.title }} — HOMEXO{% endblock %}
+
 {% block content %}
-{% include 'properties/create.html' %}
+<div style="background:var(--charcoal);padding:60px;">
+  <div class="section-eyebrow">Update Listing</div>
+  <h1 class="section-title" style="color:var(--ivory);">Edit <em>{{ property.title }}</em></h1>
+  <div style="color:rgba(255,255,255,.4);margin-top:8px;font-size:13px;">
+    {{ property.locality }}, {{ property.city }} &middot; {{ property.get_listing_type_display }}
+  </div>
+</div>
+
+<section class="section" style="background:var(--ivory);">
+  <div style="max-width:860px;margin:0 auto;">
+    {% include 'properties/_property_form.html' %}
+  </div>
+</section>
 {% endblock %}

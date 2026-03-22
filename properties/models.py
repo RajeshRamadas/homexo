@@ -70,6 +70,12 @@ class Property(models.Model):
         SEMI         = 'semi',          'Semi Furnished'
         UNFURNISHED  = 'unfurnished',   'Unfurnished'
 
+    class OwnershipType(models.TextChoices):
+        FREEHOLD   = 'freehold',   'Freehold'
+        LEASEHOLD  = 'leasehold',  'Leasehold'
+        COOP       = 'coop',       'Co-operative Society'
+        POA        = 'poa',        'Power of Attorney'
+
     # ── Ownership & Classification ────────────────────────────────────────────
     owner          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                        related_name='owned_properties')
@@ -114,12 +120,20 @@ class Property(models.Model):
                                                        verbose_name='Property Age (years)')
     parking_slots   = models.PositiveSmallIntegerField(default=0)
     possession_date = models.DateField(null=True, blank=True)
+    ownership_type  = models.CharField(max_length=15, choices=OwnershipType.choices, blank=True,
+                                       verbose_name='Ownership Type')
+    rera_approved   = models.BooleanField(default=False, verbose_name='RERA Approved')
+    rera_number     = models.CharField(max_length=100, blank=True, verbose_name='RERA Registration No.')
 
     # ── Flags ─────────────────────────────────────────────────────────────────
     is_featured    = models.BooleanField(default=False, db_index=True)
     is_signature   = models.BooleanField(default=False, help_text='Ultra-premium / Signature collection')
     is_new         = models.BooleanField(default=True)
     is_exclusive   = models.BooleanField(default=False)
+
+    # ── Floor Plan ────────────────────────────────────────────────────────────
+    floor_plan     = models.ImageField(upload_to='properties/floor_plans/', null=True, blank=True,
+                                       verbose_name='Floor Plan Image')
 
     # ── Status & Meta ─────────────────────────────────────────────────────────
     status         = models.CharField(max_length=15, choices=Status.choices, default=Status.DRAFT)

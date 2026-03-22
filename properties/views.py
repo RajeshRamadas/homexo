@@ -6,12 +6,21 @@ List, detail, create, update, delete views for properties.
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.forms import inlineformset_factory
 from django.views.generic import DetailView
 
-from .models import Property, PropertyTag
+from .models import Property, PropertyTag, PropertyImage, PropertyFeature
 from .forms import PropertySearchForm, PropertyCreateForm
+
+# Inline formset for amenities / features (used by create & update views)
+PropertyFeatureFormSet = inlineformset_factory(
+    Property, PropertyFeature,
+    fields=('name',),
+    extra=6, can_delete=True,
+)
 
 
 def property_list(request):
@@ -126,11 +135,17 @@ def property_detail(request, slug):
         ).exclude(pk__in=existing_ids).order_by('-views_count')[:needed]
         similar.extend(list(fallback))
 
+    is_saved = False
+    if request.user.is_authenticated:
+        from wishlist.models import WishlistItem
+        is_saved = WishlistItem.objects.filter(user=request.user, property=prop).exists()
+
     context = {
         'property': prop,
         'similar':  similar,
         'images':   prop.images.all(),
         'features': prop.features.all(),
+        'is_saved': is_saved,
     }
     return render(request, 'properties/detail.html', context)
 
@@ -139,28 +154,67 @@ def property_detail(request, slug):
 def property_create(request):
     """List a new property (requires login)."""
     form = PropertyCreateForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
+    feature_formset = PropertyFeatureFormSet(request.POST or None, prefix='features')
+    if request.method == 'POST' and form.is_valid() and feature_formset.is_valid():
         prop = form.save(commit=False)
         prop.owner = request.user
         prop.status = 'pending'  # Requires admin approval
         prop.save()
         form.save_m2m()
+        # Save uploaded images
+        for i, img_file in enumerate(request.FILES.getlist('prop_images')):
+            PropertyImage.objects.create(
+                property=prop, image=img_file, is_primary=(i == 0)
+            )
+        # Save features
+        feature_formset.instance = prop
+        feature_formset.save()
         messages.success(request, 'Your property has been submitted for review.')
         return redirect('properties:detail', slug=prop.slug)
 
-    return render(request, 'properties/create.html', {'form': form})
+    return render(request, 'properties/create.html', {
+        'form': form,
+        'feature_formset': feature_formset,
+    })
 
 
 @login_required
 def property_update(request, slug):
-    prop = get_object_or_404(Property, slug=slug, owner=request.user)
+    prop = get_object_or_404(Property, slug=slug)
+    # Allow the owner OR any staff member to edit
+    if prop.owner != request.user and not request.user.is_staff:
+        raise PermissionDenied
+
     form = PropertyCreateForm(request.POST or None, request.FILES or None, instance=prop)
-    if request.method == 'POST' and form.is_valid():
+    feature_formset = PropertyFeatureFormSet(
+        request.POST or None, instance=prop, prefix='features'
+    )
+    if request.method == 'POST' and form.is_valid() and feature_formset.is_valid():
         form.save()
+        # Clear floor plan if requested
+        if request.POST.get('clear_floor_plan') and prop.floor_plan:
+            prop.floor_plan.delete(save=True)
+        # Delete images that were checked for removal
+        delete_ids = request.POST.getlist('delete_image')
+        if delete_ids:
+            PropertyImage.objects.filter(pk__in=delete_ids, property=prop).delete()
+        # Add any newly uploaded images
+        existing_count = prop.images.count()
+        for i, img_file in enumerate(request.FILES.getlist('prop_images')):
+            PropertyImage.objects.create(
+                property=prop, image=img_file,
+                is_primary=(existing_count == 0 and i == 0)
+            )
+        feature_formset.save()
         messages.success(request, 'Property updated successfully.')
         return redirect('properties:detail', slug=prop.slug)
 
-    return render(request, 'properties/update.html', {'form': form, 'property': prop})
+    return render(request, 'properties/update.html', {
+        'form': form,
+        'property': prop,
+        'feature_formset': feature_formset,
+        'existing_images': prop.images.all(),
+    })
 
 
 @login_required

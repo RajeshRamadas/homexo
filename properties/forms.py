@@ -36,6 +36,9 @@ class PropertyCreateForm(forms.ModelForm):
             'address', 'locality', 'city', 'state', 'pincode',
             'floor_no', 'total_floors', 'furnishing', 'facing',
             'age_years', 'parking_slots', 'possession_date',
+            'ownership_type', 'rera_approved', 'rera_number',
+            'latitude', 'longitude',
+            'floor_plan',
             'tags',
         )
         widgets = {
