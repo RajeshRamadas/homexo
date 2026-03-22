@@ -449,6 +449,11 @@
         {% elif request.GET.type == 'rent' %}<span>Rent</span>
         {% elif request.GET.type == 'new_project' %}<span>New Projects</span>
         {% elif request.GET.type == 'commercial' %}<span>Commercial</span>
+        {% elif request.GET.property_type == 'apartment' %}<span>Apartments</span>
+        {% elif request.GET.property_type == 'villa' %}<span>Villas</span>
+        {% elif request.GET.property_type == 'penthouse' %}<span>Penthouses</span>
+        {% elif request.GET.property_type == 'plot' %}<span>Plots</span>
+        {% elif request.GET.property_type == 'office' %}<span>Offices</span>
         {% else %}<span>All Properties</span>{% endif %}
         {% if request.GET.location %}
         <span class="page-breadcrumb-sep">›</span><span>{{ request.GET.location }}</span>
@@ -460,6 +465,11 @@
         {% elif request.GET.type == 'rent' %}Homes for <em>Rent</em>
         {% elif request.GET.type == 'new_project' %}New <em>Projects</em>
         {% elif request.GET.type == 'commercial' %}Commercial <em>Properties</em>
+        {% elif request.GET.property_type == 'apartment' %}Browse <em>Apartments</em>
+        {% elif request.GET.property_type == 'villa' %}Browse <em>Villas</em>
+        {% elif request.GET.property_type == 'penthouse' %}Browse <em>Penthouses</em>
+        {% elif request.GET.property_type == 'plot' %}Browse <em>Plots</em>
+        {% elif request.GET.property_type == 'office' %}Browse <em>Offices</em>
         {% else %}Browse <em>Properties</em>{% endif %}
         {% if request.GET.location %}<br><em>{{ request.GET.location }}</em>{% endif %}
       </h1>
@@ -802,6 +812,10 @@ function setSort(v) {
 function quickFilter(field, value) {
   if (field === 'property_type') {
     document.getElementById('iPropertyType').value = value;
+    // Clicking a property-type tab (All/Apartment/Villa/etc.) means the user is
+    // browsing by property type — clear the Commercial listing-type tab so they
+    // are never stuck with type=commercial + a property_type filter combined.
+    document.getElementById('iType').value = '';
   } else if (field === 'type') {
     document.getElementById('iType').value = value;
     document.getElementById('iPropertyType').value = '';
