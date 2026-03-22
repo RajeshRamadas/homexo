@@ -6,6 +6,7 @@ Custom User model extending AbstractBaseUser.
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+import datetime
 
 
 class UserManager(BaseUserManager):
@@ -74,3 +75,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_seller(self):
         return self.role in (self.Role.SELLER, self.Role.AGENT)
+
+
+class PhoneOTP(models.Model):
+    """One-time password for phone-based login. Valid for 10 minutes, single use."""
+    phone      = models.CharField(max_length=20, db_index=True)
+    otp        = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used    = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'OTP for {self.phone}'
+
+    @property
+    def is_valid(self):
+        return (
+            not self.is_used and
+            timezone.now() < self.created_at + datetime.timedelta(minutes=10)
+        )

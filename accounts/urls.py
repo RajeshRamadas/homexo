@@ -11,6 +11,10 @@ urlpatterns = [
     path('profile/',        views.profile_view,         name='profile'),
     path('profile/edit/',   views.profile_update_view,  name='profile_update'),
 
+    # ── Phone OTP Login ───────────────────────────────────────────────────────
+    path('phone-login/',        views.phone_login_request_view, name='phone_login'),
+    path('phone-login/verify/', views.phone_login_verify_view,  name='phone_login_verify'),
+
     # ── Email Confirmation ────────────────────────────────────────────────────
     path('email-confirm/sent/',     views.email_confirm_sent_view, name='email_confirm_sent'),
     path('email-confirm/<str:token>/', views.email_confirm_view,   name='email_confirm'),

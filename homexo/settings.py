@@ -208,6 +208,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@homexo.in'
 ENQUIRY_NOTIFICATION_EMAIL = 'enquiries@homexo.in'
 
+# ─── TWILIO (Phone OTP) ───────────────────────────────────────────────────────
+# Sign up at https://www.twilio.com and get a trial phone number.
+TWILIO_ACCOUNT_SID  = os.environ.get('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN   = os.environ.get('TWILIO_AUTH_TOKEN', '')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')  # e.g. +12015551234
+# Leave blank in dev — OTPs will print to the terminal console instead.
+
 # ─── CACHE ────────────────────────────────────────────────────────────────────
 CACHES = {
     'default': {

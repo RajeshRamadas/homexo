@@ -15,7 +15,8 @@ from django.template.loader import render_to_string
 from django.conf import settings
 
 from .forms import RegisterForm, LoginForm, ProfileUpdateForm
-from .models import User
+from .models import User, PhoneOTP
+from .sms import generate_otp, send_otp_sms
 
 
 def register_view(request):
@@ -105,3 +106,78 @@ def profile_update_view(request):
         return redirect('accounts:profile')
 
     return render(request, 'accounts/profile_update.html', {'form': form})
+
+
+# ── Phone OTP Login ───────────────────────────────────────────────────────────
+
+def phone_login_request_view(request):
+    """Step 1: enter phone number, receive OTP."""
+    if request.user.is_authenticated:
+        return redirect('pages:home')
+
+    error = None
+    if request.method == 'POST':
+        phone = request.POST.get('phone', '').strip()
+        if not phone:
+            error = 'Please enter your phone number.'
+        else:
+            try:
+                user = User.objects.get(phone=phone, is_active=True)
+            except User.DoesNotExist:
+                error = 'No active account found with this phone number. Please register first.'
+
+            if not error:
+                # Invalidate previous unused OTPs for this phone
+                PhoneOTP.objects.filter(phone=phone, is_used=False).update(is_used=True)
+
+                otp = generate_otp()
+                PhoneOTP.objects.create(phone=phone, otp=otp)
+                sent = send_otp_sms(phone, otp)
+
+                if not sent:
+                    error = 'Could not send OTP. Please try again.'
+                else:
+                    request.session['otp_phone'] = phone
+                    return redirect('accounts:phone_login_verify')
+
+    return render(request, 'accounts/phone_login.html', {'error': error})
+
+
+def phone_login_verify_view(request):
+    """Step 2: enter OTP, get logged in."""
+    if request.user.is_authenticated:
+        return redirect('pages:home')
+
+    phone = request.session.get('otp_phone')
+    if not phone:
+        return redirect('accounts:phone_login')
+
+    error = None
+    if request.method == 'POST':
+        entered = request.POST.get('otp', '').strip()
+        try:
+            record = PhoneOTP.objects.filter(
+                phone=phone, is_used=False
+            ).latest('created_at')
+        except PhoneOTP.DoesNotExist:
+            error = 'OTP not found. Please request a new one.'
+            record = None
+
+        if record:
+            if not record.is_valid:
+                error = 'OTP has expired. Please request a new one.'
+            elif entered != record.otp:
+                error = 'Incorrect OTP. Please try again.'
+            else:
+                record.is_used = True
+                record.save(update_fields=['is_used'])
+                del request.session['otp_phone']
+                try:
+                    user = User.objects.get(phone=phone, is_active=True)
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    messages.success(request, f'Welcome back, {user.first_name}!')
+                    return redirect('pages:home')
+                except User.DoesNotExist:
+                    error = 'Account not found.'
+
+    return render(request, 'accounts/phone_otp.html', {'phone': phone, 'error': error})
