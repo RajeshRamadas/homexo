@@ -27,118 +27,161 @@
 <style>
   /* ── Hero ──────────────────────────────────────────────────── */
   .faq-hero {
-    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
-    padding: 80px 40px 70px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #071929 0%, #0D2B4E 100%);
+    padding: 100px 40px 120px; position: relative; overflow: hidden;
+    text-align: center;
   }
-  .faq-hero::after {
+  .faq-hero::before {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 70% at 70% 50%, rgba(74,144,196,.08) 0%, transparent 65%);
-    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.5;
   }
-  .faq-hero-inner { max-width: 700px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+  .faq-hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
   .faq-eyebrow {
     display: inline-flex; align-items: center; justify-content: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600;
     color: var(--sky); margin-bottom: 24px;
   }
-  .faq-eyebrow::before, .faq-eyebrow::after { content: ''; display: block; width: 24px; height: 1px; background: var(--sky); }
+  .faq-eyebrow::before, .faq-eyebrow::after { content: ''; display: block; width: 30px; height: 1px; background: var(--sky); }
   .faq-hero h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(32px, 4vw, 52px); font-weight: 300; line-height: 1.15;
-    color: #fff; margin-bottom: 18px;
+    font-size: clamp(36px, 5vw, 56px); font-weight: 400; line-height: 1.1;
+    color: #fff; margin-bottom: 20px;
   }
   .faq-hero h1 em { font-style: italic; color: var(--sky); }
-  .faq-hero p { font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.55); font-weight: 300; }
+  .faq-hero p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,.7); font-weight: 300; max-width: 600px; margin: 0 auto; }
 
-  /* ── Search ─────────────────────────────────────────────────── */
-  .faq-search-bar { background: #fff; border-top: 1px solid var(--border); padding: 28px 40px; }
-  .faq-search-inner { max-width: 640px; margin: 0 auto; position: relative; }
-  .faq-search-inner input {
-    width: 100%; padding: 14px 48px 14px 20px;
-    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
-    font-size: 14px; color: var(--charcoal); background: var(--ivory);
-    outline: none; transition: border-color .25s;
+  /* ── Floating Search ───────────────────────────────────────── */
+  .faq-search-wrapper {
+    max-width: 760px; margin: -40px auto 40px; position: relative; z-index: 10;
+    padding: 0 20px;
   }
-  .faq-search-inner input:focus { border-color: var(--sky); }
-  .faq-search-inner input::placeholder { color: var(--warm-grey); }
-  .faq-search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--warm-grey); pointer-events: none; }
+  .faq-search-inner {
+    position: relative; background: var(--white); border-radius: 50px;
+    box-shadow: 0 12px 32px rgba(7, 25, 41, 0.12); display: flex; align-items: center;
+    padding: 8px 12px 8px 24px; border: 1px solid rgba(200,216,236,0.5);
+  }
+  .faq-search-inner input {
+    flex: 1; border: none; font-family: 'DM Sans', sans-serif;
+    font-size: 16px; color: var(--charcoal); background: transparent;
+    outline: none; padding: 12px 0;
+  }
+  .faq-search-inner input::placeholder { color: var(--warm-grey); font-weight: 400; }
+  .faq-search-icon {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--navy);
+    color: var(--white); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; box-shadow: 0 4px 12px rgba(13, 43, 78, 0.2); transition: background 0.3s;
+  }
+  .faq-search-inner:focus-within .faq-search-icon { background: var(--sky); }
 
   /* ── Layout ─────────────────────────────────────────────────── */
-  .faq-body { padding: 70px 40px; background: var(--ivory); }
-  .faq-body-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; gap: 56px; align-items: start; }
+  .faq-body { padding: 40px 40px 80px; background: #fafcff; }
+  .faq-body-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 64px; align-items: start; }
 
   /* ── Nav ─────────────────────────────────────────────────────── */
-  .faq-nav { position: sticky; top: calc(var(--nav-h) + 24px); }
-  .faq-nav-title { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--warm-grey); margin-bottom: 16px; }
-  .faq-nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+  .faq-nav { position: sticky; top: calc(var(--nav-h) + 40px); background: transparent; border: none; padding: 0; box-shadow: none; }
+  .faq-nav-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; color: var(--warm-grey); margin-bottom: 20px; padding-left: 16px; }
+  .faq-nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
   .faq-nav-list a {
-    display: block; padding: 10px 16px; font-size: 13px; color: var(--charcoal);
-    text-decoration: none; border-left: 2px solid transparent; transition: all .2s;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px; font-size: 15px; font-weight: 500; color: var(--charcoal);
+    text-decoration: none; border-radius: 12px; transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--white); border: 1px solid transparent; box-shadow: 0 4px 12px rgba(13,43,78,0.02);
   }
-  .faq-nav-list a:hover { color: var(--sky); border-left-color: var(--sky); background: rgba(74,144,196,.05); }
-  .faq-nav-list a.active { color: var(--sky); border-left-color: var(--sky); background: rgba(74,144,196,.08); }
-  .faq-count { display: inline-block; padding: 2px 7px; font-size: 10px; background: rgba(74,144,196,.12); color: var(--sky); margin-left: 6px; }
+  .faq-nav-list a:hover { transform: translateX(4px); box-shadow: 0 6px 16px rgba(13,43,78,0.06); border-color: rgba(74,144,196,0.2); }
+  .faq-nav-list a.active {
+    background: var(--navy); color: var(--white);
+    border-color: var(--navy); box-shadow: 0 10px 24px rgba(13,43,78,0.2);
+    transform: translateX(6px); font-weight: 600;
+  }
+  .faq-nav-left { display: flex; align-items: center; gap: 12px; }
+  .faq-nav-icon { color: var(--sky); display: flex; transition: color .3s; }
+  .faq-nav-list a:hover .faq-nav-icon { color: var(--navy); }
+  .faq-nav-list a.active .faq-nav-icon { color: var(--white); }
+  
+  .faq-count { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; border-radius: 13px; font-size: 11px; font-weight: 600; background: rgba(74,144,196,0.1); color: var(--sky); transition: all 0.3s; }
+  .faq-nav-list a.active .faq-count { background: rgba(255,255,255,0.2); color: var(--white); }
 
   /* ── Accordion ──────────────────────────────────────────────── */
-  .faq-section { margin-bottom: 48px; }
+  .faq-section { margin-bottom: 64px; }
   .faq-section:last-child { margin-bottom: 0; }
   .faq-section-heading {
-    font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300;
-    color: var(--charcoal); margin-bottom: 20px;
-    display: flex; align-items: center; gap: 16px;
+    font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 500;
+    color: var(--navy); margin-bottom: 28px;
+    display: flex; align-items: center; gap: 20px;
   }
-  .faq-section-heading::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .faq-section-heading::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
   .faq-item {
-    border: 1px solid var(--border); background: #fff; margin-bottom: 6px;
-    overflow: hidden; transition: box-shadow .25s;
+    border: 1px solid var(--border); background: var(--white); margin-bottom: 16px;
+    border-radius: 12px; overflow: hidden; transition: all .3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.01);
   }
-  .faq-item:hover { box-shadow: 0 4px 20px rgba(13,43,78,.05); }
+  .faq-item:hover { box-shadow: 0 8px 24px rgba(13,43,78,.06); border-color: rgba(74,144,196,0.3); transform: translateY(-2px); }
   .faq-q {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 24px; cursor: pointer; list-style: none; font-size: 14px;
-    font-family: 'DM Sans', sans-serif; color: var(--charcoal); font-weight: 500;
-    gap: 20px;
+    padding: 20px 28px; cursor: pointer; list-style: none; font-size: 16px;
+    font-family: 'DM Sans', sans-serif; color: var(--charcoal); font-weight: 600;
+    gap: 20px; transition: color 0.3s;
   }
   .faq-q::-webkit-details-marker { display: none; }
   .faq-q-text { flex: 1; line-height: 1.5; }
   .faq-q-arrow {
-    flex-shrink: 0; width: 20px; height: 20px; border: 1px solid var(--border);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    color: var(--sky); transition: transform .3s;
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: #f0f5fa; color: var(--navy); display: flex; align-items: center; justify-content: center;
+    transition: all .3s ease;
   }
-  details[open] .faq-q-arrow { transform: rotate(180deg); }
-  details[open] .faq-q { color: var(--sky); }
-  .faq-a { padding: 0 24px 20px; font-size: 13.5px; line-height: 1.85; color: var(--warm-grey); font-weight: 300; border-top: 1px solid var(--border); padding-top: 16px; }
-  .faq-a p { margin: 0 0 10px; }
+  .faq-q-arrow svg { width: 14px; height: 14px; stroke-width: 2px; }
+  details[open].faq-item { border-color: var(--sky); box-shadow: 0 8px 24px rgba(74,144,196,.08); }
+  details[open] .faq-q-arrow { transform: rotate(180deg); background: var(--sky); color: var(--white); }
+  details[open] .faq-q { color: var(--navy); }
+  .faq-a { padding: 0 28px 24px; font-size: 15px; line-height: 1.8; color: #4A5568; border-top: 1px dashed var(--border); margin-top: 4px; padding-top: 20px; }
+  .faq-a p { margin: 0 0 12px; }
   .faq-a p:last-child { margin-bottom: 0; }
-  .faq-a ul { margin: 0 0 10px; padding-left: 18px; }
-  .faq-a ul li { margin-bottom: 5px; }
-  .faq-a a { color: var(--sky); text-decoration: none; }
-  .faq-a a:hover { text-decoration: underline; }
+  .faq-a ul { margin: 0 0 12px; padding-left: 20px; }
+  .faq-a ul li { margin-bottom: 6px; }
+  .faq-a a { color: var(--sky); text-decoration: none; font-weight: 500; }
+  .faq-a a:hover { text-decoration: underline; color: var(--navy); }
 
   /* ── "Still Have Questions" card ─────────────────────────────── */
-  .faq-helpcard { background: linear-gradient(135deg, #0D2B4E, #1a4468); padding: 40px 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-top: 48px; }
-  .faq-helpcard-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; color: #fff; margin-bottom: 8px; }
+  .faq-helpcard { background: linear-gradient(135deg, #071929, #1A4A7A); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin-top: 64px; box-shadow: 0 20px 40px rgba(13,43,78,.15); position: relative; overflow: hidden; }
+  .faq-helpcard::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; opacity: 0.8; }
+  .faq-helpcard-text { position: relative; z-index: 1; }
+  .faq-helpcard-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; color: #fff; margin-bottom: 12px; }
   .faq-helpcard-text h3 em { font-style: italic; color: var(--sky); }
-  .faq-helpcard-text p { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 300; max-width: 480px; }
+  .faq-helpcard-text p { font-size: 15px; color: rgba(255,255,255,.7); font-weight: 300; max-width: 500px; line-height: 1.6; }
   .faq-helpcard-btn {
-    padding: 13px 32px; background: var(--sky); color: #fff; text-decoration: none;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-family: 'DM Sans', sans-serif;
-    white-space: nowrap; transition: background .25s; flex-shrink: 0;
+    position: relative; z-index: 1; padding: 16px 36px; background: var(--sky); color: #fff; text-decoration: none; border-radius: 50px;
+    font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-family: 'DM Sans', sans-serif;
+    white-space: nowrap; transition: all .3s ease; box-shadow: 0 8px 24px rgba(74, 144, 196, 0.4);
   }
-  .faq-helpcard-btn:hover { background: #3a7ab0; }
+  .faq-helpcard-btn:hover { background: var(--white); color: var(--navy); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(74, 144, 196, 0.5); }
 
   /* ── Responsive ──────────────────────────────────────────────── */
   @media (max-width: 900px) {
-    .faq-body-inner { grid-template-columns: 1fr; gap: 40px; }
-    .faq-nav { position: static; }
-    .faq-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; }
-    .faq-nav-list a { border-left: none; border-bottom: 2px solid transparent; border-radius: 2px; font-size: 12px; padding: 7px 12px; background: rgba(13,43,78,.04); }
+    .faq-body-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .faq-body-inner > * { min-width: 0; max-width: 100%; }
+    .faq-nav { position: static; padding: 16px; border-radius: 12px; }
+    .faq-nav-title { font-size: 13px; margin-bottom: 12px; }
+    .faq-nav-list { flex-direction: row; overflow-x: auto; scrollbar-width: none; gap: 12px; }
+    .faq-nav-list::-webkit-scrollbar { display: none; }
+    .faq-nav-list li { flex-shrink: 0; }
+    .faq-nav-list a { padding: 10px 20px; background: #f0f5fa; white-space: nowrap; border-radius: 40px; border: 1px solid transparent; gap: 12px; }
+    .faq-nav-list a:hover { transform: none; box-shadow: none; border-color: transparent; background: #e8f0f8; }
+    .faq-nav-list a.active { background: var(--navy); color: var(--white); transform: none; box-shadow: 0 4px 12px rgba(13,43,78,.15); }
+    .faq-nav-list a.active .faq-count { background: rgba(255,255,255,0.2); }
   }
   @media (max-width: 640px) {
-    .faq-hero, .faq-body { padding: 56px 24px; }
-    .faq-search-bar { padding: 20px 24px; }
-    .faq-helpcard { flex-direction: column; text-align: center; }
+    .faq-hero { padding: 80px 20px 100px; }
+    .faq-body { padding: 20px 20px 60px; }
+    .faq-search-wrapper { margin-top: -30px; margin-bottom: 30px; }
+    .faq-search-inner { padding: 6px 8px 6px 20px; }
+    .faq-search-icon { width: 38px; height: 38px; }
+    .faq-search-inner input { font-size: 15px; }
+    .faq-section-heading { font-size: 26px; margin-bottom: 20px; }
+    .faq-q { padding: 16px 20px; font-size: 15px; gap: 16px; }
+    .faq-a { padding: 0 20px 20px; font-size: 14px; }
+    .faq-helpcard { padding: 32px 24px; flex-direction: column; text-align: center; }
+    .faq-helpcard-btn { width: 100%; text-align: center; }
   }
 </style>
 {% endblock %}
@@ -157,11 +200,11 @@
   </div>
 
   <!-- Search bar -->
-  <div class="faq-search-bar">
+  <div class="faq-search-wrapper">
     <div class="faq-search-inner">
       <input type="text" id="faq-search" placeholder="Search questions…" aria-label="Search FAQs">
       <span class="faq-search-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </span>
     </div>
   </div>
@@ -174,12 +217,60 @@
       <nav class="faq-nav">
         <div class="faq-nav-title">Categories</div>
         <ul class="faq-nav-list">
-          <li><a href="#buying">Buying <span class="faq-count">6</span></a></li>
-          <li><a href="#selling">Selling <span class="faq-count">5</span></a></li>
-          <li><a href="#renting">Renting <span class="faq-count">5</span></a></li>
-          <li><a href="#home-loan">Home Loan <span class="faq-count">6</span></a></li>
-          <li><a href="#legal">Legal <span class="faq-count">5</span></a></li>
-          <li><a href="#homexo">About HOMEXO <span class="faq-count">5</span></a></li>
+          <li>
+            <a href="#buying">
+              <span class="faq-nav-left">
+                <span class="faq-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+                Buying
+              </span>
+              <span class="faq-count">6</span>
+            </a>
+          </li>
+          <li>
+            <a href="#selling">
+              <span class="faq-nav-left">
+                <span class="faq-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></span>
+                Selling
+              </span>
+              <span class="faq-count">5</span>
+            </a>
+          </li>
+          <li>
+            <a href="#renting">
+              <span class="faq-nav-left">
+                <span class="faq-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+                Renting
+              </span>
+              <span class="faq-count">5</span>
+            </a>
+          </li>
+          <li>
+            <a href="#home-loan">
+              <span class="faq-nav-left">
+                <span class="faq-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></span>
+                Home Loan
+              </span>
+              <span class="faq-count">6</span>
+            </a>
+          </li>
+          <li>
+            <a href="#legal">
+              <span class="faq-nav-left">
+                <span class="faq-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></span>
+                Legal
+              </span>
+              <span class="faq-count">5</span>
+            </a>
+          </li>
+          <li>
+            <a href="#homexo">
+              <span class="faq-nav-left">
+                <span class="faq-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>
+                About HOMEXO
+              </span>
+              <span class="faq-count">5</span>
+            </a>
+          </li>
         </ul>
       </nav>
 
