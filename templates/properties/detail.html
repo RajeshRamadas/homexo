@@ -285,6 +285,8 @@
   .pd-agent-name { font-size: 15px; font-weight: 600; color: var(--charcoal); }
   .pd-agent-role { font-size: 12px; color: var(--warm-grey); margin-top: 2px; }
   .pd-agent-verified { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #2E7D32; font-weight: 500; margin-top: 4px; }
+  @keyframes pdShake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+  .pd-shake { animation: pdShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
   .pd-form { display: flex; flex-direction: column; gap: 9px; }
   .pd-input {
     border: 1px solid var(--border); padding: 10px 13px; font-size: 13px;
@@ -1035,7 +1037,11 @@ function pdEnquireNow() {
     var form = document.getElementById('pd-contact-form');
     if (form) {
       form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(function() { form.querySelector('input[name="name"]').focus(); }, 500);
+      setTimeout(function() { 
+        form.classList.add('pd-shake');
+        form.querySelector('input[name="name"]').focus(); 
+        setTimeout(function() { form.classList.remove('pd-shake'); }, 500);
+      }, 500);
     }
   }
 }
