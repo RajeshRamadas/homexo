@@ -691,6 +691,7 @@
           <form action="{% url 'enquiries:create' %}" method="POST" class="pd-form">
             {% csrf_token %}
             <input type="hidden" name="property" value="{{ property.id }}">
+            <input type="hidden" name="enquiry_type" value="{% if property.listing_type == 'rent' %}rent{% else %}buy{% endif %}">
             <input type="text"  name="name"     class="pd-input" placeholder="Your Full Name" required>
             <input type="tel"   name="phone"    class="pd-input" placeholder="Phone Number"   required>
             <input type="email" name="email"    class="pd-input" placeholder="Email Address">

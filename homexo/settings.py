@@ -196,17 +196,16 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # ─── EMAIL ────────────────────────────────────────────────────────────────────
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# For production:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-
-DEFAULT_FROM_EMAIL = 'noreply@homexo.in'
-ENQUIRY_NOTIFICATION_EMAIL = 'enquiries@homexo.in'
+# Set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend in .env for real mail.
+# Leave as console backend in development to print emails to terminal.
+EMAIL_BACKEND         = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST            = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT            = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS         = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER       = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD   = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL    = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@homexo.in')
+ENQUIRY_NOTIFICATION_EMAIL = os.environ.get('ENQUIRY_NOTIFICATION_EMAIL', 'enquiries@homexo.in')
 
 # ─── TWILIO (Phone OTP) ───────────────────────────────────────────────────────
 # Sign up at https://www.twilio.com and get a trial phone number.
