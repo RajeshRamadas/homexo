@@ -25,7 +25,10 @@ def enquiry_create(request):
         'home_loan': 'home_loan',
     }
 
-    form = EnquiryForm(request.POST or None)
+    post_data = request.POST.copy() if request.method == 'POST' else None
+    if post_data and not post_data.get('enquiry_type'):
+        post_data['enquiry_type'] = 'general'
+    form = EnquiryForm(post_data)
     if request.method == 'POST' and form.is_valid():
         enquiry = form.save(commit=False)
         if request.user.is_authenticated:
@@ -44,9 +47,26 @@ def enquiry_create(request):
 
         # ── Admin notification email ─────────────────────────────────────────
         try:
-            property_line = ''
-            if enquiry.property:
-                property_line = f'<tr><td style="padding:6px 0;color:#888;">Property</td><td style="padding:6px 0;"><strong>{enquiry.property}</strong></td></tr>'
+            prop = enquiry.property
+            property_block = ''
+            property_plain = ''
+            if prop:
+                prop_url = request.build_absolute_uri(prop.get_absolute_url()) if hasattr(prop, 'get_absolute_url') else ''
+                property_block = f'''
+    <tr><td colspan="2" style="padding-top:16px;"></td></tr>
+    <tr><td colspan="2" style="padding:10px 14px;background:#f0f4f8;border-left:3px solid #4A90C4;">
+      <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#4A90C4;margin-bottom:6px;">Property Enquired</div>
+      <div style="font-size:15px;font-weight:600;color:#1a2e44;">{prop}</div>
+      <div style="font-size:13px;color:#666;margin-top:3px;">{getattr(prop, "locality", "")}{", " + getattr(prop, "city", "") if getattr(prop, "city", "") else ""}</div>
+      <div style="font-size:14px;color:#1a2e44;font-weight:500;margin-top:4px;">{getattr(prop, "display_price", "")}</div>
+      {"<a href=\"" + prop_url + "\" style=\"font-size:12px;color:#4A90C4;text-decoration:none;display:inline-block;margin-top:6px;\">View Listing →</a>" if prop_url else ""}
+    </td></tr>'''
+                property_plain = (
+                    f"\nProperty: {prop}\n"
+                    f"Location: {getattr(prop, 'locality', '')} {getattr(prop, 'city', '')}\n"
+                    f"Price: {getattr(prop, 'display_price', '')}\n"
+                    + (f"Link: {prop_url}\n" if prop_url else "")
+                )
 
             admin_html = f"""
 <html><body style="font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:20px;">
@@ -60,8 +80,8 @@ def enquiry_create(request):
       <tr><td style="padding:6px 0;color:#888;">Phone</td><td style="padding:6px 0;"><a href="tel:{enquiry.phone}" style="color:#1a2e44;">{enquiry.phone}</a></td></tr>
       <tr><td style="padding:6px 0;color:#888;">Email</td><td style="padding:6px 0;"><a href="mailto:{enquiry.email}" style="color:#1a2e44;">{enquiry.email}</a></td></tr>
       <tr><td style="padding:6px 0;color:#888;">Type</td><td style="padding:6px 0;">{enquiry.get_enquiry_type_display()}</td></tr>
-      {property_line}
       <tr><td style="padding:6px 0;color:#888;">Budget</td><td style="padding:6px 0;">{enquiry.budget or '—'}</td></tr>
+      {property_block}
     </table>
     {'<div style="margin-top:20px;padding:16px;background:#f9f9f9;border-left:3px solid #1a2e44;font-size:14px;"><em>' + enquiry.message + '</em></div>' if enquiry.message else ''}
     <a href="http://127.0.0.1:8000/admin/enquiries/enquiry/{enquiry.id}/change/"
@@ -74,8 +94,8 @@ def enquiry_create(request):
             admin_plain = (
                 f"New enquiry from {enquiry.name}\n"
                 f"Phone: {enquiry.phone}\nEmail: {enquiry.email}\n"
-                f"Type: {enquiry.get_enquiry_type_display()}\nBudget: {enquiry.budget}\n\n"
-                f"{enquiry.message}"
+                f"Type: {enquiry.get_enquiry_type_display()}\nBudget: {enquiry.budget}\n"
+                f"{property_plain}\n{enquiry.message}"
             )
             msg = EmailMultiAlternatives(
                 subject=f'[Homexo] New Enquiry from {enquiry.name}',
@@ -91,6 +111,21 @@ def enquiry_create(request):
 
         # ── Auto-reply to the lead ────────────────────────────────────────────
         try:
+            prop = enquiry.property
+            prop_section = ''
+            prop_plain = ''
+            if prop:
+                prop_url = request.build_absolute_uri(prop.get_absolute_url()) if hasattr(prop, 'get_absolute_url') else ''
+                prop_section = f'''
+    <div style="margin-top:20px;padding:14px 16px;background:#f0f4f8;border-left:3px solid #4A90C4;border-radius:2px;">
+      <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#4A90C4;margin-bottom:6px;">Property You Enquired About</div>
+      <div style="font-size:15px;font-weight:600;color:#1a2e44;">{prop}</div>
+      <div style="font-size:13px;color:#666;margin-top:2px;">{getattr(prop, "locality", "")}{", " + getattr(prop, "city", "") if getattr(prop, "city", "") else ""}</div>
+      <div style="font-size:14px;color:#1a2e44;font-weight:500;margin-top:4px;">{getattr(prop, "display_price", "")}</div>
+      {"<a href=\"" + prop_url + "\" style=\"font-size:12px;color:#4A90C4;text-decoration:none;display:inline-block;margin-top:6px;\">View Listing →</a>" if prop_url else ""}
+    </div>'''
+                prop_plain = f"\nProperty: {prop}\nLocation: {getattr(prop, 'locality', '')} {getattr(prop, 'city', '')}\nPrice: {getattr(prop, 'display_price', '')}\n"
+
             reply_html = f"""
 <html><body style="font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:20px;">
 <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);">
@@ -99,6 +134,7 @@ def enquiry_create(request):
   </div>
   <div style="padding:28px 32px;font-size:14px;color:#333;line-height:1.7;">
     <p>We've received your enquiry and our team will get back to you shortly.</p>
+    {prop_section}
     <p style="margin-top:20px;">Here's a summary of what you submitted:</p>
     <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
       <tr><td style="padding:5px 0;color:#888;">Type</td><td>{enquiry.get_enquiry_type_display()}</td></tr>
@@ -114,7 +150,8 @@ def enquiry_create(request):
 
             reply_plain = (
                 f"Hi {enquiry.name},\n\nThank you for your enquiry. "
-                f"Our team will contact you shortly.\n\n— The Homexo Team"
+                f"Our team will contact you shortly.\n"
+                f"{prop_plain}\n— The Homexo Team"
             )
             reply_msg = EmailMultiAlternatives(
                 subject='We received your enquiry — Homexo',
