@@ -250,7 +250,7 @@
     <a href="{{ post.get_absolute_url }}" class="bl-row">
       <div class="bl-thumb">
         {% if post.cover_image %}
-        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy">
         {% endif %}
         {% with cat=post.categories.all.0 %}
         {% if cat %}

@@ -2,6 +2,26 @@
 {% load static %}
 
 {% block title %}FAQs — Frequently Asked Questions | HOMEXO{% endblock %}
+{% block meta_description %}Get answers on buying, selling, renting property in India. Home loans, legal services, RERA, stamp duty, and more — answered by HOMEXO's expert team.{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How do I start my property search on HOMEXO?", "acceptedAnswer": {"@type": "Answer", "text": "Begin by visiting our Properties page and using the filters to narrow by city, budget, BHK configuration, and property type. You can also speak to a dedicated HOMEXO advisor who will prepare a shortlist based on your exact requirements — at no cost."}},
+    {"@type": "Question", "name": "What documents do I need to buy a property in India?", "acceptedAnswer": {"@type": "Answer", "text": "You'll need PAN Card, Aadhaar Card, passport-size photographs, bank statements (last 6 months), income proof (salary slips / ITR for 2-3 years), and property-related documents (sale deed, approved plan, OC/CC)."}},
+    {"@type": "Question", "name": "What is stamp duty and who pays it?", "acceptedAnswer": {"@type": "Answer", "text": "Stamp duty is a state government tax paid on registration of the sale deed. Rates vary by state (typically 5-8% of property value). As the buyer, you are responsible for paying stamp duty and registration charges."}},
+    {"@type": "Question", "name": "Can NRIs buy residential property in India?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. NRIs and PIOs can purchase residential and commercial properties in India under FEMA regulations without special RBI permission. They cannot buy agricultural land, plantation property, or farmhouse."}},
+    {"@type": "Question", "name": "What is title verification and why is it essential?", "acceptedAnswer": {"@type": "Answer", "text": "Title verification is a legal search of the property's ownership history (typically last 30 years) to confirm the seller has a clear, marketable title and no encumbrances. It is the single most important legal step before buying any property."}},
+    {"@type": "Question", "name": "What is RERA and how does it protect buyers?", "acceptedAnswer": {"@type": "Answer", "text": "The Real Estate (Regulation and Development) Act, 2016 (RERA) mandates that all residential projects above 500 sqm or 8 apartments must be registered. It requires developers to publish project details, timelines, hold 70% collections in escrow, and compensate buyers for delays."}},
+    {"@type": "Question", "name": "How does HOMEXO help me get a better home loan rate?", "acceptedAnswer": {"@type": "Answer", "text": "HOMEXO submits high loan volumes to partner banks and receives preferential rate offers. We compare offers from 25+ lenders in real time and present the lowest available rate with zero processing fees."}},
+    {"@type": "Question", "name": "Is HOMEXO's property advisory service free for buyers?", "acceptedAnswer": {"@type": "Answer", "text": "For primary (new project) purchases, HOMEXO is paid by the developer — making our advisory completely free for buyers. For resale and rental transactions, our fee structure is disclosed upfront."}}
+  ]
+}
+</script>
+{% endblock %}
 
 {% block extra_head %}
 <style>

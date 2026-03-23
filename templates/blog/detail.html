@@ -1,6 +1,47 @@
 {% extends 'base.html' %}
 {% block title %}{{ post.title }} — HOMEXO Insights{% endblock %}
 {% block meta_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block og_image %}{% if post.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ post.title|escapejs }}",
+  "description": "{{ post.excerpt|default:post.title|escapejs }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if post.cover_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}",{% endif %}
+  {% if post.published_at %}"datePublished": "{{ post.published_at|date:'c' }}",{% endif %}
+  "dateModified": "{{ post.updated_at|date:'c' }}",
+  {% if post.author %}"author": {
+    "@type": "Person",
+    "name": "{{ post.author.get_full_name|escapejs }}"
+  },{% endif %}
+  "publisher": {
+    "@type": "Organization",
+    "name": "HOMEXO"
+  },
+  "mainEntityOfPage": "{{ request.build_absolute_uri }}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ post.title|truncatewords:6 }}"}
+  ]
+}
+</script>
+{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -600,7 +641,7 @@
         <a href="{{ rpost.get_absolute_url }}" class="related-item">
           <div class="related-thumb">
             {% if rpost.cover_image %}
-            <img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}">
+            <img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}" loading="lazy">
             {% else %}
             <div class="related-thumb-placeholder"></div>
             {% endif %}

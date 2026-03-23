@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +6,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}HOMEXO — Luxury Real Estate{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}Find your perfect luxury property with HOMEXO.{% endblock %}">
+{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+<meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+<meta name="theme-color" content="#0D2B4E">
+<link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+<link rel="alternate icon" href="{% static 'favicon.ico' %}">
+
+<!-- Open Graph -->
+<meta property="og:type" content="{% block og_type %}website{% endblock %}">
+<meta property="og:title" content="{% block og_title %}HOMEXO — Luxury Real Estate{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Find your perfect luxury property with HOMEXO — India's premium real estate advisory.{% endblock %}">
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}{% endblock %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:site_name" content="HOMEXO">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}HOMEXO — Luxury Real Estate{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}Find luxury properties with HOMEXO{% endblock %}">
+
+<!-- Preconnect for faster font loading -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/homexo.css' %}">
+
+<!-- JSON-LD Structured Data -->
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "HOMEXO",
+  "url": "{{ request.scheme }}://{{ request.get_host }}/",
+  "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+  "description": "India's premium real estate advisory connecting exceptional people with extraordinary homes.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91-8105568225",
+    "contactType": "customer service",
+    "areaServed": "IN"
+  },
+  "sameAs": [
+    "https://www.facebook.com/homexo.in",
+    "https://www.instagram.com/homexo.in",
+    "https://www.linkedin.com/company/homexo",
+    "https://twitter.com/homexo_in",
+    "https://www.youtube.com/@homexo"
+  ]
+}
+</script>
+{% endblock %}
+
 {% block extra_head %}{% endblock %}
 <style>
   :root {

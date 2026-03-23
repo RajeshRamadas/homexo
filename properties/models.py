@@ -131,10 +131,6 @@ class Property(models.Model):
     is_new         = models.BooleanField(default=True)
     is_exclusive   = models.BooleanField(default=False)
 
-    # ── Floor Plan ────────────────────────────────────────────────────────────
-    floor_plan     = models.ImageField(upload_to='properties/floor_plans/', null=True, blank=True,
-                                       verbose_name='Floor Plan Image')
-
     # ── Status & Meta ─────────────────────────────────────────────────────────
     status         = models.CharField(max_length=15, choices=Status.choices, default=Status.DRAFT)
     tags           = models.ManyToManyField(PropertyTag, blank=True)
@@ -212,6 +208,22 @@ class PropertyImage(models.Model):
                 property=self.property, is_primary=True
             ).exclude(pk=self.pk).update(is_primary=False)
         super().save(*args, **kwargs)
+
+
+class PropertyFloorPlan(models.Model):
+    """Multiple floor plan / layout images for a property."""
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='floor_plans')
+    image    = models.ImageField(upload_to='properties/floor_plans/')
+    caption  = models.CharField(max_length=200, blank=True)
+    order    = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name        = 'Floor Plan'
+        verbose_name_plural = 'Floor Plans'
+        ordering            = ['order', 'id']
+
+    def __str__(self):
+        return f'Floor Plan for {self.property.title}'
 
 
 class PropertyFeature(models.Model):

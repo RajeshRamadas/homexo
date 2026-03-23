@@ -2,6 +2,50 @@
 {% load static %}
 
 {% block title %}HOMEXO — Find Your Perfect Sanctuary{% endblock %}
+{% block meta_description %}Explore luxury apartments, villas, penthouses and plots across Bengaluru, Mumbai, Delhi, Hyderabad and more. HOMEXO — India's premium real estate advisory.{% endblock %}
+{% block og_title %}HOMEXO — Luxury Real Estate in India{% endblock %}
+{% block og_description %}Discover curated luxury properties — apartments, villas, penthouses — across India's top cities.{% endblock %}
+{% block twitter_title %}HOMEXO — Luxury Real Estate in India{% endblock %}
+{% block twitter_description %}Discover luxury properties across India's top cities with HOMEXO.{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "HOMEXO",
+  "url": "{{ request.scheme }}://{{ request.get_host }}/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ request.scheme }}://{{ request.get_host }}/properties/?location={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "HOMEXO",
+  "url": "{{ request.scheme }}://{{ request.get_host }}/",
+  "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+  "description": "India's premium real estate advisory connecting exceptional people with extraordinary homes.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91-8105568225",
+    "contactType": "customer service",
+    "areaServed": "IN"
+  },
+  "sameAs": [
+    "https://www.facebook.com/homexo.in",
+    "https://www.instagram.com/homexo.in",
+    "https://www.linkedin.com/company/homexo",
+    "https://twitter.com/homexo_in",
+    "https://www.youtube.com/@homexo"
+  ]
+}
+</script>
+{% endblock %}
 
 {% block extra_head %}
 <style>

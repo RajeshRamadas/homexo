@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /wishlist/
+Disallow: /api/
+Disallow: /enquiries/
+
+Sitemap: https://www.homexo.in/sitemap.xml

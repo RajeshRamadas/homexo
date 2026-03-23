@@ -235,41 +235,38 @@
 
   <!-- Section: Floor Plan -->
   <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
-    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:8px;">Floor Plan</div>
-    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Upload a single floor plan / layout image (JPG, PNG, PDF-screenshot). Max 10 MB.</p>
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:8px;">Floor Plans</div>
+    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Upload one or more floor plan / layout images (JPG, PNG, WEBP). Max 10 MB each.</p>
 
-    {% if property.floor_plan %}
-    <div style="margin-bottom:20px;">
-      <div style="font-size:11px;font-weight:600;color:var(--charcoal);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Current Floor Plan</div>
-      <div style="position:relative;display:inline-block;">
-        <img src="{{ property.floor_plan.url }}" alt="Floor Plan"
-             style="max-width:400px;width:100%;border:1px solid var(--border);display:block;">
-        <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:#c62828;cursor:pointer;">
-          <input type="checkbox" name="clear_floor_plan" value="1" style="width:auto;margin:0;">
-          Remove current floor plan
+    {% if existing_floor_plans %}
+    <div style="font-size:11px;font-weight:600;color:var(--charcoal);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Current Floor Plans</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+      {% for fp in existing_floor_plans %}
+      <div style="position:relative;width:120px;flex-shrink:0;">
+        <img src="{{ fp.image.url }}" alt="Floor Plan" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+        {% if fp.caption %}
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ fp.caption }}</div>
+        {% endif %}
+        <label style="position:absolute;top:4px;right:4px;background:rgba(190,0,0,.85);color:#fff;font-size:10px;padding:3px 7px;cursor:pointer;display:flex;align-items:center;gap:4px;backdrop-filter:blur(3px);">
+          <input type="checkbox" name="delete_floor_plan" value="{{ fp.pk }}" style="width:auto;margin:0;"> Remove
         </label>
       </div>
+      {% endfor %}
     </div>
     {% endif %}
 
-    <div id="pdFpDropzone"
+    <label id="pdFpDropzone"
          style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px;border:2px dashed var(--border);cursor:pointer;background:var(--ivory);transition:border-color .2s;"
-         onmouseover="this.style.borderColor='var(--sky)'" onmouseout="this.style.borderColor='var(--border)'"
-         onclick="document.getElementById('id_floor_plan_input').click()">
+         onmouseover="this.style.borderColor='var(--sky)'" onmouseout="this.style.borderColor='var(--border)'">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.5">
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>
-      <span style="font-size:13px;font-weight:500;color:var(--soft-brown);">Click to upload floor plan</span>
-      <span style="font-size:11px;color:var(--warm-grey);">JPG, PNG, WEBP · Max 10 MB</span>
-      <input type="file" id="id_floor_plan_input" name="floor_plan" accept="image/*"
-             style="display:none;" onchange="pdPreviewFloorPlan(this)">
-    </div>
-    <div id="pdFpPreview" style="margin-top:14px;display:none;">
-      <div style="font-size:11px;font-weight:600;color:var(--charcoal);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Preview</div>
-      <img id="pdFpPreviewImg" src="" alt="Floor Plan Preview"
-           style="max-width:400px;width:100%;border:1px solid var(--border);display:block;">
-      <div id="pdFpPreviewName" style="font-size:11px;color:var(--warm-grey);margin-top:6px;"></div>
-    </div>
+      <span style="font-size:13px;font-weight:500;color:var(--soft-brown);">Click to upload floor plans</span>
+      <span style="font-size:11px;color:var(--warm-grey);">JPG, PNG, WEBP · Max 10 MB each · Multiple allowed</span>
+      <input type="file" id="id_floor_plan_input" name="floor_plans" accept="image/*"
+             multiple style="display:none;" onchange="pdPreviewFloorPlans(this)">
+    </label>
+    <div id="pdFpPreviews" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>
   </div>
 
   <!-- Section: Amenities & Features -->
@@ -318,20 +315,87 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// Accumulated file list so multiple picker-opens stack up
+var _pdImageFiles = new DataTransfer();
+
 function pdPreviewImages(input) {
+  // Merge newly picked files into the accumulated list (skip duplicates by name+size)
+  Array.from(input.files).forEach(file => {
+    const isDupe = Array.from(_pdImageFiles.files).some(
+      f => f.name === file.name && f.size === file.size
+    );
+    if (!isDupe) _pdImageFiles.items.add(file);
+  });
+  // Write merged list back to the input so it submits all files
+  input.files = _pdImageFiles.files;
+
+  // Re-render all previews
   const preview = document.getElementById('pdNewImgPreviews');
   preview.innerHTML = '';
-  Array.from(input.files).forEach(file => {
+  Array.from(_pdImageFiles.files).forEach((file, idx) => {
     const reader = new FileReader();
     reader.onload = e => {
       const div = document.createElement('div');
       div.style.cssText = 'position:relative;width:120px;flex-shrink:0;';
-      div.innerHTML = `<img src="${e.target.result}" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
-        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${file.name}</div>`;
+      div.innerHTML = `
+        <img src="${e.target.result}" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${file.name}</div>
+        <button type="button" onclick="pdRemoveImage(${idx})" style="position:absolute;top:3px;right:3px;background:rgba(190,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>`;
       preview.appendChild(div);
     };
     reader.readAsDataURL(file);
   });
+
+  // Update counter badge
+  const count = _pdImageFiles.files.length;
+  const label = input.closest('label');
+  if (label) {
+    let badge = label.querySelector('.pd-img-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'pd-img-count';
+      badge.style.cssText = 'font-size:12px;color:var(--sky);font-weight:600;';
+      label.appendChild(badge);
+    }
+    badge.textContent = count + ' photo' + (count !== 1 ? 's' : '') + ' selected';
+  }
+}
+
+function pdRemoveImage(removeIdx) {
+  const newDt = new DataTransfer();
+  Array.from(_pdImageFiles.files).forEach((f, i) => {
+    if (i !== removeIdx) newDt.items.add(f);
+  });
+  _pdImageFiles = newDt;
+  // Sync back to the file input
+  const input = document.querySelector('input[name="prop_images"]');
+  if (input) {
+    input.files = _pdImageFiles.files;
+    pdPreviewImages({ files: new DataTransfer().files, closest: () => null }); // re-render without adding
+    // Re-render directly
+    const preview = document.getElementById('pdNewImgPreviews');
+    preview.innerHTML = '';
+    Array.from(_pdImageFiles.files).forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.createElement('div');
+        div.style.cssText = 'position:relative;width:120px;flex-shrink:0;';
+        div.innerHTML = `
+          <img src="${e.target.result}" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${file.name}</div>
+          <button type="button" onclick="pdRemoveImage(${idx})" style="position:absolute;top:3px;right:3px;background:rgba(190,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>`;
+        preview.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+    // Update badge
+    const label = input.closest('label');
+    if (label) {
+      const badge = label.querySelector('.pd-img-count');
+      const count = _pdImageFiles.files.length;
+      if (badge) badge.textContent = count ? count + ' photo' + (count !== 1 ? 's' : '') + ' selected' : '';
+    }
+  }
 }
 
 function pdToggleRera(show) {
@@ -343,16 +407,72 @@ function pdToggleRera(show) {
   }
 }
 
-function pdPreviewFloorPlan(input) {
-  const preview = document.getElementById('pdFpPreview');
-  const img = document.getElementById('pdFpPreviewImg');
-  const name = document.getElementById('pdFpPreviewName');
-  if (!input.files.length) { preview.style.display = 'none'; return; }
-  const file = input.files[0];
-  const reader = new FileReader();
-  reader.onload = e => { img.src = e.target.result; preview.style.display = 'block'; };
-  reader.readAsDataURL(file);
-  name.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+// Accumulated floor plan file list so multiple picker-opens stack up
+var _pdFpFiles = new DataTransfer();
+
+function pdPreviewFloorPlans(input) {
+  // Merge newly picked files into accumulated list (skip duplicates by name+size)
+  Array.from(input.files).forEach(function(file) {
+    var isDupe = Array.from(_pdFpFiles.files).some(function(f) {
+      return f.name === file.name && f.size === file.size;
+    });
+    if (!isDupe) _pdFpFiles.items.add(file);
+  });
+  // Write merged list back so the form submits all files
+  input.files = _pdFpFiles.files;
+  pdRenderFpPreviews();
+
+  // Counter badge
+  var count = _pdFpFiles.files.length;
+  var label = input.closest('label');
+  if (label) {
+    var badge = label.querySelector('.pd-fp-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'pd-fp-count';
+      badge.style.cssText = 'font-size:12px;color:var(--sky);font-weight:600;';
+      label.appendChild(badge);
+    }
+    badge.textContent = count + ' floor plan' + (count !== 1 ? 's' : '') + ' selected';
+  }
+}
+
+function pdRenderFpPreviews() {
+  var preview = document.getElementById('pdFpPreviews');
+  preview.innerHTML = '';
+  Array.from(_pdFpFiles.files).forEach(function(file, idx) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var div = document.createElement('div');
+      div.style.cssText = 'position:relative;width:120px;flex-shrink:0;';
+      div.innerHTML =
+        '<img src="' + e.target.result + '" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + file.name + '</div>' +
+        '<button type="button" onclick="pdRemoveFloorPlan(' + idx + ')" style="position:absolute;top:3px;right:3px;background:rgba(190,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>';
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function pdRemoveFloorPlan(removeIdx) {
+  var newDt = new DataTransfer();
+  Array.from(_pdFpFiles.files).forEach(function(f, i) {
+    if (i !== removeIdx) newDt.items.add(f);
+  });
+  _pdFpFiles = newDt;
+  var input = document.querySelector('input[name="floor_plans"]');
+  if (input) {
+    input.files = _pdFpFiles.files;
+    // Update badge
+    var label = input.closest('label');
+    if (label) {
+      var badge = label.querySelector('.pd-fp-count');
+      var count = _pdFpFiles.files.length;
+      if (badge) badge.textContent = count ? count + ' floor plan' + (count !== 1 ? 's' : '') + ' selected' : '';
+    }
+  }
+  pdRenderFpPreviews();
 }
 
 function pdAddAmenity() {

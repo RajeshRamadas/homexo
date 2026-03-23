@@ -5,7 +5,7 @@ Rich admin panel for Property management.
 
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Property, PropertyImage, PropertyFeature, PropertyTag
+from .models import Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag
 
 
 class PropertyImageInline(admin.TabularInline):
@@ -16,6 +16,19 @@ class PropertyImageInline(admin.TabularInline):
 
     @admin.display(description='Preview')
     def image_thumb(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" height="60" style="border-radius:4px;object-fit:cover;" />', obj.image.url)
+        return '—'
+
+
+class PropertyFloorPlanInline(admin.TabularInline):
+    model      = PropertyFloorPlan
+    extra      = 2
+    fields     = ('image', 'fp_thumb', 'caption', 'order')
+    readonly_fields = ('fp_thumb',)
+
+    @admin.display(description='Preview')
+    def fp_thumb(self, obj):
         if obj.image:
             return format_html('<img src="{}" height="60" style="border-radius:4px;object-fit:cover;" />', obj.image.url)
         return '—'
@@ -41,7 +54,7 @@ class PropertyAdmin(admin.ModelAdmin):
     list_editable  = ('is_featured', 'is_signature', 'status')
     date_hierarchy = 'created_at'
     ordering       = ('-created_at',)
-    inlines        = [PropertyImageInline, PropertyFeatureInline]
+    inlines        = [PropertyImageInline, PropertyFloorPlanInline, PropertyFeatureInline]
     filter_horizontal = ('tags',)
 
     fieldsets = (

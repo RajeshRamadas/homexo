@@ -5,6 +5,7 @@ Django Settings
 
 from pathlib import Path
 import os
+import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,6 +24,7 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
 ]
 
 THIRD_PARTY_APPS = [
@@ -220,4 +222,33 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'homexo-cache',
     }
+}
+
+# ─── LOGGING ──────────────────────────────────────────────────────────────────
+# Suppress noisy Chrome DevTools auto-probe from the dev server log.
+class _IgnoreChromeDevTools(logging.Filter):
+    def filter(self, record):
+        return '/.well-known/appspecific/com.chrome.devtools' not in record.getMessage()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'ignore_chrome_devtools': {
+            '()': _IgnoreChromeDevTools,
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['ignore_chrome_devtools'],
+        },
+    },
+    'loggers': {
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
 }

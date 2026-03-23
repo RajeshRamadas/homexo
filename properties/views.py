@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 from django.forms import inlineformset_factory
 from django.views.generic import DetailView
 
-from .models import Property, PropertyTag, PropertyImage, PropertyFeature
+from .models import Property, PropertyTag, PropertyImage, PropertyFloorPlan, PropertyFeature
 from .forms import PropertySearchForm, PropertyCreateForm
 
 # Inline formset for amenities / features (used by create & update views)
@@ -166,6 +166,9 @@ def property_create(request):
             PropertyImage.objects.create(
                 property=prop, image=img_file, is_primary=(i == 0)
             )
+        # Save floor plan images
+        for i, fp_file in enumerate(request.FILES.getlist('floor_plans')):
+            PropertyFloorPlan.objects.create(property=prop, image=fp_file, order=i)
         # Save features
         feature_formset.instance = prop
         feature_formset.save()
@@ -191,9 +194,16 @@ def property_update(request, slug):
     )
     if request.method == 'POST' and form.is_valid() and feature_formset.is_valid():
         form.save()
-        # Clear floor plan if requested
-        if request.POST.get('clear_floor_plan') and prop.floor_plan:
-            prop.floor_plan.delete(save=True)
+        # Delete floor plans that were checked for removal
+        delete_fp_ids = request.POST.getlist('delete_floor_plan')
+        if delete_fp_ids:
+            PropertyFloorPlan.objects.filter(pk__in=delete_fp_ids, property=prop).delete()
+        # Add any newly uploaded floor plan images
+        existing_fp_count = prop.floor_plans.count()
+        for i, fp_file in enumerate(request.FILES.getlist('floor_plans')):
+            PropertyFloorPlan.objects.create(
+                property=prop, image=fp_file, order=existing_fp_count + i
+            )
         # Delete images that were checked for removal
         delete_ids = request.POST.getlist('delete_image')
         if delete_ids:
@@ -214,6 +224,7 @@ def property_update(request, slug):
         'property': prop,
         'feature_formset': feature_formset,
         'existing_images': prop.images.all(),
+        'existing_floor_plans': prop.floor_plans.all(),
     })
 
 

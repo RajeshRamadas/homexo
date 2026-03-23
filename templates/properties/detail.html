@@ -3,12 +3,65 @@
 
 {% block title %}{{ property.title }} — HOMEXO{% endblock %}
 {% block meta_description %}{{ property.title }} in {{ property.locality }}, {{ property.city }}. {{ property.display_price }}.{% endblock %}
+{% block og_type %}realestate.listing{% endblock %}
+{% block og_title %}{{ property.title }} — {{ property.display_price }}{% endblock %}
+{% block og_description %}{% if property.bhk %}{{ property.get_bhk_display }} {% endif %}{{ property.get_property_type_display }} in {{ property.locality }}, {{ property.city }} — {{ property.display_price }}{% endblock %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% if property.primary_image %}{{ property.primary_image.image.url }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ property.title }} — {{ property.display_price }}{% endblock %}
+{% block twitter_description %}{% if property.bhk %}{{ property.get_bhk_display }} {% endif %}in {{ property.locality }}, {{ property.city }}{% endblock %}
 
-{% block extra_head %}
-<meta property="og:title" content="{{ property.title }}">
-<meta property="og:description" content="{% if property.bhk %}{{ property.get_bhk_display }} in {% endif %}{{ property.locality }} - {{ property.display_price }}">
-<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% if property.primary_image %}{{ property.primary_image.image.url }}{% endif %}">
-<style>
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateListing",
+  "name": "{{ property.title }}",
+  "description": "{{ property.description|truncatewords:50|escapejs }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if property.primary_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ property.primary_image.image.url }}",{% endif %}
+  "datePosted": "{{ property.created_at|date:'c' }}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": "{{ property.price }}",
+    "availability": "https://schema.org/InStock"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ property.address|escapejs }}",
+    "addressLocality": "{{ property.locality }}",
+    "addressRegion": "{{ property.state }}",
+    "addressCountry": "IN"{% if property.pincode %},
+    "postalCode": "{{ property.pincode }}"{% endif %}
+  }{% if property.latitude and property.longitude %},
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "{{ property.latitude }}",
+    "longitude": "{{ property.longitude }}"
+  }{% endif %}{% if property.area_sqft %},
+  "floorSize": {
+    "@type": "QuantitativeValue",
+    "value": {{ property.area_sqft }},
+    "unitCode": "FTK"
+  }{% endif %}{% if property.bedrooms %},
+  "numberOfRooms": {{ property.bedrooms }}{% endif %}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Properties", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'properties:list' %}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ property.city }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'properties:list' %}?location={{ property.city }}"},
+    {"@type": "ListItem", "position": 4, "name": "{{ property.title }}"}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_head %}<style>
   /* ── Breadcrumb ── */
   .pd-breadcrumb {
     background: var(--white); padding: 11px 60px;
@@ -60,6 +113,11 @@
   .pd-gallery-cell:nth-child(5) { background: linear-gradient(135deg,#1A4A7A,#4A90C4); }
   .pd-gallery-cell img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; display: block; }
   .pd-gallery-cell:hover img { transform: scale(1.04); }
+  /* ── Slideshow slides ── */
+  .prop-img-slide { display:none; position:absolute; top:0;left:0;right:0;bottom:0; align-items:center; justify-content:center; }
+  .prop-img-slide.pi-active { display:flex; }
+  .fp-slide { display:none; position:absolute; top:0;left:0;right:0;bottom:0; align-items:center; justify-content:center; }
+  .fp-slide.fp-active { display:flex; }
   .pd-gallery-cell::after {
     content: ''; position: absolute; inset: 0;
     background: rgba(7,25,41,.2); pointer-events: none;
@@ -453,24 +511,56 @@
 
     {# GALLERY + PROPERTY HEADER #}
     <div class="pd-card" style="overflow:hidden;">
-      <div class="pd-gallery">
-        {# Main image #}
-        <div class="pd-gallery-main" onclick="pdOpenLightbox(0)">
-          {% if property.primary_image %}
-          <img src="{{ property.primary_image.image.url }}" alt="{{ property.title }}">
-          {% endif %}
-          <div class="pd-photo-count" onclick="pdOpenLightbox(0)">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            View All {{ images.count }} Photo{{ images.count|pluralize }}
-          </div>
+
+      {# ── Image Slideshow ── #}
+      {% with all_images=images %}
+      <div id="propImgBox" style="position:relative;width:100%;height:480px;background:#0D2B4E;overflow:hidden;display:flex;align-items:center;justify-content:center;user-select:none;cursor:pointer;">
+
+        {# Slides #}
+        {% for img in all_images %}
+        <div class="prop-img-slide{% if forloop.first %} pi-active{% endif %}"
+             onclick="pdOpenLightbox({{ forloop.counter0 }})">
+          <img src="{{ img.image.url }}" alt="{{ img.caption|default:property.title }}" loading="lazy"
+               style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
         </div>
-        {# Thumbnail cells — up to 4 extra #}
-        {% for img in images %}{% if not img.is_primary and forloop.counter <= 5 %}
-        <div class="pd-gallery-cell" onclick="pdOpenLightbox({{ forloop.counter0 }})">
-          <img src="{{ img.image.url }}" alt="Photo {{ forloop.counter }}">
+        {% empty %}
+        <div style="color:#4A90C4;font-size:13px;opacity:.7;">No photos available</div>
+        {% endfor %}
+
+        {# Prev arrow #}
+        {% if images.count > 1 %}
+        <button id="propImgPrev" type="button" onclick="event.stopPropagation();propImgSlide(-1)" aria-label="Previous photo"
+                style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;display:none;align-items:center;justify-content:center;z-index:3;transition:background .15s;"
+                onmouseover="this.style.background='var(--sky)';this.querySelector('svg').style.stroke='#fff'"
+                onmouseout="this.style.background='rgba(255,255,255,.92)';this.querySelector('svg').style.stroke='var(--navy)'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        {# Next arrow #}
+        <button id="propImgNext" type="button" onclick="event.stopPropagation();propImgSlide(1)" aria-label="Next photo"
+                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:background .15s;"
+                onmouseover="this.style.background='var(--sky)';this.querySelector('svg').style.stroke='#fff'"
+                onmouseout="this.style.background='rgba(255,255,255,.92)';this.querySelector('svg').style.stroke='var(--navy)'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        {% endif %}
+
+        {# View all overlay badge #}
+        <div class="pd-photo-count" onclick="pdOpenLightbox(0);event.stopPropagation()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          View All {{ images.count }} Photo{{ images.count|pluralize }}
         </div>
-        {% endif %}{% endfor %}
       </div>
+
+      {# Counter row #}
+      {% if images.count > 1 %}
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:var(--charcoal);">
+        <span id="propImgCounter" style="font-size:11px;color:#aaa;">1 / {{ images.count }}</span>
+        <span style="font-size:11px;color:#aaa;">Click image to view full screen</span>
+      </div>
+      {% endif %}
+      {% endwith %}
+
+
 
       {# PROPERTY TITLE #}
       <div class="pd-prop-header">
@@ -645,14 +735,58 @@
 
     {# FLOOR PLAN #}
     <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">Floor Plan</div></div>
-      {% if property.floor_plan %}
+      <div class="pd-card-header"><div class="pd-card-title">Floor Plans</div></div>
+      {% with fps=property.floor_plans.all %}
+      {% if fps %}
       <div style="padding:14px 28px 22px;">
-        <img src="{{ property.floor_plan.url }}" alt="Floor Plan for {{ property.title }}"
-             style="width:100%;max-width:100%;display:block;border:1px solid var(--border);cursor:zoom-in;"
-             onclick="this.style.maxWidth=this.style.maxWidth==='none'?'100%':'none'">
-        <p style="font-size:11px;color:var(--warm-grey);margin-top:6px;">Click image to zoom</p>
+
+        <!-- Image box (fixed height, arrows overlaid inside) -->
+        <div id="fpBox" style="position:relative;width:100%;height:420px;background:#f5f5f5;border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;user-select:none;">
+
+          <!-- Slides -->
+          {% for fp in fps %}
+          <div class="fp-slide{% if forloop.first %} fp-active{% endif %}" data-fp-idx="{{ forloop.counter0 }}">
+            <img src="{{ fp.image.url }}"
+                 alt="{% if fp.caption %}{{ fp.caption }}{% else %}Floor Plan {{ forloop.counter }} for {{ property.title }}{% endif %}"
+                 style="max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;"
+                 onclick="pdFpZoom(this)">
+          </div>
+          {% endfor %}
+
+          {% if fps|length > 1 %}
+          <!-- Prev arrow (inside box, left edge) -->
+          <button id="fpPrev" type="button" onclick="fpSlide(-1)" aria-label="Previous floor plan"
+                  style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15);cursor:pointer;display:none;align-items:center;justify-content:center;z-index:3;transition:background .15s;"
+                  onmouseover="this.style.background='var(--sky)';this.querySelector('svg').style.stroke='#fff'"
+                  onmouseout="this.style.background='rgba(255,255,255,.92)';this.querySelector('svg').style.stroke='var(--navy)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <!-- Next arrow (inside box, right edge) -->
+          <button id="fpNext" type="button" onclick="fpSlide(1)" aria-label="Next floor plan"
+                  style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:background .15s;"
+                  onmouseover="this.style.background='var(--sky)';this.querySelector('svg').style.stroke='#fff'"
+                  onmouseout="this.style.background='rgba(255,255,255,.92)';this.querySelector('svg').style.stroke='var(--navy)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          {% endif %}
+        </div>
+
+        <!-- Counter + caption + hint -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+          {% if fps|length > 1 %}
+          <span id="fpCounter" style="font-size:11px;color:var(--warm-grey);">1 / {{ fps|length }}</span>
+          {% else %}
+          <span></span>
+          {% endif %}
+          <span style="font-size:11px;color:var(--warm-grey);">Click image to zoom full size</span>
+        </div>
+        <div id="fpCaption" style="font-size:11px;color:var(--warm-grey);margin-top:4px;">
+          {% for fp in fps %}{% if forloop.first %}{{ fp.caption }}{% endif %}{% endfor %}
+        </div>
       </div>
+
+
+
       {% else %}
       <div class="pd-fp-preview">
         <div class="pd-fp-ph">
@@ -662,6 +796,7 @@
         </div>
       </div>
       {% endif %}
+      {% endwith %}
     </div>
 
     {# LOCATION #}
@@ -728,7 +863,7 @@
       {% for sim in similar %}
       <a href="{{ sim.get_absolute_url }}" class="pd-sim-item">
         <div class="pd-sim-thumb">
-          {% if sim.primary_image %}<img src="{{ sim.primary_image.image.url }}" alt="{{ sim.title }}">{% endif %}
+          {% if sim.primary_image %}<img src="{{ sim.primary_image.image.url }}" alt="{{ sim.title }}" loading="lazy">{% endif %}
         </div>
         <div style="min-width:0;flex:1;">
           <div class="pd-sim-price">{{ sim.display_price }}</div>
@@ -1081,81 +1216,163 @@ function pdFmtAmt(v) {
 })();
 
 // ── Lightbox ──
-const pdImages = [
+var pdImages = [
   {% for img in images %}
   { src: "{{ img.image.url }}", caption: "{{ img.caption|default:property.title|escapejs }}" }{% if not forloop.last %},{% endif %}
   {% endfor %}
 ];
-const pdTotal = pdImages.length;
-let pdCurrent = 0, pdLbIsOpen = false;
+var pdTotal = pdImages.length;
+var pdCurrent = 0, pdLbIsOpen = false;
 
-const pdStage    = document.getElementById('pdLbStage');
-const pdDotsCont = document.getElementById('pdLbDots');
-const pdThumbsCont = document.getElementById('pdLbThumbs');
+(function() {
+  var pdStage      = document.getElementById('pdLbStage');
+  var pdDotsCont   = document.getElementById('pdLbDots');
+  var pdThumbsCont = document.getElementById('pdLbThumbs');
+  var pdLightbox   = document.getElementById('pdLightbox');
+  if (!pdStage || !pdLightbox) return;
 
-// Build slides, dots, thumbs
-pdImages.forEach((img, i) => {
-  const slide = document.createElement('div');
-  slide.className = 'pd-lb-slide' + (i===0?' active':'');
-  slide.innerHTML = `<img src="${img.src}" alt="${img.caption}" class="pd-lb-slide-img" loading="lazy">`;
-  pdStage.appendChild(slide);
+  // Build slides, dots, thumbs
+  pdImages.forEach(function(img, i) {
+    var slide = document.createElement('div');
+    slide.className = 'pd-lb-slide' + (i===0?' active':'');
+    var si = document.createElement('img');
+    si.src = img.src; si.alt = img.caption; si.className = 'pd-lb-slide-img'; si.loading = 'lazy';
+    slide.appendChild(si);
+    pdStage.appendChild(slide);
 
-  const dot = document.createElement('div');
-  dot.className = 'pd-lb-dot' + (i===0?' active':'');
-  dot.onclick = () => pdLbGoTo(i);
-  pdDotsCont.appendChild(dot);
+    if (pdDotsCont) {
+      var dot = document.createElement('div');
+      dot.className = 'pd-lb-dot' + (i===0?' active':'');
+      dot.onclick = function() { window.pdLbGoTo(i); };
+      pdDotsCont.appendChild(dot);
+    }
 
-  const thumb = document.createElement('div');
-  thumb.className = 'pd-lb-thumb' + (i===0?' active':'');
-  thumb.innerHTML = `<div class="pd-lb-thumb-inner"><img src="${img.src}" alt="${img.caption}" loading="lazy"></div>`;
-  thumb.onclick = () => pdLbGoTo(i);
-  pdThumbsCont.appendChild(thumb);
-});
+    if (pdThumbsCont) {
+      var thumb = document.createElement('div');
+      thumb.className = 'pd-lb-thumb' + (i===0?' active':'');
+      var ti = document.createElement('img');
+      ti.src = img.src; ti.alt = img.caption; ti.loading = 'lazy';
+      var tw = document.createElement('div');
+      tw.className = 'pd-lb-thumb-inner'; tw.appendChild(ti);
+      thumb.appendChild(tw);
+      thumb.onclick = function() { window.pdLbGoTo(i); };
+      pdThumbsCont.appendChild(thumb);
+    }
+  });
 
-function pdLbGoTo(index) {
-  const slides = pdStage.querySelectorAll('.pd-lb-slide');
-  const dots   = pdDotsCont.querySelectorAll('.pd-lb-dot');
-  const thumbs = pdThumbsCont.querySelectorAll('.pd-lb-thumb');
-  slides[pdCurrent].classList.remove('active');
-  dots[pdCurrent].classList.remove('active');
-  thumbs[pdCurrent].classList.remove('active');
-  pdCurrent = (index + pdTotal) % pdTotal;
-  slides[pdCurrent].classList.add('active');
-  dots[pdCurrent].classList.add('active');
-  thumbs[pdCurrent].classList.add('active');
-  document.getElementById('pdLbCounterTxt').textContent = (pdCurrent+1)+' / '+pdTotal;
-  document.getElementById('pdLbCaption').textContent = pdImages[pdCurrent].caption;
-  thumbs[pdCurrent].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
-}
-function pdLbShift(dir) { pdLbGoTo(pdCurrent + dir); }
-function pdOpenLightbox(index) {
-  if (pdTotal === 0) return;
-  pdLbIsOpen = true;
-  pdLbGoTo(index);
-  document.getElementById('pdLightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function pdCloseLightbox() {
-  pdLbIsOpen = false;
-  document.getElementById('pdLightbox').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function pdHandleBackdrop(e) {
-  if (e.target === document.getElementById('pdLightbox') || e.target.classList.contains('pd-lb-inner')) pdCloseLightbox();
-}
-document.addEventListener('keydown', e => {
-  if (!pdLbIsOpen) return;
-  if (e.key==='ArrowRight'||e.key==='ArrowDown') pdLbShift(1);
-  if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   pdLbShift(-1);
-  if (e.key==='Escape') pdCloseLightbox();
-});
-let pdTouchX = null;
-document.getElementById('pdLightbox').addEventListener('touchstart', e=>{ pdTouchX=e.touches[0].clientX; },{passive:true});
-document.getElementById('pdLightbox').addEventListener('touchend', e=>{
-  if(pdTouchX===null) return;
-  const dx = e.changedTouches[0].clientX - pdTouchX;
-  if(Math.abs(dx)>40) pdLbShift(dx<0?1:-1);
-  pdTouchX = null;
-});
+  window.pdLbGoTo = function(index) {
+    var slides = pdStage.querySelectorAll('.pd-lb-slide');
+    var dots   = pdDotsCont ? pdDotsCont.querySelectorAll('.pd-lb-dot') : [];
+    var thumbs = pdThumbsCont ? pdThumbsCont.querySelectorAll('.pd-lb-thumb') : [];
+    if (slides[pdCurrent]) slides[pdCurrent].classList.remove('active');
+    if (dots[pdCurrent])   dots[pdCurrent].classList.remove('active');
+    if (thumbs[pdCurrent]) thumbs[pdCurrent].classList.remove('active');
+    pdCurrent = (index + pdTotal) % pdTotal;
+    if (slides[pdCurrent]) slides[pdCurrent].classList.add('active');
+    if (dots[pdCurrent])   dots[pdCurrent].classList.add('active');
+    if (thumbs[pdCurrent]) thumbs[pdCurrent].classList.add('active');
+    var ctrTxt = document.getElementById('pdLbCounterTxt');
+    var capEl  = document.getElementById('pdLbCaption');
+    if (ctrTxt) ctrTxt.textContent = (pdCurrent+1)+' / '+pdTotal;
+    if (capEl)  capEl.textContent = pdImages[pdCurrent] ? pdImages[pdCurrent].caption : '';
+    if (thumbs[pdCurrent]) thumbs[pdCurrent].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+  };
+
+  window.pdLbShift = function(dir) { window.pdLbGoTo(pdCurrent + dir); };
+
+  window.pdOpenLightbox = function(index) {
+    if (pdTotal === 0) return;
+    pdLbIsOpen = true;
+    window.pdLbGoTo(index);
+    pdLightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.pdCloseLightbox = function() {
+    pdLbIsOpen = false;
+    pdLightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.pdHandleBackdrop = function(e) {
+    if (e.target === pdLightbox || e.target.classList.contains('pd-lb-inner')) window.pdCloseLightbox();
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (!pdLbIsOpen) return;
+    if (e.key==='ArrowRight'||e.key==='ArrowDown') window.pdLbShift(1);
+    if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   window.pdLbShift(-1);
+    if (e.key==='Escape') window.pdCloseLightbox();
+  });
+
+  var pdTouchX = null;
+  pdLightbox.addEventListener('touchstart', function(e){ pdTouchX=e.touches[0].clientX; },{passive:true});
+  pdLightbox.addEventListener('touchend', function(e){
+    if(pdTouchX===null) return;
+    var dx = e.changedTouches[0].clientX - pdTouchX;
+    if(Math.abs(dx)>40) window.pdLbShift(dx<0?1:-1);
+    pdTouchX = null;
+  });
+})();
+
+// ── Property image slideshow ──
+(function(){
+  var box = document.getElementById('propImgBox');
+  if (!box) return;
+  var slides = Array.from(box.getElementsByClassName('prop-img-slide'));
+  var total = slides.length;
+  var cur = 0;
+  var counter = document.getElementById('propImgCounter');
+  var btnPrev = document.getElementById('propImgPrev');
+  var btnNext = document.getElementById('propImgNext');
+  function piUpdate() {
+    if (counter) counter.textContent = (cur+1) + ' / ' + total;
+    if (btnPrev) btnPrev.style.display = cur > 0        ? 'flex' : 'none';
+    if (btnNext) btnNext.style.display = cur < total-1  ? 'flex' : 'none';
+  }
+  window.propImgSlide = function(dir) {
+    if (cur+dir < 0 || cur+dir >= total) return;
+    slides[cur].classList.remove('pi-active');
+    cur += dir;
+    slides[cur].classList.add('pi-active');
+    piUpdate();
+  };
+  piUpdate();
+})();
+
+// ── Floor plan slideshow ──
+(function(){
+  var box = document.getElementById('fpBox');
+  if (!box) return;
+  var slides = Array.from(box.getElementsByClassName('fp-slide'));
+  var total = slides.length;
+  var cur = 0;
+  var counter = document.getElementById('fpCounter');
+  var btnPrev = document.getElementById('fpPrev');
+  var btnNext = document.getElementById('fpNext');
+  function fpUpdate() {
+    if (counter) counter.textContent = (cur+1) + ' / ' + total;
+    if (btnPrev) btnPrev.style.display = cur > 0        ? 'flex' : 'none';
+    if (btnNext) btnNext.style.display = cur < total-1  ? 'flex' : 'none';
+  }
+  window.fpSlide = function(dir) {
+    if (cur+dir < 0 || cur+dir >= total) return;
+    slides[cur].classList.remove('fp-active');
+    cur += dir;
+    slides[cur].classList.add('fp-active');
+    fpUpdate();
+  };
+  window.pdFpZoom = function(img) {
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+    var zi = document.createElement('img');
+    zi.src = img.src;
+    zi.style.cssText = 'max-width:92vw;max-height:92vh;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.6);';
+    ov.appendChild(zi);
+    ov.onclick = function(){ document.body.removeChild(ov); };
+    document.body.appendChild(ov);
+  };
+  fpUpdate();
+})();
 </script>
 {% endblock %}
