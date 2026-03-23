@@ -207,6 +207,16 @@
     <h1 class="bl-title">Insights &amp; <em>Analysis</em></h1>
   </div>
   <div class="bl-header-right">
+    {% if user.is_staff %}
+    <a href="{% url 'blog:create' %}"
+       style="display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;
+              text-transform:uppercase;background:var(--navy);color:var(--white);
+              padding:10px 20px;text-decoration:none;transition:background .2s;align-self:flex-end;"
+       onmouseover="this.style.background='var(--sky)'"
+       onmouseout="this.style.background='var(--navy)'">
+      + New Post
+    </a>
+    {% endif %}
     <form method="GET" action="{% url 'blog:list' %}" class="bl-search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" name="q" value="{{ query }}" placeholder="Search articles…">
@@ -242,9 +252,11 @@
         {% if post.cover_image %}
         <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
         {% endif %}
-        {% if post.category %}
-        <span class="bl-cat-badge" style="background:{{ post.category.color }};">{{ post.category.name }}</span>
+        {% with cat=post.categories.all.0 %}
+        {% if cat %}
+        <span class="bl-cat-badge" style="background:{{ cat.color }};">{{ cat.name }}</span>
         {% endif %}
+        {% endwith %}
       </div>
       <div class="bl-body">
         <div class="bl-byline">
@@ -296,7 +308,9 @@
         <a href="{{ p.get_absolute_url }}" class="bl-pop-item">
           <span class="bl-pop-num">0{{ forloop.counter }}</span>
           <div>
-            {% if p.category %}<div class="bl-pop-cat">{{ p.category.name }}</div>{% endif %}
+            {% with cat=p.categories.all.0 %}
+            {% if cat %}<div class="bl-pop-cat">{{ cat.name }}</div>{% endif %}
+            {% endwith %}
             <div class="bl-pop-title">{{ p.title }}</div>
             <div class="bl-pop-date">{% if p.published_at %}{{ p.published_at|date:"M j, Y" }}{% endif %}</div>
           </div>

@@ -10,8 +10,8 @@ from .models import Enquiry
 
 
 def enquiry_create(request):
-    property_id = request.GET.get('property')
-    agent_id    = request.GET.get('agent')
+    property_id = request.GET.get('property') or request.POST.get('property')
+    agent_id    = request.GET.get('agent') or request.POST.get('agent')
 
     # Map ?service= values that come from service pages to enquiry_type
     _SERVICE_TYPE_MAP = {

@@ -1,16 +1,91 @@
 {% extends 'base.html' %}
 {% block title %}My Saved Properties — HOMEXO{% endblock %}
 
+{% block extra_head %}
+<style>
+  .wishlist-hero {
+    background: var(--charcoal);
+    padding: 60px 60px 50px;
+  }
+  .wishlist-hero .section-title { color: var(--ivory); }
+  .wishlist-hero p { color: rgba(255,255,255,.45); margin-top: 12px; font-size: 14px; }
+
+  .wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .wishlist-card-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+  }
+  .wishlist-card-actions .btn-primary {
+    flex: 1;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 11px;
+  }
+  .wishlist-card-actions .btn-outline {
+    padding: 12px 20px;
+    font-size: 11px;
+  }
+
+  .wishlist-empty {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .wishlist-empty svg {
+    width: 64px;
+    height: 64px;
+    opacity: .25;
+    margin-bottom: 20px;
+    stroke: var(--charcoal);
+  }
+  .wishlist-empty h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--charcoal);
+    margin-bottom: 12px;
+  }
+  .wishlist-empty p {
+    color: var(--warm-grey);
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+
+  /* ── Tablet ── */
+  @media (max-width: 1024px) {
+    .wishlist-hero { padding: 50px 40px 40px; }
+    .wishlist-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 640px) {
+    .wishlist-hero { padding: 36px 20px 30px; }
+    .wishlist-hero .section-title { font-size: 32px !important; }
+    .wishlist-grid { grid-template-columns: 1fr; gap: 1px; }
+    .wishlist-card-actions { flex-direction: column; }
+    .wishlist-card-actions .btn-primary,
+    .wishlist-card-actions .btn-outline { text-align: center; padding: 13px 20px; font-size: 12px; }
+    .wishlist-empty h2 { font-size: 28px; }
+    .property-card-img { height: 220px; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div style="background:var(--charcoal);padding:60px;">
+<div class="wishlist-hero">
   <div class="section-eyebrow">My Account</div>
-  <h1 class="section-title" style="color:var(--ivory);">Saved <em>Properties</em></h1>
-  <p style="color:rgba(255,255,255,.45);margin-top:12px;font-size:14px;">{{ items|length }} propert{{ items|length|pluralize:"y,ies" }} saved</p>
+  <h1 class="section-title">Saved <em>Properties</em></h1>
+  <p>{{ items|length }} propert{{ items|length|pluralize:"y,ies" }} saved</p>
 </div>
 
 <section class="section" style="background:var(--ivory);">
   {% if items %}
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;">
+  <div class="wishlist-grid">
     {% for item in items %}
     <div class="property-card">
       <div class="property-card-img">
@@ -20,7 +95,6 @@
         <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>
         {% endif %}
         {% if item.property.is_featured %}<div class="property-tag featured">Featured</div>{% endif %}
-        <!-- Remove from wishlist -->
         <form action="{% url 'wishlist:remove' item.id %}" method="POST" style="position:absolute;top:16px;right:16px;">
           {% csrf_token %}
           <button type="submit" class="property-fav" title="Remove from saved" style="background:rgba(220,50,50,.85);">
@@ -47,9 +121,9 @@
           <span class="spec">{{ item.property.area_sqft|floatformat:0 }} sq.ft</span>
           {% endif %}
         </div>
-        <div style="margin-top:16px;display:flex;gap:10px;">
-          <a href="{{ item.property.get_absolute_url }}" class="btn-primary" style="flex:1;text-align:center;padding:12px 20px;font-size:11px;">View Property</a>
-          <a href="{% url 'enquiries:create' %}?property={{ item.property.id }}" class="btn-outline" style="padding:12px 20px;font-size:11px;">Enquire</a>
+        <div class="wishlist-card-actions">
+          <a href="{{ item.property.get_absolute_url }}" class="btn-primary">View Property</a>
+          <a href="{% url 'enquiries:create' %}?property={{ item.property.id }}" class="btn-outline">Enquire</a>
         </div>
       </div>
     </div>
@@ -57,10 +131,10 @@
   </div>
 
   {% else %}
-  <div style="text-align:center;padding:80px 20px;">
-    <div style="font-size:64px;margin-bottom:20px;opacity:.3;">♡</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--charcoal);margin-bottom:12px;">No Saved Properties</h2>
-    <p style="color:var(--warm-grey);margin-bottom:32px;font-size:14px;">Properties you save will appear here. Start exploring to find your perfect home.</p>
+  <div class="wishlist-empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <h2>No Saved Properties</h2>
+    <p>Properties you save will appear here. Start exploring to find your perfect home.</p>
     <a href="{% url 'properties:list' %}" class="btn-primary">Browse Properties</a>
   </div>
   {% endif %}

@@ -230,7 +230,7 @@ def home(request):
         # News carousel (5 latest posts)
         'news_posts': Post.objects.filter(
             status='published'
-        ).select_related('category').order_by('-published_at')[:5],
+        ).prefetch_related('categories').order_by('-published_at')[:5],
 
         # Popular cities for search chips (top cities by listing count)
         'popular_cities': (
@@ -274,8 +274,8 @@ def area_guides(request):
 
 def market_reports(request):
     reports = Post.objects.filter(
-        status='published', category__slug='market-reports'
-    ).order_by('-published_at')[:12]
+        status='published', categories__slug='market-reports'
+    ).distinct().order_by('-published_at')[:12]
     return render(request, 'pages/market_reports.html', {'reports': reports})
 
 

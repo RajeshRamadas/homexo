@@ -12,14 +12,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PostListSerializer(serializers.ModelSerializer):
-    category     = CategorySerializer(read_only=True)
+    categories   = CategorySerializer(many=True, read_only=True)
     author_name  = serializers.SerializerMethodField()
     cover_image  = serializers.SerializerMethodField()
 
     class Meta:
         model  = Post
         fields = ('id', 'title', 'slug', 'excerpt', 'cover_image',
-                  'category', 'author_name', 'published_at', 'views_count')
+                  'categories', 'author_name', 'published_at', 'views_count')
 
     def get_author_name(self, obj):
         return obj.author.get_full_name() if obj.author else 'HOMEXO Team'

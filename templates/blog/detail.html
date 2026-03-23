@@ -453,20 +453,38 @@
   </a>
 </div>
 
+{% if user.is_staff %}
+<div style="background:var(--navy);padding:10px 60px;display:flex;align-items:center;justify-content:flex-end;gap:16px;">
+  <span style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,216,236,.5);">
+    {% if post.status == 'draft' %}Draft{% else %}Published{% endif %}
+  </span>
+  <a href="{% url 'blog:edit' post.slug %}"
+     style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--white);
+            text-decoration:none;border:1px solid rgba(74,144,196,.4);padding:7px 18px;
+            transition:all .2s;display:inline-flex;align-items:center;gap:8px;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    Edit Post
+  </a>
+</div>
+{% endif %}
+
 <!-- ARTICLE HERO -->
 <header class="article-hero">
   <div class="article-breadcrumb">
     <a href="{% url 'blog:list' %}">Insights</a>
-    {% if post.category %}
+    {% for cat in post.categories.all %}
     <span class="breadcrumb-sep">—</span>
-    <a href="{% url 'blog:list' %}?category={{ post.category.slug }}">{{ post.category.name }}</a>
-    {% endif %}
+    <a href="{% url 'blog:list' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+    {% endfor %}
   </div>
 
   <div class="article-cat-badge">
-    {% if post.category %}
-    <span class="article-cat-pill" style="background:{{ post.category.color|default:'var(--navy)' }};">{{ post.category.name }}</span>
-    {% endif %}
+    {% for cat in post.categories.all %}
+    <span class="article-cat-pill" style="background:{{ cat.color|default:'var(--navy)' }};">{{ cat.name }}</span>
+    {% endfor %}
     <span class="article-read-time">{{ post.reading_time }} min read</span>
     <span class="article-views">{{ post.views_count }} views</span>
   </div>
@@ -537,9 +555,9 @@
 
     <!-- Tags -->
     <div class="article-tags">
-      {% if post.category %}
-      <a href="{% url 'blog:list' %}?category={{ post.category.slug }}" class="article-tag">{{ post.category.name }}</a>
-      {% endif %}
+      {% for cat in post.categories.all %}
+      <a href="{% url 'blog:list' %}?category={{ cat.slug }}" class="article-tag">{{ cat.name }}</a>
+      {% endfor %}
       <a href="{% url 'blog:list' %}" class="article-tag">All Insights</a>
     </div>
 
@@ -588,9 +606,9 @@
             {% endif %}
           </div>
           <div>
-            {% if rpost.category %}
-            <div class="related-cat">{{ rpost.category.name }}</div>
-            {% endif %}
+            {% with cat=rpost.categories.all.0 %}
+            {% if cat %}<div class="related-cat">{{ cat.name }}</div>{% endif %}
+            {% endwith %}
             <div class="related-title">{{ rpost.title|truncatewords:10 }}</div>
           </div>
         </a>

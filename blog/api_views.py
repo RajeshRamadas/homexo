@@ -8,7 +8,7 @@ from .serializers import PostListSerializer, PostDetailSerializer, CategorySeria
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset           = Post.objects.filter(status='published').select_related('author', 'category')
+    queryset           = Post.objects.filter(status='published').select_related('author').prefetch_related('categories')
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends    = [filters.SearchFilter, filters.OrderingFilter]
     search_fields      = ['title', 'excerpt', 'body']
