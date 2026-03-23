@@ -331,8 +331,8 @@
   .pd-lightbox.open { opacity: 1; pointer-events: all; }
   .pd-lb-inner { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   .pd-lb-stage { position: relative; max-width: 880px; width: calc(100% - 160px); max-height: 80vh; display: flex; align-items: center; justify-content: center; }
-  .pd-lb-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .4s; pointer-events: none; }
-  .pd-lb-slide.active { opacity: 1; pointer-events: all; position: relative; }
+  .pd-lb-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .4s; }
+  .pd-lb-slide.active { opacity: 1; position: relative; z-index: 2; }
   .pd-lb-slide img { max-width: 100%; max-height: 80vh; object-fit: contain; display: block; }
   .pd-lb-placeholder { width: 100%; height: 520px; }
   .pd-lb-close { position: absolute; top: 22px; right: 26px; width: 42px; height: 42px; border: 1px solid rgba(200,216,236,.25); background: rgba(13,43,78,.5); color: #C8D8EC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .3s; z-index: 10; }
