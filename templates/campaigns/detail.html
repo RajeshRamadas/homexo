@@ -7,32 +7,25 @@
 <style>
   :root { --accent: {{ campaign.accent_color }}; }
 
-  /* Hero */
+  /* ═══ Hero ═══════════════════════════════════════════════════════════ */
   .camp-hero {
-    min-height: 88vh;
-    display: flex; flex-direction: column; justify-content: center;
-    position: relative; overflow: hidden;
-    padding: 6rem 2rem 4rem;
+    min-height: 88vh; display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden; padding: 6rem 2rem 4rem;
     background: linear-gradient(135deg, var(--navy) 0%, #1a3a5c 60%, var(--accent) 100%);
     color: #fff;
   }
-  .camp-hero__bg {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; opacity: .25;
-  }
+  .camp-hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .25; }
   .camp-hero__inner {
     position: relative; max-width: 1200px; margin: 0 auto; width: 100%;
     display: grid; grid-template-columns: 1fr 420px; gap: 3rem; align-items: center;
   }
   .camp-hero__eyebrow {
     font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 600;
-    letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.65);
-    margin-bottom: 1rem;
+    letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.65); margin-bottom: 1rem;
   }
   .camp-hero__h1 {
     font-family: 'Cormorant Garamond', serif; font-weight: 700;
-    font-size: clamp(2.5rem, 5.5vw, 4rem); line-height: 1.1;
-    margin-bottom: 1.25rem;
+    font-size: clamp(2.5rem, 5.5vw, 4rem); line-height: 1.1; margin-bottom: 1.25rem;
   }
   .camp-hero__h1 em { color: var(--accent); font-style: normal; }
   .camp-hero__sub {
@@ -43,8 +36,7 @@
     display: inline-block; padding: .8rem 2rem;
     background: var(--accent); color: #fff; border-radius: 5px;
     font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
-    text-decoration: none; letter-spacing: .04em;
-    transition: opacity .2s;
+    text-decoration: none; letter-spacing: .04em; transition: opacity .2s;
   }
   .camp-hero__cta:hover { opacity: .85; }
 
@@ -55,210 +47,200 @@
     display: inline-flex; gap: 2rem; align-items: center;
   }
   .countdown-unit { text-align: center; }
-  .countdown-num {
-    font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700;
-    line-height: 1;
-  }
-  .countdown-lbl {
-    font-family: 'DM Sans', sans-serif; font-size: .65rem; opacity: .6;
-    text-transform: uppercase; letter-spacing: .1em;
-  }
+  .countdown-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; line-height: 1; }
+  .countdown-lbl { font-family: 'DM Sans', sans-serif; font-size: .65rem; opacity: .6; text-transform: uppercase; letter-spacing: .1em; }
 
   /* Enquiry card in hero */
-  .hero-enquiry-card {
-    background: #fff; border-radius: 12px; padding: 2rem;
-    box-shadow: 0 16px 48px rgba(0,0,0,.2);
-  }
-  .hero-enquiry-card h3 {
-    font-family: 'Cormorant Garamond', serif; font-weight: 700;
-    font-size: 1.4rem; color: var(--navy); margin-bottom: 1.25rem;
-  }
-  .hero-enquiry-card input,
-  .hero-enquiry-card select,
-  .hero-enquiry-card textarea {
+  .hero-enquiry-card { background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 16px 48px rgba(0,0,0,.2); }
+  .hero-enquiry-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; color: var(--navy); margin-bottom: 1.25rem; }
+  .hero-enquiry-card input, .hero-enquiry-card select, .hero-enquiry-card textarea {
     width: 100%; padding: .65rem .9rem; margin-bottom: .75rem;
     border: 1px solid var(--border); border-radius: 5px;
-    font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--charcoal);
-    box-sizing: border-box;
+    font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--charcoal); box-sizing: border-box;
   }
   .hero-enquiry-card textarea { resize: vertical; min-height: 80px; }
   .hero-enquiry-card button {
     width: 100%; padding: .75rem; background: var(--accent); color: #fff;
     border: none; border-radius: 5px; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
-    transition: opacity .2s;
+    font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; transition: opacity .2s;
   }
   .hero-enquiry-card button:hover { opacity: .85; }
 
   /* Offer banner */
   .offer-banner {
-    background: var(--accent); color: #fff; text-align: center;
-    padding: .75rem 2rem;
+    background: var(--accent); color: #fff; text-align: center; padding: .75rem 2rem;
     font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 500;
   }
 
-  /* Highlights */
-  .highlights-section {
-    padding: 4rem 2rem;
-    background: var(--ivory);
+  /* ═══ Key Stats Strip ════════════════════════════════════════════════ */
+  .key-stats-strip {
+    background: var(--navy); color: #fff; padding: 1.5rem 2rem;
+    border-top: 2px solid var(--accent);
   }
-  .highlights-section .inner { max-width: 1200px; margin: 0 auto; }
-  .highlights-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem; margin-top: 2.5rem;
+  .key-stats-strip .inner { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
+  .key-stat { text-align: center; min-width: 120px; }
+  .key-stat .label {
+    font-family: 'DM Sans', sans-serif; font-size: .65rem; font-weight: 600;
+    letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: .35rem;
   }
-  .highlight-card {
-    background: #fff; border-radius: 10px; padding: 1.75rem;
-    border: 1px solid var(--border);
-    transition: box-shadow .25s;
-  }
-  .highlight-card:hover { box-shadow: 0 6px 24px rgba(13,43,78,.1); }
-  .highlight-card .icon {
-    font-size: 1.75rem; margin-bottom: .75rem; display: block;
-  }
-  .highlight-card h4 {
-    font-family: 'Cormorant Garamond', serif; font-weight: 700;
-    font-size: 1.15rem; color: var(--navy); margin-bottom: .5rem;
-  }
-  .highlight-card p {
-    font-family: 'DM Sans', sans-serif; font-size: .85rem;
-    color: #6b7280; line-height: 1.6; margin: 0;
+  .key-stat .value {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700;
   }
 
-  /* About */
-  .about-section {
-    padding: 5rem 2rem;
+  /* ═══ Shared Section Styles ══════════════════════════════════════════ */
+  .section-eyebrow {
+    font-family: 'DM Sans', sans-serif; font-size: .72rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--sky); margin-bottom: .75rem;
   }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif; font-weight: 700;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: var(--navy); line-height: 1.2; margin-bottom: 1.25rem;
+  }
+  .section-body { font-family: 'DM Sans', sans-serif; font-size: .95rem; color: #4b5563; line-height: 1.8; }
+  .accent-bar { width: 48px; height: 3px; background: var(--accent); border-radius: 2px; margin-bottom: 1.5rem; }
+
+  /* ═══ About ══════════════════════════════════════════════════════════ */
+  .about-section { padding: 5rem 2rem; }
   .about-section .inner {
     max-width: 1200px; margin: 0 auto;
     display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
   }
-  .section-eyebrow {
-    font-family: 'DM Sans', sans-serif; font-size: .72rem; font-weight: 600;
-    letter-spacing: .18em; text-transform: uppercase; color: var(--sky);
-    margin-bottom: .75rem;
-  }
-  .section-heading {
-    font-family: 'Cormorant Garamond', serif; font-weight: 700;
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: var(--navy); line-height: 1.2;
-    margin-bottom: 1.25rem;
-  }
-  .section-body {
-    font-family: 'DM Sans', sans-serif; font-size: .95rem; color: #4b5563; line-height: 1.8;
-  }
-  .accent-bar {
-    width: 48px; height: 3px; background: var(--accent); border-radius: 2px; margin-bottom: 1.5rem;
-  }
+  .about-section .about-img { width: 100%; border-radius: 10px; object-fit: cover; }
 
-  /* Dev stat strip */
-  .dev-stat-strip {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem; margin-top: 2.5rem;
-  }
-  .dev-stat { text-align: center; }
-  .dev-stat .num {
-    font-family: 'Cormorant Garamond', serif; font-size: 2.2rem;
-    font-weight: 700; color: var(--accent);
-  }
-  .dev-stat .lbl {
-    font-family: 'DM Sans', sans-serif; font-size: .78rem; color: #6b7280; margin-top: .2rem;
-  }
+  /* ═══ Master Plan ════════════════════════════════════════════════════ */
+  .masterplan-section { padding: 5rem 2rem; background: var(--ivory); }
+  .masterplan-section .inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+  .masterplan-section img { max-width: 100%; border-radius: 10px; margin-top: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,.1); }
 
-  /* Properties */
-  .properties-section {
-    padding: 5rem 2rem; background: var(--ivory);
-  }
-  .properties-section .inner { max-width: 1200px; margin: 0 auto; }
-  .prop-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.75rem; margin-top: 2.5rem;
-  }
-  .prop-card {
+  /* ═══ Floor Plans ════════════════════════════════════════════════════ */
+  .floorplans-section { padding: 5rem 2rem; }
+  .floorplans-section .inner { max-width: 1200px; margin: 0 auto; }
+  .fp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.75rem; margin-top: 2.5rem; }
+  .fp-card {
     background: #fff; border-radius: 10px; overflow: hidden;
-    border: 1px solid var(--border);
-    transition: box-shadow .25s;
+    border: 1px solid var(--border); transition: box-shadow .25s;
   }
+  .fp-card:hover { box-shadow: 0 8px 28px rgba(13,43,78,.12); }
+  .fp-card__img { height: 180px; background: #f3f4f6; overflow: hidden; }
+  .fp-card__img img { width: 100%; height: 100%; object-fit: cover; }
+  .fp-card__body { padding: 1.25rem; }
+  .fp-card__config {
+    font-family: 'Cormorant Garamond', serif; font-weight: 700;
+    font-size: 1.15rem; color: var(--navy); margin-bottom: .4rem;
+  }
+  .fp-card__sba { font-family: 'DM Sans', sans-serif; font-size: .82rem; color: #6b7280; margin-bottom: .3rem; }
+  .fp-card__price {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700;
+    color: var(--accent); margin-bottom: .75rem;
+  }
+  .fp-card__dl {
+    display: inline-block; padding: .45rem 1rem;
+    background: var(--accent); color: #fff; border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600;
+    text-decoration: none; transition: opacity .2s;
+  }
+  .fp-card__dl:hover { opacity: .85; }
+
+  /* ═══ Amenities ══════════════════════════════════════════════════════ */
+  .amenities-section { padding: 5rem 2rem; background: var(--ivory); }
+  .amenities-section .inner { max-width: 1200px; margin: 0 auto; }
+  .amen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+  .amen-card {
+    background: #fff; border-radius: 10px; padding: 1.75rem;
+    border: 1px solid var(--border); transition: box-shadow .25s;
+  }
+  .amen-card:hover { box-shadow: 0 6px 24px rgba(13,43,78,.1); }
+  .amen-card .icon { font-size: 1.5rem; margin-bottom: .6rem; display: block; }
+  .amen-card h4 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 700;
+    font-size: 1.1rem; color: var(--navy); margin-bottom: .4rem;
+  }
+  .amen-card p { font-family: 'DM Sans', sans-serif; font-size: .83rem; color: #6b7280; line-height: 1.6; margin: 0; }
+
+  /* ═══ Gallery ════════════════════════════════════════════════════════ */
+  .gallery-section { padding: 5rem 2rem; }
+  .gallery-section .inner { max-width: 1200px; margin: 0 auto; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .gallery-grid img {
+    width: 100%; height: 220px; object-fit: cover; border-radius: 8px;
+    cursor: pointer; transition: transform .3s, box-shadow .3s;
+  }
+  .gallery-grid img:hover { transform: scale(1.03); box-shadow: 0 8px 32px rgba(0,0,0,.15); }
+
+  /* ═══ Location ═══════════════════════════════════════════════════════ */
+  .location-section { padding: 5rem 2rem; background: var(--ivory); }
+  .location-section .inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+  }
+  .location-section .map-frame { width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+  .location-section .map-frame img { width: 100%; display: block; }
+  .location-section .map-frame iframe { width: 100%; height: 400px; border: 0; }
+
+  /* ═══ Highlights ═════════════════════════════════════════════════════ */
+  .highlights-section { padding: 4rem 2rem; background: var(--ivory); }
+  .highlights-section .inner { max-width: 1200px; margin: 0 auto; }
+  .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+  .highlight-card {
+    background: #fff; border-radius: 10px; padding: 1.75rem;
+    border: 1px solid var(--border); transition: box-shadow .25s;
+  }
+  .highlight-card:hover { box-shadow: 0 6px 24px rgba(13,43,78,.1); }
+  .highlight-card .icon { font-size: 1.75rem; margin-bottom: .75rem; display: block; }
+  .highlight-card h4 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 700;
+    font-size: 1.15rem; color: var(--navy); margin-bottom: .5rem;
+  }
+  .highlight-card p { font-family: 'DM Sans', sans-serif; font-size: .85rem; color: #6b7280; line-height: 1.6; margin: 0; }
+
+  /* ═══ Properties ═════════════════════════════════════════════════════ */
+  .properties-section { padding: 5rem 2rem; }
+  .properties-section .inner { max-width: 1200px; margin: 0 auto; }
+  .prop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.75rem; margin-top: 2.5rem; }
+  .prop-card { background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); transition: box-shadow .25s; }
   .prop-card:hover { box-shadow: 0 8px 28px rgba(13,43,78,.12); }
-  .prop-card__img {
-    height: 200px; background: linear-gradient(135deg, #e5e7eb, #d1d5db);
-    position: relative; overflow: hidden;
-  }
+  .prop-card__img { height: 200px; background: linear-gradient(135deg, #e5e7eb, #d1d5db); position: relative; overflow: hidden; }
   .prop-card__img img { width: 100%; height: 100%; object-fit: cover; }
   .prop-card__badge {
-    position: absolute; top: .75rem; left: .75rem;
-    background: var(--accent); color: #fff;
+    position: absolute; top: .75rem; left: .75rem; background: var(--accent); color: #fff;
     font-family: 'DM Sans', sans-serif; font-size: .7rem; font-weight: 600;
     padding: .2rem .6rem; border-radius: 3px; letter-spacing: .05em; text-transform: uppercase;
   }
   .prop-card__body { padding: 1.25rem; }
   .prop-card__title {
     font-family: 'Cormorant Garamond', serif; font-weight: 700;
-    font-size: 1.1rem; color: var(--navy); margin-bottom: .4rem;
-    text-decoration: none; display: block;
+    font-size: 1.1rem; color: var(--navy); margin-bottom: .4rem; text-decoration: none; display: block;
   }
-  .prop-card__meta {
-    font-family: 'DM Sans', sans-serif; font-size: .8rem; color: #6b7280; margin-bottom: .75rem;
-  }
-  .prop-card__price {
-    font-family: 'Cormorant Garamond', serif; font-size: 1.25rem;
-    font-weight: 700; color: var(--accent);
-  }
+  .prop-card__meta { font-family: 'DM Sans', sans-serif; font-size: .8rem; color: #6b7280; margin-bottom: .75rem; }
+  .prop-card__price { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 700; color: var(--accent); }
 
-  /* Agent strip */
-  .agent-strip {
-    padding: 3.5rem 2rem;
-    background: var(--navy); color: #fff;
-  }
-  .agent-strip .inner {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; gap: 2.5rem; align-items: center;
-  }
-  .agent-strip__photo {
-    width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-    border: 3px solid var(--accent); flex-shrink: 0;
-  }
+  /* ═══ Agent strip ════════════════════════════════════════════════════ */
+  .agent-strip { padding: 3.5rem 2rem; background: var(--navy); color: #fff; }
+  .agent-strip .inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 2.5rem; align-items: center; }
+  .agent-strip__photo { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); flex-shrink: 0; }
   .agent-strip__initials {
-    width: 90px; height: 90px; border-radius: 50%;
-    background: var(--accent); color: #fff;
+    width: 90px; height: 90px; border-radius: 50%; background: var(--accent); color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700;
-    flex-shrink: 0;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; flex-shrink: 0;
   }
-  .agent-strip__info h4 {
-    font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;
-    font-weight: 700; margin-bottom: .3rem;
-  }
-  .agent-strip__info p {
-    font-family: 'DM Sans', sans-serif; font-size: .85rem; opacity: .75; margin-bottom: .5rem;
-  }
-  .agent-strip .badge {
-    display: inline-block; padding: .2rem .6rem;
-    background: rgba(255,255,255,.15); border-radius: 3px;
-    font-family: 'DM Sans', sans-serif; font-size: .72rem; margin-right: .4rem;
-  }
+  .agent-strip__info h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: .3rem; }
+  .agent-strip__info p { font-family: 'DM Sans', sans-serif; font-size: .85rem; opacity: .75; margin-bottom: .5rem; }
+  .agent-strip .badge { display: inline-block; padding: .2rem .6rem; background: rgba(255,255,255,.15); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: .72rem; margin-right: .4rem; }
 
-  /* CTA section */
-  .camp-cta {
-    padding: 5rem 2rem; text-align: center;
-  }
+  /* ═══ CTA section ════════════════════════════════════════════════════ */
+  .camp-cta { padding: 5rem 2rem; text-align: center; }
   .camp-cta .inner { max-width: 680px; margin: 0 auto; }
 
-  /* Contact form */
+  /* ═══ Contact / Lead form ════════════════════════════════════════════ */
   #contact { padding: 5rem 2rem; background: var(--ivory); }
-  #contact .inner {
-    max-width: 720px; margin: 0 auto;
-  }
+  #contact .inner { max-width: 720px; margin: 0 auto; }
   #contact form label {
-    display: block; font-family: 'DM Sans', sans-serif;
-    font-size: .8rem; font-weight: 600; color: var(--navy);
-    margin-bottom: .35rem; margin-top: .85rem;
+    display: block; font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600;
+    color: var(--navy); margin-bottom: .35rem; margin-top: .85rem;
     text-transform: uppercase; letter-spacing: .06em;
   }
-  #contact form input,
-  #contact form select,
-  #contact form textarea {
-    width: 100%; padding: .7rem .95rem;
-    border: 1px solid var(--border); border-radius: 5px;
+  #contact form input, #contact form select, #contact form textarea {
+    width: 100%; padding: .7rem .95rem; border: 1px solid var(--border); border-radius: 5px;
     font-family: 'DM Sans', sans-serif; font-size: .9rem; color: var(--charcoal);
     box-sizing: border-box; background: #fff;
   }
@@ -271,21 +253,31 @@
   }
   #contact form button[type="submit"]:hover { opacity: .85; }
 
+  /* ═══ Disclaimer ═════════════════════════════════════════════════════ */
+  .disclaimer-bar {
+    background: #f9fafb; border-top: 1px solid var(--border); padding: 1.25rem 2rem;
+    font-family: 'DM Sans', sans-serif; font-size: .75rem; color: #9ca3af; line-height: 1.6;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  /* ═══ Responsive ═════════════════════════════════════════════════════ */
   @media (max-width: 900px) {
     .camp-hero__inner { grid-template-columns: 1fr; }
     .hero-enquiry-card { display: none; }
     .about-section .inner { grid-template-columns: 1fr; gap: 2rem; }
+    .location-section .inner { grid-template-columns: 1fr; }
     .agent-strip .inner { flex-direction: column; text-align: center; }
   }
   @media (max-width: 600px) {
-    .dev-stat-strip { grid-template-columns: 1fr 1fr; }
+    .key-stats-strip .inner { gap: 1rem; }
+    .key-stat { min-width: 90px; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- ── Offer Banner ──────────────────────────────────────────────────── -->
+{# ── Offer Banner ─────────────────────────────────────────────────── #}
 {% if campaign.offer_label %}
 <div class="offer-banner">
   🎁 &nbsp;<strong>{{ campaign.offer_label }}</strong>
@@ -296,23 +288,19 @@
 </div>
 {% endif %}
 
-<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+{# ── Hero ─────────────────────────────────────────────────────────── #}
 <section class="camp-hero">
   {% if campaign.hero_bg %}
     <img class="camp-hero__bg" src="{{ campaign.hero_bg.url }}" alt="">
   {% endif %}
   <div class="camp-hero__inner">
-    <!-- Left – copy -->
     <div>
       <p class="camp-hero__eyebrow">{{ campaign.developer_name }} × HOMEXO</p>
       <h1 class="camp-hero__h1">
         {{ campaign.hero_heading_parts.0 }}{% if campaign.hero_heading_parts.1 %}<br><em>{{ campaign.hero_heading_parts.1 }}</em>{% endif %}
       </h1>
-      {% if campaign.hero_sub %}
-        <p class="camp-hero__sub">{{ campaign.hero_sub }}</p>
-      {% endif %}
+      {% if campaign.hero_sub %}<p class="camp-hero__sub">{{ campaign.hero_sub }}</p>{% endif %}
       <a href="#contact" class="camp-hero__cta">{{ campaign.nav_cta_text }}</a>
-
       {% if campaign.offer_expiry %}
       <div class="countdown-bar">
         <div class="countdown-unit"><div class="countdown-num" id="cd-days">--</div><div class="countdown-lbl">Days</div></div>
@@ -322,8 +310,6 @@
       </div>
       {% endif %}
     </div>
-
-    <!-- Right – quick enquiry card -->
     <div class="hero-enquiry-card">
       <h3>Book a Site Visit</h3>
       <form method="post" action="{% url 'enquiries:create' %}">
@@ -340,11 +326,149 @@
   </div>
 </section>
 
-<!-- ── Highlights ────────────────────────────────────────────────────── -->
+{# ── Key Stats Strip ─────────────────────────────────────────────── #}
+{% if campaign.has_stats %}
+<div class="key-stats-strip">
+  <div class="inner">
+    {% if campaign.stat_land_parcel %}
+    <div class="key-stat"><div class="label">Development</div><div class="value">{{ campaign.stat_land_parcel }}</div></div>
+    {% endif %}
+    {% if campaign.stat_floors %}
+    <div class="key-stat"><div class="label">Floors</div><div class="value">{{ campaign.stat_floors }}</div></div>
+    {% endif %}
+    {% if campaign.stat_configs %}
+    <div class="key-stat"><div class="label">Homes</div><div class="value">{{ campaign.stat_configs }}</div></div>
+    {% endif %}
+    {% if campaign.stat_possession %}
+    <div class="key-stat"><div class="label">Possession</div><div class="value">{{ campaign.stat_possession }}</div></div>
+    {% endif %}
+    {% if campaign.stat_price_start %}
+    <div class="key-stat"><div class="label">Starting Price</div><div class="value">{{ campaign.stat_price_start }}</div></div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{# ── About ────────────────────────────────────────────────────────── #}
+{% if campaign.about_heading or campaign.about_body %}
+<section class="about-section" id="about">
+  <div class="inner">
+    <div>
+      <p class="section-eyebrow">About the Project</p>
+      <div class="accent-bar"></div>
+      {% if campaign.about_heading %}<h2 class="section-heading">{{ campaign.about_heading }}</h2>{% endif %}
+      {% if campaign.about_body %}<div class="section-body">{{ campaign.about_body|linebreaks }}</div>{% endif %}
+    </div>
+    <div>
+      {% if campaign.about_image %}
+        <img class="about-img" src="{{ campaign.about_image.url }}" alt="{{ campaign.about_heading }}">
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── Master Plan ──────────────────────────────────────────────────── #}
+{% if campaign.masterplan_image %}
+<section class="masterplan-section" id="masterplan">
+  <div class="inner">
+    <p class="section-eyebrow">Master Plan</p>
+    <h2 class="section-heading">{{ campaign.masterplan_heading }}</h2>
+    {% if campaign.masterplan_body %}<p class="section-body" style="max-width:700px;margin:0 auto 1rem;">{{ campaign.masterplan_body }}</p>{% endif %}
+    <img src="{{ campaign.masterplan_image.url }}" alt="{{ campaign.masterplan_heading }}">
+  </div>
+</section>
+{% endif %}
+
+{# ── Floor Plans & Pricing ────────────────────────────────────────── #}
+{% if campaign.floor_plans.all %}
+<section class="floorplans-section" id="floorplans">
+  <div class="inner">
+    <p class="section-eyebrow">Floor Plans & Pricing</p>
+    <h2 class="section-heading">Configurations & Price Bands</h2>
+    <div class="fp-grid">
+      {% for fp in campaign.floor_plans.all %}
+      <div class="fp-card">
+        {% if fp.image %}
+        <div class="fp-card__img"><img src="{{ fp.image.url }}" alt="{{ fp.config }}"></div>
+        {% endif %}
+        <div class="fp-card__body">
+          <div class="fp-card__config">{{ fp.config }}</div>
+          {% if fp.sba_range %}<div class="fp-card__sba">Tentative SBA: {{ fp.sba_range }}</div>{% endif %}
+          {% if fp.price_range %}<div class="fp-card__price">{{ fp.price_range }}</div>{% endif %}
+          {% if fp.plan_pdf %}
+            <a class="fp-card__dl" href="{{ fp.plan_pdf.url }}" target="_blank" rel="noopener">Download Plan</a>
+          {% else %}
+            <a class="fp-card__dl" href="#contact">Get Cost Sheet</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── Amenities ────────────────────────────────────────────────────── #}
+{% if campaign.amenities.all %}
+<section class="amenities-section" id="amenities">
+  <div class="inner">
+    <p class="section-eyebrow">Premium Amenities</p>
+    <h2 class="section-heading">A Lifestyle That Feels Resort-Level</h2>
+    <div class="amen-grid">
+      {% for a in campaign.amenities.all %}
+      <div class="amen-card">
+        <span class="icon">{{ a.icon }}</span>
+        <h4>{{ a.name }}</h4>
+        {% if a.description %}<p>{{ a.description }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── Gallery ──────────────────────────────────────────────────────── #}
+{% if campaign.gallery_images.all %}
+<section class="gallery-section" id="gallery">
+  <div class="inner">
+    <p class="section-eyebrow">Gallery</p>
+    <h2 class="section-heading">Project Gallery</h2>
+    <div class="gallery-grid">
+      {% for gi in campaign.gallery_images.all %}
+        <img src="{{ gi.image.url }}" alt="{{ gi.caption|default:campaign.title }}" loading="lazy">
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── Location & Connectivity ─────────────────────────────────────── #}
+{% if campaign.location_heading or campaign.location_body or campaign.location_map_image or campaign.location_map_embed %}
+<section class="location-section" id="location">
+  <div class="inner">
+    <div>
+      <p class="section-eyebrow">Connectivity & Location</p>
+      <div class="accent-bar"></div>
+      {% if campaign.location_heading %}<h2 class="section-heading">{{ campaign.location_heading }}</h2>{% endif %}
+      {% if campaign.location_body %}<div class="section-body">{{ campaign.location_body|linebreaks }}</div>{% endif %}
+    </div>
+    <div class="map-frame">
+      {% if campaign.location_map_embed %}
+        {{ campaign.location_map_embed|safe }}
+      {% elif campaign.location_map_image %}
+        <img src="{{ campaign.location_map_image.url }}" alt="Location Map">
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── Highlights ───────────────────────────────────────────────────── #}
 {% if campaign.highlights.all %}
 <section class="highlights-section" id="highlights">
   <div class="inner">
-    <p class="section-eyebrow">Why This Campaign</p>
+    <p class="section-eyebrow">Why This Project</p>
     <h2 class="section-heading">What Makes This Offer Special</h2>
     <div class="highlights-grid">
       {% for h in campaign.highlights.all %}
@@ -359,7 +483,7 @@
 </section>
 {% endif %}
 
-<!-- ── Properties Grid ───────────────────────────────────────────────── -->
+{# ── Properties Grid ─────────────────────────────────────────────── #}
 {% if properties %}
 <section class="properties-section" id="properties">
   <div class="inner">
@@ -370,18 +494,14 @@
       <article class="prop-card">
         <div class="prop-card__img">
           {% with prop.images.first as img %}
-            {% if img %}
-              <img src="{{ img.image.url }}" alt="{{ prop.title }}">
-            {% endif %}
+            {% if img %}<img src="{{ img.image.url }}" alt="{{ prop.title }}">{% endif %}
           {% endwith %}
           <span class="prop-card__badge">{{ prop.get_listing_type_display }}</span>
         </div>
         <div class="prop-card__body">
           <a href="{% url 'properties:detail' prop.slug %}" class="prop-card__title">{{ prop.title }}</a>
           <p class="prop-card__meta">📍 {{ prop.city }}{% if prop.bhk %} · {{ prop.get_bhk_display }}{% endif %}</p>
-          <div class="prop-card__price">
-            {% if prop.price %}₹ {{ prop.price|floatformat:0 }}{% endif %}
-          </div>
+          <div class="prop-card__price">{% if prop.price %}₹ {{ prop.price|floatformat:0 }}{% endif %}</div>
         </div>
       </article>
       {% endfor %}
@@ -390,33 +510,7 @@
 </section>
 {% endif %}
 
-<!-- ── About ─────────────────────────────────────────────────────────── -->
-{% if campaign.about_heading or campaign.about_body %}
-<section class="about-section" id="about">
-  <div class="inner">
-    <div>
-      <p class="section-eyebrow">About the Developer</p>
-      <div class="accent-bar"></div>
-      {% if campaign.about_heading %}
-        <h2 class="section-heading">{{ campaign.about_heading }}</h2>
-      {% endif %}
-      {% if campaign.about_body %}
-        <div class="section-body">{{ campaign.about_body|linebreaks }}</div>
-      {% endif %}
-    </div>
-    <!-- Developer stat strip -->
-    <div>
-      <div class="dev-stat-strip">
-        <div class="dev-stat"><div class="num">{{ campaign.properties.count }}+</div><div class="lbl">Listed Units</div></div>
-        <div class="dev-stat"><div class="num">10+</div><div class="lbl">Years Experience</div></div>
-        <div class="dev-stat"><div class="num">RERA</div><div class="lbl">Approved</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-{% endif %}
-
-<!-- ── Assigned Agent ─────────────────────────────────────────────────── -->
+{# ── Assigned Agent ───────────────────────────────────────────────── #}
 {% if campaign.assigned_agent %}
 {% with agent=campaign.assigned_agent %}
 <section class="agent-strip">
@@ -439,7 +533,7 @@
 {% endwith %}
 {% endif %}
 
-<!-- ── CTA ────────────────────────────────────────────────────────────── -->
+{# ── CTA ──────────────────────────────────────────────────────────── #}
 {% if campaign.cta_heading %}
 <section class="camp-cta">
   <div class="inner">
@@ -451,7 +545,7 @@
 </section>
 {% endif %}
 
-<!-- ── Contact / Enquiry ──────────────────────────────────────────────── -->
+{# ── Contact / Lead Capture ───────────────────────────────────────── #}
 <section id="contact">
   <div class="inner">
     <p class="section-eyebrow">Get in Touch</p>
@@ -473,6 +567,11 @@
   </div>
 </section>
 
+{# ── Disclaimer ───────────────────────────────────────────────────── #}
+{% if campaign.disclaimer %}
+<div class="disclaimer-bar">{{ campaign.disclaimer }}</div>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
@@ -484,8 +583,7 @@
     const diff = expiry - Date.now();
     if(diff <= 0){
       ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id=>{
-        const el = document.getElementById(id);
-        if(el) el.textContent = '00';
+        const el = document.getElementById(id); if(el) el.textContent = '00';
       });
       const bar = document.getElementById('countdown');
       if(bar) bar.textContent = 'Offer Ended';

@@ -4,7 +4,10 @@ campaigns/admin.py
 
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Campaign, CampaignHighlight
+from .models import (
+    Campaign, CampaignHighlight, CampaignFloorPlan,
+    CampaignAmenity, CampaignGalleryImage,
+)
 
 
 class CampaignHighlightInline(admin.TabularInline):
@@ -13,13 +16,36 @@ class CampaignHighlightInline(admin.TabularInline):
     fields  = ('order', 'icon', 'heading', 'body')
 
 
+class CampaignFloorPlanInline(admin.TabularInline):
+    model   = CampaignFloorPlan
+    extra   = 2
+    fields  = ('order', 'config', 'sba_range', 'price_range', 'image', 'plan_pdf')
+
+
+class CampaignAmenityInline(admin.TabularInline):
+    model   = CampaignAmenity
+    extra   = 3
+    fields  = ('order', 'icon', 'name', 'description')
+
+
+class CampaignGalleryImageInline(admin.TabularInline):
+    model   = CampaignGalleryImage
+    extra   = 3
+    fields  = ('order', 'image', 'caption')
+
+
 @admin.register(Campaign)
 class CampaignAdmin(admin.ModelAdmin):
     list_display  = ('title', 'developer_name', 'color_swatch', 'nav_style', 'footer_style', 'is_active', 'created_at')
     list_filter   = ('is_active', 'nav_style', 'footer_style')
     search_fields = ('title', 'developer_name')
     prepopulated_fields = {'slug': ('title',)}
-    inlines       = [CampaignHighlightInline]
+    inlines       = [
+        CampaignHighlightInline,
+        CampaignFloorPlanInline,
+        CampaignAmenityInline,
+        CampaignGalleryImageInline,
+    ]
 
     fieldsets = (
         ('Identity', {
@@ -31,16 +57,32 @@ class CampaignAdmin(admin.ModelAdmin):
         ('Hero', {
             'fields': ('hero_heading', 'hero_sub', 'hero_bg'),
         }),
+        ('Key Stats (Hero Strip)', {
+            'fields': ('stat_land_parcel', 'stat_floors', 'stat_configs', 'stat_possession', 'stat_price_start'),
+            'classes': ('collapse',),
+        }),
         ('Offer Banner', {
             'fields': ('offer_label', 'offer_expiry'),
             'classes': ('collapse',),
         }),
         ('About Section', {
-            'fields': ('about_heading', 'about_body'),
+            'fields': ('about_heading', 'about_body', 'about_image'),
+            'classes': ('collapse',),
+        }),
+        ('Master Plan', {
+            'fields': ('masterplan_heading', 'masterplan_body', 'masterplan_image'),
+            'classes': ('collapse',),
+        }),
+        ('Location & Connectivity', {
+            'fields': ('location_heading', 'location_body', 'location_map_image', 'location_map_embed'),
             'classes': ('collapse',),
         }),
         ('CTA Block', {
             'fields': ('cta_heading', 'cta_sub', 'cta_button_text'),
+            'classes': ('collapse',),
+        }),
+        ('Disclaimer', {
+            'fields': ('disclaimer',),
             'classes': ('collapse',),
         }),
         ('Relations', {
@@ -49,8 +91,8 @@ class CampaignAdmin(admin.ModelAdmin):
         ('Footer', {
             'fields': (
                 'footer_style', 'footer_tagline', 'footer_address',
-                'footer_email', 'footer_facebook', 'footer_instagram',
-                'footer_youtube', 'footer_copyright',
+                'footer_email', 'footer_phone', 'footer_facebook',
+                'footer_instagram', 'footer_youtube', 'footer_copyright',
             ),
             'classes': ('collapse',),
         }),

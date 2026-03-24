@@ -1,6 +1,9 @@
 """
 campaigns/models.py
 Developer campaign landing pages — fully customisable nav & footer per record.
+Supports: hero, key stats, master plan, floor plans, amenities, gallery,
+location / connectivity, highlights, about, CTA, lead-capture and branded
+nav / footer — inspired by raintree-park.com style project pages.
 """
 
 from django.db import models
@@ -55,6 +58,13 @@ class Campaign(models.Model):
         help_text='Optional hero background image (falls back to gradient)'
     )
 
+    # ── Key Stats (hero strip) ────────────────────────────────────────────
+    stat_land_parcel = models.CharField(max_length=80, blank=True, help_text='e.g. 21 Acres')
+    stat_floors      = models.CharField(max_length=80, blank=True, help_text='e.g. 3B + G + 19')
+    stat_configs     = models.CharField(max_length=120, blank=True, help_text='e.g. 1, 2, 3 & 4 BHK')
+    stat_possession  = models.CharField(max_length=80, blank=True, help_text='e.g. Dec 2029+')
+    stat_price_start = models.CharField(max_length=80, blank=True, help_text='e.g. ₹1.1 Crore Onwards*')
+
     # ── Offer banner ─────────────────────────────────────────────────────
     offer_label     = models.CharField(max_length=120, blank=True)
     offer_expiry    = models.DateTimeField(
@@ -65,11 +75,44 @@ class Campaign(models.Model):
     # ── About section ─────────────────────────────────────────────────────
     about_heading   = models.CharField(max_length=200, blank=True)
     about_body      = models.TextField(blank=True)
+    about_image     = models.ImageField(
+        upload_to='campaigns/about/', blank=True, null=True,
+        help_text='Image shown beside the about text'
+    )
+
+    # ── Master Plan ──────────────────────────────────────────────────────
+    masterplan_heading = models.CharField(max_length=200, blank=True, default='Overall Master Plan')
+    masterplan_body    = models.TextField(blank=True)
+    masterplan_image   = models.ImageField(
+        upload_to='campaigns/masterplans/', blank=True, null=True,
+        help_text='Master plan / layout image'
+    )
+
+    # ── Location & Connectivity ───────────────────────────────────────────
+    location_heading  = models.CharField(max_length=200, blank=True)
+    location_body     = models.TextField(
+        blank=True,
+        help_text='Rich description of connectivity (roads, metro, airport, etc.)'
+    )
+    location_map_image = models.ImageField(
+        upload_to='campaigns/maps/', blank=True, null=True,
+        help_text='Location / connectivity map image'
+    )
+    location_map_embed = models.TextField(
+        blank=True,
+        help_text='Google Maps embed iframe HTML (optional, used instead of image if provided)'
+    )
 
     # ── CTA block ─────────────────────────────────────────────────────────
     cta_heading     = models.CharField(max_length=200, blank=True)
     cta_sub         = models.CharField(max_length=300, blank=True)
     cta_button_text = models.CharField(max_length=80, blank=True, default='Book a Free Consultation')
+
+    # ── Disclaimer ────────────────────────────────────────────────────────
+    disclaimer = models.TextField(
+        blank=True,
+        help_text='Legal disclaimer shown at the bottom of the page'
+    )
 
     # ── Relations ─────────────────────────────────────────────────────────
     assigned_agent  = models.ForeignKey(
@@ -87,6 +130,7 @@ class Campaign(models.Model):
     footer_tagline   = models.CharField(max_length=300, blank=True)
     footer_address   = models.TextField(blank=True)
     footer_email     = models.EmailField(blank=True)
+    footer_phone     = models.CharField(max_length=20, blank=True)
     footer_facebook  = models.URLField(blank=True)
     footer_instagram = models.URLField(blank=True)
     footer_youtube   = models.URLField(blank=True)
@@ -121,6 +165,11 @@ class Campaign(models.Model):
         year = timezone.now().year
         return f'\u00a9 {year} {self.developer_name}. Powered by HOMEXO.'
 
+    @property
+    def has_stats(self):
+        return any([self.stat_land_parcel, self.stat_floors, self.stat_configs,
+                     self.stat_possession, self.stat_price_start])
+
 
 class CampaignHighlight(models.Model):
     campaign = models.ForeignKey(
@@ -139,3 +188,62 @@ class CampaignHighlight(models.Model):
 
     def __str__(self):
         return f'{self.campaign} / {self.heading}'
+
+
+class CampaignFloorPlan(models.Model):
+    campaign   = models.ForeignKey(
+        Campaign, on_delete=models.CASCADE, related_name='floor_plans'
+    )
+    config     = models.CharField(max_length=80, help_text='e.g. 2 BHK (L)')
+    sba_range  = models.CharField(max_length=120, blank=True, help_text='e.g. 1250 – 1300 sft')
+    price_range = models.CharField(max_length=120, blank=True, help_text='e.g. ₹1.90 – 2.10 Cr*')
+    image      = models.ImageField(
+        upload_to='campaigns/floor_plans/', blank=True, null=True,
+        help_text='Floor plan image or interior shot'
+    )
+    plan_pdf   = models.FileField(
+        upload_to='campaigns/floor_plans/pdfs/', blank=True, null=True,
+        help_text='Downloadable floor plan PDF'
+    )
+    order      = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f'{self.campaign} / {self.config}'
+
+
+class CampaignAmenity(models.Model):
+    campaign    = models.ForeignKey(
+        Campaign, on_delete=models.CASCADE, related_name='amenities'
+    )
+    icon        = models.CharField(
+        max_length=20, default='✦',
+        help_text='Emoji or short label (GYM, POOL, etc.)'
+    )
+    name        = models.CharField(max_length=120)
+    description = models.CharField(max_length=300, blank=True)
+    order       = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name_plural = 'Campaign amenities'
+
+    def __str__(self):
+        return f'{self.campaign} / {self.name}'
+
+
+class CampaignGalleryImage(models.Model):
+    campaign = models.ForeignKey(
+        Campaign, on_delete=models.CASCADE, related_name='gallery_images'
+    )
+    image    = models.ImageField(upload_to='campaigns/gallery/')
+    caption  = models.CharField(max_length=200, blank=True)
+    order    = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f'{self.campaign} / {self.caption or "Image"}'
