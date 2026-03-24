@@ -322,6 +322,9 @@
       linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)),
       rgba(8,28,48,.9);
   }
+  .field-group select.placeholder-shown {
+    color:rgba(255,255,255,.35);
+  }
   .field-group select option {
     background:#0A1E33;
     color:var(--white);
@@ -736,7 +739,7 @@
           </div>
           <div class="field-inner select-field">
             <label>Property Type</label>
-            <select name="property_type">
+            <select name="property_type" class="placeholder-shown" onchange="this.classList.toggle('placeholder-shown',!this.value)">
               <option value="">All Types</option>
               {% for val, label in property_types %}
               <option value="{{ val }}">{{ label }}</option>
@@ -751,7 +754,7 @@
           </div>
           <div class="field-inner select-field">
             <label>BHK</label>
-            <select name="bhk">
+            <select name="bhk" class="placeholder-shown" onchange="this.classList.toggle('placeholder-shown',!this.value)">
               <option value="">Any BHK</option>
               {% for val, label in bhk_choices %}
               <option value="{{ val }}">{{ label }}</option>
@@ -766,7 +769,7 @@
           </div>
           <div class="field-inner select-field">
             <label>Budget</label>
-            <select name="price">
+            <select name="price" class="placeholder-shown" onchange="this.classList.toggle('placeholder-shown',!this.value)">
               <option value="">Any Price</option>
               <option value="under50l">Under ₹50L</option>
               <option value="50l-1cr">₹50L – ₹1Cr</option>
