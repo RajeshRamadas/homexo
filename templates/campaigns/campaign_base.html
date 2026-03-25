@@ -400,20 +400,23 @@
       .camp-footer--branded .footer-inner {
         grid-template-columns: 1fr 1fr;
       }
-
       .camp-nav .nav-links {
         display: none;
       }
+      .camp-nav--branded .nav-links { display: none; }
+      .camp-nav .dev-name-label { display: none; }
+      .camp-nav .nav-cta { padding: .4rem .85rem; font-size: .75rem; }
     }
 
     @media (max-width: 480px) {
       .camp-footer--branded .footer-inner {
         grid-template-columns: 1fr;
       }
-
       .camp-nav {
         padding: 0 1rem;
       }
+      .camp-nav--branded { height: 60px; }
+      .camp-nav .homexo-wordmark { font-size: 1.15rem; }
     }
   </style>
 

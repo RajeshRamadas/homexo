@@ -399,12 +399,27 @@
     .location-section .inner { padding: 4rem 2rem; }
     .location-card { max-width: 100%; background: transparent; border: none; padding: 0; box-shadow: none; backdrop-filter: none; }
     .agent-strip .inner { flex-direction: column; text-align: center; }
+    .fp-grid, .amen-grid, .highlights-grid, .prop-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  }
+  @media (max-width: 768px) {
+    .camp-hero { padding: 5rem 1.5rem 3rem; min-height: 70vh; }
+    .camp-hero__h1 { font-size: clamp(2rem, 5vw, 2.5rem); }
+    .about-section, .masterplan-section, .floorplans-section, .amenities-section, .gallery-section, .properties-section, .camp-cta { padding: 3.5rem 1.5rem; }
+    .highlights-section { padding: 3rem 1.5rem; }
+    .section-heading { font-size: 2rem; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 600px) {
-    .key-stats-strip .inner { gap: 1rem; }
-    .key-stat { min-width: 90px; }
+    .key-stats-strip .inner { gap: 1rem; justify-content: space-around; }
+    .key-stat { min-width: 45%; margin-bottom: 0.5rem; }
     .sticky-bottom-bar { gap: 0; }
-    .sticky-bottom-bar a, .sticky-bottom-bar button { font-size: .7rem; padding: .7rem .3rem; }
+    .sticky-bottom-bar a, .sticky-bottom-bar button { font-size: .65rem; padding: .65rem .2rem; flex-direction: column; justify-content: center; gap: .2rem; }
+    .sticky-bottom-bar .icon { font-size: 1.1rem; margin-bottom: 2px;}
+    .lead-popup { padding: 0; max-height: 90vh; overflow-y: auto; width: 95vw; }
+    .fp-grid, .amen-grid, .highlights-grid, .prop-grid { grid-template-columns: 1fr; }
+    .about-section, .masterplan-section, .floorplans-section, .amenities-section, .gallery-section, .properties-section, .camp-cta { padding: 3rem 1rem; }
+    .highlights-section { padding: 2.5rem 1rem; }
+    .camp-hero { padding: 4rem 1rem 2.5rem; }
   }
 
   /* Push page content above sticky bar */
