@@ -301,6 +301,153 @@
   {% block content %}{% endblock %}
 </main>
 
+{% if user.is_authenticated and not user.profile_complete %}
+<!-- ── Profile-Completion Modal ── -->
+<div class="pc-overlay" id="pcOverlay">
+  <div class="pc-modal">
+    <div class="pc-header">
+      <h2 class="pc-title">Complete Your Profile</h2>
+      <p class="pc-subtitle">Help us personalise your experience</p>
+    </div>
+    <form id="pcForm" method="POST" action="{% url 'accounts:profile_complete' %}">
+      {% csrf_token %}
+      <div class="pc-body">
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_first_name">First Name</label>
+            <input type="text" id="pc_first_name" name="first_name"
+                   value="{{ user.first_name }}" placeholder="First Name" required>
+          </div>
+          <div class="form-group">
+            <label for="pc_last_name">Last Name</label>
+            <input type="text" id="pc_last_name" name="last_name"
+                   value="{{ user.last_name }}" placeholder="Last Name" required>
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_phone">Phone</label>
+            <input type="tel" id="pc_phone" name="phone"
+                   value="{{ user.phone|default_if_none:'' }}" placeholder="+91 98765 43210">
+          </div>
+          <div class="form-group">
+            <label for="pc_city">Preferred City</label>
+            <input type="text" id="pc_city" name="preferred_city"
+                   value="{{ user.preferred_city }}" placeholder="e.g. Bangalore">
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_listing">Looking To</label>
+            <select id="pc_listing" name="preferred_listing_type">
+              <option value="">Select&hellip;</option>
+              <option value="buy"{% if user.preferred_listing_type == 'buy' %} selected{% endif %}>Buy</option>
+              <option value="rent"{% if user.preferred_listing_type == 'rent' %} selected{% endif %}>Rent</option>
+              <option value="new_project"{% if user.preferred_listing_type == 'new_project' %} selected{% endif %}>New Project</option>
+              <option value="commercial"{% if user.preferred_listing_type == 'commercial' %} selected{% endif %}>Commercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pc_ptype">Property Type</label>
+            <select id="pc_ptype" name="preferred_property_type">
+              <option value="">Select&hellip;</option>
+              <option value="apartment"{% if user.preferred_property_type == 'apartment' %} selected{% endif %}>Apartment</option>
+              <option value="villa"{% if user.preferred_property_type == 'villa' %} selected{% endif %}>Villa</option>
+              <option value="penthouse"{% if user.preferred_property_type == 'penthouse' %} selected{% endif %}>Penthouse</option>
+              <option value="plot"{% if user.preferred_property_type == 'plot' %} selected{% endif %}>Plot / Land</option>
+              <option value="office"{% if user.preferred_property_type == 'office' %} selected{% endif %}>Office Space</option>
+              <option value="shop"{% if user.preferred_property_type == 'shop' %} selected{% endif %}>Shop / Retail</option>
+              <option value="warehouse"{% if user.preferred_property_type == 'warehouse' %} selected{% endif %}>Warehouse</option>
+            </select>
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_bhk">BHK Preference</label>
+            <select id="pc_bhk" name="preferred_bhk">
+              <option value="">Select&hellip;</option>
+              <option value="studio"{% if user.preferred_bhk == 'studio' %} selected{% endif %}>Studio</option>
+              <option value="1bhk"{% if user.preferred_bhk == '1bhk' %} selected{% endif %}>1 BHK</option>
+              <option value="2bhk"{% if user.preferred_bhk == '2bhk' %} selected{% endif %}>2 BHK</option>
+              <option value="3bhk"{% if user.preferred_bhk == '3bhk' %} selected{% endif %}>3 BHK</option>
+              <option value="4bhk"{% if user.preferred_bhk == '4bhk' %} selected{% endif %}>4 BHK</option>
+              <option value="5bhk"{% if user.preferred_bhk == '5bhk' %} selected{% endif %}>5 BHK</option>
+              <option value="6+bhk"{% if user.preferred_bhk == '6+bhk' %} selected{% endif %}>6+ BHK</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+          </div>
+        </div>
+        <div id="pcErrors" style="display:none;margin-bottom:12px;color:#e53935;font-size:13px;"></div>
+      </div>
+      <div class="pc-footer">
+        <button type="button" class="btn-outline pc-skip" id="pcSkip">Skip for Now</button>
+        <button type="submit" class="btn-primary pc-save">Save &amp; Continue</button>
+      </div>
+    </form>
+  </div>
+</div>
+<style>
+  .pc-overlay{position:fixed;inset:0;z-index:9999;background:rgba(13,27,42,.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;animation:pcFadeIn .3s ease;}
+  @keyframes pcFadeIn{from{opacity:0}to{opacity:1}}
+  .pc-modal{background:var(--white);width:94%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(13,43,78,.22);animation:pcSlideUp .35s ease;}
+  @keyframes pcSlideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .pc-header{padding:32px 32px 0;text-align:center;}
+  .pc-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--navy);margin-bottom:6px;}
+  .pc-subtitle{font-size:13px;color:var(--warm-grey);letter-spacing:.5px;}
+  .pc-body{padding:24px 32px 0;}
+  .pc-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:4px;}
+  .pc-footer{display:flex;justify-content:flex-end;gap:12px;padding:20px 32px 28px;}
+  .pc-skip{padding:12px 28px;font-size:12px;}
+  .pc-save{padding:12px 32px;font-size:12px;}
+  @media(max-width:560px){.pc-row{grid-template-columns:1fr;gap:8px;}.pc-modal{max-width:100%;margin:0 8px;}.pc-header,.pc-body,.pc-footer{padding-left:20px;padding-right:20px;}}
+</style>
+<script>
+(function(){
+  var overlay = document.getElementById('pcOverlay');
+  var form    = document.getElementById('pcForm');
+  var errBox  = document.getElementById('pcErrors');
+  var skipBtn = document.getElementById('pcSkip');
+
+  function close(){
+    overlay.style.opacity='0';
+    setTimeout(function(){ overlay.remove(); }, 250);
+  }
+
+  /* Skip — mark complete without saving extra data */
+  skipBtn.addEventListener('click', function(){
+    var csrf = form.querySelector('[name=csrfmiddlewaretoken]').value;
+    var body = new FormData();
+    body.append('csrfmiddlewaretoken', csrf);
+    body.append('first_name', form.querySelector('[name=first_name]').value || '{{ user.first_name|escapejs }}');
+    body.append('last_name', form.querySelector('[name=last_name]').value || '{{ user.last_name|escapejs }}');
+    fetch(form.action, {method:'POST', body:body, headers:{'X-Requested-With':'XMLHttpRequest'}});
+    close();
+  });
+
+  /* Submit via AJAX */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errBox.style.display='none';
+    var data = new FormData(form);
+    fetch(form.action, {
+      method:'POST', body:data, headers:{'X-Requested-With':'XMLHttpRequest'}
+    })
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, data:j}; }); })
+    .then(function(res){
+      if(res.data.ok){ close(); return; }
+      var msgs=[];
+      for(var f in res.data.errors){
+        res.data.errors[f].forEach(function(e){ msgs.push(e.message); });
+      }
+      errBox.textContent = msgs.join(' ');
+      errBox.style.display='block';
+    });
+  });
+})();
+</script>
+{% endif %}
+
 <div class="floating-actions" aria-label="Quick Actions">
   <div class="fab-wrap">
     <div class="fab-label">EMI Calculator</div>

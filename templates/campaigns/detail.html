@@ -17,7 +17,7 @@
   .camp-hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .25; }
   .camp-hero__inner {
     position: relative; max-width: 1200px; margin: 0 auto; width: 100%;
-    display: grid; grid-template-columns: 1fr 420px; gap: 3rem; align-items: center;
+    display: grid; grid-template-columns: 1fr 380px; gap: 3rem; align-items: center;
   }
   .camp-hero__eyebrow {
     font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 600;
@@ -36,7 +36,7 @@
     display: inline-block; padding: .8rem 2rem;
     background: var(--accent); color: #fff; border-radius: 5px;
     font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
-    text-decoration: none; letter-spacing: .04em; transition: opacity .2s;
+    text-decoration: none; letter-spacing: .04em; transition: opacity .2s; cursor: pointer;
   }
   .camp-hero__cta:hover { opacity: .85; }
 
@@ -50,7 +50,7 @@
   .countdown-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; line-height: 1; }
   .countdown-lbl { font-family: 'DM Sans', sans-serif; font-size: .65rem; opacity: .6; text-transform: uppercase; letter-spacing: .1em; }
 
-  /* Enquiry card in hero */
+  /* Hero sidebar enquiry card */
   .hero-enquiry-card { background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 16px 48px rgba(0,0,0,.2); }
   .hero-enquiry-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; color: var(--navy); margin-bottom: 1.25rem; }
   .hero-enquiry-card input, .hero-enquiry-card select, .hero-enquiry-card textarea {
@@ -58,7 +58,7 @@
     border: 1px solid var(--border); border-radius: 5px;
     font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--charcoal); box-sizing: border-box;
   }
-  .hero-enquiry-card textarea { resize: vertical; min-height: 80px; }
+  .hero-enquiry-card textarea { resize: vertical; min-height: 70px; }
   .hero-enquiry-card button {
     width: 100%; padding: .75rem; background: var(--accent); color: #fff;
     border: none; border-radius: 5px; cursor: pointer;
@@ -83,9 +83,7 @@
     font-family: 'DM Sans', sans-serif; font-size: .65rem; font-weight: 600;
     letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: .35rem;
   }
-  .key-stat .value {
-    font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700;
-  }
+  .key-stat .value { font-family: 'DM Sans', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: -.01em; }
 
   /* ═══ Shared Section Styles ══════════════════════════════════════════ */
   .section-eyebrow {
@@ -137,7 +135,7 @@
     display: inline-block; padding: .45rem 1rem;
     background: var(--accent); color: #fff; border-radius: 4px;
     font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600;
-    text-decoration: none; transition: opacity .2s;
+    text-decoration: none; transition: opacity .2s; cursor: pointer;
   }
   .fp-card__dl:hover { opacity: .85; }
 
@@ -146,16 +144,25 @@
   .amenities-section .inner { max-width: 1200px; margin: 0 auto; }
   .amen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
   .amen-card {
-    background: #fff; border-radius: 10px; padding: 1.75rem;
-    border: 1px solid var(--border); transition: box-shadow .25s;
+    background: #fff; border-radius: 16px; overflow: hidden; position: relative;
+    border: 1px solid rgba(0,0,0,0.06); transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.03);
   }
-  .amen-card:hover { box-shadow: 0 6px 24px rgba(13,43,78,.1); }
-  .amen-card .icon { font-size: 1.5rem; margin-bottom: .6rem; display: block; }
+  .amen-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 4px;
+    background: var(--accent); transition: width .4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .amen-card:hover { transform: translateY(-8px); box-shadow: 0 20px 48px rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.1); }
+  .amen-card:hover::after { width: 100%; }
+  .amen-card__img { height: 210px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); overflow: hidden; }
+  .amen-card__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1); filter: brightness(0.95); }
+  .amen-card:hover .amen-card__img img { transform: scale(1.08); filter: brightness(1.05); }
+  .amen-card__body { padding: 2rem 1.75rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
   .amen-card h4 {
     font-family: 'Cormorant Garamond', serif; font-weight: 700;
-    font-size: 1.1rem; color: var(--navy); margin-bottom: .4rem;
+    font-size: 1.35rem; color: var(--navy); margin-bottom: .6rem; line-height: 1.25;
   }
-  .amen-card p { font-family: 'DM Sans', sans-serif; font-size: .83rem; color: #6b7280; line-height: 1.6; margin: 0; }
+  .amen-card p { font-family: 'DM Sans', sans-serif; font-size: .88rem; color: #6b7280; line-height: 1.6; margin: 0; }
 
   /* ═══ Gallery ════════════════════════════════════════════════════════ */
   .gallery-section { padding: 5rem 2rem; }
@@ -168,25 +175,37 @@
   .gallery-grid img:hover { transform: scale(1.03); box-shadow: 0 8px 32px rgba(0,0,0,.15); }
 
   /* ═══ Location ═══════════════════════════════════════════════════════ */
-  .location-section { padding: 5rem 2rem; background: var(--ivory); }
-  .location-section .inner {
-    max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+  .location-section { position: relative; padding: 0; color: #fff; height: 600px; background: var(--navy); }
+  .location-section .map-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+  .location-section .map-frame::after {
+    content: ''; position: absolute; inset: 0; width: 60%; height: 100%;
+    background: linear-gradient(to right, rgba(13,43,78,0.95) 0%, rgba(13,43,78,0) 100%);
+    pointer-events: none;
   }
-  .location-section .map-frame { width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
-  .location-section .map-frame img { width: 100%; display: block; }
-  .location-section .map-frame iframe { width: 100%; height: 400px; border: 0; }
+  .location-section .map-frame img, .location-section .map-frame iframe { width: 100%; height: 100%; object-fit: cover; border: none; }
+  .location-section .inner {
+    position: relative; z-index: 2; max-width: 1200px; margin: 0 auto;
+    height: 100%; display: flex; align-items: center; padding: 0 2rem;
+  }
+  .location-card {
+    background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    padding: 3rem; border-radius: 20px; max-width: 480px;
+  }
 
   /* ═══ Highlights ═════════════════════════════════════════════════════ */
   .highlights-section { padding: 4rem 2rem; background: var(--ivory); }
   .highlights-section .inner { max-width: 1200px; margin: 0 auto; }
   .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
   .highlight-card {
-    background: #fff; border-radius: 10px; padding: 1.75rem;
+    background: #fff; border-radius: 10px; overflow: hidden;
     border: 1px solid var(--border); transition: box-shadow .25s;
+    display: flex; flex-direction: column;
   }
   .highlight-card:hover { box-shadow: 0 6px 24px rgba(13,43,78,.1); }
-  .highlight-card .icon { font-size: 1.75rem; margin-bottom: .75rem; display: block; }
+  .highlight-card__img { height: 180px; background: #f3f4f6; }
+  .highlight-card__img img { width: 100%; height: 100%; object-fit: cover; }
+  .highlight-card__body { padding: 1.75rem; flex-grow: 1; }
   .highlight-card h4 {
     font-family: 'Cormorant Garamond', serif; font-weight: 700;
     font-size: 1.15rem; color: var(--navy); margin-bottom: .5rem;
@@ -231,28 +250,6 @@
   .camp-cta { padding: 5rem 2rem; text-align: center; }
   .camp-cta .inner { max-width: 680px; margin: 0 auto; }
 
-  /* ═══ Contact / Lead form ════════════════════════════════════════════ */
-  #contact { padding: 5rem 2rem; background: var(--ivory); }
-  #contact .inner { max-width: 720px; margin: 0 auto; }
-  #contact form label {
-    display: block; font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600;
-    color: var(--navy); margin-bottom: .35rem; margin-top: .85rem;
-    text-transform: uppercase; letter-spacing: .06em;
-  }
-  #contact form input, #contact form select, #contact form textarea {
-    width: 100%; padding: .7rem .95rem; border: 1px solid var(--border); border-radius: 5px;
-    font-family: 'DM Sans', sans-serif; font-size: .9rem; color: var(--charcoal);
-    box-sizing: border-box; background: #fff;
-  }
-  #contact form textarea { resize: vertical; min-height: 110px; }
-  #contact form button[type="submit"] {
-    margin-top: 1.25rem; width: 100%; padding: .85rem;
-    background: var(--accent); color: #fff; border: none; border-radius: 5px;
-    font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600;
-    cursor: pointer; transition: opacity .2s;
-  }
-  #contact form button[type="submit"]:hover { opacity: .85; }
-
   /* ═══ Disclaimer ═════════════════════════════════════════════════════ */
   .disclaimer-bar {
     background: #f9fafb; border-top: 1px solid var(--border); padding: 1.25rem 2rem;
@@ -260,18 +257,158 @@
     max-width: 1200px; margin: 0 auto;
   }
 
+  /* ═══ LEAD CAPTURE POPUP MODAL ══════════════════════════════════════ */
+  .lead-popup-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.65); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .lead-popup-overlay.active { display: flex; }
+  .lead-popup {
+    background: #fff; border-radius: 14px; width: 420px; max-width: 94vw;
+    box-shadow: 0 24px 80px rgba(0,0,0,.3); position: relative;
+    animation: popIn .3s ease;
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(.92) translateY(20px); } to { opacity: 1; transform: none; } }
+  .lead-popup__close {
+    position: absolute; top: 12px; right: 14px; background: none; border: none;
+    font-size: 1.4rem; cursor: pointer; color: rgba(255,255,255,.7); z-index: 1;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; transition: background .2s;
+  }
+  .lead-popup__close:hover { background: rgba(255,255,255,.15); }
+  .lead-popup__header {
+    background: var(--popup-bg, var(--navy)); color: #fff; padding: 1.5rem 2rem; border-radius: 14px 14px 0 0;
+    position: relative; overflow: hidden; background-size: cover; background-position: center;
+  }
+  .lead-popup__header--has-img::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(0,0,0,.45); z-index: 0;
+  }
+  .lead-popup__header > * { position: relative; z-index: 1; }
+  .lead-popup__header h3 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.35rem; margin: 0 0 .3rem;
+  }
+  .lead-popup__header p { font-family: 'DM Sans', sans-serif; font-size: .82rem; opacity: .7; margin: 0; }
+  .lead-popup__body { padding: 1.75rem 2rem 2rem; }
+  .lead-popup__body input {
+    width: 100%; padding: .7rem .9rem; margin-bottom: .65rem;
+    border: 1px solid #e5e7eb; border-radius: 6px; font-family: 'DM Sans', sans-serif;
+    font-size: .9rem; box-sizing: border-box; transition: border-color .2s;
+  }
+  .lead-popup__body input:focus { outline: none; border-color: var(--accent); }
+  .lead-popup__body .popup-submit {
+    width: 100%; padding: .8rem; margin-top: .5rem;
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600;
+    cursor: pointer; transition: opacity .2s; letter-spacing: .02em;
+  }
+  .lead-popup__body .popup-submit:hover { opacity: .85; }
+  .lead-popup__body .popup-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .lead-popup__success {
+    text-align: center; padding: 2rem 0;
+  }
+  .lead-popup__success .check {
+    width: 56px; height: 56px; border-radius: 50%; background: #10b981; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin: 0 auto 1rem;
+  }
+  .lead-popup__success h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead-popup__success p { font-family: 'DM Sans', sans-serif; font-size: .85rem; color: #6b7280; }
+
+  /* ═══ FLOATING SIDEBAR FORM (desktop) ═══════════════════════════════ */
+  .floating-sidebar {
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    z-index: 800; width: 300px;
+    background: #fff; border-radius: 12px; box-shadow: 0 12px 48px rgba(0,0,0,.18);
+    transition: opacity .3s, transform .3s;
+  }
+  .floating-sidebar.hidden { opacity: 0; pointer-events: none; transform: translateY(-50%) translateX(20px); }
+  .floating-sidebar__header {
+    background: var(--navy); color: #fff; padding: 1.1rem 1.25rem; border-radius: 12px 12px 0 0;
+    font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.1rem;
+  }
+  .floating-sidebar__body { padding: 1.25rem; }
+  .floating-sidebar__body input {
+    width: 100%; padding: .6rem .8rem; margin-bottom: .55rem;
+    border: 1px solid #e5e7eb; border-radius: 5px; font-family: 'DM Sans', sans-serif;
+    font-size: .85rem; box-sizing: border-box;
+  }
+  .floating-sidebar__body button {
+    width: 100%; padding: .65rem; background: var(--accent); color: #fff; border: none;
+    border-radius: 5px; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .floating-sidebar__body button:hover { opacity: .85; }
+
+  /* ═══ STICKY BOTTOM BAR ═════════════════════════════════════════════ */
+  .sticky-bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 850;
+    background: var(--charcoal); border-top: 2px solid var(--accent);
+    display: flex; justify-content: center; gap: 0;
+    box-shadow: 0 -4px 24px rgba(0,0,0,.25);
+  }
+  .sticky-bottom-bar a, .sticky-bottom-bar button {
+    flex: 1; max-width: 220px; display: flex; align-items: center; justify-content: center; gap: .45rem;
+    padding: .85rem .5rem; color: #fff; text-decoration: none; border: none; background: none;
+    font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600;
+    cursor: pointer; transition: background .2s; letter-spacing: .02em;
+    border-right: 1px solid rgba(255,255,255,.1);
+  }
+  .sticky-bottom-bar a:last-child, .sticky-bottom-bar button:last-child { border-right: none; }
+  .sticky-bottom-bar a:hover, .sticky-bottom-bar button:hover { background: rgba(255,255,255,.08); }
+  .sticky-bottom-bar .icon { font-size: 1rem; }
+
+  /* ═══ GALLERY LIGHTBOX ══════════════════════════════════════════════ */
+  .lightbox-overlay {
+    display: none; position: fixed; inset: 0; z-index: 10000;
+    background: rgba(0,0,0,.92); align-items: center; justify-content: center;
+    cursor: zoom-out;
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-overlay img {
+    max-width: 90vw; max-height: 90vh; object-fit: contain;
+    border-radius: 8px; box-shadow: 0 8px 40px rgba(0,0,0,.5);
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 24px; background: none; border: none;
+    color: #fff; font-size: 2rem; cursor: pointer; opacity: .7; transition: opacity .2s;
+  }
+  .lightbox-close:hover { opacity: 1; }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,.15); border: none; color: #fff;
+    font-size: 1.5rem; padding: .5rem .8rem; cursor: pointer; border-radius: 6px;
+    transition: background .2s;
+  }
+  .lightbox-nav:hover { background: rgba(255,255,255,.3); }
+  .lightbox-nav.prev { left: 20px; }
+  .lightbox-nav.next { right: 20px; }
+
   /* ═══ Responsive ═════════════════════════════════════════════════════ */
+  @media (max-width: 1100px) {
+    .floating-sidebar { display: none; }
+  }
   @media (max-width: 900px) {
     .camp-hero__inner { grid-template-columns: 1fr; }
     .hero-enquiry-card { display: none; }
     .about-section .inner { grid-template-columns: 1fr; gap: 2rem; }
-    .location-section .inner { grid-template-columns: 1fr; }
+    .location-section { height: auto; display: flex; flex-direction: column-reverse; }
+    .location-section .map-frame { position: relative; height: 400px; }
+    .location-section .map-frame::after { display: none; }
+    .location-section .inner { padding: 4rem 2rem; }
+    .location-card { max-width: 100%; background: transparent; border: none; padding: 0; box-shadow: none; backdrop-filter: none; }
     .agent-strip .inner { flex-direction: column; text-align: center; }
   }
   @media (max-width: 600px) {
     .key-stats-strip .inner { gap: 1rem; }
     .key-stat { min-width: 90px; }
+    .sticky-bottom-bar { gap: 0; }
+    .sticky-bottom-bar a, .sticky-bottom-bar button { font-size: .7rem; padding: .7rem .3rem; }
   }
+
+  /* Push page content above sticky bar */
+  .camp-footer { margin-bottom: 56px; }
 </style>
 {% endblock %}
 
@@ -295,12 +432,14 @@
   {% endif %}
   <div class="camp-hero__inner">
     <div>
-      <p class="camp-hero__eyebrow">{{ campaign.developer_name }} × HOMEXO</p>
+      <p class="camp-hero__eyebrow">
+        {% if campaign.developer_logo %}<img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:28px; vertical-align:middle; margin-right:.5rem; object-fit:contain;">{% endif %}{{ campaign.developer_name }} × HOMEXO
+      </p>
       <h1 class="camp-hero__h1">
         {{ campaign.hero_heading_parts.0 }}{% if campaign.hero_heading_parts.1 %}<br><em>{{ campaign.hero_heading_parts.1 }}</em>{% endif %}
       </h1>
       {% if campaign.hero_sub %}<p class="camp-hero__sub">{{ campaign.hero_sub }}</p>{% endif %}
-      <a href="#contact" class="camp-hero__cta">{{ campaign.nav_cta_text }}</a>
+      <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')" class="camp-hero__cta">{{ campaign.nav_cta_text }}</a>
       {% if campaign.offer_expiry %}
       <div class="countdown-bar">
         <div class="countdown-unit"><div class="countdown-num" id="cd-days">--</div><div class="countdown-lbl">Days</div></div>
@@ -311,15 +450,12 @@
       {% endif %}
     </div>
     <div class="hero-enquiry-card">
-      <h3>Book a Site Visit</h3>
-      <form method="post" action="{% url 'enquiries:create' %}">
-        {% csrf_token %}
-        <input type="hidden" name="enquiry_type" value="site_visit">
-        <input type="hidden" name="source" value="campaign:{{ campaign.slug }}">
-        <input type="text"   name="name"    placeholder="Your Full Name"   required>
-        <input type="tel"    name="phone"   placeholder="Phone Number"     required>
-        <input type="email"  name="email"   placeholder="Email Address"    required>
-        <textarea name="message" placeholder="Any specific questions or preferred visit dates?"></textarea>
+      <h3>Get The Best Quote</h3>
+      <form id="heroSidebarForm" onsubmit="return submitLeadForm(event, this, 'site_visit')">
+        <input type="text"  name="name"  placeholder="Your Full Name" required>
+        <input type="tel"   name="phone" placeholder="Phone Number" required>
+        <input type="email" name="email" placeholder="Email Address" required>
+        <textarea name="message" placeholder="I'm interested in this project..."></textarea>
         <button type="submit">{{ campaign.nav_cta_text }} →</button>
       </form>
     </div>
@@ -358,6 +494,7 @@
       <div class="accent-bar"></div>
       {% if campaign.about_heading %}<h2 class="section-heading">{{ campaign.about_heading }}</h2>{% endif %}
       {% if campaign.about_body %}<div class="section-body">{{ campaign.about_body|linebreaks }}</div>{% endif %}
+      <a href="javascript:void(0)" onclick="openLeadPopup('brochure')" class="camp-hero__cta" style="margin-top:1.5rem;">📄 Download Brochure</a>
     </div>
     <div>
       {% if campaign.about_image %}
@@ -375,7 +512,10 @@
     <p class="section-eyebrow">Master Plan</p>
     <h2 class="section-heading">{{ campaign.masterplan_heading }}</h2>
     {% if campaign.masterplan_body %}<p class="section-body" style="max-width:700px;margin:0 auto 1rem;">{{ campaign.masterplan_body }}</p>{% endif %}
-    <img src="{{ campaign.masterplan_image.url }}" alt="{{ campaign.masterplan_heading }}">
+    <img src="{{ campaign.masterplan_image.url }}" alt="{{ campaign.masterplan_heading }}" style="cursor:pointer;" onclick="openLeadPopup('masterplan')">
+    <br><br>
+    <a href="javascript:void(0)" onclick="openLeadPopup('masterplan')" class="camp-hero__cta">View Master Plan</a>
+    <a href="javascript:void(0)" onclick="openLeadPopup('brochure')" class="camp-hero__cta" style="margin-left:.75rem;background:transparent;border:2px solid var(--accent);color:var(--navy);">Download Masterplan</a>
   </div>
 </section>
 {% endif %}
@@ -390,16 +530,28 @@
       {% for fp in campaign.floor_plans.all %}
       <div class="fp-card">
         {% if fp.image %}
-        <div class="fp-card__img"><img src="{{ fp.image.url }}" alt="{{ fp.config }}"></div>
+        <div class="fp-card__img" style="cursor:pointer; position:relative; overflow:hidden;" onclick="openLeadPopup('floor_plan')">
+          <img src="{{ fp.image.url }}" alt="{{ fp.config }}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(5px); transform: scale(1.15);">
+          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; transition: background 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.35)'" onmouseout="this.style.background='rgba(0,0,0,0.5)'">
+            <div style="width: 48px; height: 48px; background: #0d6efd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; box-shadow: 0 4px 14px rgba(13,110,253,0.4);">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <span style="color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.8); letter-spacing: 0.02em;">View Floorplan</span>
+          </div>
+        </div>
+        {% else %}
+        <div class="fp-card__img" style="cursor:pointer; display: flex; align-items: center; justify-content: center; background: #f9fafb; border-bottom: 1px solid var(--border);" onclick="openLeadPopup('floor_plan')">
+          <span style="font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; color: #6b7280;">🔒 Request Floor Plan</span>
+        </div>
         {% endif %}
         <div class="fp-card__body">
           <div class="fp-card__config">{{ fp.config }}</div>
           {% if fp.sba_range %}<div class="fp-card__sba">Tentative SBA: {{ fp.sba_range }}</div>{% endif %}
           {% if fp.price_range %}<div class="fp-card__price">{{ fp.price_range }}</div>{% endif %}
+          <a class="fp-card__dl" href="javascript:void(0)" onclick="openLeadPopup('cost_sheet')">Enquire Now</a>
+          <a class="fp-card__dl" href="javascript:void(0)" onclick="openLeadPopup('floor_plan')" style="margin-left:.25rem;background:transparent;border:1px solid var(--accent);color:var(--accent);">Floor Plan</a>
           {% if fp.plan_pdf %}
-            <a class="fp-card__dl" href="{{ fp.plan_pdf.url }}" target="_blank" rel="noopener">Download Plan</a>
-          {% else %}
-            <a class="fp-card__dl" href="#contact">Get Cost Sheet</a>
+            <a class="fp-card__dl" href="javascript:void(0)" onclick="openLeadPopup('brochure')" style="margin-left:.25rem;background:transparent;border:1px solid var(--accent);color:var(--accent);">Download</a>
           {% endif %}
         </div>
       </div>
@@ -418,11 +570,22 @@
     <div class="amen-grid">
       {% for a in campaign.amenities.all %}
       <div class="amen-card">
-        <span class="icon">{{ a.icon }}</span>
-        <h4>{{ a.name }}</h4>
-        {% if a.description %}<p>{{ a.description }}</p>{% endif %}
+        {% if a.image %}
+        <div class="amen-card__img"><img src="{{ a.image.url }}" alt="{{ a.name }}"></div>
+        {% else %}
+        <div class="amen-card__img" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center;">
+          <span style="font-family: 'Cormorant Garamond', serif; font-size: 5rem; color: rgba(15,23,42,0.04); font-weight: 700; text-transform: uppercase;">{{ a.name|slice:":1" }}</span>
+        </div>
+        {% endif %}
+        <div class="amen-card__body">
+          <h4>{{ a.name }}</h4>
+          {% if a.description %}<p>{{ a.description }}</p>{% endif %}
+        </div>
       </div>
       {% endfor %}
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="javascript:void(0)" onclick="openLeadPopup('brochure')" class="camp-hero__cta">📄 Download Amenities List</a>
     </div>
   </div>
 </section>
@@ -436,7 +599,7 @@
     <h2 class="section-heading">Project Gallery</h2>
     <div class="gallery-grid">
       {% for gi in campaign.gallery_images.all %}
-        <img src="{{ gi.image.url }}" alt="{{ gi.caption|default:campaign.title }}" loading="lazy">
+        <img src="{{ gi.image.url }}" alt="{{ gi.caption|default:campaign.title }}" loading="lazy" onclick="openLightbox(this)" data-idx="{{ forloop.counter0 }}">
       {% endfor %}
     </div>
   </div>
@@ -446,19 +609,21 @@
 {# ── Location & Connectivity ─────────────────────────────────────── #}
 {% if campaign.location_heading or campaign.location_body or campaign.location_map_image or campaign.location_map_embed %}
 <section class="location-section" id="location">
+  <div class="map-frame">
+    {% if campaign.location_map_embed %}
+      {{ campaign.location_map_embed|safe }}
+    {% elif campaign.location_map_image %}
+      <img src="{{ campaign.location_map_image.url }}" alt="Location Map">
+    {% endif %}
+  </div>
   <div class="inner">
-    <div>
-      <p class="section-eyebrow">Connectivity & Location</p>
-      <div class="accent-bar"></div>
-      {% if campaign.location_heading %}<h2 class="section-heading">{{ campaign.location_heading }}</h2>{% endif %}
-      {% if campaign.location_body %}<div class="section-body">{{ campaign.location_body|linebreaks }}</div>{% endif %}
-    </div>
-    <div class="map-frame">
-      {% if campaign.location_map_embed %}
-        {{ campaign.location_map_embed|safe }}
-      {% elif campaign.location_map_image %}
-        <img src="{{ campaign.location_map_image.url }}" alt="Location Map">
-      {% endif %}
+    <div class="location-card">
+      <p class="section-eyebrow" style="color:var(--sky);">Connectivity & Location</p>
+      {% if campaign.location_heading %}<h2 class="section-heading" style="color:#fff; margin-bottom:1.5rem;">{{ campaign.location_heading }}</h2>{% endif %}
+      {% if campaign.location_body %}<div class="section-body" style="color:rgba(255,255,255,0.85); font-size:1.05rem; line-height:1.7;">{{ campaign.location_body|linebreaks }}</div>{% endif %}
+      <div style="margin-top: 2rem;">
+        <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')" style="display:inline-block; padding:12px 28px; background:var(--accent); color:#fff; border-radius:30px; font-weight:600; font-family:'DM Sans', sans-serif; text-decoration:none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Schedule Site Visit</a>
+      </div>
     </div>
   </div>
 </section>
@@ -473,9 +638,17 @@
     <div class="highlights-grid">
       {% for h in campaign.highlights.all %}
       <div class="highlight-card">
-        <span class="icon">{{ h.icon }}</span>
-        <h4>{{ h.heading }}</h4>
-        {% if h.body %}<p>{{ h.body }}</p>{% endif %}
+        {% if h.image %}
+        <div class="highlight-card__img"><img src="{{ h.image.url }}" alt="{{ h.heading }}"></div>
+        {% else %}
+        <div class="highlight-card__img" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center;">
+          <span style="font-family: 'Cormorant Garamond', serif; font-size: 5rem; color: rgba(15,23,42,0.04); font-weight: 700; text-transform: uppercase;">{{ h.heading|slice:":1" }}</span>
+        </div>
+        {% endif %}
+        <div class="highlight-card__body">
+          <h4>{{ h.heading }}</h4>
+          {% if h.body %}<p>{{ h.body }}</p>{% endif %}
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -540,70 +713,255 @@
     <p class="section-eyebrow">Limited Time Offer</p>
     <h2 class="section-heading">{{ campaign.cta_heading }}</h2>
     {% if campaign.cta_sub %}<p class="section-body" style="margin-bottom:2rem;">{{ campaign.cta_sub }}</p>{% endif %}
-    <a href="#contact" class="camp-hero__cta">{{ campaign.cta_button_text }}</a>
+    <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')" class="camp-hero__cta">{{ campaign.cta_button_text }}</a>
   </div>
 </section>
 {% endif %}
-
-{# ── Contact / Lead Capture ───────────────────────────────────────── #}
-<section id="contact">
-  <div class="inner">
-    <p class="section-eyebrow">Get in Touch</p>
-    <h2 class="section-heading" style="margin-bottom:2rem;">Book Your Consultation</h2>
-    <form method="post" action="{% url 'enquiries:create' %}">
-      {% csrf_token %}
-      <input type="hidden" name="enquiry_type" value="general">
-      <input type="hidden" name="source" value="campaign:{{ campaign.slug }}">
-      <label>Full Name</label>
-      <input type="text" name="name" placeholder="Your name" required>
-      <label>Phone</label>
-      <input type="tel" name="phone" placeholder="+91 98765 43210" required>
-      <label>Email</label>
-      <input type="email" name="email" placeholder="you@example.com">
-      <label>Message</label>
-      <textarea name="message" placeholder="Tell us what you're looking for…"></textarea>
-      <button type="submit">{{ campaign.cta_button_text|default:"Send Enquiry" }} →</button>
-    </form>
-  </div>
-</section>
 
 {# ── Disclaimer ───────────────────────────────────────────────────── #}
 {% if campaign.disclaimer %}
 <div class="disclaimer-bar">{{ campaign.disclaimer }}</div>
 {% endif %}
 
+{# ══════════════════════════════════════════════════════════════════════ #}
+{# LEAD CAPTURE POPUP MODAL                                              #}
+{# ══════════════════════════════════════════════════════════════════════ #}
+<div class="lead-popup-overlay" id="leadPopupOverlay" onclick="if(event.target===this)closeLeadPopup()">
+  <div class="lead-popup">
+    <button class="lead-popup__close" onclick="closeLeadPopup()" aria-label="Close">✕</button>
+    <div class="lead-popup__header{% if campaign.popup_bg_image %} lead-popup__header--has-img{% endif %}"
+         style="{% if campaign.popup_bg_color %}--popup-bg:{{ campaign.popup_bg_color }};{% endif %}{% if campaign.popup_bg_image %}background-image:url('{{ campaign.popup_bg_image.url }}');{% endif %}">
+      {% if campaign.developer_logo %}
+        <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:32px; object-fit:contain; margin-bottom:.6rem; display:block;">
+      {% endif %}
+      <h3 id="popupTitle">Get The Best Quote</h3>
+      <p id="popupSubtitle">Fill in your details and we'll get back to you instantly.</p>
+    </div>
+    <div class="lead-popup__body">
+      <form id="leadPopupForm" onsubmit="return submitLeadForm(event, this, null)">
+        <input type="hidden" name="intent" id="popupIntent" value="general">
+        <input type="text"  name="name"  placeholder="Your Full Name" required id="popupName">
+        <input type="tel"   name="phone" placeholder="Phone Number" required id="popupPhone">
+        <input type="email" name="email" placeholder="Email Address" required id="popupEmail">
+        <button type="submit" class="popup-submit" id="popupSubmitBtn">Submit →</button>
+      </form>
+      <div class="lead-popup__success" id="popupSuccess" style="display:none;">
+        <div class="check">✓</div>
+        <h4>Thank You!</h4>
+        <p id="popupSuccessMsg">Our team will reach out shortly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════════════════════════════ #}
+{# FLOATING SIDEBAR (desktop)                                            #}
+{# ══════════════════════════════════════════════════════════════════════ #}
+<div class="floating-sidebar hidden" id="floatingSidebar">
+  <div class="floating-sidebar__header">
+    {% if campaign.developer_logo %}<img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:24px; object-fit:contain; margin-right:.5rem; vertical-align:middle;">{% endif %}📞 Get The Best Quote
+  </div>
+  <div class="floating-sidebar__body">
+    <form id="sidebarForm" onsubmit="return submitLeadForm(event, this, 'site_visit')">
+      <input type="text"  name="name"  placeholder="Your Name" required>
+      <input type="tel"   name="phone" placeholder="Phone" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <button type="submit">Get Quote →</button>
+    </form>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════════════════════════════ #}
+{# STICKY BOTTOM BAR                                                     #}
+{# ══════════════════════════════════════════════════════════════════════ #}
+<div class="sticky-bottom-bar" id="stickyBottomBar">
+  <button onclick="openLeadPopup('brochure')"><span class="icon">📄</span> Download Brochure</button>
+  {% if campaign.contact_phone %}
+    <a href="tel:{{ campaign.contact_phone }}"><span class="icon">📞</span> Call Now</a>
+  {% endif %}
+  <button onclick="openLeadPopup('callback')"><span class="icon">📲</span> Instant Callback</button>
+  <button onclick="openLeadPopup('site_visit')"><span class="icon">🏠</span> Free Site Visit</button>
+</div>
+
+{# ══════════════════════════════════════════════════════════════════════ #}
+{# LIGHTBOX                                                              #}
+{# ══════════════════════════════════════════════════════════════════════ #}
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav prev" onclick="event.stopPropagation();navLightbox(-1)">❮</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav next" onclick="event.stopPropagation();navLightbox(1)">❯</button>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
-{% if campaign.offer_expiry %}
 <script>
 (function(){
+  /* ── Intent config ─────────────────────────────────────────── */
+  const INTENTS = {
+    site_visit: { title: 'Book a Free Site Visit', sub: 'Our team will schedule your visit at a convenient time.', btn: 'Book Site Visit →', success: 'We\'ll call you to confirm your visit!' },
+    brochure:   { title: 'Download Brochure', sub: 'Get the detailed project brochure delivered to your inbox.', btn: 'Download Now →', success: 'Your brochure is downloading!' },
+    cost_sheet: { title: 'Get Cost Sheet', sub: 'Receive the detailed pricing breakdown instantly.', btn: 'Get Cost Sheet →', success: 'A detailed cost sheet will be sent to you!' },
+    floor_plan: { title: 'Request Floor Plan', sub: 'Fill in your details to receive the high-resolution floor plan directly.', btn: 'Get Floor Plan →', success: 'The floor plan has been sent to your email!' },
+    callback:   { title: 'Request Instant Callback', sub: 'We\'ll call you back within 2 minutes.', btn: 'Call Me Back →', success: 'Expect a call within 2 minutes!' },
+    masterplan: { title: 'View Full Master Plan', sub: 'Fill in your details to view the complete master plan.', btn: 'View Master Plan →', success: 'Here is the detailed master plan!' },
+    general:    { title: 'Enquire Now', sub: 'Fill in your details and we\'ll get back to you.', btn: 'Submit →', success: 'Our team will reach out shortly.' },
+  };
+
+  const brochureUrl = '{% if campaign.brochure_pdf %}{{ campaign.brochure_pdf.url }}{% endif %}';
+  const csrfToken = '{{ csrf_token }}';
+  const enquiryUrl = '{% url "enquiries:create" %}';
+  const campaignSlug = '{{ campaign.slug }}';
+
+  /* ── Popup ──────────────────────────────────────────────────── */
+  window.openLeadPopup = function(intent) {
+    const cfg = INTENTS[intent] || INTENTS.general;
+    document.getElementById('popupTitle').textContent = cfg.title;
+    document.getElementById('popupSubtitle').textContent = cfg.sub;
+    document.getElementById('popupSubmitBtn').textContent = cfg.btn;
+    document.getElementById('popupIntent').value = intent;
+    document.getElementById('leadPopupForm').style.display = '';
+    document.getElementById('popupSuccess').style.display = 'none';
+    document.getElementById('leadPopupOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('popupName').focus();
+  };
+
+  window.closeLeadPopup = function() {
+    document.getElementById('leadPopupOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  /* ── AJAX form submit ──────────────────────────────────────── */
+  window.submitLeadForm = function(e, form, intentOverride) {
+    e.preventDefault();
+    const fd = new FormData(form);
+    fd.set('enquiry_type', 'general');
+    fd.set('source', 'campaign:' + campaignSlug);
+    fd.set('csrfmiddlewaretoken', csrfToken);
+    const intent = intentOverride || fd.get('intent') || 'general';
+    fd.set('message', '[Campaign Intent: ' + intent + '] ' + (fd.get('message') || ''));
+
+    const btn = form.querySelector('button[type="submit"]');
+    if(btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
+
+    fetch(enquiryUrl, { method: 'POST', body: fd, redirect: 'follow' })
+      .then(function() {
+        // Show success in popup if form is the popup form
+        if(form.id === 'leadPopupForm') {
+          const cfg = INTENTS[intent] || INTENTS.general;
+          document.getElementById('popupSuccessMsg').textContent = cfg.success;
+          document.getElementById('leadPopupForm').style.display = 'none';
+          document.getElementById('popupSuccess').style.display = '';
+          if(intent === 'brochure' && brochureUrl) triggerBrochureDownload();
+          setTimeout(closeLeadPopup, 3000);
+        } else {
+          // Sidebar or hero form
+          form.innerHTML = '<div style="text-align:center;padding:1rem 0;color:#10b981;font-family:DM Sans,sans-serif;font-weight:600;">✓ Thank you! We\'ll contact you soon.</div>';
+          if(intent === 'brochure' && brochureUrl) triggerBrochureDownload();
+        }
+      })
+      .catch(function() {
+        if(btn) { btn.disabled = false; btn.textContent = 'Submit →'; }
+        alert('Something went wrong. Please try again.');
+      });
+    return false;
+  };
+
+  function triggerBrochureDownload() {
+    const a = document.createElement('a');
+    a.href = brochureUrl;
+    a.download = '';
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  /* ── Floating sidebar show/hide ────────────────────────────── */
+  const sidebar = document.getElementById('floatingSidebar');
+  if(sidebar && window.innerWidth > 1100) {
+    window.addEventListener('scroll', function() {
+      const hero = document.querySelector('.camp-hero');
+      if(!hero) return;
+      const heroBottom = hero.offsetTop + hero.offsetHeight;
+      const footerTop = document.querySelector('.camp-footer') ? document.querySelector('.camp-footer').offsetTop : Infinity;
+      const scrollY = window.scrollY + window.innerHeight / 2;
+      if(window.scrollY > heroBottom && scrollY < footerTop - 200) {
+        sidebar.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('hidden');
+      }
+    });
+  }
+
+  /* ── Timed popup (once per session) ────────────────────────── */
+  if(!sessionStorage.getItem('campPopupShown_' + campaignSlug)) {
+    setTimeout(function() {
+      if(!document.getElementById('leadPopupOverlay').classList.contains('active')) {
+        openLeadPopup('site_visit');
+        sessionStorage.setItem('campPopupShown_' + campaignSlug, '1');
+      }
+    }, 15000);
+  }
+
+  /* ── Gallery Lightbox ──────────────────────────────────────── */
+  let lbImages = [];
+  let lbIndex = 0;
+  const galleryImgs = document.querySelectorAll('.gallery-grid img');
+  galleryImgs.forEach(function(img, i) { lbImages.push(img.src); });
+
+  window.openLightbox = function(img) {
+    lbIndex = parseInt(img.dataset.idx) || 0;
+    document.getElementById('lightboxImg').src = lbImages[lbIndex];
+    document.getElementById('lightboxOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeLightbox = function() {
+    document.getElementById('lightboxOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  window.navLightbox = function(dir) {
+    lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+    document.getElementById('lightboxImg').src = lbImages[lbIndex];
+  };
+  document.addEventListener('keydown', function(e) {
+    if(!document.getElementById('lightboxOverlay').classList.contains('active')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') navLightbox(-1);
+    if(e.key === 'ArrowRight') navLightbox(1);
+  });
+  document.addEventListener('keydown', function(e) {
+    if(e.key === 'Escape' && document.getElementById('leadPopupOverlay').classList.contains('active')) closeLeadPopup();
+  });
+
+  /* ── Countdown timer ───────────────────────────────────────── */
+  {% if campaign.offer_expiry %}
   const expiry = new Date("{{ campaign.offer_expiry|date:'c' }}");
   function tick(){
     const diff = expiry - Date.now();
     if(diff <= 0){
-      ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id=>{
-        const el = document.getElementById(id); if(el) el.textContent = '00';
-      });
-      const bar = document.getElementById('countdown');
+      ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(function(id){ var el = document.getElementById(id); if(el) el.textContent = '00'; });
+      var bar = document.getElementById('countdown');
       if(bar) bar.textContent = 'Offer Ended';
       return;
     }
-    const d = Math.floor(diff/86400000);
-    const h = Math.floor((diff%86400000)/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    const s = Math.floor((diff%60000)/1000);
-    const pad = n => String(n).padStart(2,'0');
-    const inline = document.getElementById('countdown');
-    if(inline) inline.textContent = `${d}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach((id,i)=>{
-      const el = document.getElementById(id);
+    var d = Math.floor(diff/86400000);
+    var h = Math.floor((diff%86400000)/3600000);
+    var m = Math.floor((diff%3600000)/60000);
+    var s = Math.floor((diff%60000)/1000);
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    var inline = document.getElementById('countdown');
+    if(inline) inline.textContent = d+'d '+pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(function(id,i){
+      var el = document.getElementById(id);
       if(el) el.textContent = pad([d,h,m,s][i]);
     });
   }
   tick();
   setInterval(tick,1000);
+  {% endif %}
 })();
 </script>
-{% endif %}
 {% endblock %}

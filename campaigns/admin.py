@@ -13,7 +13,7 @@ from .models import (
 class CampaignHighlightInline(admin.TabularInline):
     model   = CampaignHighlight
     extra   = 3
-    fields  = ('order', 'icon', 'heading', 'body')
+    fields  = ('order', 'image', 'heading', 'body')
 
 
 class CampaignFloorPlanInline(admin.TabularInline):
@@ -25,7 +25,7 @@ class CampaignFloorPlanInline(admin.TabularInline):
 class CampaignAmenityInline(admin.TabularInline):
     model   = CampaignAmenity
     extra   = 3
-    fields  = ('order', 'icon', 'name', 'description')
+    fields  = ('order', 'image', 'name', 'description')
 
 
 class CampaignGalleryImageInline(admin.TabularInline):
@@ -49,7 +49,7 @@ class CampaignAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Identity', {
-            'fields': ('title', 'slug', 'developer_name', 'developer_logo', 'accent_color', 'is_active'),
+            'fields': ('title', 'slug', 'developer_name', 'developer_logo', 'accent_color', 'brochure_pdf', 'contact_phone', 'popup_bg_color', 'popup_bg_image', 'is_active'),
         }),
         ('Header / Nav', {
             'fields': ('nav_style', 'nav_cta_text', 'nav_show_links'),

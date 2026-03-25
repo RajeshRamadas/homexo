@@ -14,7 +14,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 
-from .forms import RegisterForm, LoginForm, ProfileUpdateForm
+from .forms import RegisterForm, LoginForm, ProfileUpdateForm, ProfileCompleteForm
 from .models import User, PhoneOTP
 from .sms import generate_otp, send_otp_sms
 
@@ -135,6 +135,31 @@ def profile_update_view(request):
         return redirect('accounts:profile')
 
     return render(request, 'accounts/profile_update.html', {'form': form})
+
+
+# ── Profile Completion (post-social-auth popup) ──────────────────────────────
+
+@login_required
+def profile_complete_view(request):
+    """AJAX endpoint for the profile-completion modal shown after social signup."""
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileCompleteForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.profile_complete = True
+            user.save()
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                from django.http import JsonResponse
+                return JsonResponse({'ok': True})
+            messages.success(request, 'Profile updated!')
+            return redirect('pages:home')
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                from django.http import JsonResponse
+                errors = {f: e.get_json_data() for f, e in form.errors.items()}
+                return JsonResponse({'ok': False, 'errors': errors}, status=400)
+    return redirect('pages:home')
 
 
 # ── Phone OTP Login ───────────────────────────────────────────────────────────

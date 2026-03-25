@@ -34,6 +34,22 @@ class Campaign(models.Model):
         max_length=7, default='#4A90C4',
         help_text='Hex colour, e.g. #4A90C4'
     )
+    brochure_pdf    = models.FileField(
+        upload_to='campaigns/brochures/', blank=True, null=True,
+        help_text='Brochure PDF — served after lead form submission'
+    )
+    contact_phone   = models.CharField(
+        max_length=20, blank=True,
+        help_text='Phone number shown on sticky bar and popup, e.g. +919876543210'
+    )
+    popup_bg_color  = models.CharField(
+        max_length=7, blank=True,
+        help_text='Hex colour for popup header, e.g. #0D2B4E (defaults to navy)'
+    )
+    popup_bg_image  = models.ImageField(
+        upload_to='campaigns/popup_bg/', blank=True, null=True,
+        help_text='Background image for the lead capture popup'
+    )
     is_active       = models.BooleanField(default=True)
     created_at      = models.DateTimeField(auto_now_add=True)
     updated_at      = models.DateTimeField(auto_now=True)
@@ -175,9 +191,9 @@ class CampaignHighlight(models.Model):
     campaign = models.ForeignKey(
         Campaign, on_delete=models.CASCADE, related_name='highlights'
     )
-    icon     = models.CharField(
-        max_length=10, default='\u2713',
-        help_text='Unicode character or emoji used as the bullet icon'
+    image    = models.ImageField(
+        upload_to='campaigns/highlights/', blank=True, null=True,
+        help_text='Optional image for the highlight'
     )
     heading  = models.CharField(max_length=120)
     body     = models.CharField(max_length=300, blank=True)
@@ -218,9 +234,9 @@ class CampaignAmenity(models.Model):
     campaign    = models.ForeignKey(
         Campaign, on_delete=models.CASCADE, related_name='amenities'
     )
-    icon        = models.CharField(
-        max_length=20, default='✦',
-        help_text='Emoji or short label (GYM, POOL, etc.)'
+    image       = models.ImageField(
+        upload_to='campaigns/amenities/', blank=True, null=True,
+        help_text='Optional image for the amenity'
     )
     name        = models.CharField(max_length=120)
     description = models.CharField(max_length=300, blank=True)

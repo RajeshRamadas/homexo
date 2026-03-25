@@ -49,6 +49,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff     = models.BooleanField(default=False)
     date_joined  = models.DateTimeField(default=timezone.now)
 
+    # Profile-completion tracking (False for new social-auth users)
+    profile_complete = models.BooleanField(default=True)
+
+    # Property preferences
+    preferred_city          = models.CharField(max_length=100, blank=True)
+    preferred_listing_type  = models.CharField(max_length=20, blank=True)
+    preferred_property_type = models.CharField(max_length=20, blank=True)
+    preferred_bhk           = models.CharField(max_length=10, blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD  = 'email'

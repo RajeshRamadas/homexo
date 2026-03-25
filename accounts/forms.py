@@ -87,6 +87,45 @@ class ProfileUpdateForm(forms.ModelForm):
         return phone
 
 
+class ProfileCompleteForm(forms.ModelForm):
+    """Shown as a popup after social-auth registration for missing info."""
+
+    class Meta:
+        model  = User
+        fields = (
+            'first_name', 'last_name', 'phone',
+            'preferred_city', 'preferred_listing_type',
+            'preferred_property_type', 'preferred_bhk',
+        )
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name':  forms.TextInput(attrs={'placeholder': 'Last Name'}),
+            'phone':      forms.TextInput(attrs={'placeholder': 'Phone Number'}),
+            'preferred_city': forms.TextInput(attrs={'placeholder': 'e.g. Bangalore'}),
+            'preferred_listing_type':  forms.Select(choices=[('', 'Select…')] + [
+                ('buy', 'Buy'), ('rent', 'Rent'),
+                ('new_project', 'New Project'), ('commercial', 'Commercial'),
+            ]),
+            'preferred_property_type': forms.Select(choices=[('', 'Select…')] + [
+                ('apartment', 'Apartment'), ('villa', 'Villa'),
+                ('penthouse', 'Penthouse'), ('plot', 'Plot / Land'),
+                ('office', 'Office Space'), ('shop', 'Shop / Retail'),
+                ('warehouse', 'Warehouse'),
+            ]),
+            'preferred_bhk': forms.Select(choices=[('', 'Select…')] + [
+                ('studio', 'Studio'), ('1bhk', '1 BHK'), ('2bhk', '2 BHK'),
+                ('3bhk', '3 BHK'), ('4bhk', '4 BHK'), ('5bhk', '5 BHK'),
+                ('6+bhk', '6+ BHK'),
+            ]),
+        }
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone', '').strip() or None
+        if phone and User.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('This phone number is already linked to another account.')
+        return phone
+
+
 # Admin forms
 class AdminUserCreationForm(UserCreationForm):
     class Meta:

@@ -56,7 +56,7 @@
       background: var(--accent); color: #fff; border-radius: 4px;
       font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 600;
       text-decoration: none; letter-spacing: .03em;
-      transition: opacity .2s;
+      transition: opacity .2s; cursor: pointer;
     }
     .camp-nav .nav-cta:hover { opacity: .88; }
 
@@ -66,10 +66,27 @@
     .camp-nav--cobranded .dev-name-label  { color: rgba(255,255,255,.9); }
     .camp-nav--cobranded .nav-links a     { color: rgba(255,255,255,.85); }
 
-    .camp-nav--branded { background: var(--charcoal); color: #fff; border-bottom: 2px solid var(--accent); }
-    .camp-nav--branded .homexo-wordmark { color: rgba(255,255,255,.55); font-size: 1rem; }
-    .camp-nav--branded .dev-name-label  { color: #fff; font-size: 1rem; }
-    .camp-nav--branded .nav-links a     { color: rgba(255,255,255,.8); }
+    .camp-nav--branded { background: #fff; color: #111827; border-bottom: 1px solid #e5e7eb; padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 70px; }
+    .camp-nav--branded .logos { padding: 0 2rem; border-right: 1px solid #e5e7eb; height: 100%; }
+    .camp-nav--branded .dev-name-label { color: #111827; font-size: 1.05rem; }
+    .camp-nav--branded .dev-initials { background: #f3f4f6; color: var(--navy); }
+    .camp-nav--branded .nav-links { gap: 0; height: 100%; flex-grow: 1; }
+    .camp-nav--branded .nav-links a {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0 1.25rem; height: 100%; flex-grow: 1; flex-basis: 0;
+      border-right: 1px solid #e5e7eb;
+      color: #374151; font-weight: 600; font-size: 0.88rem;
+      text-decoration: none; opacity: 1; transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .camp-nav--branded .nav-links a:hover { background: #f9fafb; color: var(--accent); }
+    .camp-nav--branded .nav-links a svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+    .camp-nav--branded .nav-cta {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      height: 100%; padding: 0 2rem; border-radius: 0;
+      background: var(--accent); color: #fff;
+      font-size: 0.95rem; font-weight: 600; white-space: nowrap;
+    }
 
     .camp-nav--minimal { background: #0a0a0a; color: #fff; }
     .camp-nav--minimal .dev-name-label { color: #fff; font-size: 1rem; }
@@ -185,32 +202,54 @@
     <a href="#contact">Contact</a>
   </div>
   {% endif %}
-  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+  <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')" class="nav-cta">{{ campaign.nav_cta_text }}</a>
 </nav>
 
 {% elif ns == 'branded' %}
 <nav class="camp-nav camp-nav--branded">
   <div class="logos">
     {% if campaign.developer_logo %}
-      <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:30px; object-fit:contain; margin-right:.5rem;">
+      <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}" style="height:36px; object-fit:contain; margin-right:.75rem;">
     {% else %}
       <span class="dev-initials">{{ campaign.developer_name|slice:":2"|upper }}</span>
     {% endif %}
     <span class="dev-name-label">{{ campaign.developer_name }}</span>
-    <span class="divider"></span>
-    <a href="/" class="homexo-wordmark">HOMEXO</a>
   </div>
   {% if campaign.nav_show_links %}
   <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#floorplans">Floor Plans</a>
-    <a href="#amenities">Amenities</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#location">Location</a>
-    <a href="#contact">Contact</a>
+    <a href="#about" title="Home">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+    <a href="#floorplans">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 4.02 2 6.5s4.48 4.5 10 4.5 10-2.02 10-4.5S17.52 2 12 2zm0 6.5C7.58 8.5 4 6.9 4 6.5S7.58 4.5 12 4.5 20 6.1 20 6.5 16.42 8.5 12 8.5z"/><path d="M2 11.5v3c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5v-3c0 2.48-4.48 4.5-10 4.5S2 13.98 2 11.5z"/><path d="M2 16.5v3c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5v-3c0 2.48-4.48 4.5-10 4.5S2 18.98 2 16.5z"/></svg>
+      Price
+    </a>
+    <a href="#floorplans">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+      Site &amp; Floor Plan
+    </a>
+    <a href="#amenities">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12.01 21.49L23.64 7c-3.45-3.19-8.84-5.12-11.62-5.12C9.23 1.88 3.84 3.81.39 7l11.62 14.49zm0-3.39L4.64 9.17C6.73 7.58 9.21 6.8 12.01 6.8c2.8 0 5.28.78 7.37 2.37L12.01 18.1z"/></svg>
+      Amenities
+    </a>
+    <a href="#gallery">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>
+      Gallery
+    </a>
+    <a href="#location">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      Location
+    </a>
+    <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>
+      Virtual Site Visit
+    </a>
   </div>
   {% endif %}
-  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+  <a href="javascript:void(0)" onclick="openLeadPopup('brochure')" class="nav-cta">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    Download Brochure
+  </a>
 </nav>
 
 {% elif ns == 'minimal' %}
@@ -223,7 +262,7 @@
     {% endif %}
     <span class="dev-name-label">{{ campaign.developer_name }}</span>
   </div>
-  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+  <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')" class="nav-cta">{{ campaign.nav_cta_text }}</a>
 </nav>
 
 {% else %}{# homexo default #}
@@ -238,7 +277,7 @@
     <a href="{% url 'pages:contact' %}">Contact</a>
   </div>
   {% endif %}
-  <a href="#contact" class="nav-cta">{{ campaign.nav_cta_text }}</a>
+  <a href="javascript:void(0)" onclick="openLeadPopup('site_visit')" class="nav-cta">{{ campaign.nav_cta_text }}</a>
 </nav>
 {% endif %}
 

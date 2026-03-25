@@ -40,10 +40,11 @@ def get_or_create_user(strategy, details, backend, uid, user=None, *args, **kwar
         last_name  = parts[1] if len(parts) > 1 else ''
 
     new_user = User.objects.create_user(
-        email      = email,
-        first_name = first_name,
-        last_name  = last_name,
-        is_verified = True,  # email verified by OAuth provider
+        email            = email,
+        first_name       = first_name,
+        last_name        = last_name,
+        is_verified      = True,   # email verified by OAuth provider
+        profile_complete = False,  # trigger completion popup on first visit
     )
     return {'is_new': True, 'user': new_user}
 
