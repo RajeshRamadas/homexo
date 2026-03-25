@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ campaign.title }} — {{ campaign.developer_name }}{% endblock %}</title>
 
+  <!-- SEO & Social Sharing -->
+  <meta name="description" content="{{ campaign.hero_sub|default:campaign.about_body|striptags|truncatechars:160 }}">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  
+  <meta property="og:title" content="{{ campaign.title }} — {{ campaign.developer_name }}">
+  <meta property="og:description" content="{{ campaign.hero_sub|default:campaign.about_body|striptags|truncatechars:160 }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% if campaign.hero_bg %}
+  <meta property="og:image" content="{{ request.build_absolute_uri|slice:':-1'|default:'' }}{{ campaign.hero_bg.url }}">
+  <meta name="twitter:image" content="{{ request.build_absolute_uri|slice:':-1'|default:'' }}{{ campaign.hero_bg.url }}">
+  {% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ campaign.title }} — {{ campaign.developer_name }}">
+  <meta name="twitter:description" content="{{ campaign.hero_sub|default:campaign.about_body|striptags|truncatechars:160 }}">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -353,6 +369,9 @@
       {% endif %}
       {% if campaign.footer_email %}
         <p class="contact-detail">✉️ <a href="mailto:{{ campaign.footer_email }}" style="color:rgba(255,255,255,.7); text-decoration:none;">{{ campaign.footer_email }}</a></p>
+      {% endif %}
+      {% if campaign.footer_phone %}
+        <p class="contact-detail">📞 <a href="tel:{{ campaign.footer_phone }}" style="color:rgba(255,255,255,.7); text-decoration:none;">{{ campaign.footer_phone }}</a></p>
       {% endif %}
       {% if campaign.footer_facebook or campaign.footer_instagram or campaign.footer_youtube %}
       <div class="social-links">
