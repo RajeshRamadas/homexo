@@ -19,12 +19,20 @@
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
-.serif    { font-family: 'Cormorant Garamond', serif; }
+.serif    { font-family: 'DM Sans', sans-serif; }
 .sans     { font-family: 'DM Sans', sans-serif; }
 .italic   { font-style: italic; }
 .sky      { color: var(--sky); }
 .navy     { color: var(--navy); }
 .charcoal { color: var(--charcoal); }
+
+/* ── Typography Additions ────────────────────────────────────────────────── */
+.rupee {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
+  display: inline-block;
+  margin-right: 1px;
+}
 
 /* ── Form widget overrides ────────────────────────────────────────────────── */
 input[type="text"],
