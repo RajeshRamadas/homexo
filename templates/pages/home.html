@@ -478,20 +478,22 @@
   .news-subtitle { font-size:13px;color:var(--warm-grey);font-weight:300; }
   .news-see-all { font-size:12px;color:var(--navy);border:1px solid var(--navy);padding:8px 18px;text-decoration:none;white-space:nowrap;transition:all .3s;letter-spacing:.5px; }
   .news-see-all:hover { background:var(--navy);color:var(--white); }
+  .news-carousel-container { position:relative; }
   .news-carousel-wrapper { position:relative;overflow:hidden; }
   .news-carousel { display:flex;gap:20px;width:100%;will-change:transform; }
-  .news-card { width:calc((100% - 40px)/3);min-width:calc((100% - 40px)/3);flex-shrink:0;background:var(--ivory);overflow:hidden;border:1px solid rgba(13,43,78,.07);transition:box-shadow .3s,transform .5s cubic-bezier(.23,1,.32,1); }
-  .news-card:hover { box-shadow:0 12px 36px rgba(13,27,42,.1); }
-  .news-img { height:140px;position:relative;overflow:hidden; }
+  .news-card { width:calc((100% - 80px)/5);min-width:calc((100% - 80px)/5);flex-shrink:0;background:transparent;overflow:hidden;border:none;transition:transform .5s cubic-bezier(.23,1,.32,1); }
+  .news-img { height:150px;position:relative;overflow:hidden; border-radius:4px; }
+  .news-category-badge {
+    position:absolute; top:12px; left:12px; z-index:5;
+    background:#076df2; color:#ffffff;
+    padding:4px 12px; font-size:11px; font-weight:600;
+    border-radius:20px; box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
   .news-img>div,.news-img>img { width:100%;height:100%;transition:transform .6s cubic-bezier(.23,1,.32,1);object-fit:cover; }
   .news-card:hover .news-img>div,.news-card:hover .news-img>img { transform:scale(1.05); }
-  .news-img-overlay { position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(13,27,42,.25)); }
-  .news-body { padding:16px; }
-  .news-card-title { font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:var(--charcoal);line-height:1.35;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
-  .news-card-excerpt { font-size:12px;line-height:1.6;color:var(--warm-grey);font-weight:300;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
-  .news-meta { display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border); }
-  .news-author { font-size:11px;color:var(--charcoal);font-weight:500; }
-  .news-date { font-size:11px;color:var(--warm-grey); }
+  .news-body { padding:14px 0 0 0; }
+  .news-card-title { font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:var(--charcoal);line-height:1.4;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+  .news-reading-time { font-size:12px;color:var(--warm-grey);font-weight:400; }
   .news-arrows { display:flex;justify-content:center;align-items:center;gap:16px;margin-top:28px; }
   .news-arrow { width:40px;height:40px;border-radius:50%;border:1px solid rgba(13,43,78,.25);background:var(--white);color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 2px 10px rgba(0,0,0,.07); }
   .news-arrow:hover { background:var(--navy);color:var(--white);border-color:var(--navy); }
@@ -535,6 +537,7 @@
     .services-strip{padding:24px 28px;}
     .about-content{padding:48px 40px;}
     .news-section{padding:48px 28px;}
+    .news-card{width:calc((100% - 20px)/2) !important;min-width:calc((100% - 20px)/2) !important;}
     .testimonials-section{padding:48px 28px;}
     .testimonial-carousel{gap:0;}
     .testimonial-card{width:100%!important;min-width:100%!important;padding:32px 24px;}
@@ -1000,42 +1003,46 @@
     </div>
     <a href="{% url 'blog:list' %}" class="news-see-all">See all news and articles &rsaquo;</a>
   </div>
-  <div class="news-carousel-wrapper">
-    <div class="news-carousel" id="newsCarousel">
-      {% for post in news_posts %}
-      <article class="news-card" onclick="window.location.href='{{ post.get_absolute_url }}'" style="cursor: pointer;">
-        <div class="news-img">
-          {% if post.cover_image %}
-          <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;">
-          {% else %}
-          <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A,#2E6FA8);"></div>
-          {% endif %}
-          <div class="news-img-overlay"></div>
-        </div>
-        <div class="news-body">
-          <h3 class="news-card-title">{{ post.title }}</h3>
-          <p class="news-card-excerpt">{{ post.excerpt }}</p>
-          <div class="news-meta">
-            <span class="news-author">{% if post.author %}{{ post.author.get_full_name|default:post.author.email }}{% else %}HOMEXO Desk{% endif %}</span>
-            <span class="news-date">{{ post.published_at|date:"M Y" }}</span>
+  <div class="news-carousel-container">
+    <div class="news-carousel-wrapper">
+      <div class="news-carousel" id="newsCarousel">
+        {% for post in news_posts %}
+        <article class="news-card" onclick="window.location.href='{{ post.get_absolute_url }}'" style="cursor: pointer;">
+          <div class="news-img">
+            {% if post.cover_image %}
+            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;">
+            {% else %}
+            <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A,#2E6FA8);"></div>
+            {% endif %}
+            {% if post.categories.first %}
+            <span class="news-category-badge" style="background: {{ post.categories.first.color }};">
+              {{ post.categories.first.name }}
+            </span>
+            {% else %}
+            <span class="news-category-badge" style="background: #076df2;">Trends</span>
+            {% endif %}
           </div>
-        </div>
-      </article>
-      {% endfor %}
+          <div class="news-body">
+            <h3 class="news-card-title">{{ post.title }}</h3>
+            <div class="news-reading-time">{{ post.reading_time|default:"5" }} mins read</div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
     </div>
-  </div>
-  <div class="news-arrows">
-    <button class="news-arrow" onclick="slideNews(-1)" aria-label="Previous">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <div class="news-dots" id="newsDots">
-      {% for post in news_posts %}
-      <div class="news-dot{% if forloop.first %} active{% endif %}"></div>
-      {% endfor %}
+    <div class="news-arrows">
+      <button class="news-arrow" onclick="slideNews(-1)" aria-label="Previous">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="news-dots" id="newsDots">
+        {% for post in news_posts %}
+        <div class="news-dot{% if forloop.first %} active{% endif %}"></div>
+        {% endfor %}
+      </div>
+      <button class="news-arrow" onclick="slideNews(1)" aria-label="Next">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
-    <button class="news-arrow" onclick="slideNews(1)" aria-label="Next">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
   </div>
 </section>
 {% endif %}
@@ -1155,7 +1162,8 @@ function slideNews(dir) {
   if (!carousel) return;
   const wrapper  = carousel.parentElement;
   const isMobile = window.innerWidth <= 768;
-  const visCount = isMobile ? 1 : 3;
+  const isTablet = window.innerWidth <= 1024;
+  const visCount = isMobile ? 1 : (isTablet ? 2 : 5);
   const maxIdx   = Math.max(0, totalNewsCards - visCount);
   newsIndex = Math.max(0, Math.min(newsIndex + dir, maxIdx));
   const card = carousel.querySelector('.news-card');
