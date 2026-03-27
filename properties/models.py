@@ -171,18 +171,16 @@ class Property(models.Model):
 
     @property
     def display_price(self):
-        from django.utils.safestring import mark_safe
         if self.price_on_req:
             return 'Price on Request'
         p = self.price
         if not p:
             return '—'
-        rupee = '<span style="font-family: Arial, sans-serif; font-weight: 600; font-size: 1.05em; margin-right: 1px;">₹</span>'
         if p >= 1_00_00_000:
-            return mark_safe(f'{rupee}{p / 1_00_00_000:.2f} Cr')
+            return f'₹{p / 1_00_00_000:.2f} Cr'
         elif p >= 1_00_000:
-            return mark_safe(f'{rupee}{p / 1_00_000:.2f} L')
-        return mark_safe(f'{rupee}{p:,.0f}')
+            return f'₹{p / 1_00_000:.2f} L'
+        return f'₹{p:,.0f}'
 
     def increment_views(self):
         Property.objects.filter(pk=self.pk).update(views_count=models.F('views_count') + 1)

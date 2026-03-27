@@ -88,3 +88,85 @@ input[type="range"] {
 
 /* ── Admin overrides ──────────────────────────────────────────────────────── */
 /* (Django admin is served at /admin/ — no custom CSS needed here) */
+
+
+/* ═══ Floor Plans (Interactive Viewer) ══════════════════════════════ */
+.floorplans-section { padding: 4rem 1.5rem; background: #fff; }
+.floorplans-section .inner { max-width: 960px; margin: 0 auto; }
+.fp-viewer { background: #fff; border: 1px solid #e5e7eb; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.02); margin-top: 1.5rem; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
+
+.fp-tabs { display: flex; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid #e5e7eb; background: #fdfdfd; width: 100%; }
+.fp-tabs::-webkit-scrollbar { display: none; }
+.fp-tab { padding: 1rem 1.25rem; cursor: pointer; border-right: 1px solid #e5e7eb; transition: background 0.2s; position: relative; flex: 1 0 auto; min-width: 90px; max-width: 200px; text-align: center; white-space: nowrap; box-sizing: border-box; }
+.fp-tab:hover { background: #f9fafb; }
+.fp-tab.active { background: #fff; }
+.fp-tab.active::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+.fp-tab-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 0.2rem; }
+.fp-tab-sub { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: #6b7280; }
+.fp-tab.active .fp-tab-title { color: var(--accent); }
+.fp-tab.active .fp-tab-sub { color: var(--accent); }
+
+.fp-subtabs { display: flex; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 0 1rem; overflow-x: auto; scrollbar-width: none; background: #fff; width: 100%; box-sizing: border-box; }
+.fp-subtabs::-webkit-scrollbar { display: none; }
+.fp-subtab { padding: 0.9rem 1.25rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; position: relative; transition: color 0.2s; flex-shrink: 0; }
+.fp-subtab:hover { color: var(--navy); }
+.fp-subtab.active { color: var(--accent); }
+.fp-subtab.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+
+.fp-main { padding: 1.25rem 1rem; position: relative; background: #fff; width: 100%; box-sizing: border-box; }
+.fp-main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+.fp-price { font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--charcoal); display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
+.fp-price-icon { color: #9ca3af; font-size: 0.9rem; cursor: help; background: #e5e7eb; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fp-toggles { display: flex; background: #f3f4f6; border-radius: 20px; padding: 3px; flex-shrink: 0; }
+.fp-toggle { padding: 0.3rem 0.9rem; border-radius: 16px; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 700; border: none; background: transparent; color: #6b7280; cursor: pointer; transition: all 0.2s; }
+.fp-toggle.active { background: var(--accent); color: #fff; }
+
+.fp-image-container { position: relative; text-align: center; padding: 0.5rem 0; background: #fff; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; overflow: hidden; box-sizing: border-box; }
+.fp-image { max-width: 100%; max-height: 260px; width: auto; height: auto; object-fit: contain; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: center; z-index: 1; display: block; }
+
+.fp-controls { position: absolute; right: 0.5rem; bottom: 2.5rem; display: flex; flex-direction: column; background: #888; border-radius: 5px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10; }
+.fp-controls button { width: 30px; height: 30px; background: transparent; border: none; color: #fff; font-size: 1rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+.fp-controls button:first-child { border-bottom: 1px solid rgba(255,255,255,0.2); }
+.fp-controls button:hover { background: #666; }
+
+.fp-explore-btn { position: absolute; right: 0.5rem; bottom: 0rem; width: 38px; height: 38px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--accent); transition: transform 0.2s; z-index: 10; }
+.fp-explore-btn:hover { transform: scale(1.05); }
+.fp-explore-text { text-align: center; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #6b7280; margin-top: 1.25rem; }
+
+.fp-dimensions { display: flex; gap: 0.6rem; padding: 1rem; overflow-x: auto; scrollbar-width: none; background: #fff; border-top: 1px solid #e5e7eb; width: 100%; box-sizing: border-box; }
+.fp-dimensions::-webkit-scrollbar { display: none; }
+.fp-dim-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.8rem 1rem; min-width: 130px; flex-shrink: 0; box-sizing: border-box; }
+.fp-dim-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--navy); margin-bottom: 0.25rem; }
+.fp-dim-val { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #6b7280; }
+
+/* ── Floor Plan Mobile Responsive ── */
+@media (max-width: 768px) {
+  .fp-viewer { margin-top: 0; border-left: none; border-right: none; border-radius: 0; }
+  .fp-tab { padding: 0.75rem 0.85rem; min-width: 70px; font-size: 0.85rem; }
+  .fp-tab-title { font-size: 0.8rem; }
+  .fp-tab-sub { font-size: 0.68rem; }
+  .fp-main { padding: 0.75rem 0.75rem; }
+  .fp-main-header { margin-bottom: 0.6rem; gap: 0.4rem; }
+  .fp-price { font-size: 1rem; }
+  .fp-image-container { min-height: 150px !important; padding: 0.4rem 0; }
+  .fp-image { max-height: 45vw; max-width: 100%; }
+  .fp-controls { right: 0.25rem; bottom: 2rem; }
+  .fp-controls button { width: 34px; height: 34px; font-size: 1.1rem; }
+  .fp-explore-btn { width: 34px; height: 34px; right: 0.25rem; bottom: 0; }
+  .fp-explore-text { font-size: 0.72rem; margin-top: 0.75rem; }
+  .fp-dimensions { padding: 0.65rem 0.75rem; gap: 0.5rem; }
+  .fp-dim-card { min-width: 100px; padding: 0.6rem 0.75rem; }
+  .fp-dim-title { font-size: 0.78rem; }
+  .fp-dim-val { font-size: 0.72rem; }
+  .fp-subtab { padding: 0.65rem 0.9rem; font-size: 0.72rem; }
+}
+
+@media (max-width: 480px) {
+  .fp-tab { padding: 0.65rem 0.65rem; min-width: 60px; }
+  .fp-tab-title { font-size: 0.75rem; }
+  .fp-image { max-height: 50vw; }
+  .fp-image-container { min-height: 130px !important; }
+  .fp-dim-card { min-width: 90px; padding: 0.5rem 0.65rem; }
+  .fp-price { font-size: 0.9rem; }
+  .fp-toggle { padding: 0.25rem 0.65rem; font-size: 0.68rem; }
+}
