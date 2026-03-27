@@ -689,7 +689,7 @@
         <div class="prop-card__body">
           <a href="{% url 'properties:detail' prop.slug %}" class="prop-card__title">{{ prop.title }}</a>
           <p class="prop-card__meta">📍 {{ prop.city }}{% if prop.bhk %} · {{ prop.get_bhk_display }}{% endif %}</p>
-          <div class="prop-card__price">{% if prop.price %}₹ {{ prop.price|floatformat:0 }}{% endif %}</div>
+          <div class="prop-card__price">{% if prop.price %}<span class="rupee">₹</span> {{ prop.price|floatformat:0 }}{% endif %}</div>
         </div>
       </article>
       {% endfor %}

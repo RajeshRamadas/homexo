@@ -280,7 +280,7 @@
           <div class="hl-hero-card-lbl">In-Principle Approval</div>
         </div>
         <div class="hl-hero-card">
-          <div class="hl-hero-card-val">₹4200<span>Cr</span></div>
+          <div class="hl-hero-card-val"><span class="rupee">₹</span>4200<span>Cr</span></div>
           <div class="hl-hero-card-lbl">Loans Facilitated</div>
         </div>
       </div>
@@ -337,7 +337,7 @@
           <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
           <div class="hl-loan-card-name">Home Renovation Loan</div>
           <div class="hl-loan-rate">9.00% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to ₹50L for existing home renovations without additional collateral.</p>
+          <p class="hl-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to <span class="rupee">₹</span>50L for existing home renovations without additional collateral.</p>
           <span class="hl-loan-tag">No Collateral</span>
         </div>
 
@@ -434,7 +434,7 @@
         <div class="hl-why-item">
           <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
           <div class="hl-why-title">Zero Processing Fee</div>
-          <p class="hl-why-desc">We have zero-fee partnerships with select banks. Clients save ₹5,000–₹30,000 on processing charges alone.</p>
+          <p class="hl-why-desc">We have zero-fee partnerships with select banks. Clients save <span class="rupee">₹</span>5,000–<span class="rupee">₹</span>30,000 on processing charges alone.</p>
         </div>
         <div class="hl-why-item">
           <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
@@ -581,9 +581,9 @@ document.getElementById('eligCalcBtn').addEventListener('click', function () {
   const resultEl = document.getElementById('eligResult');
   const amountEl = document.getElementById('eligAmount');
   if (eligibleLoan >= 10000000) {
-    amountEl.textContent = '₹' + (eligibleLoan / 10000000).toFixed(2) + ' Cr';
+    amountEl.textContent = '<span class="rupee">₹</span>' + (eligibleLoan / 10000000).toFixed(2) + ' Cr';
   } else {
-    amountEl.textContent = '₹' + (eligibleLoan / 100000).toFixed(1) + ' L';
+    amountEl.textContent = '<span class="rupee">₹</span>' + (eligibleLoan / 100000).toFixed(1) + ' L';
   }
   resultEl.classList.add('show');
 });

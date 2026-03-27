@@ -616,11 +616,11 @@
         <div class="lx-filter-section-title">Budget</div>
         <div class="lx-chips">
           <button type="button" class="lx-chip {% if not request.GET.price %}active{% endif %}" onclick="setChip('iPrice','',this)">Any</button>
-          <button type="button" class="lx-chip {% if request.GET.price == 'under50l' %}active{% endif %}" onclick="setChip('iPrice','under50l',this)">Under ₹50L</button>
-          <button type="button" class="lx-chip {% if request.GET.price == '50l-1cr' %}active{% endif %}" onclick="setChip('iPrice','50l-1cr',this)">₹50L&#8211;₹1Cr</button>
-          <button type="button" class="lx-chip {% if request.GET.price == '1cr-3cr' %}active{% endif %}" onclick="setChip('iPrice','1cr-3cr',this)">₹1Cr&#8211;₹3Cr</button>
-          <button type="button" class="lx-chip {% if request.GET.price == '3cr-10cr' %}active{% endif %}" onclick="setChip('iPrice','3cr-10cr',this)">₹3Cr&#8211;₹10Cr</button>
-          <button type="button" class="lx-chip {% if request.GET.price == 'above10cr' %}active{% endif %}" onclick="setChip('iPrice','above10cr',this)">Above ₹10Cr</button>
+          <button type="button" class="lx-chip {% if request.GET.price == 'under50l' %}active{% endif %}" onclick="setChip('iPrice','under50l',this)">Under <span class="rupee">₹</span>50L</button>
+          <button type="button" class="lx-chip {% if request.GET.price == '50l-1cr' %}active{% endif %}" onclick="setChip('iPrice','50l-1cr',this)"><span class="rupee">₹</span>50L&#8211;<span class="rupee">₹</span>1Cr</button>
+          <button type="button" class="lx-chip {% if request.GET.price == '1cr-3cr' %}active{% endif %}" onclick="setChip('iPrice','1cr-3cr',this)"><span class="rupee">₹</span>1Cr&#8211;<span class="rupee">₹</span>3Cr</button>
+          <button type="button" class="lx-chip {% if request.GET.price == '3cr-10cr' %}active{% endif %}" onclick="setChip('iPrice','3cr-10cr',this)"><span class="rupee">₹</span>3Cr&#8211;<span class="rupee">₹</span>10Cr</button>
+          <button type="button" class="lx-chip {% if request.GET.price == 'above10cr' %}active{% endif %}" onclick="setChip('iPrice','above10cr',this)">Above <span class="rupee">₹</span>10Cr</button>
         </div>
       </div>
 
@@ -662,11 +662,11 @@
           {% endif %}
           {% if request.GET.price %}
           <div class="lx-filter-tag">
-            {% if request.GET.price == 'under50l' %}Under ₹50L
-            {% elif request.GET.price == '50l-1cr' %}₹50L&#8211;₹1Cr
-            {% elif request.GET.price == '1cr-3cr' %}₹1Cr&#8211;₹3Cr
-            {% elif request.GET.price == '3cr-10cr' %}₹3Cr&#8211;₹10Cr
-            {% elif request.GET.price == 'above10cr' %}Above ₹10Cr
+            {% if request.GET.price == 'under50l' %}Under <span class="rupee">₹</span>50L
+            {% elif request.GET.price == '50l-1cr' %}<span class="rupee">₹</span>50L&#8211;<span class="rupee">₹</span>1Cr
+            {% elif request.GET.price == '1cr-3cr' %}<span class="rupee">₹</span>1Cr&#8211;<span class="rupee">₹</span>3Cr
+            {% elif request.GET.price == '3cr-10cr' %}<span class="rupee">₹</span>3Cr&#8211;<span class="rupee">₹</span>10Cr
+            {% elif request.GET.price == 'above10cr' %}Above <span class="rupee">₹</span>10Cr
             {% else %}{{ request.GET.price }}{% endif %}
             <a href="?{% for k,v in request.GET.items %}{% if k != 'price' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
           </div>

@@ -1177,7 +1177,7 @@ function pdCalcEMI() {
   const n = tenure * 12;
   const emi = P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
   const totalInt = (emi * n) - P;
-  document.getElementById('pdLoanVal').textContent = loanLakhs >= 100 ? '₹'+(loanLakhs/100).toFixed(1)+' Cr' : '₹'+loanLakhs+' L';
+  document.getElementById('pdLoanVal').textContent = loanLakhs >= 100 ? '<span class="rupee">₹</span>'+(loanLakhs/100).toFixed(1)+' Cr' : '<span class="rupee">₹</span>'+loanLakhs+' L';
   document.getElementById('pdRateVal').textContent = rate.toFixed(1)+'%';
   document.getElementById('pdTenureVal').textContent = tenure+' Year'+(tenure>1?'s':'');
   document.getElementById('pdEMIAmt').textContent = pdFmtAmt(emi);
@@ -1189,9 +1189,9 @@ function pdCalcEMI() {
   });
 }
 function pdFmtAmt(v) {
-  if (v >= 10000000) return '₹'+(v/10000000).toFixed(2)+' Cr';
-  if (v >= 100000)   return '₹'+(v/100000).toFixed(2)+' L';
-  return '₹'+Math.round(v).toLocaleString('en-IN');
+  if (v >= 10000000) return '<span class="rupee">₹</span>'+(v/10000000).toFixed(2)+' Cr';
+  if (v >= 100000)   return '<span class="rupee">₹</span>'+(v/100000).toFixed(2)+' L';
+  return '<span class="rupee">₹</span>'+Math.round(v).toLocaleString('en-IN');
 }
 
 // ── Map Street / Satellite toggle ──

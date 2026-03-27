@@ -42,7 +42,7 @@
     <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Pricing</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
       <div class="form-group" style="grid-column:span 2;">
-        <label>Price (₹) *</label>
+        <label>Price (<span class="rupee">₹</span>) *</label>
         <input type="number" name="price" value="{{ form.price.value|default:'' }}" required placeholder="e.g. 5000000">
         {% if form.price.errors %}<div class="form-error">{{ form.price.errors.0 }}</div>{% endif %}
       </div>
