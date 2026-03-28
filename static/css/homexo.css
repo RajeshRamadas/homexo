@@ -1,3 +1,17 @@
+.property-price .rupee,
+.pd-price .rupee,
+.fp-price .rupee,
+.fpw-price-val .rupee,
+.emi-slider-value .rupee,
+.emi-kpi-value .rupee,
+.emi-slider-bounds .rupee,
+.field-icon-rupee .rupee {
+  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1.05em !important;
+  display: inline-block;
+  margin-right: 1px;
+}
 /*
  * homexo.css
  * Supplemental styles loaded via {% static 'css/homexo.css' %}
@@ -27,7 +41,7 @@
 .charcoal { color: var(--charcoal); }
 
 /* ── Typography Additions ────────────────────────────────────────────────── */
-.rupee { font-family: Arial, sans-serif !important; font-weight: 600 !important; font-size: 1.05em !important; display: inline-block; margin-right: 1px; }
+.rupee { font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important; font-weight: 600 !important; font-size: 1.05em !important; display: inline-block; margin-right: 1px; }
 
 /* ── Form widget overrides ────────────────────────────────────────────────── */
 input[type="text"],

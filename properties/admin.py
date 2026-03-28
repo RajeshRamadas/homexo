@@ -10,10 +10,10 @@ from .models import Developer, Property, PropertyImage, PropertyFloorPlan, Prope
 
 @admin.register(Developer)
 class DeveloperAdmin(admin.ModelAdmin):
-    list_display        = ('logo_thumb', 'name', 'tagline', 'location', 'total_projects', 'is_featured')
+    list_display        = ('logo_thumb', 'name', 'tagline', 'location', 'tags', 'total_projects', 'is_featured')
     list_display_links  = ('name',)
     list_filter         = ('is_featured', 'location')
-    search_fields       = ('name', 'tagline', 'location')
+    search_fields       = ('name', 'tagline', 'location', 'tags')
     prepopulated_fields = {'slug': ('name',)}
     list_editable       = ('is_featured',)
 

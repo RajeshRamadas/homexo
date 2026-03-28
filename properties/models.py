@@ -21,6 +21,7 @@ class Developer(models.Model):
     established_year = models.PositiveSmallIntegerField(null=True, blank=True)
     website          = models.URLField(blank=True)
     location         = models.CharField(max_length=200, blank=True, help_text='e.g. Bengaluru, Pan India')
+    tags             = models.CharField(max_length=255, blank=True, help_text='Comma-separated tags (e.g. Premium, Affordable, Commercial, Luxury, Township, Plotted)')
     is_featured      = models.BooleanField(default=False)
 
     class Meta:

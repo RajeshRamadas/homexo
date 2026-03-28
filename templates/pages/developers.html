@@ -664,13 +664,13 @@
 <!-- FILTER BAR -->
 <div class="dev-filter-bar">
   <div class="filter-tabs">
-    <button class="ftab active" onclick="setFilter(this)">All Developers</button>
-    <button class="ftab" onclick="setFilter(this)">Premium</button>
-    <button class="ftab" onclick="setFilter(this)">Affordable</button>
-    <button class="ftab" onclick="setFilter(this)">Commercial</button>
-    <button class="ftab" onclick="setFilter(this)">Luxury</button>
-    <button class="ftab" onclick="setFilter(this)">Township</button>
-    <button class="ftab" onclick="setFilter(this)">Plotted</button>
+    <button class="ftab active" data-filter="all" onclick="setFilter(this)">All Developers</button>
+    <button class="ftab" data-filter="premium" onclick="setFilter(this)">Premium</button>
+    <button class="ftab" data-filter="affordable" onclick="setFilter(this)">Affordable</button>
+    <button class="ftab" data-filter="commercial" onclick="setFilter(this)">Commercial</button>
+    <button class="ftab" data-filter="luxury" onclick="setFilter(this)">Luxury</button>
+    <button class="ftab" data-filter="township" onclick="setFilter(this)">Township</button>
+    <button class="ftab" data-filter="plotted" onclick="setFilter(this)">Plotted</button>
   </div>
   <div class="filter-right">
     <div class="filter-search">
@@ -800,7 +800,7 @@
     <div class="dev-section-label">Top Rated Developers</div>
     <div class="dev-grid" id="devGridTop">
       {% for developer in developers %}
-      <div class="dev-card vis">
+      <div class="dev-card vis" data-tags="{{ developer.tags|lower }}">
         <div class="dev-verified">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           RERA Verified
@@ -859,118 +859,35 @@
   <div id="listView" style="display:none;">
     <div class="dev-section-label">All Developers — List View</div>
     <div class="dev-list">
+
+      {% for developer in developers %}
+      <div class="dev-list-item vis" data-tags="{{ developer.tags|lower }}">
+        <div class="dli-rank">{{ forloop.counter|stringformat:"02d" }}</div>
+        <div class="dli-main">
+          <div class="dli-logo">
+            {% if developer.logo %}
+                <img src="{{ developer.logo.url }}" alt="{{ developer.name }}" style="width:100%;height:100%;object-fit:contain;padding:5px;">
+            {% else %}
+                {{ developer.initials }}
+            {% endif %}
+          </div>
+          <div class="dli-info">
+            <div class="dli-name">{{ developer.name }}</div>
+            <div class="dli-sub">
+              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>{{ developer.location }}</span>
+              {% if developer.tags %}<span>{{ developer.tags }}</span>{% endif %}
+              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
+            </div>
+          </div>
+        </div>
         <div class="dli-stats">
-          <div class="dli-stat"><div class="dli-stat-val">250+</div><div class="dli-stat-lbl">Projects</div></div>
+          <div class="dli-stat"><div class="dli-stat-val">{{ developer.active_projects_count }}+</div><div class="dli-stat-lbl">Projects</div></div>
           <div class="dli-stat"><div class="dli-stat-val">4.8★</div><div class="dli-stat-lbl">Rating</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">35 Yrs</div><div class="dli-stat-lbl">Est.</div></div>
+          <div class="dli-stat"><div class="dli-stat-val">{% if developer.established_year %}{{ developer.established_year }}{% else %}—{% endif %}</div><div class="dli-stat-lbl">Est.</div></div>
         </div>
-        <div class="dli-action"><a href="{% url 'pages:developer_profile' 'prestige-group' %}" class="dli-btn">View Projects</a></div>
+        <div class="dli-action"><a href="{% url 'pages:developer_profile' developer.slug %}" class="dli-btn">View Projects</a></div>
       </div>
-
-      <div class="dev-list-item">
-        <div class="dli-rank">02</div>
-        <div class="dli-main">
-          <div class="dli-logo">SB</div>
-          <div class="dli-info">
-            <div class="dli-name">Sobha Limited</div>
-            <div class="dli-sub">
-              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru · Pan India</span>
-              <span>Luxury</span>
-              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
-            </div>
-          </div>
-        </div>
-        <div class="dli-stats">
-          <div class="dli-stat"><div class="dli-stat-val">110+</div><div class="dli-stat-lbl">Projects</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">4.7★</div><div class="dli-stat-lbl">Rating</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">31 Yrs</div><div class="dli-stat-lbl">Est.</div></div>
-        </div>
-        <div class="dli-action"><a href="{% url 'pages:developer_profile' 'sobha-limited' %}" class="dli-btn">View Projects</a></div>
-      </div>
-
-      <div class="dev-list-item">
-        <div class="dli-rank">03</div>
-        <div class="dli-main">
-          <div class="dli-logo">GD</div>
-          <div class="dli-info">
-            <div class="dli-name">Godrej Properties</div>
-            <div class="dli-sub">
-              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai · Pan India</span>
-              <span>Premium · Township</span>
-              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
-            </div>
-          </div>
-        </div>
-        <div class="dli-stats">
-          <div class="dli-stat"><div class="dli-stat-val">85+</div><div class="dli-stat-lbl">Projects</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">4.6★</div><div class="dli-stat-lbl">Rating</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">29 Yrs</div><div class="dli-stat-lbl">Est.</div></div>
-        </div>
-        <div class="dli-action"><a href="{% url 'pages:developer_profile' 'godrej-properties' %}" class="dli-btn">View Projects</a></div>
-      </div>
-
-      <div class="dev-list-item">
-        <div class="dli-rank">04</div>
-        <div class="dli-main">
-          <div class="dli-logo">DL</div>
-          <div class="dli-info">
-            <div class="dli-name">DLF Limited</div>
-            <div class="dli-sub">
-              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Delhi NCR · Pan India</span>
-              <span>Luxury · Commercial</span>
-              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
-            </div>
-          </div>
-        </div>
-        <div class="dli-stats">
-          <div class="dli-stat"><div class="dli-stat-val">180+</div><div class="dli-stat-lbl">Projects</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">4.5★</div><div class="dli-stat-lbl">Rating</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">75 Yrs</div><div class="dli-stat-lbl">Est.</div></div>
-        </div>
-        <div class="dli-action"><a href="{% url 'pages:developer_profile' 'dlf-limited' %}" class="dli-btn">View Projects</a></div>
-      </div>
-
-      <div class="dev-list-item">
-        <div class="dli-rank">05</div>
-        <div class="dli-main">
-          <div class="dli-logo">BR</div>
-          <div class="dli-info">
-            <div class="dli-name">Brigade Group</div>
-            <div class="dli-sub">
-              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru · South India</span>
-              <span>Premium · Commercial</span>
-              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
-            </div>
-          </div>
-        </div>
-        <div class="dli-stats">
-          <div class="dli-stat"><div class="dli-stat-val">95+</div><div class="dli-stat-lbl">Projects</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">4.5★</div><div class="dli-stat-lbl">Rating</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">32 Yrs</div><div class="dli-stat-lbl">Est.</div></div>
-        </div>
-        <div class="dli-action"><a href="{% url 'pages:developer_profile' 'brigade-group' %}" class="dli-btn">View Projects</a></div>
-      </div>
-
-      <div class="dev-list-item">
-        <div class="dli-rank">06</div>
-        <div class="dli-main">
-          <div class="dli-logo">OR</div>
-          <div class="dli-info">
-            <div class="dli-name">Oberoi Realty</div>
-            <div class="dli-sub">
-              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai</span>
-              <span>Luxury · Ultra Premium</span>
-              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
-            </div>
-          </div>
-        </div>
-        <div class="dli-stats">
-          <div class="dli-stat"><div class="dli-stat-val">42+</div><div class="dli-stat-lbl">Projects</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">4.8★</div><div class="dli-stat-lbl">Rating</div></div>
-          <div class="dli-stat"><div class="dli-stat-val">38 Yrs</div><div class="dli-stat-lbl">Est.</div></div>
-        </div>
-        <div class="dli-action"><a href="{% url 'pages:developer_profile' 'oberoi-realty' %}" class="dli-btn">View Projects</a></div>
-      </div>
+      {% endfor %}
 
     </div><!-- /dev-list -->
     <div class="load-more-wrap">
@@ -1005,16 +922,64 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { threshold: 0.06 });
   document.querySelectorAll('.dev-card, .dev-list-item, .featured-developer').forEach(el => obs.observe(el));
 
+  // Unified filter function
+  function applyFilters() {
+    const activeTab = document.querySelector('.ftab.active');
+    const tagVal = (activeTab && activeTab.dataset.filter) ? activeTab.dataset.filter.toLowerCase() : 'all';
+
+    const activeCityBtn = document.querySelector('.city-chip.active');
+    const cityVal = activeCityBtn ? activeCityBtn.textContent.trim().toLowerCase() : 'all cities';
+    
+    const searchVal = document.getElementById('devSearch').value.toLowerCase();
+
+    // Filter Grid View
+    document.querySelectorAll('#gridView .dev-card').forEach(card => {
+      const tags = card.dataset.tags ? card.dataset.tags.toLowerCase() : '';
+      const name = card.querySelector('.dev-name')?.textContent.toLowerCase() || '';
+      const loc  = card.querySelector('.dev-location')?.textContent.toLowerCase() || '';
+
+      const matchTag = (tagVal === 'all' || tags.includes(tagVal));
+      const matchCity = (cityVal === 'all cities' || loc.includes(cityVal));
+      const matchSearch = (!searchVal || name.includes(searchVal));
+
+      if (matchTag && matchCity && matchSearch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Filter List View
+    document.querySelectorAll('#listView .dev-list-item').forEach(item => {
+      const tags = item.dataset.tags ? item.dataset.tags.toLowerCase() : '';
+      const name = item.querySelector('.dli-name')?.textContent.toLowerCase() || '';
+      const locSpan = item.querySelector('.dli-sub span');
+      const loc = locSpan ? locSpan.textContent.toLowerCase() : '';
+
+      const matchTag = (tagVal === 'all' || tags.includes(tagVal));
+      const matchCity = (cityVal === 'all cities' || loc.includes(cityVal));
+      const matchSearch = (!searchVal || name.includes(searchVal));
+
+      if (matchTag && matchCity && matchSearch) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
   // Filter tabs
   window.setFilter = function(btn) {
     document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
+    applyFilters();
   };
 
   // City chips
   window.setCity = function(btn) {
     document.querySelectorAll('.city-chip').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
+    applyFilters();
   };
 
   // View toggle
@@ -1040,11 +1005,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Search filter
   window.filterDevs = function() {
-    const q = document.getElementById('devSearch').value.toLowerCase();
-    document.querySelectorAll('.dev-card').forEach(card => {
-      const name = card.querySelector('.dev-name')?.textContent.toLowerCase() || '';
-      card.style.display = name.includes(q) ? '' : 'none';
-    });
+    applyFilters();
   };
 
 });
