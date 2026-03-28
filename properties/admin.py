@@ -54,7 +54,7 @@ class ConnectivityItemInline(admin.TabularInline):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display   = ('primary_thumb', 'title', 'listing_type', 'property_type',
+    list_display   = ('primary_thumb', 'title', 'developer_name', 'listing_type', 'property_type',
                       'display_price', 'locality', 'city', 'bedrooms', 'bathrooms',
                       'is_featured', 'is_signature', 'status', 'views_count', 'created_at')
     list_display_links = ('title',)
@@ -71,7 +71,7 @@ class PropertyAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Basic Info', {
-            'fields': ('title', 'slug', 'listing_type', 'property_type', 'description',
+            'fields': ('title', 'slug', 'developer_name', 'listing_type', 'property_type', 'description',
                        'owner', 'agent', 'status')
         }),
         ('Pricing', {

@@ -87,6 +87,7 @@ class Property(models.Model):
     # ── Core Details ──────────────────────────────────────────────────────────
     title          = models.CharField(max_length=200)
     slug           = models.SlugField(max_length=220, unique=True, blank=True)
+    developer_name = models.CharField(max_length=200, blank=True, verbose_name='Developer / Builder')
     description    = models.TextField(blank=True)
     bhk            = models.CharField(max_length=10, choices=BHK.choices, blank=True)
 

@@ -428,11 +428,7 @@
     border-radius: 10px; background: none; transition: background .18s;
     position: relative;
   }
-  .pd-conn-item:last-child { border-bottom: none; }
-  .pd-conn-item:hover {
-    background: linear-gradient(90deg, #fafdff 80%, #eaf3fa 100%);
-    box-shadow: 0 2px 8px 0 rgba(74,144,196,0.06);
-  }
+    .pd-conn-item:last-child { border-bottom: none; }
   .pd-conn-icon {
     width: 38px; height: 38px; border-radius: 50%;
     background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
@@ -440,10 +436,6 @@
     color: var(--sky); flex-shrink: 0; font-size: 18px; box-shadow: 0 1px 4px 0 rgba(74,144,196,0.08);
     border: 1.5px solid #dbeaf7;
     transition: background .18s, color .18s;
-  }
-  .pd-conn-item:hover .pd-conn-icon {
-    background: linear-gradient(135deg, var(--sky), var(--navy));
-    color: #fff;
   }
   .pd-conn-name {
     flex: 1; font-size: 15px; font-weight: 600; color: var(--charcoal);
@@ -921,7 +913,7 @@
   .fpw { width: 100%; box-sizing: border-box; overflow: hidden; }
 
   /* ── Config tabs — bottom highlight only ── */
-  .fpw-config-wrap { display: flex; align-items: stretch; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); border-bottom: 1.5px solid #e3eaf3; padding: 0 16px; gap: 0; }
+  .fpw-config-wrap { display: flex; align-items: stretch; background: #fafdff; border-bottom: 1.5px solid #e3eaf3; padding: 0 16px; gap: 0; }
   .fpw-config-arr { flex-shrink: 0; width: 22px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
   .fpw-config-arr:hover { color: var(--sky); }
   .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 0; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
@@ -940,7 +932,7 @@
   .fpw-config-tab.active .fpw-config-name { color: var(--navy); }
 
   /* ── Size sub-tabs — flat style ── */
-  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1.5px solid #e3eaf3; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); padding: 0 16px; gap: 0; }
+  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1.5px solid #e3eaf3; background: #fafdff; padding: 0 16px; gap: 0; }
   .fpw-size-arr { flex-shrink: 0; width: 22px; height: 42px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
   .fpw-size-arr:hover { color: var(--sky); }
   .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
@@ -956,7 +948,7 @@
   .fpw-size-tab.active { color: var(--navy); background: #eaf3fa; border-bottom-color: var(--sky); }
 
   /* ── Price bar ── */
-  .fpw-price-bar { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: linear-gradient(90deg, #eaf3fa 30%, #fafdff 100%); border-bottom: 1.5px solid #e3eaf3; }
+  .fpw-price-bar { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: #fafdff; border-bottom: 1.5px solid #e3eaf3; }
   .fpw-price-val { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); }
   .fpw-price-info { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #dbeaf7; background: #eaf3fa; color: var(--sky); font-size: 9px; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
 
@@ -1250,6 +1242,9 @@
               {% endif %}
             </div>
             <div class="pd-prop-name">{{ property.title }}</div>
+            {% if property.developer_name %}
+            <div class="pd-prop-developer" style="font-size:13px;color:var(--sky);font-weight:600;margin:2px 0 6px 0;">By {{ property.developer_name }}</div>
+            {% endif %}
             <div class="pd-prop-address">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
               {{ property.address }}
