@@ -406,6 +406,9 @@
   .dev-slider-wrapper { overflow:hidden;width:100%; }
   .dev-slider { display:flex;gap:2px;will-change:transform;transition:transform .55s cubic-bezier(.23,1,.32,1); }
   .dev-slider .property-card { width:calc((100% - 6px) / 4);min-width:calc((100% - 6px) / 4);flex-shrink:0; }
+  @media(max-width:1024px){
+    .dev-slider .property-card { width:calc(50% - 1px);min-width:calc(50% - 1px); }
+  }
   /* Developer-specific badge colour override */
   .dev-badge-featured { background:linear-gradient(90deg,var(--sky),#1A5A9A)!important;color:var(--white)!important; }
 
@@ -481,19 +484,9 @@
   .news-carousel-container { position:relative; }
   .news-carousel-wrapper { position:relative;overflow:hidden; }
   .news-carousel { display:flex;gap:20px;width:100%;will-change:transform; }
-  .news-card { width:calc((100% - 80px)/5);min-width:calc((100% - 80px)/5);flex-shrink:0;background:transparent;overflow:hidden;border:none;transition:transform .5s cubic-bezier(.23,1,.32,1); }
-  .news-img { height:150px;position:relative;overflow:hidden; border-radius:4px; }
-  .news-category-badge {
-    position:absolute; top:12px; left:12px; z-index:5;
-    background:#076df2; color:#ffffff;
-    padding:4px 12px; font-size:11px; font-weight:600;
-    border-radius:20px; box-shadow:0 2px 8px rgba(0,0,0,.15);
-  }
-  .news-img>div,.news-img>img { width:100%;height:100%;transition:transform .6s cubic-bezier(.23,1,.32,1);object-fit:cover; }
-  .news-card:hover .news-img>div,.news-card:hover .news-img>img { transform:scale(1.05); }
-  .news-body { padding:14px 0 0 0; }
-  .news-card-title { font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:var(--charcoal);line-height:1.4;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
-  .news-reading-time { font-size:12px;color:var(--warm-grey);font-weight:400; }
+  .news-card { width:calc((100% - 80px)/5);min-width:calc((100% - 80px)/5);flex-shrink:0; }
+  @media(max-width:1024px){ .news-card { width:calc((100% - 20px)/2);min-width:calc((100% - 20px)/2); } }
+  @media(max-width:768px){ .news-card { width:100%;min-width:100%; } }
   .news-arrows { display:flex;justify-content:center;align-items:center;gap:16px;margin-top:28px; }
   .news-arrow { width:40px;height:40px;border-radius:50%;border:1px solid rgba(13,43,78,.25);background:var(--white);color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 2px 10px rgba(0,0,0,.07); }
   .news-arrow:hover { background:var(--navy);color:var(--white);border-color:var(--navy); }
@@ -582,7 +575,7 @@
     .service-icon img{width:30px;height:30px;}
     .service-label{font-size:10px;line-height:1.35;max-width:12ch;}
     .prop-slider .property-card{width:100%!important;min-width:100%!important;}
-    .dev-slider .property-card{width:calc(50% - 1px)!important;min-width:calc(50% - 1px)!important;}
+    .dev-slider .property-card{width:100%!important;min-width:100%!important;}
     .property-grid-featured{display:flex;flex-direction:column;gap:2px;}
     .property-card-large .property-card-img{min-height:58vw!important;}
     .property-card-sm{flex-direction:column!important;}
@@ -1069,24 +1062,24 @@
     <div class="news-carousel-wrapper">
       <div class="news-carousel" id="newsCarousel">
         {% for post in news_posts %}
-        <article class="news-card" onclick="window.location.href='{{ post.get_absolute_url }}'" style="cursor: pointer;">
-          <div class="news-img">
+        <article class="property-card news-card" onclick="window.location.href='{{ post.get_absolute_url }}'" style="cursor: pointer; border:1px solid rgba(13,43,78,.07);">
+          <div class="property-card-img" style="height:200px;">
             {% if post.cover_image %}
-            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;">
+            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
             {% else %}
             <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A,#2E6FA8);"></div>
             {% endif %}
             {% if post.categories.first %}
-            <span class="news-category-badge" style="background: {{ post.categories.first.color }};">
+            <span class="property-tag new" style="background: {{ post.categories.first.color }};">
               {{ post.categories.first.name }}
             </span>
             {% else %}
-            <span class="news-category-badge" style="background: #076df2;">Trends</span>
+            <span class="property-tag new" style="background: #076df2;">Trends</span>
             {% endif %}
           </div>
-          <div class="news-body">
-            <h3 class="news-card-title">{{ post.title }}</h3>
-            <div class="news-reading-time">{{ post.reading_time|default:"5" }} mins read</div>
+          <div class="property-body" style="padding: 24px;">
+            <div class="property-price" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:8px;">{{ post.reading_time|default:"5" }} min read</div>
+            <div class="property-name" style="font-size:16px;line-height:1.5;margin-bottom:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ post.title }}</div>
           </div>
         </article>
         {% endfor %}
@@ -1209,7 +1202,7 @@ function slideProp(dir) {
   propIndex = Math.max(0, Math.min(propIndex + dir, maxIdx));
   const card = slider.querySelector('.property-card');
   if (!card) return;
-  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 2);
+  const cardW = card.offsetWidth + 2;
   slider.style.transform = `translateX(-${propIndex * cardW}px)`;
   slider.style.transition = 'transform 0.55s cubic-bezier(.23,1,.32,1)';
   document.querySelectorAll('.prop-dot').forEach((d, i) => d.classList.toggle('active', i === propIndex));
@@ -1230,7 +1223,7 @@ function slideDev(dir) {
   devIndex = Math.max(0, Math.min(devIndex + dir, maxIdx));
   const card = slider.querySelector('.property-card');
   if (!card) return;
-  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 2);
+  const cardW = card.offsetWidth + 2;
   slider.style.transform = `translateX(-${devIndex * cardW}px)`;
   slider.style.transition = 'transform 0.55s cubic-bezier(.23,1,.32,1)';
   document.querySelectorAll('#devDots .prop-dot').forEach((d, i) => d.classList.toggle('active', i === devIndex));
@@ -1251,7 +1244,7 @@ function slideNews(dir) {
   newsIndex = Math.max(0, Math.min(newsIndex + dir, maxIdx));
   const card = carousel.querySelector('.news-card');
   if (!card) return;
-  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 20);
+  const cardW = card.offsetWidth + (isMobile ? 0 : 20);
   carousel.style.transform = `translateX(-${newsIndex * cardW}px)`;
   carousel.style.transition = 'transform 0.5s cubic-bezier(.23,1,.32,1)';
   document.querySelectorAll('.news-dot').forEach((d, i) => d.classList.toggle('active', i === newsIndex));
@@ -1271,7 +1264,7 @@ function slideTestimonial(dir) {
   testIndex = Math.max(0, Math.min(testIndex + dir, maxIdx));
   const card = carousel.querySelector('.testimonial-card');
   if (!card) return;
-  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 16);
+  const cardW = card.offsetWidth + 16;
   carousel.style.transform = `translateX(-${testIndex * cardW}px)`;
   carousel.style.transition = 'transform 0.5s cubic-bezier(.23,1,.32,1)';
   document.querySelectorAll('.testimonial-dot').forEach((d, i) => d.classList.toggle('active', i === testIndex));
