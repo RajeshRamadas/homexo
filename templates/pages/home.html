@@ -478,12 +478,6 @@
   .service-info p { font-size:13px;color:rgba(245,240,232,.45);line-height:1.7; }
 
   /* ═══ NEWS ═══ */
-  .news-section { padding:60px;background:var(--white); }
-  .news-header { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px; }
-  .news-title { font-family:'DM Sans',sans-serif;font-size:clamp(28px,3vw,40px);font-weight:400;color:var(--charcoal);margin-bottom:6px; }
-  .news-subtitle { font-size:13px;color:var(--warm-grey);font-weight:300; }
-  .news-see-all { font-size:12px;color:var(--navy);border:1px solid var(--navy);padding:8px 18px;text-decoration:none;white-space:nowrap;transition:all .3s;letter-spacing:.5px; }
-  .news-see-all:hover { background:var(--navy);color:var(--white); }
   .news-carousel-container { position:relative; }
   .news-carousel-wrapper { position:relative;overflow:hidden; }
   .news-carousel { display:flex;gap:20px;width:100%;will-change:transform; }
@@ -1063,13 +1057,13 @@
 
 <!-- ══════════════════════ NEWS ════════════════════════════ -->
 {% if news_posts %}
-<section class="news-section">
-  <div class="news-header">
+<section class="section">
+  <div class="section-flex">
     <div>
-      <h2 class="news-title">News and Articles</h2>
-      <p class="news-subtitle">Read what's happening in Real Estate</p>
+      <div class="section-eyebrow">Real Estate Insights</div>
+      <h2 class="section-title">News &amp;<br><em>Articles</em></h2>
     </div>
-    <a href="{% url 'blog:list' %}" class="news-see-all">See all news and articles &rsaquo;</a>
+    <a href="{% url 'blog:list' %}" class="view-all"><span></span> See All Articles</a>
   </div>
   <div class="news-carousel-container">
     <div class="news-carousel-wrapper">
