@@ -18,7 +18,7 @@
 <!-- ── Campaign Grid ─────────────────────────────────────────────────── -->
 <section style="max-width:1200px; margin:0 auto; padding:4rem 2rem;">
   {% if campaigns %}
-  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:2rem;">
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr)); gap:2rem;">
     {% for campaign in campaigns %}
     <article style="border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff; transition:box-shadow .25s; box-shadow:0 2px 12px rgba(13,43,78,.06);" onmouseover="this.style.boxShadow='0 8px 32px rgba(13,43,78,.13)'" onmouseout="this.style.boxShadow='0 2px 12px rgba(13,43,78,.06)'">
 

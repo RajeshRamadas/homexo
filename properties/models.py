@@ -212,10 +212,30 @@ class PropertyImage(models.Model):
 
 class PropertyFloorPlan(models.Model):
     """Multiple floor plan / layout images for a property."""
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='floor_plans')
-    image    = models.ImageField(upload_to='properties/floor_plans/')
-    caption  = models.CharField(max_length=200, blank=True)
-    order    = models.PositiveSmallIntegerField(default=0)
+    property      = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='floor_plans')
+    image         = models.ImageField(upload_to='properties/floor_plans/')
+    caption       = models.CharField(max_length=200, blank=True)
+    bhk_type      = models.CharField(
+        max_length=100, blank=True,
+        help_text='Config tab label, e.g. "2 BHK Apartment". Plans sharing the same bhk_type are grouped into one tab.'
+    )
+    size_sqft     = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text='Size variant in sq.ft, shown as a sub-tab, e.g. 977 or 1040.'
+    )
+    price_display = models.CharField(
+        max_length=100, blank=True,
+        help_text='Price label for this variant, e.g. "₹ 92.95 L" or "₹ 1.05 Cr".'
+    )
+    room_data     = models.JSONField(
+        null=True, blank=True,
+        help_text='Room dimensions as JSON: [{"title": "Bedroom 1", "val": "11\'0 × 11\'2"}, ...]'
+    )
+    image_3d      = models.ImageField(
+        upload_to='properties/floor_plans/', null=True, blank=True,
+        help_text='Optional 3D render of the same layout. When present, a 2D/3D toggle will appear on the viewer.'
+    )
+    order         = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         verbose_name        = 'Floor Plan'

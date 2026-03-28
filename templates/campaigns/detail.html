@@ -110,6 +110,45 @@
   .masterplan-section .inner { max-width: 1200px; margin: 0 auto; text-align: center; }
   .masterplan-section img { max-width: 100%; border-radius: 10px; margin-top: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,.1); }
 
+  /* ═══ Floor Plans Section ════════════════════════════════════════════ */
+  .floorplans-section { padding: 5rem 2rem; }
+  .floorplans-section .inner { max-width: 1200px; margin: 0 auto; }
+
+  /* ── Floor Plan Viewer ── */
+  .fp-viewer { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; margin-top: 2rem; box-shadow: 0 4px 20px rgba(13,43,78,.06); }
+  .fp-tabs { display: flex; overflow-x: auto; scrollbar-width: none; background: #f9fafb; border-bottom: 1px solid var(--border); }
+  .fp-tabs::-webkit-scrollbar { display: none; }
+  .fp-tab { flex-shrink: 0; padding: 14px 20px; border: none; border-bottom: 3px solid transparent; background: transparent; cursor: pointer; text-align: left; transition: all .2s; font-family: 'DM Sans', sans-serif; }
+  .fp-tab:hover { background: rgba(0,0,0,.03); }
+  .fp-tab.active { border-bottom-color: var(--accent); background: #fff; }
+  .fp-tab-title { font-size: .88rem; font-weight: 700; color: var(--charcoal); white-space: nowrap; }
+  .fp-tab.active .fp-tab-title { color: var(--accent); }
+  .fp-tab-sub { font-size: .73rem; color: #9ca3af; margin-top: .2rem; white-space: nowrap; }
+  .fp-subtabs { display: flex; overflow-x: auto; scrollbar-width: none; padding: 0 1rem; border-bottom: 1px solid var(--border); gap: .45rem; align-items: center; background: #fff; min-height: 48px; }
+  .fp-subtabs::-webkit-scrollbar { display: none; }
+  .fp-subtab { flex-shrink: 0; padding: 5px 13px; border: none; border-radius: 20px; background: #f3f4f6; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 600; color: #6b7280; transition: all .2s; white-space: nowrap; }
+  .fp-subtab:hover { background: #e5e7eb; color: var(--navy); }
+  .fp-subtab.active { background: var(--accent); color: #fff; }
+  .fp-main { background: #fff; }
+  .fp-main-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; padding: .9rem 1.5rem; border-bottom: 1px solid var(--border); background: #fafafa; }
+  .fp-price { font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--navy); }
+  .fp-price .rupee { font-size: .85rem; margin-right: .15rem; }
+  .fp-price-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); color: #9ca3af; font-size: .65rem; cursor: help; margin-left: .35rem; vertical-align: middle; }
+  .fp-toggles { display: flex; gap: .3rem; }
+  .fp-toggle { padding: .3rem .75rem; border: 1px solid var(--border); border-radius: 4px; background: #fff; font-family: 'DM Sans', sans-serif; font-size: .76rem; font-weight: 600; cursor: pointer; transition: all .2s; color: #374151; }
+  .fp-toggle.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .fp-image-container { position: relative; min-height: 320px; background: #f0f2f5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .fp-image { max-width: 100%; max-height: 380px; object-fit: contain; display: block; transition: transform .3s cubic-bezier(.23,1,.32,1); cursor: zoom-in; }
+  .fp-controls { position: absolute; bottom: 12px; right: 12px; display: flex; gap: .3rem; }
+  .fp-controls button { width: 30px; height: 30px; border: 1px solid rgba(0,0,0,.15); background: rgba(255,255,255,.9); border-radius: 4px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--charcoal); }
+  .fp-controls button:hover { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+  .fp-explore-btn { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; background: rgba(255,255,255,.92); border: 1px solid rgba(0,0,0,.1); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--navy); transition: all .2s; }
+  .fp-explore-btn:hover { background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+  .fp-explore-text { text-align: center; padding: .5rem 1rem .75rem; font-family: 'DM Sans', sans-serif; font-size: .72rem; color: #9ca3af; }
+  .fp-dimensions { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .65rem; padding: 1.1rem 1.5rem 1.25rem; border-top: 1px solid var(--border); background: #fafafa; }
+  .fp-dim-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: .6rem .85rem; }
+  .fp-dim-title { font-family: 'DM Sans', sans-serif; font-size: .68rem; color: #9ca3af; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .25rem; font-weight: 600; }
+  .fp-dim-val { font-family: 'DM Sans', sans-serif; font-size: .83rem; font-weight: 700; color: var(--navy); }
 
   /* ═══ Amenities ══════════════════════════════════════════════════════ */
   .amenities-section { padding: 5rem 2rem; background: var(--ivory); }
@@ -380,6 +419,11 @@
     .highlights-section { padding: 3rem 1.5rem; }
     .section-heading { font-size: 2rem; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .countdown-bar { gap: 1.25rem; padding: .85rem 1.25rem; }
+    .countdown-num { font-size: 1.6rem; }
+    .fp-main-header { padding: .8rem 1.25rem; }
+    .fp-image-container { min-height: 280px; }
+    .fp-image { max-height: 280px; }
   }
   @media (max-width: 600px) {
     .key-stats-strip .inner { gap: 1rem; justify-content: space-around; }
@@ -392,6 +436,25 @@
     .about-section, .masterplan-section, .floorplans-section, .amenities-section, .gallery-section, .properties-section, .camp-cta { padding: 3rem 1rem; }
     .highlights-section { padding: 2.5rem 1rem; }
     .camp-hero { padding: 4rem 1rem 2.5rem; }
+    .countdown-bar { gap: .6rem; padding: .65rem .85rem; }
+    .countdown-num { font-size: 1.35rem; }
+    .countdown-lbl { font-size: .6rem; }
+    .fp-image-container { min-height: 55vw; }
+    .fp-image { max-height: 55vw; }
+    .fp-dimensions { grid-template-columns: repeat(2, 1fr); gap: .5rem; padding: .85rem 1rem; }
+    .fp-main-header { padding: .65rem .875rem; }
+    .fp-tabs .fp-tab { padding: 10px 13px; }
+    .about-img { max-height: 280px; width: 100%; object-fit: cover; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .location-section .inner { padding: 2.5rem 1rem; }
+  }
+  @media (max-width: 480px) {
+    .masterplan-section .camp-hero__cta { display: block !important; margin-left: 0 !important; margin-top: .75rem; text-align: center; box-sizing: border-box; }
+    .masterplan-section .camp-hero__cta:first-of-type { margin-top: 0; }
+    .camp-hero__sub { font-size: .95rem; }
+    .key-stat .value { font-size: 1rem; }
+    .key-stat .label { font-size: .6rem; }
+    .agent-strip .inner { gap: 1.5rem; }
   }
 
   /* Push page content above sticky bar */

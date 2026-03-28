@@ -24,13 +24,19 @@ class PropertyImageInline(admin.TabularInline):
 class PropertyFloorPlanInline(admin.TabularInline):
     model      = PropertyFloorPlan
     extra      = 2
-    fields     = ('image', 'fp_thumb', 'caption', 'order')
-    readonly_fields = ('fp_thumb',)
+    fields     = ('image', 'fp_thumb', 'image_3d', 'fp_thumb_3d', 'bhk_type', 'caption', 'size_sqft', 'price_display', 'room_data', 'order')
+    readonly_fields = ('fp_thumb', 'fp_thumb_3d')
 
-    @admin.display(description='Preview')
+    @admin.display(description='2D Preview')
     def fp_thumb(self, obj):
         if obj.image:
             return format_html('<img src="{}" height="60" style="border-radius:4px;object-fit:cover;" />', obj.image.url)
+        return '—'
+
+    @admin.display(description='3D Preview')
+    def fp_thumb_3d(self, obj):
+        if obj.image_3d:
+            return format_html('<img src="{}" height="60" style="border-radius:4px;object-fit:cover;" />', obj.image_3d.url)
         return '—'
 
 

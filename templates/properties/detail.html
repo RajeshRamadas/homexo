@@ -371,39 +371,148 @@
     .pd-prop-name { font-size: 22px; }
   }
   @media (max-width: 768px) {
-    .pd-breadcrumb { padding: 9px 14px; font-size: 11px; }
-    .pd-layout { display: flex; flex-direction: column; padding: 10px 12px 40px; gap: 12px; }
+    .pd-breadcrumb { padding: 10px 16px; font-size: 11px; }
+    .pd-layout { display: flex; flex-direction: column; padding: 0 0 80px; gap: 8px; }
     .pd-sticky { position: static; }
-    .pd-gallery { grid-template-columns: 3fr 2fr; grid-template-rows: 52vw 26vw; }
-    .pd-gallery-cell:nth-child(4), .pd-gallery-cell:nth-child(5) { display: none; }
-    .pd-prop-header { padding: 14px 14px 10px; }
-    .pd-prop-top { flex-direction: column; gap: 6px; }
+    .pd-card { border-left: none; border-right: none; border-radius: 0; }
+    .pd-gallery { grid-template-columns: 1fr; grid-template-rows: 56vw; }
+    .pd-gallery-main { grid-row: auto; }
+    .pd-gallery-cell { display: none; }
+    .pd-prop-header { padding: 16px 16px 10px; }
+    .pd-prop-top { flex-direction: column; gap: 8px; }
     .pd-price-block { text-align: left; }
-    .pd-prop-name { font-size: clamp(15px,4.5vw,20px); }
-    .pd-price { font-size: clamp(20px,5.5vw,26px); }
-    .pd-actions { padding: 0 14px 14px; }
+    .pd-prop-name { font-size: clamp(17px,4.8vw,22px); line-height: 1.3; }
+    .pd-price { font-size: clamp(22px,6vw,28px); }
+    .pd-price-per { font-size: 11px; }
+    .pd-actions { padding: 0 16px 16px; gap: 8px; }
     .pd-btn-primary { flex: 1 1 100%; order: -1; }
-    .pd-highlights { grid-template-columns: repeat(2, 1fr); padding: 14px; gap: 10px; }
-    .pd-ov-grid { grid-template-columns: 1fr; gap: 12px; padding: 14px; }
+    .pd-btn { min-height: 44px; font-size: 13px; }
+    .pd-highlights { grid-template-columns: repeat(2, 1fr); padding: 14px 16px; gap: 10px; }
+    .pd-ov-grid { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
     .pd-ov-item { padding-bottom: 10px; }
-    .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); padding: 12px 14px; }
-    .pd-prop-header, .pd-actions, .pd-tabs, .pd-card-header { padding-left: 14px; padding-right: 14px; }
-    .pd-amenity, .pd-sim-item { padding-left: 14px; padding-right: 14px; }
-    .pd-map-wrapper { height: 52vw; min-height: 240px; }
-    .pd-fp-preview { margin: 10px 14px 16px; }
-    .pd-contact, .pd-emi { padding: 14px; }
-    .pd-lb-stage { width: calc(100% - 70px); }
-    .pd-lb-arrow.prev { left: 6px; width: 40px; height: 40px; }
-    .pd-lb-arrow.next { right: 6px; width: 40px; height: 40px; }
+    .pd-ov-lbl { font-size: 12px; }
+    .pd-ov-val { font-size: 13px; }
+    .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); padding: 12px 16px; }
+    .pd-prop-header, .pd-actions, .pd-tabs, .pd-card-header { padding-left: 16px; padding-right: 16px; }
+    .pd-amenity { padding: 10px 16px; min-height: 44px; }
+    .pd-sim-item { padding-left: 16px; padding-right: 16px; }
+    .pd-map-wrapper { height: 56vw; min-height: 240px; }
+    .pd-map-pin { max-width: 200px; }
+    .pd-fp-preview { margin: 10px 16px 16px; }
+    .pd-contact, .pd-emi { padding: 16px; }
+    .pd-side { gap: 8px; }
+    .pd-lb-stage { width: calc(100% - 40px); }
+    .pd-lb-arrow.prev { left: 4px; width: 42px; height: 42px; }
+    .pd-lb-arrow.next { right: 4px; width: 42px; height: 42px; }
     .pd-lb-thumbs { display: none; }
-    .pd-lb-placeholder { height: 52vw; min-height: 220px; }
+    .pd-lb-placeholder { height: 56vw; min-height: 220px; }
+    .pd-lb-close { top: 14px; right: 14px; width: 40px; height: 40px; }
     /* Floor plan viewer mobile fix */
     #pdFpViewer { width: 100%; max-width: 100%; overflow: hidden; margin-top: 0; border-left: none; border-right: none; }
+    /* Image slideshow — full bleed, proper height */
+    #propImgBox { height: 56vw !important; max-height: 380px; }
+    /* Hide desktop-only hint text on touch devices */
+    .pd-img-hint { display: none; }
+    /* Description & location footer inline padding overrides */
+    .pd-desc-body { padding: 16px !important; }
+    .pd-loc-footer { padding: 12px 16px !important; }
+    /* Overflow protection */
+    .pd-main, .pd-side { max-width: 100%; overflow-x: hidden; }
+    /* EMI slider bigger touch target */
+    .pd-emi-slider::-webkit-slider-thumb { width: 20px; height: 20px; }
+    /* Property address wrap */
+    .pd-prop-address { font-size: 12px; flex-wrap: wrap; }
+    /* Photo count badge */
+    .pd-photo-count { bottom: 10px; right: 10px; padding: 6px 12px; font-size: 11px; }
+    /* Agent row on mobile */
+    .pd-agent-name { font-size: 14px; }
+    .pd-agent-av { width: 44px; height: 44px; font-size: 16px; }
+  }
+  @media (max-width: 480px) {
+    #propImgBox { height: 66vw !important; max-height: 280px; }
+    .pd-layout { padding: 0 0 88px; gap: 6px; }
+    .pd-breadcrumb { padding: 8px 12px; font-size: 10px; }
+    .pd-breadcrumb-cur { max-width: 140px; }
+    /* Property header */
+    .pd-prop-header { padding: 14px 14px 8px; }
+    .pd-prop-name { font-size: clamp(16px,4.5vw,20px); }
+    .pd-price { font-size: clamp(20px,5.5vw,26px); }
+    .pd-actions { padding: 0 14px 14px; gap: 6px; }
+    /* Action buttons: outline/ghost go 50-50 */
+    .pd-btn-ghost, .pd-btn-outline { flex: 1 1 calc(50% - 3px); justify-content: center; min-width: 0; font-size: 11px; padding: 10px 8px; }
+    /* Highlights: keep 2-col but tighter */
+    .pd-highlights { padding: 12px; gap: 8px; }
+    .pd-hl { padding: 12px 10px; }
+    .pd-hl-val { font-size: 14px; }
+    .pd-hl-lbl { font-size: 9px; }
+    /* Amenities: single column on very small screens */
+    .pd-amenities-grid { grid-template-columns: 1fr; }
+    .pd-amenity { font-size: 11px; padding: 10px 12px; }
+    /* Similar properties */
+    .pd-sim-thumb { width: 80px; height: 60px; }
+    .pd-sim-price { font-size: 16px; }
+    .pd-sim-name { max-width: 160px; font-size: 12px; }
+    .pd-sim-tags { gap: 4px; }
+    /* EMI */
+    .pd-emi-res-val { font-size: 18px; }
+    .pd-emi-result { padding: 12px; flex-wrap: wrap; }
+    /* Card header & tab padding */
+    .pd-card-header { padding: 14px 12px; }
+    .pd-tabs { padding: 0 12px; }
+    .pd-tab { padding: 12px 12px; font-size: 11px; min-height: 44px; }
+    /* Overview */
+    .pd-ov-grid { padding: 14px; }
+    .pd-ov-item { gap: 8px; }
+    /* Map */
+    .pd-map-wrapper { height: 60vw; min-height: 200px; }
+    .pd-map-ctrl-btn { padding: 8px 14px; min-height: 36px; }
+    .pd-loc-footer { flex-direction: column; align-items: flex-start !important; gap: 8px; }
+    /* Contact / EMI padding */
+    .pd-contact, .pd-emi { padding: 14px; }
+    /* Lightbox */
+    .pd-lb-stage { width: calc(100% - 20px); }
+    .pd-lb-arrow.prev { left: 2px; }
+    .pd-lb-arrow.next { right: 2px; }
+    .pd-lb-close { top: 10px; right: 10px; }
+    /* Photo count */
+    .pd-photo-count { bottom: 8px; right: 8px; padding: 5px 10px; font-size: 10px; }
+    /* Description */
+    .pd-desc { font-size: 14px; line-height: 1.7; }
+    .pd-desc-body { padding: 14px !important; }
   }
   @media (hover: none) and (pointer: coarse) {
     .pd-tab, .pd-map-ctrl-btn { min-height: 44px; }
     .pd-input, .pd-textarea { font-size: 16px !important; }
     .pd-emi-slider::-webkit-slider-thumb { width: 22px; height: 22px; }
+    .pd-btn { min-height: 44px; }
+    .pd-amenity { min-height: 44px; }
+    .pd-read-more { min-height: 44px; }
+  }
+
+  /* ── IMAGE SLIDESHOW DOT INDICATORS ── */
+  .pd-slide-dots {
+    display: none;
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    gap: 6px; align-items: center; z-index: 4;
+  }
+  .pd-slide-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,.4);
+    border: none; padding: 0; cursor: pointer;
+    transition: all .3s;
+  }
+  .pd-slide-dot.active {
+    background: var(--white);
+    width: 18px; border-radius: 4px;
+  }
+  @media (max-width: 768px) {
+    .pd-slide-dots { display: flex; }
+    /* Always show slideshow arrows on mobile for discoverability */
+    #propImgPrev, #propImgNext { display: flex !important; }
+    #propImgPrev { opacity: 0.7; }
+    #propImgNext { opacity: 0.7; }
+    /* Larger touch targets for slideshow arrows on mobile */
+    #propImgPrev, #propImgNext { width: 40px !important; height: 40px !important; }
   }
 
   /* ── MOBILE STICKY BOTTOM BAR ── */
@@ -438,11 +547,12 @@
       letter-spacing: .5px;
       cursor: pointer;
       text-decoration: none;
+      min-height: 48px;
     }
     .pd-mobile-bar-primary { background: var(--navy); color: var(--white); }
     .pd-mobile-bar-wa      { background: #25D366;       color: #fff; }
-    /* push page content above bar */
-    .pd-layout { padding-bottom: 80px !important; }
+    /* hide global floating actions behind mobile bar */
+    .floating-actions { bottom: 80px !important; }
   }
 
   /* ── BOTTOM SHEET ── */
@@ -493,20 +603,47 @@
   /* ══════════════ FLOOR PLAN VIEWER (fpw) ══════════════ */
   .fpw { width: 100%; box-sizing: border-box; overflow: hidden; }
 
-  /* Tab strip */
-  .fpw-tabs { display: flex; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border); background: #fafafa; }
-  .fpw-tabs::-webkit-scrollbar { display: none; }
-  .fpw-tab {
-    flex-shrink: 0; padding: 11px 20px; border: none; background: none;
-    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
-    color: var(--warm-grey); cursor: pointer; white-space: nowrap;
-    border-bottom: 2px solid transparent; margin-bottom: -1px;
-    transition: all .2s; letter-spacing: .3px;
+  /* ── Config tabs (2 BHK / 3 BHK …) ── */
+  .fpw-config-wrap { display: flex; align-items: stretch; background: #fafafa; border-bottom: 2px solid var(--border); }
+  .fpw-config-arr { flex-shrink: 0; width: 26px; border: none; background: none; color: var(--warm-grey); font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
+  .fpw-config-arr:hover { color: var(--navy); }
+  .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 6px 0 0; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-config-tabs::-webkit-scrollbar { display: none; }
+  .fpw-config-tab {
+    flex-shrink: 0; padding: 8px 14px 9px; border: none; border-bottom: 2px solid transparent;
+    background: transparent; cursor: pointer; text-align: left;
+    transition: all .2s; position: relative;
+    box-sizing: border-box; overflow: hidden;
   }
-  .fpw-tab:hover { color: var(--navy); }
-  .fpw-tab.active { color: var(--navy); border-bottom-color: var(--navy); background: var(--white); }
+  .fpw-config-tab:hover { background: rgba(0,0,0,.04); }
+  .fpw-config-tab.active { border-bottom-color: var(--navy); background: #fff; }
+  .fpw-config-tab.active::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--navy); border-radius: 3px 3px 0 0; }
+  .fpw-config-name { font-size: 12px; font-weight: 700; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fpw-config-tab.active .fpw-config-name { color: var(--navy); }
+  .fpw-config-price { font-size: 11px; color: var(--warm-grey); margin-top: 2px; }
 
-  /* Image stage */
+  /* ── Size sub-tabs (977 SQ.FT / 1017 SQ.FT …) ── */
+  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1px solid var(--border); background: #fff; }
+  .fpw-size-arr { flex-shrink: 0; width: 26px; height: 40px; border: none; background: none; color: var(--warm-grey); font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
+  .fpw-size-arr:hover { color: var(--navy); }
+  .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-size-tabs::-webkit-scrollbar { display: none; }
+  .fpw-size-tab {
+    flex-shrink: 0; padding: 10px 14px; border: none; background: none;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    text-transform: uppercase; color: var(--warm-grey); cursor: pointer; white-space: nowrap;
+    position: relative; transition: color .2s;
+  }
+  .fpw-size-tab:hover { color: var(--charcoal); }
+  .fpw-size-tab.active { color: var(--navy); }
+  .fpw-size-tab.active::after { content: ''; position: absolute; bottom: 0; left: 6px; right: 6px; height: 2px; background: var(--navy); border-radius: 2px 2px 0 0; }
+
+  /* ── Price bar ── */
+  .fpw-price-bar { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: #fff; border-bottom: 1px solid var(--border); }
+  .fpw-price-val { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 700; color: var(--charcoal); }
+  .fpw-price-info { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border); background: #f3f4f6; color: var(--warm-grey); font-size: 10px; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
+
+  /* ── Image stage ── */
   .fpw-stage {
     position: relative; background: #f0f2f5; overflow: hidden;
     min-height: 340px; display: flex; align-items: center; justify-content: center;
@@ -520,7 +657,13 @@
     cursor: zoom-in;
   }
 
-  /* Overlay controls (top-right cluster) */
+  /* ── 2D / 3D toggle (floating top-left of stage) ── */
+  .fpw-2d3d { position: absolute; top: 12px; left: 12px; z-index: 10; display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.15); border: 1px solid var(--border); }
+  .fpw-view-btn { width: 38px; height: 34px; border: none; background: #fff; color: var(--warm-grey); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s; }
+  .fpw-view-btn.active { background: var(--navy); color: #fff; }
+  .fpw-view-btn:hover:not(.active) { background: var(--ivory); color: var(--navy); }
+
+  /* ── Overlay controls (top-right) ── */
   .fpw-overlay {
     position: absolute; top: 12px; right: 12px; z-index: 10;
     display: flex; flex-direction: column; gap: 2px;
@@ -537,7 +680,7 @@
   .fpw-oc-btn:hover { background: var(--navy); color: #fff; }
   .fpw-oc-sep { height: 1px; background: var(--border); margin: 0 4px; }
 
-  /* Side nav arrows */
+  /* ── Prev/Next arrows ── */
   .fpw-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.7);
@@ -549,7 +692,7 @@
   .fpw-arrow-prev { left: 12px; }
   .fpw-arrow-next { right: 12px; }
 
-  /* Zoom badge */
+  /* ── Zoom badge ── */
   .fpw-zoom-badge {
     position: absolute; bottom: 12px; left: 12px; z-index: 10;
     background: rgba(13,27,42,.65); color: #fff; font-size: 10px;
@@ -559,7 +702,20 @@
   }
   .fpw-stage:hover .fpw-zoom-badge { opacity: 1; }
 
-  /* Stats strip */
+  /* ── Room dimensions strip ── */
+  .fpw-dims-wrap { display: flex; align-items: stretch; border-top: 1px solid var(--border); background: #fff; }
+  .fpw-dims-arr { flex-shrink: 0; width: 26px; border: none; background: #fff; color: var(--warm-grey); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s, background .2s; padding: 0; }
+  .fpw-dims-arr:hover { color: var(--navy); background: var(--ivory); }
+  .fpw-dims-arr-l { border-right: 1px solid var(--border); }
+  .fpw-dims-arr-r { border-left: 1px solid var(--border); }
+  .fpw-dims { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+  .fpw-dims::-webkit-scrollbar { display: none; }
+  .fpw-dim-card { flex-shrink: 0; min-width: 120px; padding: 10px 14px; border-right: 1px solid var(--border); box-sizing: border-box; }
+  .fpw-dim-card:last-child { border-right: none; }
+  .fpw-dim-title { font-size: 12px; font-weight: 700; color: var(--charcoal); margin-bottom: 2px; }
+  .fpw-dim-val { font-size: 11px; color: var(--warm-grey); }
+
+  /* ── Stats strip ── */
   .fpw-stats {
     display: flex; align-items: center; flex-wrap: wrap; gap: 0;
     border-top: 1px solid var(--border); background: var(--white);
@@ -579,7 +735,7 @@
   }
   .fpw-dl-btn:hover { color: var(--navy); }
 
-  /* CTA row */
+  /* ── CTA row ── */
   .fpw-cta {
     display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
     padding: 14px 20px; border-top: 1px solid var(--border); background: #fafafa;
@@ -593,44 +749,44 @@
   .fpw-cta-btn:hover { background: var(--sky); }
   .fpw-cta-note { font-size: 11px; color: var(--warm-grey); line-height: 1.5; }
 
-  /* Thumbnail strip */
-  .fpw-thumbs {
-    display: flex; gap: 8px; padding: 12px 20px; overflow-x: auto; scrollbar-width: none;
-    background: var(--white); border-top: 1px solid var(--border);
-  }
-  .fpw-thumbs::-webkit-scrollbar { display: none; }
-  .fpw-thumb {
-    flex-shrink: 0; width: 76px; cursor: pointer; opacity: .55;
-    border: 2px solid transparent; transition: all .2s; border-radius: 2px; overflow: hidden;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-  }
-  .fpw-thumb img { width: 76px; height: 52px; object-fit: cover; display: block; }
-  .fpw-thumb span { font-size: 9px; font-weight: 600; color: var(--warm-grey); letter-spacing: .3px; text-transform: uppercase; padding-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 76px; }
-  .fpw-thumb:hover { opacity: .8; }
-  .fpw-thumb.active { opacity: 1; border-color: var(--navy); }
-  .fpw-thumb.active span { color: var(--navy); }
-
-  /* Mobile responsive */
+  /* ── Responsive ── */
   @media (max-width: 768px) {
     .fpw-stage { min-height: 52vw; }
     .fpw-slide { padding: 16px 12px; }
     .fpw-img { max-height: 48vw; }
+    .fpw-config-tab { padding: 6px 12px 8px; }
+    .fpw-config-price { font-size: 10px; }
+    .fpw-size-tab { padding: 8px 10px; font-size: 10px; }
+    .fpw-price-val { font-size: 15px; }
+    .fpw-price-bar { padding: 8px 14px; }
+    .fpw-2d3d { top: 8px; left: 8px; }
+    .fpw-view-btn { width: 32px; height: 28px; font-size: 10px; }
     .fpw-overlay { top: 8px; right: 8px; }
     .fpw-oc-btn { width: 28px; height: 28px; }
     .fpw-arrow { width: 30px; height: 30px; }
     .fpw-arrow-prev { left: 8px; }
     .fpw-arrow-next { right: 8px; }
+    .fpw-dim-card { min-width: 100px; padding: 8px 10px; }
+    .fpw-dim-title { font-size: 11px; }
+    .fpw-dim-val { font-size: 10px; }
     .fpw-stat { padding: 9px 14px; font-size: 11px; }
     .fpw-cta { padding: 12px 14px; gap: 10px; }
     .fpw-cta-btn { font-size: 11px; padding: 9px 14px; }
-    .fpw-thumbs { padding: 10px 14px; }
-    .fpw-tab { padding: 9px 16px; font-size: 11px; }
   }
   @media (max-width: 480px) {
-    .fpw-stage { min-height: 56vw; }
-    .fpw-img { max-height: 52vw; }
-    .fpw-stat-right { margin-left: 0; border-left: none; }
-    .fpw-stats { padding: 0; }
+    .fpw-stage { min-height: 72vw; }
+    .fpw-img { max-height: 68vw; }
+    .fpw-config-tabs { padding: 4px 4px 0; }
+    .fpw-config-tab { padding: 5px 10px 7px; font-size: 11px; max-width: 130px; }
+    /* hide zoom +/- on mobile — pinch-to-zoom is available */
+    .fpw-overlay .fpw-oc-btn:nth-child(1),
+    .fpw-overlay .fpw-oc-btn:nth-child(2),
+    .fpw-oc-sep { display: none; }
+    /* bigger prev/next touch targets */
+    .fpw-arrow { width: 38px; height: 38px; }
+    /* stats: 2-column grid */
+    .fpw-stat { flex: 0 0 50%; box-sizing: border-box; border-bottom: 1px solid var(--border); }
+    .fpw-stat-right { flex: 1 0 100%; margin-left: 0; border-right: none; border-top: 1px solid var(--border); justify-content: center; }
     .fpw-cta { flex-direction: column; align-items: flex-start; }
     .fpw-cta-btn { width: 100%; justify-content: center; }
   }
@@ -693,13 +849,22 @@
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           View All {{ images.count }} Photo{{ images.count|pluralize }}
         </div>
+
+        {# Dot indicators (shown on mobile) #}
+        {% if images.count > 1 %}
+        <div class="pd-slide-dots" id="propImgDots">
+          {% for img in images %}
+          <button class="pd-slide-dot{% if forloop.first %} active{% endif %}" type="button" aria-label="Go to photo {{ forloop.counter }}" onclick="event.stopPropagation();propImgGoTo({{ forloop.counter0 }})"></button>
+          {% endfor %}
+        </div>
+        {% endif %}
       </div>
 
       {# Counter row #}
       {% if images.count > 1 %}
       <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:var(--charcoal);">
         <span id="propImgCounter" style="font-size:11px;color:#aaa;">1 / {{ images.count }}</span>
-        <span style="font-size:11px;color:#aaa;">Click image to view full screen</span>
+        <span class="pd-img-hint" style="font-size:11px;color:#aaa;">Click image to view full screen</span>
       </div>
       {% endif %}
       {% endwith %}
@@ -800,7 +965,7 @@
     {# DESCRIPTION #}
     <div class="pd-card">
       <div class="pd-card-header"><div class="pd-card-title">About this Property</div></div>
-      <div style="padding:22px 28px;">
+      <div class="pd-desc-body" style="padding:22px 28px;">
         <div class="pd-desc">
           {% if property.description %}
           <span id="pdDescShort">{{ property.description|truncatechars:320 }}</span>
@@ -891,16 +1056,22 @@
 
       <div class="fpw" id="fpwWrap">
 
-        {# ── Tab strip ── #}
-        {% if fps|length > 1 %}
-        <div class="fpw-tabs" id="fpwTabs">
-          {% for fp in fps %}
-          <button class="fpw-tab{% if forloop.first %} active{% endif %}" onclick="fpwSetTab({{ forloop.counter0 }})">
-            {{ fp.caption|default:forloop.counter }}
-          </button>
-          {% endfor %}
+        {# ── Config tabs (BHK type) — JS-rendered ── #}
+        <div class="fpw-config-wrap" id="fpwConfigWrap" style="display:none;">
+          <button class="fpw-config-arr" onclick="fpwConfigScroll(-1)">&#8249;</button>
+          <div class="fpw-config-tabs" id="fpwConfigTabs"></div>
+          <button class="fpw-config-arr" onclick="fpwConfigScroll(1)">&#8250;</button>
         </div>
-        {% endif %}
+
+        {# ── Size sub-tabs — JS-rendered ── #}
+        <div class="fpw-size-wrap" id="fpwSizeWrap" style="display:none;">
+          <button class="fpw-size-arr" onclick="fpwSizeScroll(-1)">&#8249;</button>
+          <div class="fpw-size-tabs" id="fpwSizeTabs"></div>
+          <button class="fpw-size-arr" onclick="fpwSizeScroll(1)">&#8250;</button>
+        </div>
+
+        {# ── Price bar — JS-rendered ── #}
+        <div class="fpw-price-bar" id="fpwPriceBar" style="display:none;"></div>
 
         {# ── Image stage ── #}
         <div class="fpw-stage" id="fpwStage">
@@ -915,7 +1086,13 @@
           </div>
           {% endfor %}
 
-          {# Floating controls — top right #}
+          {# 2D/3D toggle — floating top-left, shown by JS only when 3D image exists #}
+          <div class="fpw-2d3d" id="fpw2d3dToggle" style="display:none;">
+            <button class="fpw-view-btn active" id="fpwBtn2D" onclick="fpwSetView('2d')">2D</button>
+            <button class="fpw-view-btn" id="fpwBtn3D" onclick="fpwSetView('3d')">3D</button>
+          </div>
+
+          {# Overlay controls — top right #}
           <div class="fpw-overlay">
             <button class="fpw-oc-btn" onclick="fpwZoom(0.3)" title="Zoom In">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -932,24 +1109,29 @@
             </button>
           </div>
 
-          {% if fps|length > 1 %}
-          <button class="fpw-arrow fpw-arrow-prev" onclick="fpwNav(-1)" aria-label="Previous plan">
+          <button class="fpw-arrow fpw-arrow-prev" id="fpwPrev" onclick="fpwNav(-1)" aria-label="Previous plan" style="display:none;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <button class="fpw-arrow fpw-arrow-next" onclick="fpwNav(1)" aria-label="Next plan">
+          <button class="fpw-arrow fpw-arrow-next" id="fpwNext" onclick="fpwNav(1)" aria-label="Next plan" style="display:none;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
-          {% endif %}
 
           <div class="fpw-zoom-badge" id="fpwZoomBadge">100%</div>
         </div>{# /fpw-stage #}
+
+        {# ── Room dimensions strip — JS-rendered ── #}
+        <div class="fpw-dims-wrap" id="fpwDimsWrap" style="display:none;">
+          <button class="fpw-dims-arr fpw-dims-arr-l" onclick="fpwDimsScroll(-1)">&#8249;</button>
+          <div class="fpw-dims" id="fpwDims"></div>
+          <button class="fpw-dims-arr fpw-dims-arr-r" onclick="fpwDimsScroll(1)">&#8250;</button>
+        </div>
 
         {# ── Property quick stats ── #}
         <div class="fpw-stats">
           {% if property.area_sqft %}
           <div class="fpw-stat">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
-            {{ property.area_sqft|floatformat:0 }} sq.ft
+            <span id="fpwStatArea">{{ property.area_sqft|floatformat:0 }} sq.ft</span>
           </div>
           {% endif %}
           {% if property.bedrooms %}
@@ -987,93 +1169,311 @@
           <span class="fpw-cta-note">Get full brochure with room dimensions in your inbox</span>
         </div>
 
-        {# ── Thumbnails (2+ plans only) ── #}
-        {% if fps|length > 1 %}
-        <div class="fpw-thumbs" id="fpwThumbs">
-          {% for fp in fps %}
-          <div class="fpw-thumb{% if forloop.first %} active{% endif %}" onclick="fpwSetTab({{ forloop.counter0 }})">
-            <img src="{{ fp.image.url }}" alt="{{ fp.caption|default:'Plan' }}" loading="lazy">
-            <span>{{ fp.caption|default:forloop.counter }}</span>
-          </div>
-          {% endfor %}
-        </div>
-        {% endif %}
-
       </div>{# /fpw #}
 
       <script>
       (function() {
-        var fpwPlans = [
-          {% for fp in fps %}
-          { idx: {{ forloop.counter0 }}, url: "{{ fp.image.url }}", cap: "{{ fp.caption|escapejs }}" }{% if not forloop.last %},{% endif %}
-          {% endfor %}
-        ];
-        var fpwCur = 0, fpwZl = 1;
-
-        function fpwActiveImg() {
-          var slide = document.getElementById('fpwSlide' + fpwCur);
-          return slide ? slide.querySelector('.fpw-img') : null;
+        // ── HTML-escape helper ──
+        function esc(s) {
+          return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
-        function fpwUpdateZoom() {
-          var img = fpwActiveImg();
-          if (img) img.style.transform = 'scale(' + fpwZl + ')';
-          var badge = document.getElementById('fpwZoomBadge');
-          if (badge) {
-            badge.textContent = Math.round(fpwZl * 100) + '%';
-            badge.style.opacity = (fpwZl !== 1) ? '1' : '0';
+        // ── Plan data from Django ──
+        var fpwAllPlans = [
+          {% for fp in fps %}
+          {
+            idx:   {{ forloop.counter0 }},
+            url:   "{{ fp.image.url }}",
+            url3d: "{% if fp.image_3d %}{{ fp.image_3d.url }}{% endif %}",
+            bhk:   "{% if fp.bhk_type %}{{ fp.bhk_type|escapejs }}{% elif fp.caption %}{{ fp.caption|escapejs }}{% else %}Plan {{ forloop.counter }}{% endif %}",
+            cap:   "{{ fp.caption|escapejs }}",
+            size:  {{ fp.size_sqft|default:"null" }},
+            price: "{{ fp.price_display|escapejs }}",
+            dims:  {% if fp.room_data %}{{ fp.room_data|safe }}{% else %}null{% endif %}
+          }{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ];
+        var fpwView = '2d';  // current view mode
+
+        var fpwCur = 0;   // current plan flat-index
+        var fpwZl  = 1;   // zoom level
+        var actCfg = '';  // active config key
+
+        // ── Group plans by bhk label ──
+        var configs = {};
+        fpwAllPlans.forEach(function(p) {
+          var key = p.bhk || 'Floor Plans';
+          p._key = key;
+          if (!configs[key]) configs[key] = [];
+          configs[key].push(p);
+        });
+        var cfgKeys  = Object.keys(configs);
+        actCfg = cfgKeys[0];
+
+        var hasSizes = fpwAllPlans.some(function(p) { return p.size; });
+        var multiCfg = cfgKeys.length > 1;
+
+        // ── Price range label for a config ──
+        function cfgPriceRange(key) {
+          var ps = configs[key].map(function(p) { return p.price; }).filter(Boolean);
+          var u  = ps.filter(function(v, i, a) { return a.indexOf(v) === i; });
+          if (!u.length) return '';
+          return u.length === 1 ? u[0] : u[0] + ' \u2013 ' + u[u.length - 1];
+        }
+
+        // ── Sort plans within a config by size_sqft ──
+        function sortedPlans(key) {
+          return configs[key].slice().sort(function(a, b) { return (a.size || 0) - (b.size || 0); });
+        }
+
+        // ── Render config tabs ──
+        function renderCfgTabs() {
+          var el = document.getElementById('fpwConfigTabs');
+          var wrap = document.getElementById('fpwConfigWrap');
+          if (!el || !wrap) return;
+          if (!multiCfg) { wrap.style.display = 'none'; return; }
+          wrap.style.display = '';
+          el.innerHTML = cfgKeys.map(function(key, i) {
+            var range = cfgPriceRange(key);
+            return '<button class="fpw-config-tab' + (key === actCfg ? ' active' : '') + '" onclick="fpwSetCfg(' + i + ')">'
+              + '<div class="fpw-config-name">' + esc(key) + '</div>'
+              + (range ? '<div class="fpw-config-price">' + esc(range) + '</div>' : '')
+              + '</button>';
+          }).join('');
+          updateConfigTabWidth();
+        }
+
+        // ── Dynamic tab width: show N tabs based on container width ──
+        function updateConfigTabWidth() {
+          var el = document.getElementById('fpwConfigTabs');
+          if (!el) return;
+          var tabs = el.querySelectorAll('.fpw-config-tab');
+          if (!tabs.length) return;
+          // clientWidth is the usable inner width (no padding since we removed horizontal padding)
+          var w = el.clientWidth;
+          if (w <= 0) { requestAnimationFrame(updateConfigTabWidth); return; }
+          // Visible tab count by screen width
+          var maxVis = w >= 700 ? Math.min(tabs.length, 5)
+                     : w >= 480 ? Math.min(tabs.length, 3)
+                     : Math.min(tabs.length, 2);
+          if (tabs.length <= maxVis) {
+            // All tabs fit — clear any JS overrides and let CSS natural sizing apply
+            for (var i = 0; i < tabs.length; i++) {
+              tabs[i].style.flex = '';
+              tabs[i].style.width = '';
+            }
+          } else {
+            // More tabs than visible — force equal widths for a consistent carousel scroll
+            var tw = Math.max(60, Math.floor(w / maxVis));
+            for (var i = 0; i < tabs.length; i++) {
+              tabs[i].style.flex = '0 0 ' + tw + 'px';
+              tabs[i].style.width = tw + 'px';
+            }
           }
         }
 
-        window.fpwSetTab = function(idx) {
+        // ── Render size sub-tabs ──
+        function renderSizeTabs() {
+          var wrap   = document.getElementById('fpwSizeWrap');
+          var tabsEl = document.getElementById('fpwSizeTabs');
+          if (!wrap || !tabsEl) return;
+          var ps       = sortedPlans(actCfg);
+          var showSize = ps.length > 1 && hasSizes;
+          wrap.style.display = showSize ? '' : 'none';
+          if (!showSize) return;
+          var cur = fpwAllPlans[fpwCur];
+          tabsEl.innerHTML = ps.map(function(p) {
+            var lbl = p.size ? p.size + ' SQ.FT' : esc(p.cap || 'Plan');
+            return '<button class="fpw-size-tab' + (p === cur ? ' active' : '') + '" onclick="fpwShowIdx(' + p.idx + ')">' + lbl + '</button>';
+          }).join('');
+        }
+
+        // ── Render price bar ──
+        function renderPriceBar() {
+          var el = document.getElementById('fpwPriceBar');
+          if (!el) return;
+          var plan = fpwAllPlans[fpwCur];
+          if (plan && plan.price) {
+            el.style.display = '';
+            el.innerHTML = '<span class="fpw-price-val">' + esc(plan.price) + '</span>'
+              + '<span class="fpw-price-info" title="Indicative price for this size variant">&#9432;</span>';
+          } else {
+            el.style.display = 'none';
+          }
+        }
+
+        // ── Render room dimensions ──
+        function renderDims() {
+          var wrap = document.getElementById('fpwDimsWrap');
+          var el   = document.getElementById('fpwDims');
+          if (!wrap || !el) return;
+          var plan = fpwAllPlans[fpwCur];
+          var dims = plan && plan.dims;
+          if (!dims || !dims.length) { wrap.style.display = 'none'; return; }
+          wrap.style.display = '';
+          el.innerHTML = dims.map(function(d) {
+            return '<div class="fpw-dim-card"><div class="fpw-dim-title">'
+              + esc(d.title) + '</div><div class="fpw-dim-val">' + esc(d.val) + '</div></div>';
+          }).join('');
+        }
+
+        // ── Show/hide nav arrows based on current config ──
+        function updateNavArrows() {
+          var show = sortedPlans(actCfg).length > 1;
+          var prev = document.getElementById('fpwPrev');
+          var next = document.getElementById('fpwNext');
+          if (prev) prev.style.display = show ? '' : 'none';
+          if (next) next.style.display = show ? '' : 'none';
+        }
+
+        // ── Zoom helpers ──
+        function fpwActiveImg() {
+          var s = document.getElementById('fpwSlide' + fpwCur);
+          return s ? s.querySelector('.fpw-img') : null;
+        }
+        function fpwUpdateZoom() {
+          var img = fpwActiveImg();
+          if (img) img.style.transform = 'scale(' + fpwZl + ')';
+          var b = document.getElementById('fpwZoomBadge');
+          if (b) { b.textContent = Math.round(fpwZl * 100) + '%'; b.style.opacity = fpwZl !== 1 ? '1' : '0'; }
+        }
+
+        // ── Show a specific plan by flat-array index ──
+        window.fpwShowIdx = function(idx) {
           fpwCur = idx; fpwZl = 1;
+          var plan = fpwAllPlans[idx];
+          actCfg = plan._key;
           document.querySelectorAll('#fpwStage .fpw-slide').forEach(function(s, i) {
             s.classList.toggle('active', i === idx);
           });
-          document.querySelectorAll('#fpwTabs .fpw-tab').forEach(function(t, i) {
-            t.classList.toggle('active', i === idx);
-          });
-          var thumbs = document.querySelectorAll('#fpwThumbs .fpw-thumb');
-          thumbs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
           var dl = document.getElementById('fpwDlLink');
-          if (dl) dl.href = fpwPlans[idx].url;
+          if (dl) dl.href = plan.url;
+          var areaEl = document.getElementById('fpwStatArea');
+          if (areaEl && plan.size) areaEl.textContent = plan.size + ' sq.ft';
           fpwUpdateZoom();
-          if (thumbs[idx]) thumbs[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          fpwApplyView();
+          renderCfgTabs();
+          renderSizeTabs();
+          renderPriceBar();
+          renderDims();
+          updateNavArrows();
+          var stabs = document.querySelectorAll('#fpwSizeTabs .fpw-size-tab');
+          var si = sortedPlans(actCfg).indexOf(plan);
+          if (stabs[si]) stabs[si].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         };
 
-        window.fpwZoom = function(d) { fpwZl = Math.max(0.5, Math.min(4, fpwZl + d)); fpwUpdateZoom(); };
-        window.fpwReset = function() { fpwZl = 1; fpwUpdateZoom(); };
-        window.fpwNav = function(dir) { fpwSetTab((fpwCur + dir + fpwPlans.length) % fpwPlans.length); };
+        // ── Switch config (BHK type) by cfgKeys index ──
+        window.fpwSetCfg = function(cfgIdx) {
+          actCfg = cfgKeys[cfgIdx];
+          window.fpwShowIdx(sortedPlans(actCfg)[0].idx);
+        };
+
+        // ── Navigate prev/next within active config ──
+        window.fpwNav = function(dir) {
+          var ps = sortedPlans(actCfg);
+          var ci = ps.indexOf(fpwAllPlans[fpwCur]);
+          window.fpwShowIdx(ps[(ci + dir + ps.length) % ps.length].idx);
+        };
+
+        window.fpwZoom  = function(d) { fpwZl = Math.max(0.5, Math.min(4, fpwZl + d)); fpwUpdateZoom(); };
+        window.fpwReset = function()  { fpwZl = 1; fpwUpdateZoom(); };
+
+        // ── Fullscreen (reuse page lightbox) ──
         window.fpwOpenFullscreen = function() {
-          var img = fpwActiveImg();
-          if (!img) return;
-          // Reuse the page lightbox: stage it with current floor plan image
-          var lb = document.getElementById('pdLightbox');
+          var plan  = fpwAllPlans[fpwCur];
+          var src   = (fpwView === '3d' && plan.url3d) ? plan.url3d : plan.url;
+          var lb    = document.getElementById('pdLightbox');
           var stage = document.getElementById('pdLbStage');
-          if (!lb || !stage) { window.open(fpwPlans[fpwCur].url, '_blank'); return; }
-          stage.innerHTML = '<div class="pd-lb-slide active"><img src="' + fpwPlans[fpwCur].url + '" alt="Floor Plan" style="max-width:100%;max-height:80vh;object-fit:contain;display:block;"></div>';
-          document.getElementById('pdLbCounterTxt').textContent = (fpwCur + 1) + ' / ' + fpwPlans.length;
+          if (!lb || !stage) { window.open(src, '_blank'); return; }
+          stage.innerHTML = '<div class="pd-lb-slide active"><img src="' + src + '" alt="Floor Plan" style="max-width:100%;max-height:80vh;object-fit:contain;display:block;"></div>';
+          document.getElementById('pdLbCounterTxt').textContent = (fpwCur + 1) + ' / ' + fpwAllPlans.length;
           lb.classList.add('open');
           document.body.style.overflow = 'hidden';
         };
 
-        // Pinch-to-zoom (mobile)
-        var stage = document.getElementById('fpwStage');
-        if (stage) {
-          var _sd = 0, _sz = 1;
-          stage.addEventListener('touchstart', function(e) {
+        // ── 2D/3D toggle ──
+        function fpwApplyView() {
+          var plan   = fpwAllPlans[fpwCur];
+          var toggle = document.getElementById('fpw2d3dToggle');
+          var has3d  = !!plan.url3d;
+          if (toggle) toggle.style.display = has3d ? '' : 'none';
+          if (!has3d) fpwView = '2d';
+          var btn2 = document.getElementById('fpwBtn2D');
+          var btn3 = document.getElementById('fpwBtn3D');
+          if (btn2) btn2.classList.toggle('active', fpwView === '2d');
+          if (btn3) btn3.classList.toggle('active', fpwView === '3d');
+          // swap the visible image src
+          var img = fpwActiveImg();
+          if (img) img.src = (fpwView === '3d' && has3d) ? plan.url3d : plan.url;
+          // keep download link pointing at currently shown image
+          var dl = document.getElementById('fpwDlLink');
+          if (dl) dl.href = (fpwView === '3d' && has3d) ? plan.url3d : plan.url;
+        }
+        window.fpwSetView = function(mode) {
+          fpwView = mode;
+          fpwApplyView();
+        };
+
+        // ── Scroll helpers ──
+        window.fpwConfigScroll = function(d) {
+          var el = document.getElementById('fpwConfigTabs');
+          if (el) el.scrollBy({ left: d * 150, behavior: 'smooth' });
+        };
+        window.fpwSizeScroll = function(d) {
+          var el = document.getElementById('fpwSizeTabs');
+          if (el) el.scrollBy({ left: d * 120, behavior: 'smooth' });
+        };
+        window.fpwDimsScroll = function(d) {
+          var el = document.getElementById('fpwDims');
+          if (el) el.scrollBy({ left: d * 140, behavior: 'smooth' });
+        };
+
+        // ── Pinch-to-zoom + swipe-to-navigate ──
+        var _fpwStage = document.getElementById('fpwStage');
+        if (_fpwStage) {
+          var _sd = 0, _sz = 1, _swX = 0, _swY = 0;
+          _fpwStage.addEventListener('touchstart', function(e) {
             if (e.touches.length === 2) {
               _sd = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
               _sz = fpwZl; e.preventDefault();
+            } else if (e.touches.length === 1) {
+              _swX = e.touches[0].clientX;
+              _swY = e.touches[0].clientY;
             }
           }, { passive: false });
-          stage.addEventListener('touchmove', function(e) {
+          _fpwStage.addEventListener('touchmove', function(e) {
             if (e.touches.length === 2) {
               var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
               fpwZl = Math.max(0.5, Math.min(4, _sz * (d / _sd)));
               fpwUpdateZoom(); e.preventDefault();
             }
           }, { passive: false });
+          _fpwStage.addEventListener('touchend', function(e) {
+            if (e.changedTouches.length === 1 && fpwZl === 1) {
+              var dx = e.changedTouches[0].clientX - _swX;
+              var dy = e.changedTouches[0].clientY - _swY;
+              if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                fpwNav(dx < 0 ? 1 : -1);
+              }
+            }
+          }, { passive: true });
+        }
+
+        // ── Init ──
+        renderCfgTabs();
+        renderSizeTabs();
+        renderPriceBar();
+        renderDims();
+        updateNavArrows();
+        fpwApplyView();
+
+        // recompute tab widths on window resize
+        if (typeof ResizeObserver !== 'undefined') {
+          var _fpwRO = new ResizeObserver(function() { updateConfigTabWidth(); });
+          var _fpwTabsEl = document.getElementById('fpwConfigTabs');
+          if (_fpwTabsEl) _fpwRO.observe(_fpwTabsEl);
+        } else {
+          window.addEventListener('resize', updateConfigTabWidth);
         }
       })();
       </script>
@@ -1114,7 +1514,7 @@
           <button class="pd-map-ctrl-btn" id="btnSat" onclick="pdSetMap('satellite')">Satellite</button>
         </div>
       </div>
-      <div style="padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <div class="pd-loc-footer" style="padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
         <div style="font-size:12px;color:var(--warm-grey);display:flex;align-items:center;gap:6px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           {{ property.address }}{% if property.pincode %} — {{ property.pincode }}{% endif %}
@@ -1620,10 +2020,13 @@ var pdCurrent = 0, pdLbIsOpen = false;
   var counter = document.getElementById('propImgCounter');
   var btnPrev = document.getElementById('propImgPrev');
   var btnNext = document.getElementById('propImgNext');
+  var dots = document.querySelectorAll('#propImgDots .pd-slide-dot');
   function piUpdate() {
     if (counter) counter.textContent = (cur+1) + ' / ' + total;
     if (btnPrev) btnPrev.style.display = cur > 0        ? 'flex' : 'none';
     if (btnNext) btnNext.style.display = cur < total-1  ? 'flex' : 'none';
+    // Update dot indicators
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === cur); });
   }
   window.propImgSlide = function(dir) {
     if (cur+dir < 0 || cur+dir >= total) return;
@@ -1632,6 +2035,30 @@ var pdCurrent = 0, pdLbIsOpen = false;
     slides[cur].classList.add('pi-active');
     piUpdate();
   };
+  window.propImgGoTo = function(idx) {
+    if (idx < 0 || idx >= total || idx === cur) return;
+    slides[cur].classList.remove('pi-active');
+    cur = idx;
+    slides[cur].classList.add('pi-active');
+    piUpdate();
+  };
+  // ── Touch swipe on main image slideshow ──
+  var _swStartX = 0, _swStartY = 0;
+  box.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      _swStartX = e.touches[0].clientX;
+      _swStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  box.addEventListener('touchend', function(e) {
+    if (e.changedTouches.length !== 1) return;
+    var dx = e.changedTouches[0].clientX - _swStartX;
+    var dy = e.changedTouches[0].clientY - _swStartY;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      e.preventDefault();
+      propImgSlide(dx < 0 ? 1 : -1);
+    }
+  });
   piUpdate();
 })();
 
