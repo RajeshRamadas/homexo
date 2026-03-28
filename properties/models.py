@@ -259,3 +259,29 @@ class PropertyFeature(models.Model):
 
     def __str__(self):
         return f'{self.name} — {self.property.title}'
+
+
+class ConnectivityItem(models.Model):
+    """Nearby landmarks / connectivity points: schools, hospitals, metro, etc."""
+
+    class Category(models.TextChoices):
+        TRANSIT    = 'transit',    'Transit'
+        EDUCATION  = 'education',  'Education'
+        HEALTHCARE = 'healthcare', 'Healthcare'
+        SHOPPING   = 'shopping',   'Shopping'
+        LIFESTYLE  = 'lifestyle',  'Lifestyle'
+        OTHER      = 'other',      'Other'
+
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='connectivity')
+    category = models.CharField(max_length=20, choices=Category.choices, default=Category.OTHER)
+    name     = models.CharField(max_length=200, help_text='e.g. Whitefield Metro Station')
+    distance = models.CharField(max_length=50, help_text='e.g. 2.5 km, 10 min drive')
+    order    = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name        = 'Connectivity Item'
+        verbose_name_plural = 'Connectivity Items'
+        ordering            = ['category', 'order', 'id']
+
+    def __str__(self):
+        return f'{self.name} ({self.distance}) — {self.property.title}'

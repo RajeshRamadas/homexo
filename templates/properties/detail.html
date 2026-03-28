@@ -245,6 +245,32 @@
   .pd-amenities-toggle svg { transition: transform .3s; }
   .pd-amenities-toggle.pd-expanded svg { transform: rotate(180deg); }
 
+  /* ── Connectivity ── */
+  .pd-conn-cats { padding: 0 20px 6px; display: flex; gap: 0; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .pd-conn-cats::-webkit-scrollbar { display: none; }
+  .pd-conn-cat-btn {
+    flex-shrink: 0; padding: 8px 14px; border: none; background: none;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+    color: var(--warm-grey); cursor: pointer; white-space: nowrap;
+    border-bottom: 2px solid transparent; transition: all .2s;
+  }
+  .pd-conn-cat-btn:hover { color: var(--charcoal); }
+  .pd-conn-cat-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .pd-conn-list { padding: 12px 20px; }
+  .pd-conn-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  .pd-conn-item:last-child { border-bottom: none; }
+  .pd-conn-icon {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(74,144,196,.1), rgba(13,43,78,.06));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--navy); flex-shrink: 0; font-size: 13px;
+  }
+  .pd-conn-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--charcoal); }
+  .pd-conn-dist { font-size: 12px; font-weight: 600; color: var(--sky); white-space: nowrap; }
+
   /* ── Floor plan ── */
   .pd-fp-preview {
     margin: 14px 28px 22px; background: var(--ivory); border: 1px solid var(--border);
@@ -1643,6 +1669,56 @@
         </div>
       </div>
     </div>
+
+    {# CONNECTIVITY #}
+    {% if connectivity %}
+    <div class="pd-card" id="pdConnCard">
+      <div class="pd-card-header">
+        <div class="pd-card-title">Connectivity</div>
+        <span class="pd-badge pd-badge-blue">{{ connectivity|length }}</span>
+      </div>
+      <div class="pd-conn-cats" id="pdConnCats"></div>
+      <div class="pd-conn-list" id="pdConnList"></div>
+    </div>
+    <script>
+    (function(){
+      var items = [
+        {% for c in connectivity %}
+        { cat: "{{ c.get_category_display|escapejs }}", name: "{{ c.name|escapejs }}", dist: "{{ c.distance|escapejs }}" }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+      var icons = {
+        'Transit': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><circle cx="8" cy="22" r="1"/><circle cx="16" cy="22" r="1"/><path d="M7 19l-1 3"/><path d="M17 19l1 3"/></svg>',
+        'Education': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+        'Healthcare': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+        'Shopping': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>',
+        'Lifestyle': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+        'Other': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>'
+      };
+      var cats = [];
+      items.forEach(function(it){ if (cats.indexOf(it.cat)===-1) cats.push(it.cat); });
+      var catsEl = document.getElementById('pdConnCats');
+      var listEl = document.getElementById('pdConnList');
+      function showCat(c){
+        catsEl.querySelectorAll('.pd-conn-cat-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.cat===c); });
+        var html = '';
+        items.forEach(function(it){
+          if (it.cat!==c) return;
+          var ic = icons[it.cat] || icons['Other'];
+          html += '<div class="pd-conn-item"><span class="pd-conn-icon">' + ic + '</span><span class="pd-conn-name">' + it.name + '</span><span class="pd-conn-dist">' + it.dist + '</span></div>';
+        });
+        listEl.innerHTML = html;
+      }
+      if (cats.length > 1) {
+        catsEl.innerHTML = cats.map(function(c){ return '<button class="pd-conn-cat-btn" data-cat="'+c+'" onclick="this.parentNode._show(\''+c.replace(/'/g,"\\'")+'\')">' + c + '</button>'; }).join('');
+        catsEl._show = showCat;
+      } else {
+        catsEl.style.display = 'none';
+      }
+      showCat(cats[0]);
+    })();
+    </script>
+    {% endif %}
 
     {# SIMILAR PROPERTIES #}
     {% if similar %}

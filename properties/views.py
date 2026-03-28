@@ -145,6 +145,7 @@ def property_detail(request, slug):
         'similar':  similar,
         'images':   prop.images.all(),
         'features': prop.features.all(),
+        'connectivity': prop.connectivity.all(),
         'is_saved': is_saved,
     }
     return render(request, 'properties/detail.html', context)

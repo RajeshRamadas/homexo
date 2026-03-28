@@ -5,7 +5,7 @@ Rich admin panel for Property management.
 
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag
+from .models import Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem
 
 
 class PropertyImageInline(admin.TabularInline):
@@ -46,6 +46,12 @@ class PropertyFeatureInline(admin.TabularInline):
     fields = ('name', 'icon', 'icon_image')
 
 
+class ConnectivityItemInline(admin.TabularInline):
+    model = ConnectivityItem
+    extra = 3
+    fields = ('category', 'name', 'distance', 'order')
+
+
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
     list_display   = ('primary_thumb', 'title', 'listing_type', 'property_type',
@@ -60,7 +66,7 @@ class PropertyAdmin(admin.ModelAdmin):
     list_editable  = ('is_featured', 'is_signature', 'status')
     date_hierarchy = 'created_at'
     ordering       = ('-created_at',)
-    inlines        = [PropertyImageInline, PropertyFloorPlanInline, PropertyFeatureInline]
+    inlines        = [PropertyImageInline, PropertyFloorPlanInline, PropertyFeatureInline, ConnectivityItemInline]
     filter_horizontal = ('tags',)
 
     fieldsets = (
