@@ -8,6 +8,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
+from pages import views as pages_views
 
 from .sitemaps import sitemaps
 
@@ -23,6 +24,9 @@ urlpatterns = [
 
     # Admin
     path('admin/', admin.site.urls),
+
+    # Direct developers link for debugging (ensures no shadowing)
+    path('developers/', pages_views.developers, name='developers_root'),
 
     # Frontend pages
     path('',               include('pages.urls',        namespace='pages')),

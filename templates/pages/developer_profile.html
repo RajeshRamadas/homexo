@@ -261,14 +261,19 @@
         RERA Verified — All Projects
       </div>
       <div class="dev-hero-top">
-        <div class="dev-hero-logo">{{ developer.initials }}</div>
+        <div class="dev-hero-logo">
+          {% if developer.logo %}
+            <img src="{{ developer.logo.url }}" alt="{{ developer.name }}" style="width:100%;height:100%;object-fit:contain;padding:10px;">
+          {% else %}
+            {{ developer.initials }}
+          {% endif %}
+        </div>
         <div class="dev-hero-name">{{ developer.name_first }} <em>{{ developer.name_last }}</em></div>
       </div>
       <p class="dev-hero-tagline">{{ developer.tagline }}</p>
       <div class="dev-hero-meta">
-        {% for tag in developer.tags %}
-          <span class="dev-hero-tag">{{ tag }}</span>
-        {% endfor %}
+        <span class="dev-hero-tag">Verified Developer</span>
+        <span class="dev-hero-tag">Residential</span>
         <span class="dev-hero-location">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           {{ developer.location }}
@@ -282,19 +287,19 @@
     </div>
     <div class="dev-hero-stats-card">
       <div class="hsc-stat">
-        <div class="hsc-val">250+</div>
-        <div class="hsc-lbl">Projects Delivered</div>
+        <div class="hsc-val">{{ project_count }}+</div>
+        <div class="hsc-lbl">Active Projects</div>
       </div>
       <div class="hsc-stat">
-        <div class="hsc-val">135M</div>
-        <div class="hsc-lbl">Sq. Ft. Developed</div>
+        <div class="hsc-val">100%</div>
+        <div class="hsc-lbl">RERA Verified</div>
       </div>
       <div class="hsc-stat">
-        <div class="hsc-val">35 Yrs</div>
+        <div class="hsc-val">{% if developer.established_year %}{{ developer.established_year }}{% else %}—{% endif %}</div>
         <div class="hsc-lbl">Established</div>
       </div>
       <div class="hsc-stat">
-        <div class="hsc-val">4.8 ★</div>
+        <div class="hsc-val">4.9 ★</div>
         <div class="hsc-lbl">Buyer Rating</div>
       </div>
     </div>
@@ -320,9 +325,7 @@
       <div class="section-label">Overview</div>
       <div class="about-card">
         <h3>About {{ developer.name }}</h3>
-        <p>{{ developer.about_p1 }}</p>
-        <p>{{ developer.about_p2 }}</p>
-        <p>{{ developer.about_p3 }}</p>
+        <p>{{ developer.description|linebreaksbr }}</p>
       </div>
 
       <div class="section-label">Key Highlights</div>
@@ -371,151 +374,39 @@
         <button class="proj-chip" onclick="filterProjects(this,'upcoming')">Upcoming</button>
       </div>
       <div class="projects-grid" id="projectsGrid">
-
-        <div class="proj-card" data-status="ongoing">
+        {% for project in projects %}
+        <div class="proj-card vis" data-status="{{ project.status }}">
           <div class="proj-card-visual">
-            <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;">
-              <rect width="400" height="180" fill="#0A2240"/>
-              <rect x="30" y="40" width="55" height="140" fill="#1A4A7A" opacity=".8"/>
-              <rect x="40" y="20" width="35" height="20" fill="#1A4A7A" opacity=".6"/>
-              <rect x="100" y="25" width="70" height="155" fill="#1E5080" opacity=".9"/>
-              <rect x="110" y="10" width="50" height="15" fill="#1E5080" opacity=".6"/>
-              <rect x="185" y="60" width="50" height="120" fill="#1A4A7A" opacity=".7"/>
-              <rect x="250" y="45" width="65" height="135" fill="#15406E" opacity=".8"/>
-              <rect x="330" y="70" width="45" height="110" fill="#1A4A7A" opacity=".6"/>
-              <rect x="35" y="55" width="8" height="6" fill="#4A90C4" opacity=".4"/>
-              <rect x="50" y="55" width="8" height="6" fill="#4A90C4" opacity=".2"/>
-              <rect x="35" y="72" width="8" height="6" fill="#4A90C4" opacity=".3"/>
-              <rect x="50" y="72" width="8" height="6" fill="#4A90C4" opacity=".5"/>
-              <rect x="108" y="38" width="10" height="7" fill="#4A90C4" opacity=".4"/>
-              <rect x="126" y="38" width="10" height="7" fill="#4A90C4" opacity=".2"/>
-              <rect x="144" y="38" width="10" height="7" fill="#4A90C4" opacity=".35"/>
-              <line x1="0" y1="170" x2="400" y2="170" stroke="#4A90C4" stroke-width=".5" opacity=".15"/>
-            </svg>
-            <span class="proj-status-badge status-ongoing">Ongoing</span>
+            {% if project.primary_image %}
+              <img src="{{ project.primary_image.image.url }}" alt="{{ project.title }}" style="width:100%;height:100%;object-fit:cover;">
+            {% else %}
+               <div style="width:100%;height:100%;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;color:var(--sky);font-size:10px;letter-spacing:2px;">NO IMAGE</div>
+            {% endif %}
+            <span class="proj-status-badge status-ongoing">{{ project.get_status_display }}</span>
           </div>
           <div class="proj-card-body">
-            <div class="proj-name">Prestige City</div>
-            <div class="proj-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Sarjapur Road, Bengaluru</div>
+            <div class="proj-name">{{ project.title }}</div>
+            <div class="proj-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> {{ project.locality }}, {{ project.city }}</div>
             <div class="proj-details">
-              <span class="proj-detail"><strong>2, 3, 4</strong> BHK</span>
-              <span class="proj-detail"><strong>1,240</strong> Units</span>
-              <span class="proj-detail"><strong>Dec 2026</strong> Possession</span>
+              <span class="proj-detail"><strong>{{ project.bhk }}</strong></span>
+              <span class="proj-detail"><strong>{{ project.area_sqft }}</strong> sq.ft</span>
+              <span class="proj-detail"><strong>{{ project.possession_date|date:"M Y" }}</strong> Possession</span>
             </div>
           </div>
           <div class="proj-card-footer">
             <div>
-              <div class="proj-price"><span class="rupee">₹</span>1.2 Cr – <span class="rupee">₹</span>3.8 Cr</div>
+              <div class="proj-price">{{ project.display_price }}</div>
               <div class="proj-price-lbl">Starting Price</div>
             </div>
-            <a href="{% url 'properties:list' %}" class="proj-view-btn">View →</a>
+            <a href="{{ project.get_absolute_url }}" class="proj-view-btn">View Project →</a>
           </div>
         </div>
-
-        <div class="proj-card" data-status="ready">
-          <div class="proj-card-visual">
-            <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;">
-              <rect width="400" height="180" fill="#071929"/>
-              <rect x="20" y="50" width="80" height="130" fill="#1A4A7A" opacity=".7"/>
-              <rect x="115" y="30" width="60" height="150" fill="#1E5080" opacity=".85"/>
-              <rect x="190" y="55" width="90" height="125" fill="#1A4A7A" opacity=".75"/>
-              <rect x="295" y="40" width="75" height="140" fill="#163C66" opacity=".8"/>
-              <rect x="20" y="68" width="12" height="9" fill="#4A90C4" opacity=".45"/>
-              <rect x="40" y="68" width="12" height="9" fill="#4A90C4" opacity=".25"/>
-              <rect x="60" y="68" width="12" height="9" fill="#4A90C4" opacity=".35"/>
-              <rect x="120" y="48" width="12" height="9" fill="#4A90C4" opacity=".4"/>
-              <rect x="140" y="48" width="12" height="9" fill="#4A90C4" opacity=".2"/>
-              <line x1="0" y1="170" x2="400" y2="170" stroke="#4A90C4" stroke-width=".5" opacity=".15"/>
-            </svg>
-            <span class="proj-status-badge status-ready">Ready to Move</span>
-          </div>
-          <div class="proj-card-body">
-            <div class="proj-name">Prestige Lakeside Habitat</div>
-            <div class="proj-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Whitefield, Bengaluru</div>
-            <div class="proj-details">
-              <span class="proj-detail"><strong>1, 2, 3</strong> BHK</span>
-              <span class="proj-detail"><strong>3,426</strong> Units</span>
-              <span class="proj-detail"><strong>Ready</strong> Possession</span>
-            </div>
-          </div>
-          <div class="proj-card-footer">
-            <div>
-              <div class="proj-price"><span class="rupee">₹</span>68 L – <span class="rupee">₹</span>2.1 Cr</div>
-              <div class="proj-price-lbl">Starting Price</div>
-            </div>
-            <a href="{% url 'properties:list' %}" class="proj-view-btn">View →</a>
-          </div>
+        {% empty %}
+        <div style="grid-column: 1/-1; padding: 60px; text-align: center; background: var(--ivory); border: 1px dashed var(--border);">
+            <div style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--warm-grey); margin-bottom: 8px;">Portfolio Empty</div>
+            <div style="font-size: 14px; color: var(--charcoal);">No active projects listed for {{ developer.name }} yet.</div>
         </div>
-
-        <div class="proj-card" data-status="ongoing">
-          <div class="proj-card-visual">
-            <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;">
-              <rect width="400" height="180" fill="#0D2B4E"/>
-              <rect x="50" y="30" width="100" height="150" fill="#1E5080" opacity=".85"/>
-              <rect x="65" y="15" width="70" height="15" fill="#1E5080" opacity=".6"/>
-              <rect x="165" y="55" width="65" height="125" fill="#1A4A7A" opacity=".7"/>
-              <rect x="245" y="45" width="80" height="135" fill="#163C66" opacity=".8"/>
-              <rect x="58" y="48" width="12" height="9" fill="#4A90C4" opacity=".4"/>
-              <rect x="78" y="48" width="12" height="9" fill="#4A90C4" opacity=".25"/>
-              <rect x="98" y="48" width="12" height="9" fill="#4A90C4" opacity=".35"/>
-              <rect x="58" y="68" width="12" height="9" fill="#4A90C4" opacity=".3"/>
-              <rect x="78" y="68" width="12" height="9" fill="#4A90C4" opacity=".45"/>
-              <line x1="0" y1="170" x2="400" y2="170" stroke="#4A90C4" stroke-width=".5" opacity=".15"/>
-            </svg>
-            <span class="proj-status-badge status-ongoing">Ongoing</span>
-          </div>
-          <div class="proj-card-body">
-            <div class="proj-name">Prestige Falcon City</div>
-            <div class="proj-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Kanakapura Road, Bengaluru</div>
-            <div class="proj-details">
-              <span class="proj-detail"><strong>2, 3</strong> BHK</span>
-              <span class="proj-detail"><strong>4,000+</strong> Units</span>
-              <span class="proj-detail"><strong>Mar 2027</strong> Possession</span>
-            </div>
-          </div>
-          <div class="proj-card-footer">
-            <div>
-              <div class="proj-price"><span class="rupee">₹</span>95 L – <span class="rupee">₹</span>2.4 Cr</div>
-              <div class="proj-price-lbl">Starting Price</div>
-            </div>
-            <a href="{% url 'properties:list' %}" class="proj-view-btn">View →</a>
-          </div>
-        </div>
-
-        <div class="proj-card" data-status="upcoming">
-          <div class="proj-card-visual">
-            <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;">
-              <rect width="400" height="180" fill="#071929"/>
-              <rect x="40" y="60" width="70" height="120" fill="#1A4A7A" opacity=".5"/>
-              <rect x="125" y="35" width="90" height="145" fill="#1E5080" opacity=".6"/>
-              <rect x="230" y="50" width="75" height="130" fill="#163C66" opacity=".55"/>
-              <rect x="320" y="65" width="55" height="115" fill="#1A4A7A" opacity=".5"/>
-              <line x1="40" y1="60" x2="110" y2="60" stroke="#4A90C4" stroke-width="1" stroke-dasharray="4,3" opacity=".3"/>
-              <line x1="125" y1="35" x2="215" y2="35" stroke="#4A90C4" stroke-width="1" stroke-dasharray="4,3" opacity=".3"/>
-              <line x1="230" y1="50" x2="305" y2="50" stroke="#4A90C4" stroke-width="1" stroke-dasharray="4,3" opacity=".3"/>
-              <line x1="0" y1="170" x2="400" y2="170" stroke="#4A90C4" stroke-width=".5" opacity=".15"/>
-              <text x="200" y="100" text-anchor="middle" font-family="serif" font-size="13" fill="#4A90C4" opacity=".3" letter-spacing="3">COMING SOON</text>
-            </svg>
-            <span class="proj-status-badge status-upcoming">Upcoming</span>
-          </div>
-          <div class="proj-card-body">
-            <div class="proj-name">Prestige Raintree Park</div>
-            <div class="proj-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Varthur, Bengaluru</div>
-            <div class="proj-details">
-              <span class="proj-detail"><strong>3, 4</strong> BHK</span>
-              <span class="proj-detail"><strong>TBA</strong> Units</span>
-              <span class="proj-detail"><strong>2028</strong> Est. Possession</span>
-            </div>
-          </div>
-          <div class="proj-card-footer">
-            <div>
-              <div class="proj-price">Price on Request</div>
-              <div class="proj-price-lbl">Pre-launch</div>
-            </div>
-            <a href="{% url 'enquiries:create' %}" class="proj-view-btn">Enquire →</a>
-          </div>
-        </div>
-
+        {% endfor %}
       </div>
     </div>
 

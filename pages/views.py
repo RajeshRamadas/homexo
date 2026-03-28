@@ -2,9 +2,10 @@
 pages/views.py
 Static + dynamic pages: Home, About, FAQ, EMI Calculator, Area Guides.
 """
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db import models
+from django.db.models import Q, Count
 from django.http import Http404, JsonResponse
-from django.db.models import Count
 
 # ── Developer profile data (static; no DB model required) ──────────────────
 _DEVELOPER_PROFILES = {
@@ -180,7 +181,7 @@ _DEVELOPER_PROFILES = {
     },
 }
 
-from properties.models import Property
+from properties.models import Property, Developer
 from agents.models import Agent
 from blog.models import Post
 from testimonials.models import Testimonial
@@ -280,21 +281,42 @@ def market_reports(request):
 
 
 def developers(request):
-    """Property Developers directory page."""
-    return render(request, 'pages/developers.html')
+    """Property Developers directory page — now dynamic from DB."""
+    queryset = Developer.objects.all().annotate(
+        active_projects_count=Count('properties', filter=Q(properties__status='active'))
+    )
+
+    # City filter logic if passed
+    current_city = request.GET.get('city')
+    if current_city:
+        queryset = queryset.filter(location__icontains=current_city)
+
+    featured_dev = queryset.filter(is_featured=True).first() or queryset.first()
+
+    context = {
+        'developers': queryset,
+        'featured_dev': featured_dev,
+        'current_city': current_city,
+        'total_verified': queryset.count(),
+        'total_units': Property.objects.filter(status='active').count(),
+    }
+    return render(request, 'pages/developers.html', context)
 
 
 def developer_profile(request, slug):
-    """Single developer profile page."""
-    developer = _DEVELOPER_PROFILES.get(slug)
-    if not developer:
-        raise Http404
-    # Split name for italic-last-word styling in template
-    parts = developer['name'].rsplit(' ', 1)
-    developer = dict(developer)
-    developer['name_first'] = parts[0] if len(parts) > 1 else developer['name']
-    developer['name_last']  = parts[1] if len(parts) > 1 else ''
-    return render(request, 'pages/developer_profile.html', {'developer': developer})
+    """Single developer profile page — now dynamic from DB."""
+    developer = get_object_or_404(Developer, slug=slug)
+
+    # Fetch projects for this developer
+    projects = developer.properties.filter(status='active').prefetch_related('images')
+
+    # Group by property type for filtering in template
+    context = {
+        'developer': developer,
+        'projects': projects,
+        'active_projects_count': projects.count(),
+    }
+    return render(request, 'pages/developer_profile.html', context)
 
 
 def security(request):

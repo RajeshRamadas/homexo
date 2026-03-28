@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block title %}Property Developers — HOMEXO{% endblock %}
-{% block meta_description %}Explore India's top real estate developers — Prestige, Sobha, Godrej, Brigade, DLF, Puravankara — premium projects on HOMEXO.{% endblock %}
 {% block meta_description %}Browse 200+ verified property developers across residential, commercial and luxury segments in India — vetted by HOMEXO for track record, delivery and buyer trust.{% endblock %}
 
 {% block extra_head %}
@@ -711,41 +710,42 @@
   <!-- FEATURED DEVELOPER -->
   <div class="featured-developer" id="featuredDev">
     <div class="fd-left">
-      <div>
-        <div class="fd-badge">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Featured Developer of the Month
+      <div class="fd-label">Featured Developer</div>
+      <div class="fd-brand">
+        <div class="fd-logo">
+          {% if featured_developer.logo %}
+              <img src="{{ featured_developer.logo.url }}" alt="{{ featured_developer.name }}" style="width:100%;height:100%;object-fit:contain;padding:5px;">
+          {% else %}
+              {{ featured_developer.initials }}
+          {% endif %}
         </div>
-        <div class="fd-logo-area">
-          <div class="fd-logo-box">PS</div>
-          <div>
-            <div class="fd-name">Prestige Group</div>
-          </div>
-        </div>
-        <p class="fd-desc">One of India's most recognised real estate conglomerates with a 35-year legacy. Prestige Group has delivered over 250 projects spanning residential, commercial, retail and hospitality — known for unwavering quality and timely possession.</p>
-        <div class="fd-meta">
-          <div class="fd-meta-item">
-            <div class="fd-meta-val">250+</div>
-            <div class="fd-meta-lbl">Projects Delivered</div>
-          </div>
-          <div class="fd-meta-item">
-            <div class="fd-meta-val">135M</div>
-            <div class="fd-meta-lbl">Sq. Ft. Developed</div>
-          </div>
-          <div class="fd-meta-item">
-            <div class="fd-meta-val">35 Yrs</div>
-            <div class="fd-meta-lbl">Established</div>
-          </div>
-          <div class="fd-meta-item">
-            <div class="fd-meta-val">4.8 ★</div>
-            <div class="fd-meta-lbl">Buyer Rating</div>
-          </div>
+        <div>
+          <div class="fd-name">{{ featured_developer.name }}</div>
         </div>
       </div>
-      <div class="fd-actions">
-        <a href="{% url 'pages:developer_profile' 'prestige-group' %}" class="fd-btn-primary">View All Projects</a>
-        <button class="fd-btn-ghost">Download Brochure</button>
+      <p class="fd-desc">{{ featured_developer.description|truncatewords:40 }}</p>
+      <div class="fd-meta">
+        <div class="fd-meta-item">
+          <div class="fd-meta-val">{{ featured_developer.active_projects_count }}+</div>
+          <div class="fd-meta-lbl">Active Projects</div>
+        </div>
+        <div class="fd-meta-item">
+          <div class="fd-meta-val">100%</div>
+          <div class="fd-meta-lbl">RERA Verified</div>
+        </div>
+        <div class="fd-meta-item">
+          <div class="fd-meta-val">{% if featured_developer.established_year %}{{ featured_developer.established_year }}{% else %}—{% endif %}</div>
+          <div class="fd-meta-lbl">Since</div>
+        </div>
+        <div class="fd-meta-item">
+          <div class="fd-meta-val">4.9 ★</div>
+          <div class="fd-meta-lbl">Buyer Rating</div>
+        </div>
       </div>
+    </div>
+    <div class="fd-actions">
+      <a href="{% url 'pages:developer_profile' featured_developer.slug %}" class="fd-btn-primary">View Profile</a>
+      <button class="fd-btn-ghost">Contact Builder</button>
     </div>
     <div class="fd-right">
       <svg style="width:100%;height:100%;position:absolute;inset:0;" viewBox="0 0 380 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
@@ -799,312 +799,59 @@
   <div id="gridView">
     <div class="dev-section-label">Top Rated Developers</div>
     <div class="dev-grid" id="devGridTop">
-
-      <!-- Sobha Limited -->
-      <div class="dev-card">
+      {% for developer in developers %}
+      <div class="dev-card vis">
         <div class="dev-verified">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           RERA Verified
         </div>
         <div class="dev-card-top">
-          <div class="dev-logo">SB</div>
+          <div class="dev-logo">
+            {% if developer.logo %}
+                <img src="{{ developer.logo.url }}" alt="{{ developer.name }}" style="width:100%;height:100%;object-fit:contain;padding:5px;">
+            {% else %}
+                {{ developer.initials }}
+            {% endif %}
+          </div>
           <div class="dev-info">
-            <div class="dev-name">Sobha Limited</div>
+            <div class="dev-name">{{ developer.name }}</div>
             <div class="dev-location">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Bengaluru · Pan India
-            </div>
-            <div class="dev-tags">
-              <span class="dev-tag primary">Luxury</span>
-              <span class="dev-tag">Residential</span>
+              {{ developer.location }}
             </div>
           </div>
         </div>
+        <div class="dev-divider"></div>
         <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">110+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">31 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.7★</div><div class="dev-stat-lbl">Rating</div></div>
+          <div class="dev-stat"><div class="dev-stat-val">{{ developer.active_projects_count }}+</div><div class="dev-stat-lbl">Projects</div></div>
+          <div class="dev-stat"><div class="dev-stat-val">{% if developer.established_year %}{{ developer.established_year }}{% else %}—{% endif %}</div><div class="dev-stat-lbl">Since</div></div>
+          <div class="dev-stat"><div class="dev-stat-val">4.8★</div><div class="dev-stat-lbl">Rating</div></div>
         </div>
         <div class="dev-card-body">
-          <p class="dev-desc">Sobha is renowned for its in-house construction model ensuring quality benchmarks across every stage — from architecture to interiors to civil work.</p>
-          <div class="dev-projects-label">Ongoing Projects</div>
+          <p class="dev-desc">{{ developer.description|truncatewords:20 }}</p>
+          <div class="dev-projects-label">Featured Projects</div>
           <div class="dev-project-pills">
-            <span class="dev-proj-pill">Sobha Dream Acres</span>
-            <span class="dev-proj-pill">Sobha Neopolis</span>
-            <span class="dev-proj-pill">+8</span>
+            {% for proj in developer.properties.all|slice:":3" %}
+              <span class="dev-proj-pill">{{ proj.title }}</span>
+            {% endfor %}
+            {% if developer.active_projects_count > 3 %}
+              <span class="dev-proj-pill">+{{ developer.active_projects_count|add:"-3" }}</span>
+            {% endif %}
           </div>
         </div>
         <div class="dev-card-footer">
           <div class="dev-rating">
             <span class="dev-rating-stars">★★★★★</span>
-            <span class="dev-rating-val">4.7</span>
-            <span class="dev-rating-count">(1,240 reviews)</span>
+            <span class="dev-rating-val">4.8</span>
           </div>
-          <a href="{% url 'pages:developer_profile' 'sobha-limited' %}" class="dev-view-btn">View →</a>
+          <a href="{% url 'pages:developer_profile' developer.slug %}" class="dev-view-btn">View →</a>
         </div>
       </div>
-
-      <!-- Godrej Properties -->
-      <div class="dev-card">
-        <div class="dev-verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>RERA Verified</div>
-        <div class="dev-card-top">
-          <div class="dev-logo">GD</div>
-          <div class="dev-info">
-            <div class="dev-name">Godrej Properties</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai · Pan India</div>
-            <div class="dev-tags"><span class="dev-tag primary">Premium</span><span class="dev-tag">Township</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">85+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">29 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.6★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">Backed by the century-old Godrej brand, Godrej Properties brings the highest standards of governance, sustainability and design to each of its projects.</p>
-          <div class="dev-projects-label">Ongoing Projects</div>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Godrej Splendour</span>
-            <span class="dev-proj-pill">Godrej Reserve</span>
-            <span class="dev-proj-pill">+12</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★★</span><span class="dev-rating-val">4.6</span><span class="dev-rating-count">(980 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'godrej-properties' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-      <!-- Brigade Group -->
-      <div class="dev-card">
-        <div class="dev-verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>RERA Verified</div>
-        <div class="dev-card-top">
-          <div class="dev-logo">BR</div>
-          <div class="dev-info">
-            <div class="dev-name">Brigade Group</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru · South India</div>
-            <div class="dev-tags"><span class="dev-tag primary">Premium</span><span class="dev-tag">Commercial</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">95+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">32 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.5★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">Brigade is synonymous with integrated townships and world-class commercial spaces. Their Gateway projects have redefined Bengaluru's skyline over three decades.</p>
-          <div class="dev-projects-label">Ongoing Projects</div>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Brigade Orchards</span>
-            <span class="dev-proj-pill">Brigade Insignia</span>
-            <span class="dev-proj-pill">+9</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★★</span><span class="dev-rating-val">4.5</span><span class="dev-rating-count">(760 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'brigade-group' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-      <!-- Mahindra Lifespaces -->
-      <div class="dev-card">
-        <div class="dev-verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>RERA Verified</div>
-        <div class="dev-card-top">
-          <div class="dev-logo">MD</div>
-          <div class="dev-info">
-            <div class="dev-name">Mahindra Lifespaces</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai · Pan India</div>
-            <div class="dev-tags"><span class="dev-tag primary">Affordable</span><span class="dev-tag">Green Certified</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">60+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">27 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.4★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">India's first carbon-neutral developer delivering sustainable, affordable homes. Their integrated industrial clusters and World Cities projects set new benchmarks.</p>
-          <div class="dev-projects-label">Ongoing Projects</div>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Mahindra Citadel</span>
-            <span class="dev-proj-pill">Mahindra Zen</span>
-            <span class="dev-proj-pill">+6</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★☆</span><span class="dev-rating-val">4.4</span><span class="dev-rating-count">(530 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'mahindra-lifespaces' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-      <!-- DLF Limited -->
-      <div class="dev-card">
-        <div class="dev-verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>RERA Verified</div>
-        <div class="dev-card-top">
-          <div class="dev-logo">DL</div>
-          <div class="dev-info">
-            <div class="dev-name">DLF Limited</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Delhi NCR · Pan India</div>
-            <div class="dev-tags"><span class="dev-tag primary">Luxury</span><span class="dev-tag">Commercial</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">180+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">75 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.5★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">India's largest listed real estate company with a 75-year legacy. DLF has shaped Gurgaon's landscape and continues to set the benchmark for luxury living in North India.</p>
-          <div class="dev-projects-label">Ongoing Projects</div>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">DLF The Arbour</span>
-            <span class="dev-proj-pill">The Camellias</span>
-            <span class="dev-proj-pill">+15</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★★</span><span class="dev-rating-val">4.5</span><span class="dev-rating-count">(2,100 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'dlf-limited' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-      <!-- Puravankara -->
-      <div class="dev-card">
-        <div class="dev-verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>RERA Verified</div>
-        <div class="dev-card-top">
-          <div class="dev-logo">PU</div>
-          <div class="dev-info">
-            <div class="dev-name">Puravankara</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru · South India</div>
-            <div class="dev-tags"><span class="dev-tag primary">Premium</span><span class="dev-tag">Affordable</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">75+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">47 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.3★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">Puravankara serves both premium and affordable segments through its flagship brand and Provident Housing. A trusted name for consistent quality and on-time delivery in South India.</p>
-          <div class="dev-projects-label">Ongoing Projects</div>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Purva Atmosphere</span>
-            <span class="dev-proj-pill">Provident Ecopolitan</span>
-            <span class="dev-proj-pill">+7</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★☆</span><span class="dev-rating-val">4.3</span><span class="dev-rating-count">(620 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'puravankara' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
+      {% endfor %}
     </div><!-- /devGridTop -->
 
-    <!-- SECTION DIVIDER -->
-    <div class="sec-divider">
-      <div class="sec-divider-line"></div>
-      <div class="sec-divider-label">More Developers</div>
-      <div class="sec-divider-line"></div>
-    </div>
-
-    <div class="dev-grid" id="devGridMore">
-
-      <!-- Oberoi Realty -->
-      <div class="dev-card">
-        <div class="dev-card-top">
-          <div class="dev-logo">OR</div>
-          <div class="dev-info">
-            <div class="dev-name">Oberoi Realty</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai</div>
-            <div class="dev-tags"><span class="dev-tag primary">Luxury</span><span class="dev-tag">Ultra Premium</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">42+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">38 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.8★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">Oberoi Realty is synonymous with ultra-luxury living in Mumbai. Their iconic Elysian, Sky City and Three Sixty West projects redefine high-rise opulence.</p>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Elysian</span>
-            <span class="dev-proj-pill">Sky City</span>
-            <span class="dev-proj-pill">360 West</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★★</span><span class="dev-rating-val">4.8</span><span class="dev-rating-count">(410 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'oberoi-realty' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-      <!-- K Raheja Corp -->
-      <div class="dev-card">
-        <div class="dev-card-top">
-          <div class="dev-logo">KP</div>
-          <div class="dev-info">
-            <div class="dev-name">K Raheja Corp</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai · Pune</div>
-            <div class="dev-tags"><span class="dev-tag primary">Premium</span><span class="dev-tag">Commercial</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">55+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">40 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.4★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">K Raheja Corp is known for landmark commercial hubs and premium residential towers across Mumbai and Pune's prime micro-markets.</p>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Raheja Imperia</span>
-            <span class="dev-proj-pill">Artesia</span>
-            <span class="dev-proj-pill">+5</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★☆</span><span class="dev-rating-val">4.4</span><span class="dev-rating-count">(380 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'k-raheja-corp' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-      <!-- Sunteck Realty -->
-      <div class="dev-card">
-        <div class="dev-card-top">
-          <div class="dev-logo">SN</div>
-          <div class="dev-info">
-            <div class="dev-name">Sunteck Realty</div>
-            <div class="dev-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mumbai · MMR</div>
-            <div class="dev-tags"><span class="dev-tag primary">Premium</span><span class="dev-tag">Affordable</span></div>
-          </div>
-        </div>
-        <div class="dev-card-stats">
-          <div class="dev-stat"><div class="dev-stat-val">32+</div><div class="dev-stat-lbl">Projects</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">18 Yrs</div><div class="dev-stat-lbl">Est.</div></div>
-          <div class="dev-stat"><div class="dev-stat-val">4.3★</div><div class="dev-stat-lbl">Rating</div></div>
-        </div>
-        <div class="dev-card-body">
-          <p class="dev-desc">Sunteck caters to multiple buyer segments, from ultra-luxury BKC projects to affordable homes in the western suburbs of Mumbai.</p>
-          <div class="dev-project-pills">
-            <span class="dev-proj-pill">Signia Isles</span>
-            <span class="dev-proj-pill">Sunteck City</span>
-            <span class="dev-proj-pill">+4</span>
-          </div>
-        </div>
-        <div class="dev-card-footer">
-          <div class="dev-rating"><span class="dev-rating-stars">★★★★☆</span><span class="dev-rating-val">4.3</span><span class="dev-rating-count">(290 reviews)</span></div>
-          <a href="{% url 'pages:developer_profile' 'sunteck-realty' %}" class="dev-view-btn">View →</a>
-        </div>
-      </div>
-
-    </div><!-- /devGridMore -->
-
     <div class="load-more-wrap">
-      <button class="load-more-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        Load More Developers
-      </button>
-      <div class="load-more-count">Showing 9 of 200+ developers</div>
+      <div class="load-more-count">Showing all {{ developers|length }} developers</div>
     </div>
   </div><!-- /gridView -->
 
@@ -1112,20 +859,6 @@
   <div id="listView" style="display:none;">
     <div class="dev-section-label">All Developers — List View</div>
     <div class="dev-list">
-
-      <div class="dev-list-item">
-        <div class="dli-rank">01</div>
-        <div class="dli-main">
-          <div class="dli-logo">PS</div>
-          <div class="dli-info">
-            <div class="dli-name">Prestige Group</div>
-            <div class="dli-sub">
-              <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru · Pan India</span>
-              <span>Luxury · Residential</span>
-              <span style="color:#2E7D32;font-size:10px;">✔ RERA</span>
-            </div>
-          </div>
-        </div>
         <div class="dli-stats">
           <div class="dli-stat"><div class="dli-stat-val">250+</div><div class="dli-stat-lbl">Projects</div></div>
           <div class="dli-stat"><div class="dli-stat-val">4.8★</div><div class="dli-stat-lbl">Rating</div></div>
@@ -1241,11 +974,7 @@
 
     </div><!-- /dev-list -->
     <div class="load-more-wrap">
-      <button class="load-more-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        Load More
-      </button>
-      <div class="load-more-count">Showing 6 of 200+ developers</div>
+      <div class="load-more-count">Showing all {{ developers|length }} registered developers</div>
     </div>
   </div><!-- /listView -->
 

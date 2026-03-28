@@ -5,8 +5,26 @@ Rich admin panel for Property management.
 
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem
+from .models import Developer, Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem
 
+
+@admin.register(Developer)
+class DeveloperAdmin(admin.ModelAdmin):
+    list_display        = ('logo_thumb', 'name', 'tagline', 'location', 'total_projects', 'is_featured')
+    list_display_links  = ('name',)
+    list_filter         = ('is_featured', 'location')
+    search_fields       = ('name', 'tagline', 'location')
+    prepopulated_fields = {'slug': ('name',)}
+    list_editable       = ('is_featured',)
+
+    @admin.display(description='Logo')
+    def logo_thumb(self, obj):
+        if obj.logo:
+            return format_html('<img src="{}" height="32" style="border-radius:4px;" />', obj.logo.url)
+        return format_html('<div style="width:32px;height:32px;background:#eef0f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9ca3af;font-weight:700;">{}</div>', obj.name[:2].upper())
+
+    def total_projects(self, obj):
+        return obj.properties.count()
 
 class PropertyImageInline(admin.TabularInline):
     model      = PropertyImage
@@ -54,7 +72,7 @@ class ConnectivityItemInline(admin.TabularInline):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display   = ('primary_thumb', 'title', 'developer_name', 'listing_type', 'property_type',
+    list_display   = ('primary_thumb', 'title', 'developer', 'listing_type', 'property_type',
                       'display_price', 'locality', 'city', 'bedrooms', 'bathrooms',
                       'is_featured', 'is_signature', 'status', 'views_count', 'created_at')
     list_display_links = ('title',)
@@ -71,7 +89,7 @@ class PropertyAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Basic Info', {
-            'fields': ('title', 'slug', 'developer_name', 'listing_type', 'property_type', 'description',
+            'fields': ('title', 'slug', 'developer', 'listing_type', 'property_type', 'description',
                        'owner', 'agent', 'status')
         }),
         ('Pricing', {

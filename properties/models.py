@@ -9,6 +9,56 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 
+class Developer(models.Model):
+    """
+    Real estate developer / builder profile.
+    """
+    name             = models.CharField(max_length=200)
+    slug             = models.SlugField(max_length=220, unique=True, blank=True)
+    logo             = models.ImageField(upload_to='developers/logos/', blank=True, null=True)
+    description      = models.TextField(blank=True)
+    tagline          = models.CharField(max_length=300, blank=True)
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    website          = models.URLField(blank=True)
+    location         = models.CharField(max_length=200, blank=True, help_text='e.g. Bengaluru, Pan India')
+    is_featured      = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name        = 'Developer'
+        verbose_name_plural = 'Developers'
+        ordering            = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    @property
+    def initials(self):
+        parts = self.name.split(' ')
+        if len(parts) > 1:
+            return f"{parts[0][0]}{parts[1][0]}".upper()
+        return self.name[:2].upper()
+
+    @property
+    def name_split(self):
+        parts = self.name.rsplit(' ', 1)
+        if len(parts) > 1:
+            return (parts[0], parts[1])
+        return (self.name, '')
+
+    @property
+    def name_first(self):
+        return self.name_split[0]
+
+    @property
+    def name_last(self):
+        return self.name_split[1]
+
+
 class PropertyTag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
@@ -87,7 +137,8 @@ class Property(models.Model):
     # ── Core Details ──────────────────────────────────────────────────────────
     title          = models.CharField(max_length=200)
     slug           = models.SlugField(max_length=220, unique=True, blank=True)
-    developer_name = models.CharField(max_length=200, blank=True, verbose_name='Developer / Builder')
+    developer      = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True,
+                                       related_name='properties', verbose_name='Developer / Builder')
     description    = models.TextField(blank=True)
     bhk            = models.CharField(max_length=10, choices=BHK.choices, blank=True)
 
