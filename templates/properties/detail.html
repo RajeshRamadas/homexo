@@ -636,7 +636,7 @@
   .fpw { width: 100%; box-sizing: border-box; overflow: hidden; }
 
   /* ── Config tabs — bottom highlight only ── */
-  .fpw-config-wrap { display: flex; align-items: stretch; background: #fff; border-bottom: 1px solid var(--border); padding: 0 16px; gap: 0; }
+  .fpw-config-wrap { display: flex; align-items: stretch; background: #fff; border-bottom: none; padding: 0 16px; gap: 0; }
   .fpw-config-arr { flex-shrink: 0; width: 22px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
   .fpw-config-arr:hover { color: var(--navy); }
   .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 0; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
@@ -657,7 +657,7 @@
   .fpw-config-price { font-size: 10px; color: var(--warm-grey); margin-top: 2px; }
 
   /* ── Size sub-tabs (810 SQ.FT / 875 SQ.FT …) ── */
-  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1px solid var(--border); background: #fff; padding-left: 16px; }
+  .fpw-size-wrap { display: flex; align-items: center; border-bottom: none; background: #fff; padding-left: 16px; }
   .fpw-size-arr { flex-shrink: 0; width: 22px; height: 34px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
   .fpw-size-arr:hover { color: var(--navy); }
   .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
@@ -673,7 +673,7 @@
   .fpw-size-tab.active::after { content: ''; position: absolute; bottom: 0; left: 8px; right: 8px; height: 2px; background: var(--navy); border-radius: 2px 2px 0 0; }
 
   /* ── Price bar ── */
-  .fpw-price-bar { display: flex; align-items: center; gap: 6px; padding: 10px 18px; background: #fff; border-bottom: 1px solid var(--border); }
+  .fpw-price-bar { display: flex; align-items: center; gap: 6px; padding: 10px 18px; background: #fff; border-bottom: none; }
   .fpw-price-val { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--charcoal); }
   .fpw-price-info { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); background: #f3f4f6; color: var(--warm-grey); font-size: 9px; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
 
@@ -1136,9 +1136,9 @@
 
         {# ── Size sub-tabs — JS-rendered ── #}
         <div class="fpw-size-wrap" id="fpwSizeWrap" style="display:none;">
-          <button class="fpw-size-arr" onclick="fpwSizeScroll(-1)">&#8249;</button>
+          <button class="fpw-size-arr" id="fpwSizeArrL" onclick="fpwSizeScroll(-1)" style="display:none;">&#8249;</button>
           <div class="fpw-size-tabs" id="fpwSizeTabs"></div>
-          <button class="fpw-size-arr" onclick="fpwSizeScroll(1)">&#8250;</button>
+          <button class="fpw-size-arr" id="fpwSizeArrR" onclick="fpwSizeScroll(1)" style="display:none;">&#8250;</button>
         </div>
 
         {# ── Price bar — JS-rendered ── #}
@@ -1370,6 +1370,14 @@
             var lbl = p.size ? p.size + ' SQ.FT' : esc(p.cap || 'Plan');
             return '<button class="fpw-size-tab' + (p === cur ? ' active' : '') + '" onclick="fpwShowIdx(' + p.idx + ')">' + lbl + '</button>';
           }).join('');
+          // Show arrows only when tabs overflow
+          requestAnimationFrame(function() {
+            var arrL = document.getElementById('fpwSizeArrL');
+            var arrR = document.getElementById('fpwSizeArrR');
+            var overflows = tabsEl.scrollWidth > tabsEl.clientWidth + 2;
+            if (arrL) arrL.style.display = overflows ? '' : 'none';
+            if (arrR) arrR.style.display = overflows ? '' : 'none';
+          });
         }
 
         // ── Render price bar ──
