@@ -1156,6 +1156,11 @@
              onclick="pdOpenLightbox({{ forloop.counter0 }})">
           <img src="{{ img.image.url }}" alt="{{ img.caption|default:property.title }}" loading="lazy"
                style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          {% if img.caption %}
+          <div style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); background:rgba(7,25,41,.7); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,.1); box-shadow:0 4px 12px rgba(0,0,0,.2); color:#fff; font-size:13px; font-weight:500; padding:6px 14px; border-radius:24px; pointer-events:none; z-index:2; max-width:85%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {{ img.caption }}
+          </div>
+          {% endif %}
         </div>
         {% empty %}
         <div style="color:#4A90C4;font-size:13px;opacity:.7;">No photos available</div>
@@ -2548,31 +2553,7 @@ var pdCurrent = 0, pdLbIsOpen = false;
 })();
 
 // ── Property image slideshow ──
-    (function(){
-        var cats = [];
-        items.forEach(function(it){ if (cats.indexOf(it.cat)===-1) cats.push(it.cat); });
-        var catsEl = document.getElementById('pdConnCats');
-        var listEl = document.getElementById('pdConnList');
-        function showCat(c){
-          catsEl.querySelectorAll('.pd-conn-cat-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.cat===c); });
-          var html = '';
-          items.forEach(function(it){
-            if (it.cat!==c) return;
-            var ic = icons[it.cat] || icons['Other'];
-            html += '<div class="pd-conn-item"><span class="pd-conn-icon">' + ic + '</span><span class="pd-conn-name">' + it.name + '</span><span class="pd-conn-dist">' + it.dist + '</span></div>';
-          });
-          listEl.innerHTML = html;
-        }
-        if (cats.length > 1) {
-          catsEl.innerHTML = cats.map(function(c){
-            var ic = icons[c] || icons['Other'];
-            return '<button class="pd-conn-cat-btn" data-cat="'+c+'" onclick="this.parentNode._show(\''+c.replace(/'/g,"\\'")+'\')">' + ic + ' ' + c + '</button>';
-          }).join('');
-          catsEl._show = showCat;
-        } else {
-          catsEl.style.display = 'none';
-        }
-        showCat(cats[0]);
+(function(){
   var box = document.getElementById('propImgBox');
   if (!box) return;
   var slides = Array.from(box.getElementsByClassName('prop-img-slide'));
