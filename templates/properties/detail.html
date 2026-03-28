@@ -920,41 +920,40 @@
   /* ══════════════ FLOOR PLAN VIEWER (fpw) ══════════════ */
   .fpw { width: 100%; box-sizing: border-box; overflow: hidden; }
 
-  /* ── Config tabs — pill style ── */
-  .fpw-config-wrap { display: flex; align-items: center; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); border-bottom: 1.5px solid #e3eaf3; padding: 10px 16px; gap: 8px; }
-  .fpw-config-arr { flex-shrink: 0; width: 22px; height: 38px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
+  /* ── Config tabs — bottom highlight only ── */
+  .fpw-config-wrap { display: flex; align-items: stretch; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); border-bottom: 1.5px solid #e3eaf3; padding: 0 16px; gap: 0; }
+  .fpw-config-arr { flex-shrink: 0; width: 22px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
   .fpw-config-arr:hover { color: var(--sky); }
-  .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 0; gap: 8px; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 0; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
   .fpw-config-tabs::-webkit-scrollbar { display: none; }
   .fpw-config-tab {
-    flex-shrink: 0; padding: 6px 18px 8px; border: 1.5px solid #dbeaf7;
-    background: #fff; cursor: pointer; text-align: left;
+    flex-shrink: 0; padding: 10px 16px 8px; border: none;
+    border-bottom: 2.5px solid transparent;
+    background: transparent; cursor: pointer; text-align: left;
     transition: all .2s; position: relative;
     box-sizing: border-box; overflow: hidden;
-    max-width: 180px; border-radius: 20px;
-    display: flex; flex-direction: column; justify-content: center;
+    max-width: 180px;
   }
-  .fpw-config-tab:hover { background: #eaf3fa; border-color: var(--sky); }
-  .fpw-config-tab.active { border-color: var(--sky); background: #eaf3fa; box-shadow: 0 1px 4px 0 rgba(74,144,196,0.12); }
+  .fpw-config-tab:hover { background: #eaf3fa; }
+  .fpw-config-tab.active { border-bottom-color: var(--sky); background: #eaf3fa; }
   .fpw-config-name { font-size: 12px; font-weight: 700; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
   .fpw-config-tab.active .fpw-config-name { color: var(--navy); }
-  .fpw-config-price { font-size: 10px; color: var(--sky); margin-top: 2px; font-weight: 600; line-height: 1.2; }
 
-  /* ── Size sub-tabs (810 SQ.FT / 875 SQ.FT …) ── */
-  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1.5px solid #e3eaf3; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); padding: 8px 16px; gap: 6px; }
-  .fpw-size-arr { flex-shrink: 0; width: 22px; height: 34px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
+  /* ── Size sub-tabs — flat style ── */
+  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1.5px solid #e3eaf3; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); padding: 0 16px; gap: 0; }
+  .fpw-size-arr { flex-shrink: 0; width: 22px; height: 42px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
   .fpw-size-arr:hover { color: var(--sky); }
-  .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; gap: 6px; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
   .fpw-size-tabs::-webkit-scrollbar { display: none; }
   .fpw-size-tab {
-    flex-shrink: 0; padding: 5px 14px; border: 1.5px solid #dbeaf7;
-    background: #fff; border-radius: 20px;
+    flex-shrink: 0; padding: 12px 18px; border: none; border-right: 1px solid rgba(200,216,236,.3);
+    border-bottom: 2.5px solid transparent;
+    background: transparent; color: var(--warm-grey); cursor: pointer; white-space: nowrap;
     font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .2px;
-    color: var(--warm-grey); cursor: pointer; white-space: nowrap;
     transition: all .2s;
   }
-  .fpw-size-tab:hover { color: var(--sky); background: #eaf3fa; border-color: var(--sky); }
-  .fpw-size-tab.active { color: var(--navy); background: #eaf3fa; border-color: var(--sky); box-shadow: 0 1px 4px 0 rgba(74,144,196,0.12); }
+  .fpw-size-tab:hover { color: var(--sky); background: #eaf3fa; }
+  .fpw-size-tab.active { color: var(--navy); background: #eaf3fa; border-bottom-color: var(--sky); }
 
   /* ── Price bar ── */
   .fpw-price-bar { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: linear-gradient(90deg, #eaf3fa 30%, #fafdff 100%); border-bottom: 1.5px solid #e3eaf3; }
@@ -1670,10 +1669,8 @@
           if (!multiCfg) { wrap.style.display = 'none'; return; }
           wrap.style.display = '';
           el.innerHTML = cfgKeys.map(function(key, i) {
-            var range = cfgPriceRange(key);
             return '<button class="fpw-config-tab' + (key === actCfg ? ' active' : '') + '" onclick="fpwSetCfg(' + i + ')">'
               + '<div class="fpw-config-name">' + esc(key) + '</div>'
-              + (range ? '<div class="fpw-config-price">' + esc(range) + '</div>' : '')
               + '</button>';
           }).join('');
           updateConfigTabWidth();
