@@ -272,6 +272,12 @@
   .pd-badge-blue { background: rgba(74,144,196,.12); color: var(--sky); }
   .pd-badge-navy { background: rgba(13,43,78,.08); color: var(--navy); }
 
+  /* ── Plan counter (1/3 style) ── */
+  .pd-plan-counter { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--border); overflow: hidden; }
+  .pd-plan-counter-arr { width: 26px; height: 26px; border: none; background: var(--ivory); color: var(--warm-grey); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; padding: 0; font-size: 14px; line-height: 1; }
+  .pd-plan-counter-arr:hover { background: var(--navy); color: var(--white); }
+  .pd-plan-counter-txt { font-size: 11px; font-weight: 600; color: var(--navy); padding: 4px 10px; background: rgba(13,43,78,.06); min-width: 42px; text-align: center; white-space: nowrap; user-select: none; }
+
   /* ── Contact card ── */
   .pd-contact { padding: 22px; box-sizing: border-box; width: 100%; overflow: hidden; }
   .pd-agent-row { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; min-width: 0; }
@@ -1047,7 +1053,15 @@
       <div class="pd-card-header">
         <div class="pd-card-title">Floor Plans</div>
         {% with fps_count=property.floor_plans.count %}
-        {% if fps_count %}<span class="pd-badge pd-badge-navy">{{ fps_count }} Plan{{ fps_count|pluralize }}</span>{% endif %}
+        {% if fps_count > 1 %}
+        <div class="pd-plan-counter" id="fpwPlanCounter">
+          <button class="pd-plan-counter-arr" onclick="fpwNav(-1)" aria-label="Previous plan">&#8249;</button>
+          <span class="pd-plan-counter-txt" id="fpwPlanCounterTxt">1 / {{ fps_count }}</span>
+          <button class="pd-plan-counter-arr" onclick="fpwNav(1)" aria-label="Next plan">&#8250;</button>
+        </div>
+        {% elif fps_count == 1 %}
+        <span class="pd-badge pd-badge-navy">1 Plan</span>
+        {% endif %}
         {% endwith %}
       </div>
 
@@ -1226,6 +1240,17 @@
           return configs[key].slice().sort(function(a, b) { return (a.size || 0) - (b.size || 0); });
         }
 
+        // ── Build a stable sorted order of all plans (by config, then size) ──
+        var fpwSortedAll = [];
+        cfgKeys.forEach(function(key) { fpwSortedAll = fpwSortedAll.concat(sortedPlans(key)); });
+
+        function fpwSortedPos() {
+          for (var i = 0; i < fpwSortedAll.length; i++) {
+            if (fpwSortedAll[i].idx === fpwCur) return i;
+          }
+          return 0;
+        }
+
         // ── Render config tabs ──
         function renderCfgTabs() {
           var el = document.getElementById('fpwConfigTabs');
@@ -1360,6 +1385,9 @@
           var stabs = document.querySelectorAll('#fpwSizeTabs .fpw-size-tab');
           var si = sortedPlans(actCfg).indexOf(plan);
           if (stabs[si]) stabs[si].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          // Update plan counter badge
+          var ctrEl = document.getElementById('fpwPlanCounterTxt');
+          if (ctrEl) ctrEl.textContent = (fpwSortedPos() + 1) + ' / ' + fpwSortedAll.length;
         };
 
         // ── Switch config (BHK type) by cfgKeys index ──
@@ -1368,11 +1396,11 @@
           window.fpwShowIdx(sortedPlans(actCfg)[0].idx);
         };
 
-        // ── Navigate prev/next within active config ──
+        // ── Navigate prev/next linearly across all plans (sorted order, continuous loop) ──
         window.fpwNav = function(dir) {
-          var ps = sortedPlans(actCfg);
-          var ci = ps.indexOf(fpwAllPlans[fpwCur]);
-          window.fpwShowIdx(ps[(ci + dir + ps.length) % ps.length].idx);
+          var pos = fpwSortedPos();
+          var next = (pos + dir + fpwSortedAll.length) % fpwSortedAll.length;
+          window.fpwShowIdx(fpwSortedAll[next].idx);
         };
 
         window.fpwZoom  = function(d) { fpwZl = Math.max(0.5, Math.min(4, fpwZl + d)); fpwUpdateZoom(); };
