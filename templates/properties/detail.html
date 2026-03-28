@@ -1243,7 +1243,9 @@
             </div>
             <div class="pd-prop-name">{{ property.title }}</div>
             {% if property.developer %}
-            <div class="pd-prop-developer" style="font-size:13px;color:var(--sky);font-weight:600;margin:2px 0 6px 0;">By {{ property.developer.name }}</div>
+            <div class="pd-prop-developer" style="font-size:13px;font-weight:600;margin:2px 0 6px 0;">
+              <a href="{% url 'pages:developer_profile' property.developer.slug %}" style="color:var(--sky);text-decoration:none;">By {{ property.developer.name }}</a>
+            </div>
             {% endif %}
             <div class="pd-prop-address">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
