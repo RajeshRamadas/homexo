@@ -1,3 +1,23 @@
+.stat-value .rupee,
+.property-price .rupee,
+.pd-price .rupee,
+.fp-price .rupee,
+.fpw-price-val .rupee,
+.emi-slider-value .rupee,
+.emi-kpi-value .rupee,
+.emi-slider-bounds .rupee,
+.field-icon-rupee .rupee,
+.page-title .rupee,
+.ph-title .rupee,
+.ph-stat-val .rupee,
+.lx-filter-tab .rupee,
+.page-count .rupee {
+  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1.05em !important;
+  display: inline-block;
+  margin-right: 1px;
+}
 .property-price .rupee,
 .pd-price .rupee,
 .fp-price .rupee,
@@ -33,8 +53,8 @@
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
-.serif    { font-family: 'DM Sans', sans-serif; }
-.sans     { font-family: 'DM Sans', sans-serif; }
+.serif    { font-family: 'Source Sans 3', sans-serif; }
+.sans     { font-family: 'Source Sans 3', sans-serif; }
 .italic   { font-style: italic; }
 .sky      { color: var(--sky); }
 .navy     { color: var(--navy); }
@@ -56,7 +76,7 @@ textarea {
   padding: 14px 16px;
   border: 1px solid var(--border);
   background: var(--white);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Source Sans 3', sans-serif;
   font-size: 14px;
   color: var(--charcoal);
   outline: none;
@@ -115,24 +135,24 @@ input[type="range"] {
 .fp-tab:hover { background: #f9fafb; }
 .fp-tab.active { background: #fff; }
 .fp-tab.active::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
-.fp-tab-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 0.2rem; }
-.fp-tab-sub { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: #6b7280; }
+.fp-tab-title { font-family: 'Source Sans 3', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 0.2rem; }
+.fp-tab-sub { font-family: 'Source Sans 3', sans-serif; font-size: 0.75rem; color: #6b7280; }
 .fp-tab.active .fp-tab-title { color: var(--accent); }
 .fp-tab.active .fp-tab-sub { color: var(--accent); }
 
 .fp-subtabs { display: flex; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 0 1rem; overflow-x: auto; scrollbar-width: none; background: #fff; width: 100%; box-sizing: border-box; }
 .fp-subtabs::-webkit-scrollbar { display: none; }
-.fp-subtab { padding: 0.9rem 1.25rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; position: relative; transition: color 0.2s; flex-shrink: 0; }
+.fp-subtab { padding: 0.9rem 1.25rem; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; position: relative; transition: color 0.2s; flex-shrink: 0; }
 .fp-subtab:hover { color: var(--navy); }
 .fp-subtab.active { color: var(--accent); }
 .fp-subtab.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
 
 .fp-main { padding: 1.25rem 1rem; position: relative; background: #fff; width: 100%; box-sizing: border-box; }
 .fp-main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
-.fp-price { font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--charcoal); display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
+.fp-price { font-family: 'Source Sans 3', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--charcoal); display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
 .fp-price-icon { color: #9ca3af; font-size: 0.9rem; cursor: help; background: #e5e7eb; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .fp-toggles { display: flex; background: #f3f4f6; border-radius: 20px; padding: 3px; flex-shrink: 0; }
-.fp-toggle { padding: 0.3rem 0.9rem; border-radius: 16px; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 700; border: none; background: transparent; color: #6b7280; cursor: pointer; transition: all 0.2s; }
+.fp-toggle { padding: 0.3rem 0.9rem; border-radius: 16px; font-family: 'Source Sans 3', sans-serif; font-size: 0.72rem; font-weight: 700; border: none; background: transparent; color: #6b7280; cursor: pointer; transition: all 0.2s; }
 .fp-toggle.active { background: var(--accent); color: #fff; }
 
 .fp-image-container { position: relative; text-align: center; padding: 0.5rem 0; background: #fff; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; overflow: hidden; box-sizing: border-box; }
@@ -145,13 +165,13 @@ input[type="range"] {
 
 .fp-explore-btn { position: absolute; right: 0.5rem; bottom: 0rem; width: 38px; height: 38px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--accent); transition: transform 0.2s; z-index: 10; }
 .fp-explore-btn:hover { transform: scale(1.05); }
-.fp-explore-text { text-align: center; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #6b7280; margin-top: 1.25rem; }
+.fp-explore-text { text-align: center; font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem; color: #6b7280; margin-top: 1.25rem; }
 
 .fp-dimensions { display: flex; gap: 0.6rem; padding: 1rem; overflow-x: auto; scrollbar-width: none; background: #fff; border-top: 1px solid #e5e7eb; width: 100%; box-sizing: border-box; }
 .fp-dimensions::-webkit-scrollbar { display: none; }
 .fp-dim-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.8rem 1rem; min-width: 130px; flex-shrink: 0; box-sizing: border-box; }
-.fp-dim-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--navy); margin-bottom: 0.25rem; }
-.fp-dim-val { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #6b7280; }
+.fp-dim-title { font-family: 'Source Sans 3', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--navy); margin-bottom: 0.25rem; }
+.fp-dim-val { font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem; color: #6b7280; }
 
 /* ── Floor Plan Mobile Responsive ── */
 @media (max-width: 768px) {

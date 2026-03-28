@@ -89,7 +89,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <div style="font-size:12px;font-weight:600;color:var(--charcoal);">Pin on Map <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional — click the map or use Detect)</span></div>
         <button type="button" id="pdLocateBtn" onclick="pdLocateAddress()"
-                style="padding:7px 16px;background:var(--sky);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;">
+                style="padding:7px 16px;background:var(--sky);color:#fff;border:none;font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:500;cursor:pointer;">
           Detect from Address
         </button>
       </div>
@@ -280,7 +280,7 @@
         {{ f_form.id }}
         <input type="text" name="{{ f_form.name.html_name }}" value="{{ f_form.name.value|default:'' }}"
                placeholder="e.g. Swimming Pool"
-               style="flex:1;min-width:120px;padding:9px 13px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--charcoal);background:var(--ivory);outline:none;transition:border-color .2s;"
+               style="flex:1;min-width:120px;padding:9px 13px;border:1px solid var(--border);font-family:'Source Sans 3',sans-serif;font-size:13px;color:var(--charcoal);background:var(--ivory);outline:none;transition:border-color .2s;"
                onfocus="this.style.borderColor='var(--navy)';this.style.background='var(--white)'"
                onblur="this.style.borderColor='var(--border)';this.style.background='var(--ivory)'">
         <label style="display:flex;align-items:center;gap:4px;cursor:pointer;flex-shrink:0;" title="Upload icon image">
@@ -306,7 +306,7 @@
     </div>
     <div style="margin-top:14px;">
       <button type="button" onclick="pdAddAmenity()"
-              style="padding:9px 20px;border:1px dashed var(--sky);background:transparent;color:var(--sky);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;"
+              style="padding:9px 20px;border:1px dashed var(--sky);background:transparent;color:var(--sky);font-family:'Source Sans 3',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;"
               onmouseover="this.style.background='var(--sky)';this.style.color='#fff'"
               onmouseout="this.style.background='transparent';this.style.color='var(--sky)'">
         + Add Amenity

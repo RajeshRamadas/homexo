@@ -6,11 +6,11 @@
 {% block content %}
 <!-- ── Hero ──────────────────────────────────────────────────────────── -->
 <section style="background:var(--navy); padding:5rem 2rem 4rem; text-align:center; color:#fff;">
-  <p style="font-family:'DM Sans',sans-serif; font-size:.75rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--sky); margin-bottom:1rem;">Exclusive Developer Campaigns</p>
-  <h1 style="font-family:'DM Sans',sans-serif; font-size:clamp(2.2rem,5vw,3.5rem); font-weight:700; line-height:1.15; margin-bottom:1.25rem;">
+  <p style="font-family:'Source Sans 3',sans-serif; font-size:.75rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--sky); margin-bottom:1rem;">Exclusive Developer Campaigns</p>
+  <h1 style="font-family:'Source Sans 3',sans-serif; font-size:clamp(2.2rem,5vw,3.5rem); font-weight:700; line-height:1.15; margin-bottom:1.25rem;">
     Curated Offers from<br><em>India's Top Developers</em>
   </h1>
-  <p style="font-family:'DM Sans',sans-serif; font-size:1.05rem; opacity:.75; max-width:560px; margin:0 auto;">
+  <p style="font-family:'Source Sans 3',sans-serif; font-size:1.05rem; opacity:.75; max-width:560px; margin:0 auto;">
     Time-limited deals, exclusive pricing, and expert-guided site visits — all through HOMEXO.
   </p>
 </section>
@@ -28,8 +28,8 @@
           <img src="{{ campaign.hero_bg.url }}" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.35;">
         {% endif %}
         <div style="position:relative;">
-          <p style="font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.65); margin-bottom:.4rem;">{{ campaign.developer_name }}</p>
-          <h2 style="font-family:'DM Sans',sans-serif; font-weight:700; font-size:1.5rem; color:#fff; line-height:1.2; margin:0;">
+          <p style="font-family:'Source Sans 3',sans-serif; font-size:.7rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.65); margin-bottom:.4rem;">{{ campaign.developer_name }}</p>
+          <h2 style="font-family:'Source Sans 3',sans-serif; font-weight:700; font-size:1.5rem; color:#fff; line-height:1.2; margin:0;">
             {{ campaign.hero_heading_parts.0 }}{% if campaign.hero_heading_parts.1 %}<br><em>{{ campaign.hero_heading_parts.1 }}</em>{% endif %}
           </h2>
         </div>
@@ -38,13 +38,13 @@
       <!-- Card Body -->
       <div style="padding:1.5rem;">
         {% if campaign.hero_sub %}
-          <p style="font-family:'DM Sans',sans-serif; font-size:.88rem; color:#6b7280; line-height:1.6; margin-bottom:1rem;">{{ campaign.hero_sub }}</p>
+          <p style="font-family:'Source Sans 3',sans-serif; font-size:.88rem; color:#6b7280; line-height:1.6; margin-bottom:1rem;">{{ campaign.hero_sub }}</p>
         {% endif %}
 
         {% if campaign.highlights.all %}
         <ul style="list-style:none; padding:0; margin:0 0 1.25rem;">
           {% for h in campaign.highlights.all|slice:":3" %}
-          <li style="display:flex; gap:.5rem; align-items:flex-start; margin-bottom:.5rem; font-family:'DM Sans',sans-serif; font-size:.83rem; color:#374151;">
+          <li style="display:flex; gap:.5rem; align-items:flex-start; margin-bottom:.5rem; font-family:'Source Sans 3',sans-serif; font-size:.83rem; color:#374151;">
             <span style="color:{{ campaign.accent_color }}; font-weight:700; flex-shrink:0;">{{ h.icon }}</span>
             <span><strong>{{ h.heading }}</strong>{% if h.body %} — {{ h.body }}{% endif %}</span>
           </li>
@@ -53,12 +53,12 @@
         {% endif %}
 
         {% if campaign.offer_label %}
-        <div style="background:rgba(74,144,196,.08); border:1px solid rgba(74,144,196,.2); border-radius:6px; padding:.6rem .85rem; margin-bottom:1.25rem; font-family:'DM Sans',sans-serif; font-size:.8rem; color:var(--navy);">
+        <div style="background:rgba(74,144,196,.08); border:1px solid rgba(74,144,196,.2); border-radius:6px; padding:.6rem .85rem; margin-bottom:1.25rem; font-family:'Source Sans 3',sans-serif; font-size:.8rem; color:var(--navy);">
           🎁 <strong>{{ campaign.offer_label }}</strong>
         </div>
         {% endif %}
 
-        <a href="{% url 'campaigns:detail' campaign.slug %}" style="display:block; text-align:center; padding:.65rem 1.25rem; background:{{ campaign.accent_color }}; color:#fff; border-radius:5px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; text-decoration:none; letter-spacing:.03em; transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        <a href="{% url 'campaigns:detail' campaign.slug %}" style="display:block; text-align:center; padding:.65rem 1.25rem; background:{{ campaign.accent_color }}; color:#fff; border-radius:5px; font-family:'Source Sans 3',sans-serif; font-size:.85rem; font-weight:600; text-decoration:none; letter-spacing:.03em; transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
           Explore Campaign →
         </a>
       </div>
@@ -68,8 +68,8 @@
 
   {% else %}
   <div style="text-align:center; padding:4rem 2rem; color:#9ca3af;">
-    <p style="font-family:'DM Sans',sans-serif; font-size:1.5rem; margin-bottom:.5rem;">No campaigns live right now.</p>
-    <p style="font-family:'DM Sans',sans-serif; font-size:.9rem;">Check back soon for exclusive developer offers.</p>
+    <p style="font-family:'Source Sans 3',sans-serif; font-size:1.5rem; margin-bottom:.5rem;">No campaigns live right now.</p>
+    <p style="font-family:'Source Sans 3',sans-serif; font-size:.9rem;">Check back soon for exclusive developer offers.</p>
   </div>
   {% endif %}
 </section>

@@ -28,7 +28,7 @@
 <!-- Preconnect for faster font loading -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/homexo.css' %}">
 
@@ -69,7 +69,7 @@
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
 
   /* ── NAV ── */
   nav {
@@ -80,7 +80,7 @@
   }
   .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
   .nav-logo-svg { height: 40px; width: auto; }
-  .nav-logo-text { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500; letter-spacing: 5px; color: var(--navy); }
+  .nav-logo-text { font-family: 'Source Sans 3', sans-serif; font-size: 18px; font-weight: 500; letter-spacing: 5px; color: var(--navy); }
   .nav-links { display: flex; gap: 36px; align-items: center; }
   .nav-links a { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--soft-brown); text-decoration: none; transition: color .3s; }
   .nav-links a:hover { color: var(--navy); }
@@ -154,8 +154,8 @@
   .property-fav:hover { background: var(--navy); }
   .property-fav:hover svg { stroke: white; }
   .property-body { padding: 20px; }
-  .property-price { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
-  .property-price span { font-size: 13px; color: var(--warm-grey); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  .property-price { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+  .property-price span { font-size: 13px; color: var(--warm-grey); font-family: 'Source Sans 3', sans-serif; font-weight: 300; }
   .property-name { font-size: 15px; font-weight: 500; color: var(--charcoal); margin-bottom: 8px; }
   .property-location { font-size: 12px; color: var(--warm-grey); display: flex; align-items: center; gap: 5px; margin-bottom: 16px; }
   .property-location svg { width: 12px; height: 12px; fill: var(--sky); }
@@ -167,7 +167,7 @@
   .section { padding: 60px; }
   .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--sky); margin-bottom: 16px; display: flex; align-items: center; gap: 14px; }
   .section-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
-  .section-title { font-family: 'DM Sans', sans-serif; font-size: clamp(36px,4vw,52px); font-weight: 300; line-height: 1.1; color: var(--charcoal); }
+  .section-title { font-family: 'Source Sans 3', sans-serif; font-size: clamp(36px,4vw,52px); font-weight: 300; line-height: 1.1; color: var(--charcoal); }
   .section-title em { font-style: italic; color: var(--sky); }
   .section-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
   .view-all { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--soft-brown); text-decoration: none; display: flex; align-items: center; gap: 10px; transition: color .3s; }
@@ -176,15 +176,15 @@
   .view-all:hover span { width: 44px; }
 
   /* ── BUTTONS ── */
-  .btn-primary { background: var(--navy); color: var(--white); padding: 16px 40px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; display: inline-block; transition: all .3s; font-family: 'DM Sans', sans-serif; }
+  .btn-primary { background: var(--navy); color: var(--white); padding: 16px 40px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; display: inline-block; transition: all .3s; font-family: 'Source Sans 3', sans-serif; }
   .btn-primary:hover { background: var(--sky); }
-  .btn-outline { background: transparent; color: var(--navy); padding: 14px 36px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: 1px solid var(--navy); cursor: pointer; display: inline-block; transition: all .3s; font-family: 'DM Sans', sans-serif; }
+  .btn-outline { background: transparent; color: var(--navy); padding: 14px 36px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: 1px solid var(--navy); cursor: pointer; display: inline-block; transition: all .3s; font-family: 'Source Sans 3', sans-serif; }
   .btn-outline:hover { background: var(--navy); color: var(--white); }
 
   /* ── FORMS ── */
   .form-group { margin-bottom: 18px; }
   .form-group label { display: block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--soft-brown); margin-bottom: 8px; }
-  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--border); background: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; transition: border-color .3s; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--border); background: var(--white); font-family: 'Source Sans 3', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; transition: border-color .3s; }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--sky); }
   .form-error { font-size: 12px; color: #e53935; margin-top: 4px; }
 
@@ -214,15 +214,15 @@
 
   /* ── CTA BANNER ── */
   .cta-banner { background:var(--deep-brown);padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;overflow:hidden; }
-  .cta-bg-text { position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'DM Sans',sans-serif;font-size:200px;font-weight:300;color:rgba(10,46,92,.04);line-height:1;pointer-events:none;white-space:nowrap; }
-  .cta-title { font-family:'DM Sans',sans-serif;font-size:clamp(40px,4vw,60px);font-weight:300;color:var(--ivory);line-height:1.1; }
+  .cta-bg-text { position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'Source Sans 3',sans-serif;font-size:200px;font-weight:300;color:rgba(10,46,92,.04);line-height:1;pointer-events:none;white-space:nowrap; }
+  .cta-title { font-family:'Source Sans 3',sans-serif;font-size:clamp(40px,4vw,60px);font-weight:300;color:var(--ivory);line-height:1.1; }
   .cta-title em { font-style:italic;color:var(--sky); }
   .cta-form-row { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px; }
-  .cta-form input,.cta-form select { width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .3s; }
+  .cta-form input,.cta-form select { width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'Source Sans 3',sans-serif;font-size:14px;outline:none;transition:border-color .3s; }
   .cta-form input::placeholder { color:rgba(245,240,232,.3); }
   .cta-form input:focus,.cta-form select:focus { border-color:var(--sky); }
   .cta-form select option { background:var(--deep-brown); }
-  .cta-submit { width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:500;margin-top:16px;transition:all .3s; }
+  .cta-submit { width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'Source Sans 3',sans-serif;font-weight:500;margin-top:16px;transition:all .3s; }
   .cta-submit:hover { background:var(--sky); }
   @media(max-width:1024px){ .cta-banner{padding:60px 28px;gap:40px;} }
   @media(max-width:768px){ .cta-banner{display:flex!important;flex-direction:column;padding:40px 16px;gap:28px;} .cta-title{font-size:clamp(30px,8.5vw,48px);} .cta-bg-text{display:none;} .cta-form-row{grid-template-columns:1fr!important;gap:10px;margin-bottom:10px;} }
@@ -392,7 +392,7 @@
   .pc-modal{background:var(--white);width:94%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(13,43,78,.22);animation:pcSlideUp .35s ease;}
   @keyframes pcSlideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
   .pc-header{padding:32px 32px 0;text-align:center;}
-  .pc-title{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:var(--navy);margin-bottom:6px;}
+  .pc-title{font-family:'Source Sans 3',sans-serif;font-size:28px;font-weight:400;color:var(--navy);margin-bottom:6px;}
   .pc-subtitle{font-size:13px;color:var(--warm-grey);letter-spacing:.5px;}
   .pc-body{padding:24px 32px 0;}
   .pc-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:4px;}
@@ -504,7 +504,7 @@
     <div class="footer-brand">
       <a href="{% url 'pages:home' %}" class="nav-logo" style="margin-bottom:16px;display:inline-flex;">
         <svg viewBox="0 0 80 70" fill="none" style="height:40px;"><polyline points="8,54 40,10 72,54" stroke="#4A90C4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="25" y1="64" x2="55" y2="64" stroke="#4A90C4" stroke-width="4" stroke-linecap="round"/></svg>
-        <span style="font-family:'DM Sans',sans-serif;font-size:18px;font-weight:500;letter-spacing:5px;color:#C8D8EC;">HOMEXO</span>
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:500;letter-spacing:5px;color:#C8D8EC;">HOMEXO</span>
       </a>
       <p>Connecting exceptional people with extraordinary homes. Luxury is not just a price point — it's a way of being.</p>
       <div class="footer-social">
