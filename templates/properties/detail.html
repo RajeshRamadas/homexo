@@ -865,7 +865,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.45);
+    background: rgba(7,25,41,.55);
     z-index: 1100;
     opacity: 0;
     transition: opacity .3s;
@@ -2642,7 +2642,7 @@ var pdCurrent = 0, pdLbIsOpen = false;
   };
   window.pdFpZoom = function(img) {
     var ov = document.createElement('div');
-    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(7,25,41,.92);display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
     var zi = document.createElement('img');
     zi.src = img.src;
     zi.style.cssText = 'max-width:92vw;max-height:92vh;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.6);';
