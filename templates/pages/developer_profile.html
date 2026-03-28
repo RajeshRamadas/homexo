@@ -280,14 +280,14 @@
         </span>
       </div>
       <div class="dev-hero-actions">
-        <a href="{% url 'properties:list' %}" class="dp-btn-primary">View All Projects</a>
+        <a href="{% url 'properties:list' %}?developer={{ developer.slug }}" class="dp-btn-primary">View All Projects</a>
         <button class="dp-btn-ghost">Download Brochure</button>
         <button class="dp-btn-ghost" onclick="document.querySelector('.sidebar-card').scrollIntoView({behavior:'smooth'})">Contact Developer</button>
       </div>
     </div>
     <div class="dev-hero-stats-card">
       <div class="hsc-stat">
-        <div class="hsc-val">{{ project_count }}+</div>
+        <div class="hsc-val">{{ active_projects_count }}+</div>
         <div class="hsc-lbl">Active Projects</div>
       </div>
       <div class="hsc-stat">

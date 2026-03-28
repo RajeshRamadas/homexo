@@ -402,6 +402,13 @@
   .prop-dot { width:6px;height:6px;border-radius:50%;background:rgba(13,43,78,.2);cursor:pointer;transition:all .3s; }
   .prop-dot.active { background:var(--navy);width:20px;border-radius:3px; }
 
+  /* ═══ DEV SLIDER (reuses property-card styles) ═══ */
+  .dev-slider-wrapper { overflow:hidden;width:100%; }
+  .dev-slider { display:flex;gap:2px;will-change:transform;transition:transform .55s cubic-bezier(.23,1,.32,1); }
+  .dev-slider .property-card { width:calc((100% - 6px) / 4);min-width:calc((100% - 6px) / 4);flex-shrink:0; }
+  /* Developer-specific badge colour override */
+  .dev-badge-featured { background:linear-gradient(90deg,var(--sky),#1A5A9A)!important;color:var(--white)!important; }
+
   /* ═══ SIGNATURE / FEATURED LARGE GRID ═══ */
   .property-grid-featured { display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:2px; }
 
@@ -581,6 +588,7 @@
     .service-icon img{width:30px;height:30px;}
     .service-label{font-size:10px;line-height:1.35;max-width:12ch;}
     .prop-slider .property-card{width:100%!important;min-width:100%!important;}
+    .dev-slider .property-card{width:calc(50% - 1px)!important;min-width:calc(50% - 1px)!important;}
     .property-grid-featured{display:flex;flex-direction:column;gap:2px;}
     .property-card-large .property-card-img{min-height:58vw!important;}
     .property-card-sm{flex-direction:column!important;}
@@ -954,7 +962,68 @@
   </div>
 </section>
 
-<!-- ══════════════════ ABOUT SECTION ═════════════════════════ -->
+<!-- ════════════════════ FEATURED DEVELOPERS ══════════════════ -->
+{% if featured_developers %}
+<section class="section" style="background:var(--white);">
+  <div class="section-flex">
+    <div>
+      <div class="section-eyebrow">Handpicked For You</div>
+      <h2 class="section-title">Featured<br><em>Developers</em></h2>
+    </div>
+    <a href="{% url 'pages:developers' %}" class="view-all"><span></span> View All Developers</a>
+  </div>
+  <div class="dev-slider-wrapper">
+    <div class="dev-slider" id="devSlider">
+      {% for dev in featured_developers %}
+      <a href="{% url 'pages:developer_profile' dev.slug %}" class="property-card" style="text-decoration:none;display:block;cursor:pointer;">
+        <div class="property-card-img">
+          {% if dev.logo %}
+          <img src="{{ dev.logo.url }}" alt="{{ dev.name }}" style="width:100%;height:100%;object-fit:contain;padding:20px;background:#0D2B4E;">
+          {% else %}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#071929 0%,#0D2B4E 50%,#1A4A7A 100%);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'DM Sans',sans-serif;font-size:clamp(48px,7vw,80px);font-weight:300;color:rgba(74,144,196,.3);letter-spacing:-3px;">{{ dev.initials }}</span>
+          </div>
+          {% endif %}
+          <div class="property-tag dev-badge-featured">Featured Developer</div>
+        </div>
+        <div class="property-body">
+          <div class="property-price" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(74,144,196,.85);">{% if dev.established_year %}Est. {{ dev.established_year }}{% else %}Verified Builder{% endif %}</div>
+          <div class="property-name">{{ dev.name }}</div>
+          <div class="property-location">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            {{ dev.location|default:"Pan India" }}
+          </div>
+          <div class="property-specs">
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+              {{ dev.properties.count }} Projects
+            </div>
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              RERA Verified
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="prop-slider-controls">
+    <button class="prop-arrow" onclick="slideDev(-1)" aria-label="Previous">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="prop-dots" id="devDots">
+      {% for dev in featured_developers %}
+      <div class="prop-dot{% if forloop.first %} active{% endif %}"></div>
+      {% endfor %}
+    </div>
+    <button class="prop-arrow" onclick="slideDev(1)" aria-label="Next">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</section>
+{% endif %}
+
 <div class="about-section">
   <div class="about-img">
     <img src="{% static 'images/about_luxury.jpg' %}" alt="Luxury Interior" style="width:100%;height:100%;object-fit:cover;opacity:.85;">
@@ -1152,6 +1221,27 @@ function slideProp(dir) {
   document.querySelectorAll('.prop-dot').forEach((d, i) => d.classList.toggle('active', i === propIndex));
 }
 
+// ── Developer slider ──
+let devIndex = 0;
+const totalDevs = document.querySelectorAll('#devSlider .property-card').length;
+
+function slideDev(dir) {
+  const slider  = document.getElementById('devSlider');
+  if (!slider) return;
+  const wrapper = slider.parentElement;
+  const isMobile = window.innerWidth <= 768;
+  const isTablet = window.innerWidth <= 1024;
+  const visCount = isMobile ? 1 : (isTablet ? 2 : 4);
+  const maxIdx   = Math.max(0, totalDevs - visCount);
+  devIndex = Math.max(0, Math.min(devIndex + dir, maxIdx));
+  const card = slider.querySelector('.property-card');
+  if (!card) return;
+  const cardW = isMobile ? wrapper.offsetWidth : (card.offsetWidth + 2);
+  slider.style.transform = `translateX(-${devIndex * cardW}px)`;
+  slider.style.transition = 'transform 0.55s cubic-bezier(.23,1,.32,1)';
+  document.querySelectorAll('#devDots .prop-dot').forEach((d, i) => d.classList.toggle('active', i === devIndex));
+}
+
 // ── News carousel ──
 let newsIndex = 0;
 const totalNewsCards = document.querySelectorAll('#newsCarousel .news-card').length;
@@ -1242,14 +1332,17 @@ if (statsSection) statsObserver.observe(statsSection);
 
 // ── Reset sliders on resize ──
 window.addEventListener('resize', () => {
-  propIndex = 0; newsIndex = 0; testIndex = 0;
-  const s = document.getElementById('propSlider');
-  const n = document.getElementById('newsCarousel');
-  const t = document.getElementById('testimonialCarousel');
-  if (s) s.style.transform = 'translateX(0)';
-  if (n) n.style.transform = 'translateX(0)';
-  if (t) t.style.transform = 'translateX(0)';
+  propIndex = 0; devIndex = 0; newsIndex = 0; testIndex = 0;
+  const s  = document.getElementById('propSlider');
+  const dv = document.getElementById('devSlider');
+  const n  = document.getElementById('newsCarousel');
+  const t  = document.getElementById('testimonialCarousel');
+  if (s)  s.style.transform  = 'translateX(0)';
+  if (dv) dv.style.transform = 'translateX(0)';
+  if (n)  n.style.transform  = 'translateX(0)';
+  if (t)  t.style.transform  = 'translateX(0)';
   document.querySelectorAll('.prop-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
+  document.querySelectorAll('#devDots .prop-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
   document.querySelectorAll('.news-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
   document.querySelectorAll('.testimonial-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
 });
@@ -1263,8 +1356,9 @@ window.addEventListener('resize', () => {
 // ── Touch/swipe support for all sliders ──
 (function() {
   const sliders = [
-    { id: 'propSlider',   fn: slideProp },
-    { id: 'newsCarousel', fn: slideNews },
+    { id: 'propSlider',          fn: slideProp },
+    { id: 'devSlider',           fn: slideDev },
+    { id: 'newsCarousel',        fn: slideNews },
     { id: 'testimonialCarousel', fn: slideTestimonial },
   ];
   sliders.forEach(({ id, fn }) => {

@@ -14,6 +14,10 @@ from django.views.generic import DetailView
 
 from .models import Property, PropertyTag, PropertyImage, PropertyFloorPlan, PropertyFeature
 from .forms import PropertySearchForm, PropertyCreateForm
+try:
+    from properties.models import Developer
+except ImportError:
+    Developer = None
 
 # Inline formset for amenities / features (used by create & update views)
 PropertyFeatureFormSet = inlineformset_factory(
@@ -84,6 +88,16 @@ def property_list(request):
         if high:
             qs = qs.filter(price__lte=high)
 
+    # ── Developer filter (from developer profile page link) ───────────────────
+    developer_slug = request.GET.get('developer', '').strip()
+    active_developer = None
+    if developer_slug and Developer:
+        try:
+            active_developer = Developer.objects.get(slug=developer_slug)
+            qs = qs.filter(developer=active_developer)
+        except Developer.DoesNotExist:
+            pass
+
     # ── Sorting ───────────────────────────────────────────────────────────────
     sort = request.GET.get('sort', 'newest')
     sort_options = {
@@ -103,14 +117,15 @@ def property_list(request):
     )
 
     context = {
-        'properties':    properties,
-        'form':          form,
-        'total':         paginator.count,
-        'listing_type':  listing_type,
-        'current_sort':  sort,
-        'tags':          PropertyTag.objects.all(),
-        'page_range':    page_range,
-        'ELLIPSIS':      paginator.ELLIPSIS,
+        'properties':       properties,
+        'form':             form,
+        'total':            paginator.count,
+        'listing_type':     listing_type,
+        'current_sort':     sort,
+        'tags':             PropertyTag.objects.all(),
+        'page_range':       page_range,
+        'ELLIPSIS':         paginator.ELLIPSIS,
+        'active_developer': active_developer,
     }
     return render(request, 'properties/list.html', context)
 
