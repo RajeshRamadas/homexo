@@ -86,13 +86,22 @@
   .pd-sticky { position: sticky; top: 96px; max-width: 100%; }
 
   /* ── Card base ── */
-  .pd-card { background: var(--white); border: 1px solid var(--border); overflow: hidden; max-width: 100%; box-sizing: border-box; }
+  .pd-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 24px;
+  }
   .pd-card-header {
-    padding: 18px 28px; border-bottom: 1px solid var(--border);
+    padding: 14px 22px; border-bottom: 1.5px solid #e3eaf3;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .pd-card-title { font-size: 13px; font-weight: 600; color: var(--charcoal); letter-spacing: .2px; }
-  .pd-card-link { font-size: 12px; color: var(--sky); text-decoration: none; font-weight: 500; transition: color .2s; }
+  .pd-card-title { font-size: 17px; font-weight: 700; color: var(--navy); letter-spacing: .1px; }
+  .pd-card-link { font-size: 12px; color: var(--sky); text-decoration: none; font-weight: 600; transition: color .2s; }
   .pd-card-link:hover { color: var(--navy); }
 
   /* ── Gallery ── */
@@ -166,15 +175,32 @@
   .pd-btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
 
   /* ── Highlights ── */
-  .pd-highlights { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 28px; background: #fafafa; border-top: 1px solid var(--border); }
-  .pd-hl {
-    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
-    gap: 6px; padding: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.3s ease;
+  .pd-highlights {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; padding: 4px 22px 14px;
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    border-top: 1.5px solid #e3eaf3;
   }
-  .pd-hl:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-color: var(--sky); }
-  .pd-hl-icon { color: var(--navy); margin-bottom: 2px; }
-  .pd-hl-val { font-size: 16px; font-weight: 600; color: var(--charcoal); line-height: 1.2; }
+  .pd-hl {
+    display: flex; flex-direction: row; align-items: center; gap: 12px;
+    padding: 12px 8px; background: none; border: none;
+    border-radius: 10px; transition: background .18s;
+  }
+  .pd-hl:hover { background: rgba(74,144,196,0.05); }
+  .pd-hl-icon {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sky);
+    border: 1.5px solid #dbeaf7;
+    transition: background .18s, color .18s;
+  }
+  .pd-hl:hover .pd-hl-icon {
+    background: linear-gradient(135deg, var(--sky), var(--navy));
+    color: #fff;
+  }
+  .pd-hl-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .pd-hl-val { font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pd-hl-lbl { font-size: 10px; color: var(--warm-grey); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 
   /* ── Tabs ── */
@@ -194,11 +220,40 @@
   .pd-tab-panel { display: block; }
 
   /* ── Overview grid ── */
-  .pd-ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 40px; padding: 20px 28px; }
-  .pd-ov-item { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px dashed var(--border); }
+  /* ── Property Overview (Modernized) ── */
+  .pd-card.pd-ov-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pd-ov-header {
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-ov-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-ov-title svg { width: 18px; height: 18px; }
+  .pd-ov-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-ov-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 0 0;
+    border: none;
+  }
+  .pd-ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 6px 22px 18px; }
+  .pd-ov-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1.5px dashed #e3eaf3; }
+  .pd-ov-item:nth-last-child(-n+2) { border-bottom: none; }
   .pd-ov-lbl { font-size: 13px; color: var(--warm-grey); font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .pd-ov-lbl::before { content: ''; display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--sky); }
-  .pd-ov-val { font-size: 14px; font-weight: 600; color: var(--charcoal); text-align: right; }
+  .pd-ov-val { font-size: 14px; font-weight: 600; color: var(--navy); text-align: right; }
   .pd-ov-val.ready { color: #2E7D32; }
 
   /* ── Description ── */
@@ -210,33 +265,96 @@
   }
   .pd-read-more:hover { color: var(--navy); }
 
-  /* ── Amenities ── */
+  /* ── About this Property (Modernized) ── */
+  .pd-card.pd-about-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pd-about-header {
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-about-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-about-title svg { width: 18px; height: 18px; }
+  .pd-about-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-about-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 0 0;
+    border: none;
+  }
+  .pd-desc { font-size: 15px; line-height: 1.8; color: var(--charcoal); }
+
+  /* ── Amenities (Modernized) ── */
+  .pd-card.pd-amen-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pd-amen-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-amen-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-amen-title svg { width: 18px; height: 18px; }
+  .pd-amen-count {
+    background: var(--sky); color: #fff; font-size: 12px; font-weight: 700;
+    border-radius: 8px; padding: 2px 10px; margin-left: 4px;
+  }
+  .pd-amen-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-amen-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
   .pd-amenities-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 10px; padding: 16px 20px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 18px; padding: 18px 28px 10px 28px;
   }
   .pd-amenity {
-    display: flex; flex-direction: row; align-items: center; gap: 8px;
-    padding: 6px 4px; background: none; border: none;
-    border-radius: 0; font-size: 12px; color: var(--charcoal); font-weight: 500;
+    display: flex; flex-direction: row; align-items: center; gap: 14px;
+    padding: 10px 0; background: none; border: none;
+    border-radius: 10px; font-size: 15px; color: var(--charcoal); font-weight: 600;
     text-align: left; line-height: 1.3; cursor: default;
+    transition: background .18s;
   }
   .pd-amenity-icon {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: linear-gradient(135deg, rgba(74,144,196,.1), rgba(13,43,78,.06));
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
     display: flex; align-items: center; justify-content: center;
-    color: var(--navy); flex-shrink: 0; font-size: 13px;
-    transition: all .2s;
+    color: var(--sky); flex-shrink: 0; font-size: 18px; box-shadow: 0 1px 4px 0 rgba(74,144,196,0.08);
+    border: 1.5px solid #dbeaf7;
+    transition: background .18s, color .18s;
   }
   .pd-amenity:hover .pd-amenity-icon {
-    background: linear-gradient(135deg, var(--navy), var(--sky));
-    color: var(--white);
+    background: linear-gradient(135deg, var(--sky), var(--navy));
+    color: #fff;
   }
-  .pd-amenity-name { word-break: break-word; }
+  .pd-amenity-name { word-break: break-word; font-size: 15px; font-weight: 600; color: var(--charcoal); }
   .pd-amenities-grid.pd-collapsed .pd-amenity:nth-child(n+13) { display: none; }
   .pd-amenities-toggle {
     display: flex; align-items: center; justify-content: center; gap: 6px;
     padding: 14px 28px; border-top: 1px solid var(--border);
-    font-size: 12px; font-weight: 600; color: var(--sky);
+    font-size: 13px; font-weight: 700; color: var(--sky);
     background: none; border-left: none; border-right: none; border-bottom: none;
     cursor: pointer; width: 100%; font-family: 'DM Sans', sans-serif;
     transition: color .2s;
@@ -245,42 +363,167 @@
   .pd-amenities-toggle svg { transition: transform .3s; }
   .pd-amenities-toggle.pd-expanded svg { transform: rotate(180deg); }
 
-  /* ── Connectivity ── */
-  .pd-conn-cats { padding: 0 20px 6px; display: flex; gap: 0; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  /* ── Connectivity (Modernized) ── */
+  .pd-card.pd-conn-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pd-conn-header {
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-conn-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-conn-title svg { width: 18px; height: 18px; }
+  .pd-conn-count {
+    background: var(--sky); color: #fff; font-size: 12px; font-weight: 700;
+    border-radius: 8px; padding: 2px 10px; margin-left: 4px;
+  }
+  .pd-conn-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-conn-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
+  .pd-conn-cats {
+    padding: 0 18px 0 18px; display: flex; gap: 0; border-bottom: none;
+    overflow-x: auto; scrollbar-width: none; margin-top: 2px;
+  }
   .pd-conn-cats::-webkit-scrollbar { display: none; }
   .pd-conn-cat-btn {
-    flex-shrink: 0; padding: 8px 14px; border: none; background: none;
-    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
-    color: var(--warm-grey); cursor: pointer; white-space: nowrap;
-    border-bottom: 2px solid transparent; transition: all .2s;
+    flex-shrink: 0; padding: 8px 18px 10px 18px; border: none; background: none;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+    color: #7a8ca7; cursor: pointer; white-space: nowrap;
+    border-bottom: 3px solid transparent; transition: all .2s;
+    display: flex; align-items: center; gap: 7px;
+    position: relative;
   }
-  .pd-conn-cat-btn:hover { color: var(--charcoal); }
-  .pd-conn-cat-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
-  .pd-conn-list { padding: 12px 20px; }
+  .pd-conn-cat-btn svg { opacity: 0.7; }
+  .pd-conn-cat-btn.active {
+    color: var(--navy); border-bottom: 3px solid var(--sky);
+    background: linear-gradient(90deg, #eaf3fa 60%, #fafdff 100%);
+    z-index: 1;
+  }
+  .pd-conn-cat-btn:hover { color: var(--sky); }
+  .pd-conn-list {
+    padding: 10px 18px 18px 18px; display: flex; flex-direction: column; gap: 0;
+  }
   .pd-conn-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px;
+    padding: 13px 0 13px 0; border-bottom: 1.5px dashed #e3eaf3;
+    border-radius: 10px; background: none; transition: background .18s;
+    position: relative;
   }
   .pd-conn-item:last-child { border-bottom: none; }
-  .pd-conn-icon {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: linear-gradient(135deg, rgba(74,144,196,.1), rgba(13,43,78,.06));
-    display: flex; align-items: center; justify-content: center;
-    color: var(--navy); flex-shrink: 0; font-size: 13px;
+  .pd-conn-item:hover {
+    background: linear-gradient(90deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 8px 0 rgba(74,144,196,0.06);
   }
-  .pd-conn-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--charcoal); }
-  .pd-conn-dist { font-size: 12px; font-weight: 600; color: var(--sky); white-space: nowrap; }
+  .pd-conn-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sky); flex-shrink: 0; font-size: 18px; box-shadow: 0 1px 4px 0 rgba(74,144,196,0.08);
+    border: 1.5px solid #dbeaf7;
+    transition: background .18s, color .18s;
+  }
+  .pd-conn-item:hover .pd-conn-icon {
+    background: linear-gradient(135deg, var(--sky), var(--navy));
+    color: #fff;
+  }
+  .pd-conn-name {
+    flex: 1; font-size: 15px; font-weight: 600; color: var(--charcoal);
+    letter-spacing: 0.1px;
+  }
+  .pd-conn-dist {
+    font-size: 13px; font-weight: 700; color: var(--sky); white-space: nowrap;
+    background: #eaf3fa; border-radius: 7px; padding: 2px 10px;
+    margin-left: 8px;
+  }
 
-  /* ── Floor plan ── */
+  /* ── Similar Properties (Modernized) ── */
+  .pd-card.pd-sim-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pd-sim-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 0 22px;
+  }
+  .pd-sim-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-sim-title svg { width: 18px; height: 18px; }
+  .pd-sim-link {
+    font-size: 12px; color: var(--sky); text-decoration: none; font-weight: 600;
+    transition: color .2s;
+  }
+  .pd-sim-link:hover { color: var(--navy); }
+  .pd-sim-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-sim-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 0 0;
+    border: none;
+  }
+
+  /* ── Floor plan (Modernized) ── */
+  .pd-card.pd-fp-card {
+    background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pd-fp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-fp-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-fp-title svg { width: 18px; height: 18px; }
+  .pd-fp-count {
+    background: var(--sky); color: #fff; font-size: 12px; font-weight: 700;
+    border-radius: 8px; padding: 2px 10px; margin-left: 4px;
+  }
+  .pd-fp-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-fp-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
   .pd-fp-preview {
-    margin: 14px 28px 22px; background: var(--ivory); border: 1px solid var(--border);
+    margin: 10px 22px 18px; background: var(--ivory); border: 1px solid var(--border);
     height: 220px; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
   }
   .pd-fp-ph { text-align: center; color: var(--warm-grey); }
   .pd-fp-ph svg { opacity: .35; margin-bottom: 10px; }
   .pd-fp-ph p { font-size: 13px; }
-  .pd-fp-sub { font-size: 12px; color: var(--sky); margin-top: 5px; }
-
   /* ── Map ── */
   .pd-map-wrapper { position: relative; height: 420px; overflow: hidden; border-bottom: 1px solid var(--border); }
   .pd-map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
@@ -305,18 +548,21 @@
 
   /* ── Similar (sidebar list) ── */
   .pd-sim-item {
-    display: flex; gap: 14px; padding: 14px 28px; border-bottom: 1px solid var(--border);
-    align-items: flex-start; cursor: pointer; transition: background .2s; text-decoration: none; color: inherit;
+    display: flex; gap: 14px; padding: 14px 22px; border-bottom: 1.5px dashed #e3eaf3;
+    align-items: flex-start; cursor: pointer; transition: background .18s; text-decoration: none; color: inherit;
   }
   .pd-sim-item:last-child { border-bottom: none; }
-  .pd-sim-item:hover { background: var(--ivory); }
-  .pd-sim-thumb { width: 90px; height: 68px; flex-shrink: 0; overflow: hidden; background: linear-gradient(135deg,#1A3A5C,#4A90C4); }
+  .pd-sim-item:hover { background: linear-gradient(90deg, #fafdff 80%, #eaf3fa 100%); }
+  .pd-sim-thumb {
+    width: 90px; height: 68px; flex-shrink: 0; overflow: hidden;
+    background: linear-gradient(135deg,#1A3A5C,#4A90C4); border-radius: 10px;
+  }
   .pd-sim-thumb img { width: 100%; height: 100%; object-fit: cover; }
   .pd-sim-price { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500; color: var(--charcoal); line-height: 1; }
   .pd-sim-name { font-size: 12px; color: var(--soft-brown); font-weight: 500; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
   .pd-sim-loc { font-size: 11px; color: var(--warm-grey); margin-top: 2px; }
   .pd-sim-tags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
-  .pd-sim-tag { font-size: 10px; color: var(--warm-grey); background: var(--ivory); border: 1px solid var(--border); padding: 2px 8px; }
+  .pd-sim-tag { font-size: 10px; color: var(--sky); background: #eaf3fa; border: 1px solid #dbeaf7; border-radius: 6px; padding: 2px 8px; font-weight: 600; }
 
   /* ── Badge ── */
   .pd-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 10px; }
@@ -324,7 +570,7 @@
   .pd-badge-navy { background: rgba(13,43,78,.08); color: var(--navy); }
 
   /* ── Plan counter (1/3 style) ── */
-  .pd-plan-counter { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--border); overflow: hidden; }
+  .pd-plan-counter { display: inline-flex; align-items: center; gap: 0; border: none; overflow: visible; }
   .pd-plan-counter-arr { width: 26px; height: 26px; border: none; background: var(--ivory); color: var(--warm-grey); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; padding: 0; font-size: 14px; line-height: 1; }
   .pd-plan-counter-arr:hover { background: var(--navy); color: var(--white); }
   .pd-plan-counter-txt { font-size: 11px; font-weight: 600; color: var(--navy); padding: 4px 10px; background: rgba(13,43,78,.06); min-width: 42px; text-align: center; white-space: nowrap; user-select: none; }
@@ -444,7 +690,7 @@
     .pd-actions { padding: 0 16px 16px; gap: 8px; }
     .pd-btn-primary { flex: 1 1 100%; order: -1; }
     .pd-btn { min-height: 44px; font-size: 13px; }
-    .pd-highlights { grid-template-columns: repeat(2, 1fr); padding: 14px 16px; gap: 10px; }
+    .pd-highlights { grid-template-columns: repeat(2, 1fr); padding: 4px 12px 10px; gap: 0; }
     .pd-ov-grid { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
     .pd-ov-item { padding-bottom: 10px; }
     .pd-ov-lbl { font-size: 12px; }
@@ -498,9 +744,10 @@
     /* Action buttons: outline/ghost go 50-50 */
     .pd-btn-ghost, .pd-btn-outline { flex: 1 1 calc(50% - 3px); justify-content: center; min-width: 0; font-size: 11px; padding: 10px 8px; }
     /* Highlights: keep 2-col but tighter */
-    .pd-highlights { padding: 12px; gap: 8px; }
-    .pd-hl { padding: 12px 10px; }
-    .pd-hl-val { font-size: 14px; }
+    .pd-highlights { padding: 2px 8px 8px; }
+    .pd-hl { padding: 10px 6px; gap: 9px; }
+    .pd-hl-icon { width: 30px; height: 30px; }
+    .pd-hl-val { font-size: 13px; }
     .pd-hl-lbl { font-size: 9px; }
     /* Amenities: single column on very small screens */
     .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -662,46 +909,46 @@
   .fpw { width: 100%; box-sizing: border-box; overflow: hidden; }
 
   /* ── Config tabs — bottom highlight only ── */
-  .fpw-config-wrap { display: flex; align-items: stretch; background: #fff; border-bottom: none; padding: 0 16px; gap: 0; }
+  .fpw-config-wrap { display: flex; align-items: stretch; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); border-bottom: 1.5px solid #e3eaf3; padding: 0 16px; gap: 0; }
   .fpw-config-arr { flex-shrink: 0; width: 22px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
-  .fpw-config-arr:hover { color: var(--navy); }
+  .fpw-config-arr:hover { color: var(--sky); }
   .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 0; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
   .fpw-config-tabs::-webkit-scrollbar { display: none; }
   .fpw-config-tab {
     flex-shrink: 0; padding: 10px 16px 8px; border: none;
-    border-bottom: 2px solid transparent;
+    border-bottom: 2.5px solid transparent;
     background: transparent; cursor: pointer; text-align: left;
     transition: all .2s; position: relative;
     box-sizing: border-box; overflow: hidden;
     max-width: 180px;
   }
-  .fpw-config-tab:hover { background: rgba(0,0,0,.02); }
-  .fpw-config-tab.active { border-bottom-color: var(--navy); }
+  .fpw-config-tab:hover { background: linear-gradient(90deg, #eaf3fa 60%, #fafdff 100%); }
+  .fpw-config-tab.active { border-bottom-color: var(--sky); background: linear-gradient(90deg, #eaf3fa 60%, #fafdff 100%); }
   .fpw-config-tab.active::before { display: none; }
   .fpw-config-name { font-size: 12px; font-weight: 700; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .fpw-config-tab.active .fpw-config-name { color: var(--navy); }
-  .fpw-config-price { font-size: 10px; color: var(--warm-grey); margin-top: 2px; }
+  .fpw-config-price { font-size: 10px; color: var(--sky); margin-top: 2px; font-weight: 600; }
 
   /* ── Size sub-tabs (810 SQ.FT / 875 SQ.FT …) ── */
-  .fpw-size-wrap { display: flex; align-items: center; border-bottom: none; background: #fff; padding-left: 16px; }
+  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1.5px solid #e3eaf3; background: linear-gradient(90deg, #fafdff 70%, #eaf3fa 100%); padding: 8px 16px; gap: 6px; }
   .fpw-size-arr { flex-shrink: 0; width: 22px; height: 34px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
-  .fpw-size-arr:hover { color: var(--navy); }
-  .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-size-arr:hover { color: var(--sky); }
+  .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; gap: 6px; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
   .fpw-size-tabs::-webkit-scrollbar { display: none; }
   .fpw-size-tab {
-    flex-shrink: 0; padding: 8px 16px; border: none; background: none;
-    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .3px;
-    text-transform: uppercase; color: var(--warm-grey); cursor: pointer; white-space: nowrap;
-    position: relative; transition: color .2s;
+    flex-shrink: 0; padding: 5px 14px; border: 1.5px solid #dbeaf7;
+    background: #fff; border-radius: 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .2px;
+    color: var(--warm-grey); cursor: pointer; white-space: nowrap;
+    transition: all .2s;
   }
-  .fpw-size-tab:hover { color: var(--charcoal); }
-  .fpw-size-tab.active { color: var(--navy); }
-  .fpw-size-tab.active::after { content: ''; position: absolute; bottom: 0; left: 8px; right: 8px; height: 2px; background: var(--navy); border-radius: 2px 2px 0 0; }
+  .fpw-size-tab:hover { color: var(--sky); background: #eaf3fa; border-color: var(--sky); }
+  .fpw-size-tab.active { color: var(--navy); background: linear-gradient(90deg, #eaf3fa 40%, #fafdff 100%); border-color: var(--sky); box-shadow: 0 1px 4px 0 rgba(74,144,196,0.12); }
 
   /* ── Price bar ── */
-  .fpw-price-bar { display: flex; align-items: center; gap: 6px; padding: 10px 18px; background: #fff; border-bottom: none; }
-  .fpw-price-val { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--charcoal); }
-  .fpw-price-info { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); background: #f3f4f6; color: var(--warm-grey); font-size: 9px; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
+  .fpw-price-bar { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: linear-gradient(90deg, #eaf3fa 30%, #fafdff 100%); border-bottom: 1.5px solid #e3eaf3; }
+  .fpw-price-val { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); }
+  .fpw-price-info { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #dbeaf7; background: #eaf3fa; color: var(--sky); font-size: 9px; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
 
   /* ── Image stage ── */
   .fpw-stage {
@@ -797,12 +1044,12 @@
   /* ── Stats strip ── */
   .fpw-stats {
     display: flex; align-items: center; flex-wrap: wrap; gap: 0;
-    border-top: 1px solid var(--border); background: var(--white);
+    border-top: none !important; background: none !important;
     padding: 0;
   }
   .fpw-stat {
     display: flex; align-items: center; gap: 5px;
-    padding: 8px 16px; border-right: 1px solid var(--border);
+    padding: 8px 16px; border-right: none !important; border-bottom: none !important;
     font-size: 11px; font-weight: 500; color: var(--charcoal);
   }
   .fpw-stat svg { color: var(--sky); flex-shrink: 0; }
@@ -867,8 +1114,8 @@
     .fpw-arrow { width: 34px; height: 34px; }
     .fpw-arrow-next { right: 10px; }
     /* stats: 2-column grid */
-    .fpw-stat { flex: 0 0 50%; box-sizing: border-box; border-bottom: 1px solid var(--border); }
-    .fpw-stat-right { flex: 1 0 100%; margin-left: 0; border-right: none; border-top: 1px solid var(--border); justify-content: center; }
+    .fpw-stat { flex: 0 0 50%; box-sizing: border-box; border-bottom: none !important; border-right: none !important; }
+    .fpw-stat-right { flex: 1 0 100%; margin-left: 0; border-right: none !important; border-top: none !important; justify-content: center; }
     .fpw-cta { flex-direction: column; align-items: flex-start; }
     .fpw-cta-btn { width: 100%; justify-content: center; }
   }
@@ -1017,37 +1264,60 @@
       <div class="pd-highlights">
         {% if property.bedrooms %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <div class="pd-hl-val">{% if property.bhk %}{{ property.get_bhk_display }}{% else %}{{ property.bedrooms }} BHK{% endif %}</div>
-          <div class="pd-hl-lbl">Bedrooms</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{% if property.bhk %}{{ property.get_bhk_display }}{% else %}{{ property.bedrooms }} BHK{% endif %}</div>
+            <div class="pd-hl-lbl">Bedrooms</div>
+          </div>
         </div>
         {% endif %}
         {% if property.area_sqft %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <div class="pd-hl-val">{{ property.area_sqft|floatformat:0 }} sq.ft</div>
-          <div class="pd-hl-lbl">Super Built-up</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{{ property.area_sqft|floatformat:0 }} sq.ft</div>
+            <div class="pd-hl-lbl">Super Built-up</div>
+          </div>
         </div>
         {% endif %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l4 4L7 17l-4-4 10-10z"/></svg>
-          <div class="pd-hl-val">{% if property.possession_date %}{{ property.possession_date|date:"M Y" }}{% elif property.age_years == 0 %}New{% else %}Ready{% endif %}</div>
-          <div class="pd-hl-lbl">Possession</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l4 4L7 17l-4-4 10-10z"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{% if property.possession_date %}{{ property.possession_date|date:"M Y" }}{% elif property.age_years == 0 %}New{% else %}Ready{% endif %}</div>
+            <div class="pd-hl-lbl">Possession</div>
+          </div>
         </div>
         {% if property.floor_no %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-          <div class="pd-hl-val">{{ property.floor_no }}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div>
-          <div class="pd-hl-lbl">Floor</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{{ property.floor_no }}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div>
+            <div class="pd-hl-lbl">Floor</div>
+          </div>
         </div>
         {% endif %}
       </div>
     </div>
 
     {# DESCRIPTION #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">About this Property</div></div>
-      <div class="pd-desc-body" style="padding:22px 28px;">
+    <div class="pd-card pd-about-card">
+      <div class="pd-about-header">
+        <div class="pd-about-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          About this Property
+        </div>
+      </div>
+      <div class="pd-about-sub">Description and highlights of this listing</div>
+      <div class="pd-about-divider"></div>
+      <div class="pd-desc-body" style="padding:16px 22px 22px;">
         <div class="pd-desc">
           {% if property.description %}
           <span id="pdDescShort">{{ property.description|truncatechars:320 }}</span>
@@ -1066,8 +1336,15 @@
     </div>
 
     {# PROPERTY OVERVIEW #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">Property Overview</div></div>
+    <div class="pd-card pd-ov-card">
+      <div class="pd-ov-header">
+        <div class="pd-ov-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Property Overview
+        </div>
+      </div>
+      <div class="pd-ov-sub">Key details and specifications of this property</div>
+      <div class="pd-ov-divider"></div>
 
       <div id="panel-overview">
         <div class="pd-ov-grid">
@@ -1101,20 +1378,25 @@
     </div>
 
     {# AMENITIES #}
-    <div class="pd-card">
-      <div class="pd-card-header">
-        <div class="pd-card-title">Amenities & Features</div>
-        {% if features %}<span class="pd-badge pd-badge-blue">{{ features|length }}</span>{% endif %}
+    <div class="pd-card pd-amen-card">
+      <div class="pd-amen-header">
+        <div class="pd-amen-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Amenities & Features
+          {% if features %}<span class="pd-amen-count">{{ features|length }}</span>{% endif %}
+        </div>
       </div>
+      <div class="pd-amen-sub">All the essentials and extras for a comfortable lifestyle</div>
+      <div class="pd-amen-divider"></div>
       {% if features %}
       <div class="pd-amenities-grid{% if features|length > 12 %} pd-collapsed{% endif %}" id="pdAmenitiesGrid">
         {% for f in features %}
         <div class="pd-amenity">
           <span class="pd-amenity-icon">
             {% if f.icon_image %}
-            <img src="{{ f.icon_image.url }}" alt="{{ f.name }}" width="18" height="18" style="object-fit:contain;" loading="lazy">
+            <img src="{{ f.icon_image.url }}" alt="{{ f.name }}" width="22" height="22" style="object-fit:contain;" loading="lazy">
             {% elif f.icon %}{{ f.icon }}{% else %}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="20 6 9 17 4 12"/></svg>
             {% endif %}
           </span>
           <span class="pd-amenity-name">{{ f.name }}</span>
@@ -1133,21 +1415,27 @@
     </div>
 
     {# FLOOR PLAN #}
-    <div class="pd-card" style="overflow:hidden;">
-      <div class="pd-card-header">
-        <div class="pd-card-title">Floor Plans</div>
+  <div class="pd-card pd-fp-card" style="overflow:hidden;">
+    <div class="pd-fp-header">
+      <div class="pd-fp-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Floor Plans
         {% with fps_count=property.floor_plans.count %}
-        {% if fps_count > 1 %}
-        <div class="pd-plan-counter" id="fpwPlanCounter">
-          <button class="pd-plan-counter-arr" onclick="fpwNav(-1)" aria-label="Previous plan">&#8249;</button>
-          <span class="pd-plan-counter-txt" id="fpwPlanCounterTxt">1 / {{ fps_count }}</span>
-          <button class="pd-plan-counter-arr" onclick="fpwNav(1)" aria-label="Next plan">&#8250;</button>
-        </div>
-        {% elif fps_count == 1 %}
-        <span class="pd-badge pd-badge-navy">1 Plan</span>
-        {% endif %}
+        {% if fps_count > 1 %}<span class="pd-fp-count">{{ fps_count }}</span>{% elif fps_count == 1 %}<span class="pd-fp-count">1</span>{% endif %}
         {% endwith %}
       </div>
+      {% with fps_count=property.floor_plans.count %}
+      {% if fps_count > 1 %}
+      <div class="pd-plan-counter" id="fpwPlanCounter">
+        <button class="pd-plan-counter-arr" onclick="fpwNav(-1)" aria-label="Previous plan">&#8249;</button>
+        <span class="pd-plan-counter-txt" id="fpwPlanCounterTxt">1 / {{ fps_count }}</span>
+        <button class="pd-plan-counter-arr" onclick="fpwNav(1)" aria-label="Next plan">&#8250;</button>
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+    <div class="pd-fp-sub">Explore available 2D & 3D floor plans for this property</div>
+    <div class="pd-fp-divider"></div>
 
       {% with fps=property.floor_plans.all %}
       {% if fps %}
@@ -1617,8 +1905,52 @@
     </div>
 
     {# LOCATION #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">Location</div></div>
+    <div class="pd-card pd-loc-card">
+      <div class="pd-loc-header">
+        <div class="pd-loc-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Location
+        </div>
+      </div>
+      <div class="pd-loc-sub">See where the property is located and what's nearby</div>
+      <div class="pd-loc-divider"></div>
+      <style>
+        /* ── Location (Modernized, Refined) ── */
+        .pd-card.pd-loc-card {
+          background: linear-gradient(120deg, #fafdff 80%, #eaf3fa 100%);
+          box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+          border: 1.5px solid #e3eaf3;
+          border-radius: 18px;
+          margin-bottom: 32px;
+          overflow: hidden;
+        }
+        .pd-loc-header {
+          display: flex; align-items: center; justify-content: flex-start;
+          padding: 14px 22px 0 22px;
+          gap: 10px;
+        }
+        .pd-loc-title {
+          font-size: 17px; font-weight: 700; color: var(--navy);
+          letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+        }
+        .pd-loc-title svg { width: 18px; height: 18px; }
+        .pd-loc-sub {
+          font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+          font-weight: 500;
+        }
+        .pd-loc-divider {
+          height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+          margin: 12px 0 10px 0;
+          border: none;
+        }
+        .pd-loc-footer {
+          background: #fafdff;
+          border-top: 1px solid #e3eaf3;
+          padding: 12px 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+          border-radius: 0 0 18px 18px;
+          margin-top: 0;
+        }
+      </style>
       <div class="pd-map-wrapper">
         {% if property.latitude and property.longitude %}
         <iframe id="pdMap" loading="lazy"
@@ -1640,7 +1972,7 @@
           <button class="pd-map-ctrl-btn" id="btnSat" onclick="pdSetMap('satellite')">Satellite</button>
         </div>
       </div>
-      <div class="pd-loc-footer" style="padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <div class="pd-loc-footer">
         <div style="font-size:12px;color:var(--warm-grey);display:flex;align-items:center;gap:6px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           {{ property.address }}{% if property.pincode %} — {{ property.pincode }}{% endif %}
@@ -1672,11 +2004,16 @@
 
     {# CONNECTIVITY #}
     {% if connectivity %}
-    <div class="pd-card" id="pdConnCard">
-      <div class="pd-card-header">
-        <div class="pd-card-title">Connectivity</div>
-        <span class="pd-badge pd-badge-blue">{{ connectivity|length }}</span>
+    <div class="pd-card pd-conn-card" id="pdConnCard">
+      <div class="pd-conn-header">
+        <div class="pd-conn-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>
+          Connectivity
+          <span class="pd-conn-count">{{ connectivity|length }}</span>
+        </div>
       </div>
+      <div class="pd-conn-sub">Explore key places around this property</div>
+      <div class="pd-conn-divider"></div>
       <div class="pd-conn-cats" id="pdConnCats"></div>
       <div class="pd-conn-list" id="pdConnList"></div>
     </div>
@@ -1688,12 +2025,12 @@
         {% endfor %}
       ];
       var icons = {
-        'Transit': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><circle cx="8" cy="22" r="1"/><circle cx="16" cy="22" r="1"/><path d="M7 19l-1 3"/><path d="M17 19l1 3"/></svg>',
-        'Education': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
-        'Healthcare': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
-        'Shopping': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>',
-        'Lifestyle': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
-        'Other': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>'
+        'Transit': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><circle cx="8" cy="22" r="1"/><circle cx="16" cy="22" r="1"/><path d="M7 19l-1 3"/><path d="M17 19l1 3"/></svg>',
+        'Education': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+        'Healthcare': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M2 12h20"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+        'Shopping': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>',
+        'Lifestyle': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+        'Other': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>'
       };
       var cats = [];
       items.forEach(function(it){ if (cats.indexOf(it.cat)===-1) cats.push(it.cat); });
@@ -1710,7 +2047,10 @@
         listEl.innerHTML = html;
       }
       if (cats.length > 1) {
-        catsEl.innerHTML = cats.map(function(c){ return '<button class="pd-conn-cat-btn" data-cat="'+c+'" onclick="this.parentNode._show(\''+c.replace(/'/g,"\\'")+'\')">' + c + '</button>'; }).join('');
+        catsEl.innerHTML = cats.map(function(c){
+          var ic = icons[c] || icons['Other'];
+          return '<button class="pd-conn-cat-btn" data-cat="'+c+'" onclick="this.parentNode._show(\''+c.replace(/'/g,"\\'")+'\')">' + ic + ' ' + c + '</button>';
+        }).join('');
         catsEl._show = showCat;
       } else {
         catsEl.style.display = 'none';
@@ -1722,11 +2062,16 @@
 
     {# SIMILAR PROPERTIES #}
     {% if similar %}
-    <div class="pd-card">
-      <div class="pd-card-header">
-        <div class="pd-card-title">Similar Properties</div>
-        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-card-link">View All ›</a>
+    <div class="pd-card pd-sim-card">
+      <div class="pd-sim-header">
+        <div class="pd-sim-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Similar Properties
+        </div>
+        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-sim-link">View All ›</a>
       </div>
+      <div class="pd-sim-sub">Other listings you might like in {{ property.city }}</div>
+      <div class="pd-sim-divider"></div>
       {% for sim in similar %}
       <a href="{{ sim.get_absolute_url }}" class="pd-sim-item">
         <div class="pd-sim-thumb">
@@ -2198,7 +2543,31 @@ var pdCurrent = 0, pdLbIsOpen = false;
 })();
 
 // ── Property image slideshow ──
-(function(){
+    (function(){
+        var cats = [];
+        items.forEach(function(it){ if (cats.indexOf(it.cat)===-1) cats.push(it.cat); });
+        var catsEl = document.getElementById('pdConnCats');
+        var listEl = document.getElementById('pdConnList');
+        function showCat(c){
+          catsEl.querySelectorAll('.pd-conn-cat-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.cat===c); });
+          var html = '';
+          items.forEach(function(it){
+            if (it.cat!==c) return;
+            var ic = icons[it.cat] || icons['Other'];
+            html += '<div class="pd-conn-item"><span class="pd-conn-icon">' + ic + '</span><span class="pd-conn-name">' + it.name + '</span><span class="pd-conn-dist">' + it.dist + '</span></div>';
+          });
+          listEl.innerHTML = html;
+        }
+        if (cats.length > 1) {
+          catsEl.innerHTML = cats.map(function(c){
+            var ic = icons[c] || icons['Other'];
+            return '<button class="pd-conn-cat-btn" data-cat="'+c+'" onclick="this.parentNode._show(\''+c.replace(/'/g,"\\'")+'\')">' + ic + ' ' + c + '</button>';
+          }).join('');
+          catsEl._show = showCat;
+        } else {
+          catsEl.style.display = 'none';
+        }
+        showCat(cats[0]);
   var box = document.getElementById('propImgBox');
   if (!box) return;
   var slides = Array.from(box.getElementsByClassName('prop-img-slide'));
