@@ -211,14 +211,43 @@
   .pd-read-more:hover { color: var(--navy); }
 
   /* ── Amenities ── */
-  .pd-amenities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px 28px; }
-  .pd-amenity {
-    display: flex; align-items: center; gap: 9px; padding: 10px 12px;
-    background: var(--ivory); border: 1px solid var(--border);
-    font-size: 12px; color: var(--soft-brown); font-weight: 500; transition: all .3s;
+  .pd-amenities-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 10px; padding: 16px 20px;
   }
-  .pd-amenity:hover { border-color: var(--navy); color: var(--navy); background: var(--white); }
-  .pd-amenity-icon { color: var(--sky); flex-shrink: 0; font-size: 14px; }
+  .pd-amenity {
+    display: flex; flex-direction: row; align-items: center; gap: 8px;
+    padding: 8px 10px; background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 12px; color: var(--charcoal); font-weight: 500;
+    text-align: left; transition: all .2s ease;
+    line-height: 1.3; cursor: default;
+  }
+  .pd-amenity:hover {
+    border-color: var(--sky); background: rgba(74,144,196,.04);
+  }
+  .pd-amenity-icon {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(74,144,196,.1), rgba(13,43,78,.06));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--navy); flex-shrink: 0; font-size: 13px;
+    transition: all .2s;
+  }
+  .pd-amenity:hover .pd-amenity-icon {
+    background: linear-gradient(135deg, var(--navy), var(--sky));
+    color: var(--white);
+  }
+  .pd-amenity-name { word-break: break-word; }
+  .pd-amenities-grid.pd-collapsed .pd-amenity:nth-child(n+13) { display: none; }
+  .pd-amenities-toggle {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 14px 28px; border-top: 1px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--sky);
+    background: none; border-left: none; border-right: none; border-bottom: none;
+    cursor: pointer; width: 100%; font-family: 'DM Sans', sans-serif;
+    transition: color .2s;
+  }
+  .pd-amenities-toggle:hover { color: var(--navy); }
+  .pd-amenities-toggle svg { transition: transform .3s; }
+  .pd-amenities-toggle.pd-expanded svg { transform: rotate(180deg); }
 
   /* ── Floor plan ── */
   .pd-fp-preview {
@@ -371,7 +400,7 @@
   @media (max-width: 1024px) {
     .pd-layout { padding: 18px 28px 48px; gap: 18px; grid-template-columns: 1fr 300px; }
     .pd-breadcrumb { padding: 11px 28px; }
-    .pd-amenities-grid { grid-template-columns: repeat(3, 1fr); }
+    .pd-amenities-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .pd-gallery { grid-template-rows: 260px 130px; }
     .pd-price { font-size: 28px; }
     .pd-prop-name { font-size: 22px; }
@@ -452,8 +481,9 @@
     .pd-hl-val { font-size: 14px; }
     .pd-hl-lbl { font-size: 9px; }
     /* Amenities: single column on very small screens */
-    .pd-amenities-grid { grid-template-columns: 1fr; }
-    .pd-amenity { font-size: 11px; padding: 10px 12px; }
+    .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pd-amenity { font-size: 11px; padding: 14px 8px 12px; }
+    .pd-amenity-icon { width: 34px; height: 34px; font-size: 14px; }
     /* Similar properties */
     .pd-sim-thumb { width: 80px; height: 60px; }
     .pd-sim-price { font-size: 16px; }
@@ -1031,18 +1061,26 @@
         {% if features %}<span class="pd-badge pd-badge-blue">{{ features|length }}</span>{% endif %}
       </div>
       {% if features %}
-      <div class="pd-amenities-grid">
+      <div class="pd-amenities-grid{% if features|length > 12 %} pd-collapsed{% endif %}" id="pdAmenitiesGrid">
         {% for f in features %}
         <div class="pd-amenity">
           <span class="pd-amenity-icon">
-            {% if f.icon %}{{ f.icon }}{% else %}
+            {% if f.icon_image %}
+            <img src="{{ f.icon_image.url }}" alt="{{ f.name }}" width="18" height="18" style="object-fit:contain;" loading="lazy">
+            {% elif f.icon %}{{ f.icon }}{% else %}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
             {% endif %}
           </span>
-          {{ f.name }}
+          <span class="pd-amenity-name">{{ f.name }}</span>
         </div>
         {% endfor %}
       </div>
+      {% if features|length > 12 %}
+      <button class="pd-amenities-toggle" id="pdAmenitiesTogle" onclick="pdToggleAmenities()">
+        <span id="pdAmenTogTxt">Show All {{ features|length }} Amenities</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      {% endif %}
       {% else %}
       <div style="padding:32px 28px;text-align:center;color:var(--warm-grey);font-size:13px;">No amenities listed for this property.</div>
       {% endif %}
@@ -1853,6 +1891,17 @@ function pdShowToast() {
     t.style.opacity = '0';
     t.style.transform = 'translateX(-50%) translateY(20px)';
   }, 2500);
+}
+
+// ── Amenities toggle ──
+function pdToggleAmenities() {
+  var grid = document.getElementById('pdAmenitiesGrid');
+  var btn = document.getElementById('pdAmenitiesTogle');
+  var txt = document.getElementById('pdAmenTogTxt');
+  if (!grid || !btn) return;
+  var collapsed = grid.classList.toggle('pd-collapsed');
+  btn.classList.toggle('pd-expanded', !collapsed);
+  txt.textContent = collapsed ? 'Show All ' + grid.children.length + ' Amenities' : 'Show Less';
 }
 
 // ── Description toggle ──

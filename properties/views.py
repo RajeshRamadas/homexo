@@ -18,7 +18,7 @@ from .forms import PropertySearchForm, PropertyCreateForm
 # Inline formset for amenities / features (used by create & update views)
 PropertyFeatureFormSet = inlineformset_factory(
     Property, PropertyFeature,
-    fields=('name',),
+    fields=('name', 'icon_image'),
     extra=6, can_delete=True,
 )
 
@@ -154,7 +154,7 @@ def property_detail(request, slug):
 def property_create(request):
     """List a new property (requires login)."""
     form = PropertyCreateForm(request.POST or None, request.FILES or None)
-    feature_formset = PropertyFeatureFormSet(request.POST or None, prefix='features')
+    feature_formset = PropertyFeatureFormSet(request.POST or None, request.FILES or None, prefix='features')
     if request.method == 'POST' and form.is_valid() and feature_formset.is_valid():
         prop = form.save(commit=False)
         prop.owner = request.user
@@ -190,7 +190,7 @@ def property_update(request, slug):
 
     form = PropertyCreateForm(request.POST or None, request.FILES or None, instance=prop)
     feature_formset = PropertyFeatureFormSet(
-        request.POST or None, instance=prop, prefix='features'
+        request.POST or None, request.FILES or None, instance=prop, prefix='features'
     )
     if request.method == 'POST' and form.is_valid() and feature_formset.is_valid():
         form.save()

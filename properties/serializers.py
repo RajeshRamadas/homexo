@@ -22,7 +22,7 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 class PropertyFeatureSerializer(serializers.ModelSerializer):
     class Meta:
         model  = PropertyFeature
-        fields = ('id', 'name', 'icon')
+        fields = ('id', 'name', 'icon', 'icon_image')
 
 
 class PropertyListSerializer(serializers.ModelSerializer):

@@ -43,7 +43,7 @@ class PropertyFloorPlanInline(admin.TabularInline):
 class PropertyFeatureInline(admin.TabularInline):
     model = PropertyFeature
     extra = 4
-    fields = ('name', 'icon')
+    fields = ('name', 'icon', 'icon_image')
 
 
 @admin.register(Property)

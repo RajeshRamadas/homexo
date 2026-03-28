@@ -248,9 +248,10 @@ class PropertyFloorPlan(models.Model):
 
 class PropertyFeature(models.Model):
     """Amenities & features: Swimming Pool, Gym, Clubhouse, etc."""
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='features')
-    name     = models.CharField(max_length=100)
-    icon     = models.CharField(max_length=100, blank=True, help_text='CSS icon class or SVG name')
+    property   = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='features')
+    name       = models.CharField(max_length=100)
+    icon       = models.CharField(max_length=100, blank=True, help_text='CSS icon class or SVG markup')
+    icon_image = models.ImageField(upload_to='features/', blank=True, help_text='Upload an icon image (PNG/SVG recommended, ~64×64px)')
 
     class Meta:
         verbose_name        = 'Feature'
