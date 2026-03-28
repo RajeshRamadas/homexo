@@ -291,11 +291,11 @@ def developers(request):
     if current_city:
         queryset = queryset.filter(location__icontains=current_city)
 
-    featured_dev = queryset.filter(is_featured=True).first() or queryset.first()
+    featured_developer = queryset.filter(is_featured=True).first() or queryset.first()
 
     context = {
         'developers': queryset,
-        'featured_dev': featured_dev,
+        'featured_developer': featured_developer,
         'current_city': current_city,
         'total_verified': queryset.count(),
         'total_units': Property.objects.filter(status='active').count(),
