@@ -37,11 +37,14 @@
   <link rel="stylesheet" href="{% static 'css/homexo.css' %}">
 
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
     }
-    
-    html, body {
+
+    html,
+    body {
       overflow-x: hidden;
       max-width: 100vw;
       margin: 0;
@@ -55,7 +58,13 @@
       --ivory: #F7F9FC;
       --border: rgba(10, 46, 92, 0.15);
 
-      --accent: {{ campaign.accent_color }};
+      --accent: {
+          {
+          campaign.accent_color
+        }
+      }
+
+      ;
     }
 
     /* ── Campaign Nav overrides ─────────────────────────────── */
@@ -427,32 +436,67 @@
     }
 
     @media (max-width: 768px) {
+
       .camp-footer--branded .footer-inner,
       .camp-footer--homexo .footer-inner {
         grid-template-columns: 1fr 1fr;
       }
+
       .camp-nav .nav-links {
         display: none;
       }
-      .camp-nav--branded .nav-links { display: none; }
-      .camp-nav .dev-name-label { display: none; }
-      .camp-nav .nav-cta { padding: .4rem .85rem; font-size: .75rem; }
-      .camp-nav--branded .logos { padding: 0 1.25rem; border-right: none; }
-      .camp-nav--branded .nav-cta { padding: 0 1.25rem; font-size: .85rem; }
+
+      .camp-nav--branded .nav-links {
+        display: none;
+      }
+
+      .camp-nav .dev-name-label {
+        display: none;
+      }
+
+      .camp-nav .nav-cta {
+        padding: .4rem .85rem;
+        font-size: .75rem;
+      }
+
+      .camp-nav--branded .logos {
+        padding: 0 1.25rem;
+        border-right: none;
+      }
+
+      .camp-nav--branded .nav-cta {
+        padding: 0 1.25rem;
+        font-size: .85rem;
+      }
     }
 
     @media (max-width: 480px) {
+
       .camp-footer--branded .footer-inner,
       .camp-footer--homexo .footer-inner {
         grid-template-columns: 1fr;
       }
+
       .camp-nav {
         padding: 0 1rem;
       }
-      .camp-nav--branded { height: 60px; }
-      .camp-nav .homexo-wordmark { font-size: 1.15rem; }
-      .camp-nav--branded .logos { padding: 0 .875rem; }
-      .camp-nav--branded .nav-cta { padding: 0 1rem; font-size: .8rem; }
+
+      .camp-nav--branded {
+        height: 60px;
+      }
+
+      .camp-nav .homexo-wordmark {
+        font-size: 1.15rem;
+      }
+
+      .camp-nav--branded .logos {
+        padding: 0 .875rem;
+      }
+
+      .camp-nav--branded .nav-cta {
+        padding: 0 1rem;
+        font-size: .8rem;
+      }
     }
   </style>
 
@@ -469,7 +513,8 @@
   {% if ns == 'cobranded' %}
   <nav class="camp-nav camp-nav--cobranded">
     <div class="logos">
-      <a href="/" class="homexo-wordmark">HOMEXO</a>
+      <a href="/" class="homexo-wordmark">HOME<span
+          style="background-color: #0D2B4E; color: #FFFFFF; padding: 1px 4px; border-radius: 2px; margin-left: 0; letter-spacing: 0;">XO</span></a>
       <span class="divider"></span>
       {% if campaign.developer_logo %}
       <img src="{{ campaign.developer_logo.url }}" alt="{{ campaign.developer_name }}"
@@ -581,7 +626,8 @@
   {% else %}{# homexo default #}
   <nav class="camp-nav camp-nav--homexo">
     <div class="logos">
-      <a href="/" class="homexo-wordmark">HOMEXO</a>
+      <a href="/" class="homexo-wordmark">HOME<span
+          style="background-color: #0D2B4E; color: #FFFFFF; font-size: 0.65em; padding: 0.2em 0.4em; border-radius: 2px; margin-left: 2px; letter-spacing: 0; vertical-align: middle;">XO</span></a>
     </div>
     {% if campaign.nav_show_links %}
     <div class="nav-links">
@@ -619,7 +665,8 @@
     <div class="footer-inner">
       <div>
         <a href="/"
-          style="font-family:'Source Sans 3',sans-serif; font-weight:700; font-size:1.5rem; color:#fff; text-decoration:none;">HOMEXO</a>
+          style="font-family:'Source Sans 3',sans-serif; font-weight:700; font-size:1.5rem; color:#fff; text-decoration:none;">HOME<span
+            style="background-color: #0D2B4E; color: #FFFFFF; padding: 1px 4px; border-radius: 2px; margin-left: 0; letter-spacing: 0;">XO</span></a>
         <p style="font-size:.85rem; opacity:.65; margin:.75rem 0; line-height:1.6;">India's premium real estate portal.
           Find your perfect home with expert guidance.</p>
       </div>
