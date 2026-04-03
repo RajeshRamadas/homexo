@@ -123,6 +123,18 @@
       <div class="form-group">
         <label>Parking Slots</label>
         <input type="number" name="parking_slots" value="{{ form.parking_slots.value|default:'0' }}" min="0" max="10">
+        <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:13px;cursor:pointer;">
+            <input type="checkbox" name="two_wheeler_parking" value="True"
+                   {% if form.two_wheeler_parking.value %}checked{% endif %} style="width:auto;margin:0;">
+            2-Wheeler
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:13px;cursor:pointer;">
+            <input type="checkbox" name="four_wheeler_parking" value="True"
+                   {% if form.four_wheeler_parking.value %}checked{% endif %} style="width:auto;margin:0;">
+            4-Wheeler
+          </label>
+        </div>
       </div>
       <div class="form-group">
         <label>Area (sq.ft)</label>
@@ -160,9 +172,20 @@
         <input type="number" name="age_years" value="{{ form.age_years.value|default:'' }}" min="0">
       </div>
     </div>
-    <div class="form-group" style="margin-top:4px;">
-      <label>Possession Date</label>
-      <input type="date" name="possession_date" value="{{ form.possession_date.value|default:'' }}" style="max-width:200px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:4px;">
+      <div class="form-group">
+        <label>Construction Status</label>
+        <select name="construction_status">
+          <option value="">Select...</option>
+          {% for val, label in form.fields.construction_status.choices %}
+          <option value="{{ val }}" {% if form.construction_status.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Possession Date</label>
+        <input type="date" name="possession_date" value="{{ form.possession_date.value|default:'' }}" style="max-width:200px;">
+      </div>
     </div>
   </div>
 

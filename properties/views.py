@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.core.paginator import Paginator
+import datetime
 from django.forms import inlineformset_factory
 from django.views.generic import DetailView
 
@@ -87,6 +88,67 @@ def property_list(request):
         qs = qs.filter(price__gte=low)
         if high:
             qs = qs.filter(price__lte=high)
+
+    # ── Area range ────────────────────────────────────────────────────────────
+    area_min = request.GET.get('area_min', '').strip()
+    area_max = request.GET.get('area_max', '').strip()
+    if area_min.isdigit():
+        qs = qs.filter(area_sqft__gte=int(area_min))
+    if area_max.isdigit():
+        qs = qs.filter(area_sqft__lte=int(area_max))
+
+    # ── Property Age ──────────────────────────────────────────────────────────
+    age = request.GET.get('age', '')
+    AGE_MAP = {'1': 1, '3': 3, '5': 5, '10': 10}
+    if age in AGE_MAP:
+        qs = qs.filter(age_years__lte=AGE_MAP[age])
+
+    # ── Bathrooms ─────────────────────────────────────────────────────────────
+    baths = request.GET.get('baths', '')
+    if baths.isdigit():
+        qs = qs.filter(bathrooms__gte=int(baths))
+
+    # ── Furnishing ────────────────────────────────────────────────────────────
+    furnishing_filter = request.GET.get('furnishing', '')
+    if furnishing_filter:
+        qs = qs.filter(furnishing=furnishing_filter)
+
+    # ── Floor ─────────────────────────────────────────────────────────────────
+    floor = request.GET.get('floor', '')
+    FLOOR_RANGES = {
+        'ground': (0, 0),
+        '1-3':    (1, 3),
+        '4-6':    (4, 6),
+        '7-9':    (7, 9),
+        '10+':    (10, None),
+    }
+    if floor in FLOOR_RANGES:
+        f_low, f_high = FLOOR_RANGES[floor]
+        qs = qs.filter(floor_no__gte=f_low)
+        if f_high is not None:
+            qs = qs.filter(floor_no__lte=f_high)
+
+    # ── Construction Status ───────────────────────────────────────────────────
+    con_status = request.GET.get('con_status', '')
+    if con_status:
+        qs = qs.filter(construction_status=con_status)
+
+    # ── With Photo ────────────────────────────────────────────────────────────
+    with_photo = request.GET.get('with_photo', '')
+    if with_photo == '1':
+        qs = qs.filter(images__isnull=False).distinct()
+
+    # ── New only ──────────────────────────────────────────────────────────────
+    only_new = request.GET.get('is_new', '')
+    if only_new == '1':
+        qs = qs.filter(is_new=True)
+
+    # ── Parking ───────────────────────────────────────────────────────────────
+    parking = request.GET.get('parking', '')
+    if parking == '2w':
+        qs = qs.filter(two_wheeler_parking=True)
+    elif parking == '4w':
+        qs = qs.filter(four_wheeler_parking=True)
 
     # ── Developer filter (from developer profile page link) ───────────────────
     developer_slug = request.GET.get('developer', '').strip()

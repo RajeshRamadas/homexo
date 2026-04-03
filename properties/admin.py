@@ -104,7 +104,9 @@ class PropertyAdmin(admin.ModelAdmin):
                        'floor_no', 'total_floors')
         }),
         ('Details', {
-            'fields': ('furnishing', 'facing', 'age_years', 'parking_slots', 'possession_date')
+            'fields': ('furnishing', 'construction_status', 'facing', 'age_years',
+                       'parking_slots', 'two_wheeler_parking', 'four_wheeler_parking',
+                       'possession_date')
         }),
         ('Flags & Tags', {
             'fields': ('is_featured', 'is_signature', 'is_new', 'is_exclusive', 'tags')

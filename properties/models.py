@@ -91,16 +91,20 @@ class Property(models.Model):
         COMMERCIAL = 'commercial', 'Commercial'
 
     class PropertyType(models.TextChoices):
-        APARTMENT  = 'apartment',  'Apartment'
-        VILLA      = 'villa',      'Villa'
-        PENTHOUSE  = 'penthouse',  'Penthouse'
-        PLOT       = 'plot',       'Plot / Land'
-        OFFICE     = 'office',     'Office Space'
-        SHOP       = 'shop',       'Shop / Retail'
-        WAREHOUSE  = 'warehouse',  'Warehouse'
+        APARTMENT         = 'apartment',         'Apartment'
+        INDEPENDENT_HOUSE = 'independent_house', 'Independent House/Villa'
+        GATED_VILLA       = 'gated_villa',       'Gated Community Villa'
+        STANDALONE        = 'standalone',        'Standalone Building'
+        VILLA             = 'villa',             'Villa'
+        PENTHOUSE         = 'penthouse',         'Penthouse'
+        PLOT              = 'plot',              'Plot / Land'
+        OFFICE            = 'office',            'Office Space'
+        SHOP              = 'shop',              'Shop / Retail'
+        WAREHOUSE         = 'warehouse',         'Warehouse'
 
     class BHK(models.TextChoices):
         STUDIO  = 'studio', 'Studio'
+        ONE_RK  = '1rk',   '1 RK'
         ONE     = '1bhk',   '1 BHK'
         TWO     = '2bhk',   '2 BHK'
         THREE   = '3bhk',   '3 BHK'
@@ -120,6 +124,11 @@ class Property(models.Model):
         FURNISHED    = 'furnished',     'Fully Furnished'
         SEMI         = 'semi',          'Semi Furnished'
         UNFURNISHED  = 'unfurnished',   'Unfurnished'
+
+    class ConstructionStatus(models.TextChoices):
+        READY            = 'ready',            'Ready to Move'
+        UNDER_CONST      = 'under_construction','Under Construction'
+        NEW_LAUNCH       = 'new_launch',       'New Launch'
 
     class OwnershipType(models.TextChoices):
         FREEHOLD   = 'freehold',   'Freehold'
@@ -165,14 +174,18 @@ class Property(models.Model):
     total_floors   = models.PositiveSmallIntegerField(null=True, blank=True)
 
     # ── Additional Info ───────────────────────────────────────────────────────
-    furnishing      = models.CharField(max_length=15, choices=FurnishingStatus.choices, blank=True)
-    facing          = models.CharField(max_length=50, blank=True, help_text='e.g. East, North-East')
-    age_years       = models.PositiveSmallIntegerField(null=True, blank=True,
-                                                       verbose_name='Property Age (years)')
-    parking_slots   = models.PositiveSmallIntegerField(default=0)
-    possession_date = models.DateField(null=True, blank=True)
-    ownership_type  = models.CharField(max_length=15, choices=OwnershipType.choices, blank=True,
-                                       verbose_name='Ownership Type')
+    furnishing           = models.CharField(max_length=15, choices=FurnishingStatus.choices, blank=True)
+    construction_status  = models.CharField(max_length=20, choices=ConstructionStatus.choices,
+                                            blank=True, verbose_name='Construction Status')
+    facing               = models.CharField(max_length=50, blank=True, help_text='e.g. East, North-East')
+    age_years            = models.PositiveSmallIntegerField(null=True, blank=True,
+                                                            verbose_name='Property Age (years)')
+    parking_slots        = models.PositiveSmallIntegerField(default=0)
+    two_wheeler_parking  = models.BooleanField(default=False, verbose_name='2-Wheeler Parking')
+    four_wheeler_parking = models.BooleanField(default=False, verbose_name='4-Wheeler Parking')
+    possession_date      = models.DateField(null=True, blank=True)
+    ownership_type       = models.CharField(max_length=15, choices=OwnershipType.choices, blank=True,
+                                            verbose_name='Ownership Type')
     rera_approved   = models.BooleanField(default=False, verbose_name='RERA Approved')
     rera_number     = models.CharField(max_length=100, blank=True, verbose_name='RERA Registration No.')
 

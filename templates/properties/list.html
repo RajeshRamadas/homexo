@@ -486,6 +486,16 @@
   <input type="hidden" name="bhk"           id="iBhk"          value="{{ request.GET.bhk }}">
   <input type="hidden" name="price"         id="iPrice"        value="{{ request.GET.price }}">
   <input type="hidden" name="location"      id="iLocation"     value="{{ request.GET.location }}">
+  <input type="hidden" name="area_min"      id="iAreaMin"      value="{{ request.GET.area_min }}">
+  <input type="hidden" name="area_max"      id="iAreaMax"      value="{{ request.GET.area_max }}">
+  <input type="hidden" name="age"           id="iAge"          value="{{ request.GET.age }}">
+  <input type="hidden" name="baths"         id="iBaths"        value="{{ request.GET.baths }}">
+  <input type="hidden" name="furnishing"    id="iFurnishing"   value="{{ request.GET.furnishing }}">
+  <input type="hidden" name="floor"         id="iFloor"        value="{{ request.GET.floor }}">
+  <input type="hidden" name="con_status"    id="iConStatus"    value="{{ request.GET.con_status }}">
+  <input type="hidden" name="with_photo"    id="iWithPhoto"    value="{{ request.GET.with_photo }}">
+  <input type="hidden" name="is_new"        id="iIsNew"        value="{{ request.GET.is_new }}">
+  <input type="hidden" name="parking"       id="iParking"      value="{{ request.GET.parking }}">
 
   {# FILTER BAR (desktop) #}
   <div class="lx-filter-bar">
@@ -601,9 +611,10 @@
       </div>
 
       <div class="lx-filter-section">
-        <div class="lx-filter-section-title">Bedrooms</div>
+        <div class="lx-filter-section-title">Bedrooms / BHK</div>
         <div class="lx-chips">
           <button type="button" class="lx-chip {% if not request.GET.bhk %}active{% endif %}" onclick="setChip('iBhk','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.bhk == '1rk' %}active{% endif %}" onclick="setChip('iBhk','1rk',this)">1 RK</button>
           <button type="button" class="lx-chip {% if request.GET.bhk == '1bhk' %}active{% endif %}" onclick="setChip('iBhk','1bhk',this)">1 BHK</button>
           <button type="button" class="lx-chip {% if request.GET.bhk == '2bhk' %}active{% endif %}" onclick="setChip('iBhk','2bhk',this)">2 BHK</button>
           <button type="button" class="lx-chip {% if request.GET.bhk == '3bhk' %}active{% endif %}" onclick="setChip('iBhk','3bhk',this)">3 BHK</button>
@@ -621,6 +632,91 @@
           <button type="button" class="lx-chip {% if request.GET.price == '1cr-3cr' %}active{% endif %}" onclick="setChip('iPrice','1cr-3cr',this)"><span class="rupee">₹</span>1Cr&#8211;<span class="rupee">₹</span>3Cr</button>
           <button type="button" class="lx-chip {% if request.GET.price == '3cr-10cr' %}active{% endif %}" onclick="setChip('iPrice','3cr-10cr',this)"><span class="rupee">₹</span>3Cr&#8211;<span class="rupee">₹</span>10Cr</button>
           <button type="button" class="lx-chip {% if request.GET.price == 'above10cr' %}active{% endif %}" onclick="setChip('iPrice','above10cr',this)">Above <span class="rupee">₹</span>10Cr</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Built Up Area (sq.ft.)</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" class="lx-filter-input" style="width:50%;" placeholder="Min"
+                 value="{{ request.GET.area_min }}" min="0" max="100000"
+                 data-sync="iAreaMin" oninput="document.getElementById('iAreaMin').value=this.value">
+          <span style="color:var(--warm-grey);font-size:13px;">–</span>
+          <input type="number" class="lx-filter-input" style="width:50%;" placeholder="Max"
+                 value="{{ request.GET.area_max }}" min="0" max="100000"
+                 data-sync="iAreaMax" oninput="document.getElementById('iAreaMax').value=this.value">
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Property Age</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not request.GET.age %}active{% endif %}" onclick="setChip('iAge','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.age == '1' %}active{% endif %}" onclick="setChip('iAge','1',this)">&lt; 1 Year</button>
+          <button type="button" class="lx-chip {% if request.GET.age == '3' %}active{% endif %}" onclick="setChip('iAge','3',this)">&lt; 3 Years</button>
+          <button type="button" class="lx-chip {% if request.GET.age == '5' %}active{% endif %}" onclick="setChip('iAge','5',this)">&lt; 5 Years</button>
+          <button type="button" class="lx-chip {% if request.GET.age == '10' %}active{% endif %}" onclick="setChip('iAge','10',this)">&lt; 10 Years</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Bathrooms</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not request.GET.baths %}active{% endif %}" onclick="setChip('iBaths','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.baths == '1' %}active{% endif %}" onclick="setChip('iBaths','1',this)">1+</button>
+          <button type="button" class="lx-chip {% if request.GET.baths == '2' %}active{% endif %}" onclick="setChip('iBaths','2',this)">2+</button>
+          <button type="button" class="lx-chip {% if request.GET.baths == '3' %}active{% endif %}" onclick="setChip('iBaths','3',this)">3+</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Furnishing</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not request.GET.furnishing %}active{% endif %}" onclick="setChip('iFurnishing','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.furnishing == 'furnished' %}active{% endif %}" onclick="setChip('iFurnishing','furnished',this)">Full</button>
+          <button type="button" class="lx-chip {% if request.GET.furnishing == 'semi' %}active{% endif %}" onclick="setChip('iFurnishing','semi',this)">Semi</button>
+          <button type="button" class="lx-chip {% if request.GET.furnishing == 'unfurnished' %}active{% endif %}" onclick="setChip('iFurnishing','unfurnished',this)">None</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Floor</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not request.GET.floor %}active{% endif %}" onclick="setChip('iFloor','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.floor == 'ground' %}active{% endif %}" onclick="setChip('iFloor','ground',this)">Ground</button>
+          <button type="button" class="lx-chip {% if request.GET.floor == '1-3' %}active{% endif %}" onclick="setChip('iFloor','1-3',this)">1 – 3</button>
+          <button type="button" class="lx-chip {% if request.GET.floor == '4-6' %}active{% endif %}" onclick="setChip('iFloor','4-6',this)">4 – 6</button>
+          <button type="button" class="lx-chip {% if request.GET.floor == '7-9' %}active{% endif %}" onclick="setChip('iFloor','7-9',this)">7 – 9</button>
+          <button type="button" class="lx-chip {% if request.GET.floor == '10+' %}active{% endif %}" onclick="setChip('iFloor','10+',this)">10 &amp; above</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Property Status</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not request.GET.con_status %}active{% endif %}" onclick="setChip('iConStatus','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.con_status == 'ready' %}active{% endif %}" onclick="setChip('iConStatus','ready',this)">Ready to Move</button>
+          <button type="button" class="lx-chip {% if request.GET.con_status == 'under_construction' %}active{% endif %}" onclick="setChip('iConStatus','under_construction',this)">Under Construction</button>
+          <button type="button" class="lx-chip {% if request.GET.con_status == 'new_launch' %}active{% endif %}" onclick="setChip('iConStatus','new_launch',this)">New Launch</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Parking</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not request.GET.parking %}active{% endif %}" onclick="setChip('iParking','',this)">Any</button>
+          <button type="button" class="lx-chip {% if request.GET.parking == '2w' %}active{% endif %}" onclick="setChip('iParking','2w',this)">2-Wheeler</button>
+          <button type="button" class="lx-chip {% if request.GET.parking == '4w' %}active{% endif %}" onclick="setChip('iParking','4w',this)">4-Wheeler</button>
+        </div>
+      </div>
+
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Show Only</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if request.GET.with_photo == '1' %}active{% endif %}"
+                  onclick="toggleFlag('iWithPhoto','1',this)">With Photo</button>
+          <button type="button" class="lx-chip {% if request.GET.is_new == '1' %}active{% endif %}"
+                  onclick="toggleFlag('iIsNew','1',this)">New</button>
         </div>
       </div>
 
@@ -675,6 +771,64 @@
           <div class="lx-filter-tag">
             {{ request.GET.location }}
             <a href="?{% for k,v in request.GET.items %}{% if k != 'location' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.area_min or request.GET.area_max %}
+          <div class="lx-filter-tag">
+            {% if request.GET.area_min %}{{ request.GET.area_min }}{% else %}0{% endif %} – {% if request.GET.area_max %}{{ request.GET.area_max }}{% else %}Any{% endif %} sq.ft.
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'area_min' and k != 'area_max' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.age %}
+          <div class="lx-filter-tag">
+            Age &lt; {{ request.GET.age }} yr{% if request.GET.age != '1' %}s{% endif %}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'age' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.baths %}
+          <div class="lx-filter-tag">
+            {{ request.GET.baths }}+ Baths
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'baths' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.furnishing %}
+          <div class="lx-filter-tag">
+            {% if request.GET.furnishing == 'furnished' %}Fully Furnished
+            {% elif request.GET.furnishing == 'semi' %}Semi Furnished
+            {% else %}Unfurnished{% endif %}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'furnishing' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.floor %}
+          <div class="lx-filter-tag">
+            Floor: {{ request.GET.floor }}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'floor' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.con_status %}
+          <div class="lx-filter-tag">
+            {% if request.GET.con_status == 'ready' %}Ready to Move
+            {% elif request.GET.con_status == 'under_construction' %}Under Construction
+            {% else %}New Launch{% endif %}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'con_status' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.parking %}
+          <div class="lx-filter-tag">
+            {% if request.GET.parking == '2w' %}2-Wheeler Parking{% else %}4-Wheeler Parking{% endif %}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'parking' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.with_photo == '1' %}
+          <div class="lx-filter-tag">
+            With Photo
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'with_photo' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
+          </div>
+          {% endif %}
+          {% if request.GET.is_new == '1' %}
+          <div class="lx-filter-tag">
+            New
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'is_new' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
           </div>
           {% endif %}
         </div>
@@ -876,10 +1030,30 @@ function openMobileFilters() {
     });
   });
 
-  // Rebind location input
-  const locEl = body.querySelector('.lx-filter-input');
-  if (locEl) locEl.addEventListener('input', e => {
-    document.getElementById('iLocation').value = e.target.value;
+  // Rebind sync inputs (location text + area range numbers)
+  body.querySelectorAll('[data-sync]').forEach(inp => {
+    inp.addEventListener('input', e => {
+      document.getElementById(e.target.dataset.sync).value = e.target.value;
+    });
+  });
+  // Rebind location text (legacy — no data-sync attr)
+  body.querySelectorAll('.lx-filter-input:not([data-sync])').forEach(inp => {
+    inp.addEventListener('input', e => {
+      document.getElementById('iLocation').value = e.target.value;
+    });
+  });
+  // Rebind toggleFlag buttons in cloned DOM
+  body.querySelectorAll('[onclick^="toggleFlag"]').forEach(btn => {
+    const orig = btn.getAttribute('onclick') || '';
+    btn.removeAttribute('onclick');
+    btn.addEventListener('click', function() {
+      const m = orig.match(/toggleFlag\('(\w+)','([^']*)'/);
+      if (!m) return;
+      const inp = document.getElementById(m[1]);
+      const isActive = inp.value === m[2];
+      inp.value = isActive ? '' : m[2];
+      btn.classList.toggle('active', !isActive);
+    });
   });
 
   overlay.classList.add('open');
@@ -898,11 +1072,22 @@ function resetFilters() {
   window.location.href = "{% url 'properties:list' %}";
 }
 
+// Toggle flag chips (with_photo, is_new) — acts like on/off
+function toggleFlag(inputId, onValue, btn) {
+  const inp = document.getElementById(inputId);
+  const isActive = inp.value === onValue;
+  inp.value = isActive ? '' : onValue;
+  btn.classList.toggle('active', !isActive);
+  document.getElementById('filterForm').submit();
+}
+
 // Before submit: sync visible location input, strip empty params for clean URLs
 document.getElementById('filterForm').addEventListener('submit', function() {
   const locVis = document.getElementById('locationText');
   if (locVis) document.getElementById('iLocation').value = locVis.value.trim();
-  ['iType', 'iPropertyType', 'iBhk', 'iPrice', 'iLocation'].forEach(function(id) {
+  ['iType','iPropertyType','iBhk','iPrice','iLocation',
+   'iAreaMin','iAreaMax','iAge','iBaths','iFurnishing',
+   'iFloor','iConStatus','iWithPhoto','iIsNew','iParking'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el && !el.value) el.disabled = true;
   });
