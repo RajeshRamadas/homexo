@@ -1,457 +1,673 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Property Legal Services — Title Verification, Sale Agreement & Registration | HOMEXO{% endblock %}
-{% block meta_description %}HOMEXO property legal services — title verification, sale agreement drafting, registration assistance, encumbrance certificates, and NRI property legal support.{% endblock %}
+{% block title %}Property Legal Verification Bangalore — Fixed Fee, Live Tracking | HOMEXO{% endblock %}
+{% block meta_description %}India's most transparent property legal verification service. Fixed fees, real-time status tracking, and a 1-page Go/No-Go verdict. Bangalore. From ₹4,999.{% endblock %}
 
 {% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  .lg-page { font-family: 'Source Sans 3', sans-serif; }
-  .section-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: var(--sky); margin-bottom: 18px;
+  .lg-page {
+    --ink: #0f0e0c; --cream: #f7f4ee; --warm: #e8e2d6;
+    --gold: #c9a84c; --gold-light: #e8d49a;
+    --rust: #b5470c; --rust-light: #f0d4c4;
+    --teal: #1a5c52; --teal-light: #d0e9e5;
+    --muted: #7a766e;
+    --border-lg: rgba(15,14,12,0.12);
+    --border-warm: rgba(201,168,76,0.3);
+    font-family: 'DM Sans', sans-serif; color: var(--ink);
   }
-  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
-  .section-heading {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
-    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
+  .lg-subnav {
+    background: var(--cream); border-bottom: 1px solid var(--border-lg);
+    padding: 0 60px; display: flex; align-items: center; gap: 0;
+    position: sticky; top: 77px; z-index: 900;
+    overflow-x: auto; scrollbar-width: none;
   }
-  .section-heading em { font-style: italic; color: var(--sky); }
-  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
-
-  /* ── Hero ──────────────────────────────────────────────────── */
-  .lg-hero {
-    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
-    padding: 90px 40px 80px; position: relative; overflow: hidden;
+  .lg-subnav::-webkit-scrollbar { display: none; }
+  .lg-subnav a {
+    padding: 14px 22px; font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; white-space: nowrap;
+    transition: color 0.2s; border-bottom: 2px solid transparent;
   }
-  .lg-hero::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 65% 80% at 80% 50%, rgba(74,144,196,.1) 0%, transparent 65%);
-    pointer-events: none;
-  }
-  .lg-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+  .lg-subnav a:hover { color: var(--ink); border-bottom-color: var(--gold); }
+  .lg-hero { display: grid; grid-template-columns: 1fr 1fr; background: var(--cream); min-height: 90vh; }
+  .lg-hero-left { padding: 80px 48px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
   .lg-hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: var(--sky); margin-bottom: 28px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 28px;
   }
-  .lg-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
-  .lg-hero h1 {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
-    color: #fff; margin-bottom: 20px; max-width: 700px;
+  .lg-hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+  .lg-hero-headline {
+    font-family: 'Playfair Display', serif; font-size: clamp(38px,4.5vw,60px);
+    font-weight: 700; line-height: 1.1; letter-spacing: -1px; color: var(--ink); margin-bottom: 24px;
   }
-  .lg-hero h1 em { font-style: italic; color: var(--sky); }
-  .lg-hero-desc {
-    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
-    max-width: 560px; font-weight: 300; margin-bottom: 40px;
+  .lg-hero-headline em { font-style: italic; color: var(--teal); }
+  .lg-hero-sub { font-size: 16px; font-weight: 300; color: var(--muted); line-height: 1.7; max-width: 440px; margin-bottom: 44px; }
+  .lg-hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 52px; }
+  .lg-btn-primary {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--cream);
+    padding: 14px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none;
+    letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s;
   }
-  .lg-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-  .lg-hero-cta {
-    padding: 14px 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    font-family: 'Source Sans 3', sans-serif; cursor: pointer; text-decoration: none;
-    transition: all .3s; display: inline-block;
+  .lg-btn-primary:hover { background: var(--teal); color: var(--cream); transform: translateY(-1px); }
+  .lg-btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--ink);
+    padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 400; text-decoration: none;
+    border: 1px solid var(--border-lg); transition: border-color 0.2s, transform 0.15s;
   }
-  .lg-hero-cta.primary { background: var(--sky); color: #fff; }
-  .lg-hero-cta.primary:hover { background: #3a7ab0; }
-  .lg-hero-cta.outline { background: transparent; color: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.3); }
-  .lg-hero-cta.outline:hover { background: rgba(255,255,255,.1); }
-  .lg-hero-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 64px; }
-  .lg-hero-card {
-    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15);
-    padding: 24px 20px; transition: background .3s;
+  .lg-btn-secondary:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .lg-trust { padding-top: 32px; border-top: 1px solid var(--border-lg); display: flex; gap: 36px; flex-wrap: wrap; }
+  .lg-trust-item { display: flex; flex-direction: column; }
+  .lg-trust-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; }
+  .lg-trust-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .lg-hero-right { background: var(--ink); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 60px 48px; }
+  .lg-hero-right::before {
+    content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%); border-radius: 50%;
   }
-  .lg-hero-card:hover { background: rgba(74,144,196,.12); }
-  .lg-hero-card-val { font-family: 'Source Sans 3', sans-serif; font-size: 34px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
-  .lg-hero-card-val span { font-size: .6em; color: var(--sky); }
-  .lg-hero-card-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
-
-  /* ── Services Section ──────────────────────────────────────── */
-  .lg-section { padding: 80px 40px; }
-  .lg-section-inner { max-width: 1200px; margin: 0 auto; }
-  .lg-2col { display: grid; grid-template-columns: 1fr 360px; gap: 80px; align-items: start; }
-  .lg-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
-  .lg-svc-card {
-    background: var(--ivory); padding: 32px 28px;
-    border: 1px solid var(--border); position: relative; overflow: hidden;
-    transition: all .35s cubic-bezier(.23,1,.32,1);
+  .lg-hero-right::after {
+    content:''; position:absolute; bottom:-80px; left:-80px; width:300px; height:300px;
+    background: radial-gradient(circle, rgba(26,92,82,0.2) 0%, transparent 70%); border-radius: 50%;
   }
-  .lg-svc-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(180deg, var(--sky), var(--navy));
-    transform: scaleY(0); transform-origin: top; transition: transform .35s cubic-bezier(.23,1,.32,1);
+  .dash-card {
+    background: rgba(247,244,238,0.06); border: 1px solid rgba(247,244,238,0.1);
+    border-radius: 16px; padding: 28px; width: 100%; max-width: 420px;
+    position: relative; z-index: 2; backdrop-filter: blur(4px);
   }
-  .lg-svc-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.1); transform: translateY(-3px); }
-  .lg-svc-card:hover::before { transform: scaleY(1); }
-  .lg-svc-icon { color: var(--sky); margin-bottom: 18px; }
-  .lg-svc-name { font-family: 'Source Sans 3', sans-serif; font-size: 20px; color: var(--charcoal); margin-bottom: 10px; font-weight: 500; }
-  .lg-svc-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
-  .lg-svc-tag { display: inline-block; margin-top: 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 10px; }
-
-  /* ── Sidebar ───────────────────────────────────────────────── */
-  .lg-sidebar { display: flex; flex-direction: column; gap: 20px; }
-  .lg-sidebar-card { background: var(--navy); padding: 28px; }
-  .lg-sidebar-title { font-family: 'Source Sans 3', sans-serif; font-size: 18px; color: #fff; margin-bottom: 16px; }
-  .lg-sidebar-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(74,144,196,.12); }
-  .lg-sidebar-item:last-child { border-bottom: none; }
-  .lg-sidebar-item-icon { color: var(--sky); flex-shrink: 0; }
-  .lg-sidebar-item-text { font-size: 12px; color: rgba(255,255,255,.7); }
-  .lg-enquire-btn {
-    display: block; padding: 14px 24px; background: var(--sky); color: #fff;
-    text-align: center; text-decoration: none; font-family: 'Source Sans 3', sans-serif;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;
-    transition: background .3s;
+  .dash-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .dash-hdr-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); }
+  .dash-hdr-order { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:0.05em; }
+  .dash-prop { background:rgba(247,244,238,0.05); border-radius:10px; padding:16px; margin-bottom:20px; border:1px solid rgba(247,244,238,0.08); }
+  .dash-prop-lbl { font-size:10px; color:rgba(247,244,238,0.4); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.08em; }
+  .dash-prop-name { font-size:13px; color:rgba(247,244,238,0.9); font-weight:500; margin-bottom:2px; }
+  .dash-prop-addr { font-size:11px; color:rgba(247,244,238,0.4); }
+  .dash-steps { display:flex; flex-direction:column; gap:0; }
+  .dash-step { display:flex; align-items:flex-start; gap:12px; padding:10px 0; position:relative; }
+  .dash-step:not(:last-child)::after { content:''; position:absolute; left:14px; top:34px; width:1px; height:calc(100% - 14px); background:rgba(247,244,238,0.1); }
+  .step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:11px; font-weight:500; }
+  .step-done { background:#1a5c52; color:#d0e9e5; }
+  .step-active { background:var(--gold); color:var(--ink); animation: pulse-dot 2s infinite; }
+  .step-pending { background:rgba(247,244,238,0.06); color:rgba(247,244,238,0.3); border:1px solid rgba(247,244,238,0.1); }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow:0 0 0 0 rgba(201,168,76,0.4); }
+    50% { box-shadow:0 0 0 6px rgba(201,168,76,0); }
   }
-  .lg-enquire-btn:hover { background: #3a7ab0; }
-  .lg-loan-link {
-    display: block; padding: 14px 24px; background: transparent; color: rgba(255,255,255,.7);
-    text-align: center; text-decoration: none; font-family: 'Source Sans 3', sans-serif;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    border: 1px solid rgba(74,144,196,.3); transition: all .3s;
-  }
-  .lg-loan-link:hover { background: rgba(74,144,196,.15); color: #fff; }
-
-  /* ── Process ───────────────────────────────────────────────── */
-  .lg-process { padding: 80px 40px; background: var(--charcoal); }
-  .lg-process-inner { max-width: 1100px; margin: 0 auto; }
-  .lg-process-header { text-align: center; margin-bottom: 56px; }
-  .lg-process-header .section-heading { color: #fff; }
-  .lg-process-header .section-heading em { color: var(--sky); }
-  .lg-process-header .section-sub { color: rgba(255,255,255,.5); margin: 0 auto; }
-  .lg-process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
-  .lg-process-grid::before {
-    content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(74,144,196,.4), transparent);
-  }
-  .lg-proc-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 10px; position: relative; z-index: 1; }
-  .lg-proc-num {
-    width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(74,144,196,.3);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Source Sans 3', sans-serif; font-size: 20px; font-weight: 300;
-    color: var(--sky); background: var(--charcoal); margin-bottom: 20px;
-  }
-  .lg-proc-title { font-family: 'Source Sans 3', sans-serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
-  .lg-proc-desc { font-size: 11px; line-height: 1.65; color: rgba(255,255,255,.4); font-weight: 300; }
-
-  /* ── Why Us ────────────────────────────────────────────────── */
-  .lg-why { padding: 80px 40px; background: #fff; }
-  .lg-why-inner { max-width: 1100px; margin: 0 auto; }
-  .lg-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
-  .lg-why-item { display: flex; flex-direction: column; gap: 14px; }
-  .lg-why-icon { width: 48px; height: 48px; border: 1px solid rgba(74,144,196,.25); display: flex; align-items: center; justify-content: center; color: var(--sky); }
-  .lg-why-title { font-family: 'Source Sans 3', sans-serif; font-size: 18px; color: var(--charcoal); font-weight: 500; }
-  .lg-why-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
-
-  /* ── CTA + Form ────────────────────────────────────────────── */
-  .lg-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); }
-  .lg-cta-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start; }
-  .lg-cta h2 { font-family: 'Source Sans 3', sans-serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
-  .lg-cta h2 em { font-style: italic; color: var(--sky); }
-  .lg-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
-  .lg-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
-  .lg-checklist li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.75); }
-  .lg-checklist li svg { color: var(--sky); flex-shrink: 0; }
-  .lg-cta-form { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2); padding: 32px; }
-  .lg-cta-form-title { font-family: 'Source Sans 3', sans-serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
-  .lg-cta-form-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 22px; }
-  .lg-cta-input {
-    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
-    color: rgba(255,255,255,.9); font-family: 'Source Sans 3', sans-serif; font-size: 13px; outline: none;
-    transition: border-color .3s;
-  }
-  .lg-cta-input::placeholder { color: rgba(255,255,255,.35); }
-  .lg-cta-input:focus { border-color: var(--sky); }
-  .lg-cta-select {
-    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
-    color: rgba(255,255,255,.8); font-family: 'Source Sans 3', sans-serif; font-size: 13px;
-    outline: none; appearance: none; cursor: pointer;
-  }
-  .lg-cta-select option { background: #0D2B4E; color: #fff; }
-  .lg-cta-submit {
-    width: 100%; padding: 14px; background: var(--sky); color: #fff; border: none;
-    font-family: 'Source Sans 3', sans-serif; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; cursor: pointer; transition: background .3s;
-  }
-  .lg-cta-submit:hover { background: #3a7ab0; }
-
-  /* ── Responsive ─────────────────────────────────────────────── */
-  @media (max-width: 1100px) {
-    .lg-2col { grid-template-columns: 1fr; }
-    .lg-sidebar { display: none; }
-    .lg-process-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; }
-    .lg-process-grid::before { display: none; }
-    .lg-why-grid { grid-template-columns: repeat(2, 1fr); }
-    .lg-cta-inner { grid-template-columns: 1fr; gap: 40px; }
-    .lg-hero-cards { grid-template-columns: repeat(2, 1fr); }
+  .step-info { flex:1; padding-top:3px; }
+  .step-name { font-size:12px; font-weight:500; color:rgba(247,244,238,0.85); margin-bottom:2px; }
+  .step-detail { font-size:10.5px; color:rgba(247,244,238,0.4); line-height:1.4; }
+  .step-detail.active-msg { color:var(--gold-light); }
+  .dash-verdict { margin-top:20px; background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:14px; display:flex; align-items:center; gap:12px; }
+  .vd-dot { width:32px; height:32px; border-radius:50%; background:#1a5c52; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .vd-text { font-family:'Playfair Display',serif; font-size:13px; color:var(--gold); font-weight:600; margin-bottom:2px; }
+  .vd-sub { font-size:10px; color:rgba(247,244,238,0.4); }
+  .lg-section { padding: 96px 60px; }
+  .lg-section-label { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .lg-s-label { font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); font-weight:500; }
+  .lg-s-line { height:1px; width:40px; background:var(--gold-light); }
+  .lg-heading { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:700; line-height:1.15; letter-spacing:-0.5px; color:var(--ink); margin-bottom:16px; }
+  .lg-heading em { font-style:italic; color:var(--teal); }
+  .lg-sub-text { font-size:15px; color:var(--muted); max-width:520px; line-height:1.7; }
+  .lg-packages { background:var(--ink); padding:96px 60px; }
+  .lg-packages .lg-heading { color:var(--cream); }
+  .lg-packages .lg-sub-text { color:rgba(247,244,238,0.5); }
+  .pkg-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:52px; }
+  .pkg-card { background:rgba(247,244,238,0.04); border:1px solid rgba(247,244,238,0.1); border-radius:16px; padding:32px; position:relative; transition:border-color 0.2s, transform 0.2s; }
+  .pkg-card:hover { border-color:rgba(201,168,76,0.4); transform:translateY(-4px); }
+  .pkg-card.featured { border-color:var(--gold); background:rgba(201,168,76,0.06); }
+  .pkg-badge { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--ink); font-size:10px; font-weight:600; padding:4px 14px; border-radius:99px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+  .pkg-tier { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:10px; }
+  .pkg-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--cream); margin-bottom:6px; }
+  .pkg-price { font-size:36px; font-weight:300; color:var(--cream); letter-spacing:-1px; margin-bottom:4px; }
+  .pkg-price sup { font-size:18px; font-weight:400; vertical-align:super; }
+  .pkg-timeline { font-family:'DM Mono',monospace; font-size:10.5px; color:var(--gold); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(247,244,238,0.08); }
+  .pkg-features { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .pkg-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:rgba(247,244,238,0.7); line-height:1.4; }
+  .feat-yes { color:#4db89a; font-size:12px; margin-top:1px; flex-shrink:0; }
+  .feat-no  { color:rgba(247,244,238,0.2); font-size:12px; margin-top:1px; flex-shrink:0; }
+  .pkg-cta { display:block; width:100%; margin-top:28px; padding:13px; border-radius:8px; font-size:13px; font-weight:500; text-align:center; transition:all 0.2s; text-decoration:none; border:none; cursor:pointer; }
+  .pkg-cta-outline { background:transparent; border:1px solid rgba(247,244,238,0.2); color:var(--cream); }
+  .pkg-cta-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .pkg-cta-gold { background:var(--gold); color:var(--ink); font-weight:600; }
+  .pkg-cta-gold:hover { background:var(--gold-light); transform:translateY(-1px); }
+  .lg-process { background:var(--cream); padding:96px 60px; }
+  .process-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; margin-top:52px; align-items:start; }
+  .proc-steps { display:flex; flex-direction:column; }
+  .proc-step { display:flex; gap:20px; padding:16px; margin:0 -16px; border-radius:8px; transition:background 0.15s; cursor:default; }
+  .proc-step:hover { background:rgba(201,168,76,0.04); }
+  .proc-num { font-family:'Playfair Display',serif; font-size:34px; font-weight:700; color:var(--gold-light); line-height:1; min-width:44px; letter-spacing:-1px; }
+  .proc-state { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--gold); margin-bottom:4px; }
+  .proc-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:5px; }
+  .proc-desc { font-size:13px; color:var(--muted); line-height:1.6; }
+  .wa-msg { margin-top:8px; display:inline-flex; align-items:flex-start; gap:6px; background:#e8f5e2; border-radius:6px; padding:7px 10px; font-size:11.5px; color:#1a5c1a; line-height:1.4; max-width:400px; }
+  .wa-icon { font-size:13px; flex-shrink:0; }
+  .proc-visual { position:sticky; top:100px; }
+  .verdict-display { background:var(--ink); border-radius:20px; padding:36px; margin-bottom:20px; }
+  .verdict-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
+  .verdict-stamp { font-size:10px; background:rgba(74,189,158,0.15); color:#4abd9e; padding:3px 10px; border-radius:99px; }
+  .verdict-main { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+  .big-dot { width:52px; height:52px; border-radius:50%; background:#1a5c52; border:2px solid rgba(74,189,158,0.4); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .verdict-title-big { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:#4abd9e; line-height:1.1; }
+  .verdict-sub-big { font-size:12px; color:rgba(247,244,238,0.4); margin-top:4px; }
+  .verdict-checks { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .v-check { display:flex; align-items:center; gap:7px; font-size:11.5px; color:rgba(247,244,238,0.6); background:rgba(247,244,238,0.04); padding:8px 10px; border-radius:6px; }
+  .v-check-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .dot-g { background:#4abd9e; }
+  .verdict-advocate { margin-top:20px; padding-top:16px; border-top:1px solid rgba(247,244,238,0.08); display:flex; align-items:center; gap:10px; }
+  .adv-avatar { width:36px; height:36px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:var(--teal-light); flex-shrink:0; }
+  .adv-name { font-size:12px; font-weight:500; color:rgba(247,244,238,0.8); }
+  .adv-role { font-size:10.5px; color:rgba(247,244,238,0.35); }
+  .adv-certified { font-family:'DM Mono',monospace; font-size:9.5px; color:var(--gold); letter-spacing:0.06em; }
+  .lg-services { background:var(--warm); padding:96px 60px; }
+  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-lg); border:1px solid var(--border-lg); border-radius:16px; overflow:hidden; margin-top:52px; }
+  .svc-cell { background:var(--warm); padding:32px 28px; transition:background 0.2s; }
+  .svc-cell:hover { background:var(--cream); }
+  .svc-num { font-family:'Playfair Display',serif; font-size:13px; font-style:italic; color:var(--gold); margin-bottom:14px; }
+  .svc-icon { width:40px; height:40px; border-radius:10px; background:var(--cream); border:1px solid var(--border-lg); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:16px; }
+  .svc-name { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:8px; line-height:1.25; }
+  .svc-body { font-size:13px; color:var(--muted); line-height:1.6; }
+  .svc-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:14px; }
+  .svc-tag { font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:0.06em; color:var(--muted); background:var(--cream); border:1px solid var(--border-lg); padding:3px 8px; border-radius:4px; }
+  .lg-why { background:var(--cream); padding:96px 60px; }
+  .why-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; margin-top:52px; align-items:center; }
+  .why-list { display:flex; flex-direction:column; gap:28px; }
+  .why-item { display:flex; gap:18px; align-items:flex-start; }
+  .why-icon { width:40px; height:40px; border-radius:10px; background:var(--teal-light); border:1px solid rgba(26,92,82,0.15); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+  .why-title { font-size:15px; font-weight:500; color:var(--ink); margin-bottom:4px; }
+  .why-desc { font-size:13px; color:var(--muted); line-height:1.6; }
+  .comp-wrap { background:var(--ink); border-radius:20px; padding:32px; overflow:hidden; }
+  .comp-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; }
+  .comp-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .comp-table th { text-align:left; padding:8px 12px; font-size:10px; font-weight:500; color:rgba(247,244,238,0.4); border-bottom:1px solid rgba(247,244,238,0.07); font-family:'DM Mono',monospace; letter-spacing:0.06em; }
+  .comp-table td { padding:9px 12px; font-size:12px; color:rgba(247,244,238,0.65); border-bottom:1px solid rgba(247,244,238,0.05); }
+  .comp-table tr:last-child td { border-bottom:none; }
+  .comp-table tr.hl-row td { color:var(--gold); font-weight:500; background:rgba(201,168,76,0.07); }
+  .cell-yes { color:#4abd9e !important; }
+  .cell-no  { color:rgba(247,244,238,0.2) !important; }
+  .lg-testimonials { background:var(--warm); padding:96px 60px; }
+  .testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:52px; }
+  .testi-card { background:var(--cream); border:1px solid var(--border-lg); border-radius:16px; padding:28px; transition:transform 0.2s; }
+  .testi-card:hover { transform:translateY(-3px); }
+  .testi-quote { font-family:'Playfair Display',serif; font-size:36px; color:var(--gold-light); line-height:1; margin-bottom:12px; }
+  .testi-text { font-size:14px; color:var(--ink); line-height:1.7; margin-bottom:20px; font-style:italic; font-family:'Playfair Display',serif; }
+  .testi-author { display:flex; align-items:center; gap:12px; padding-top:16px; border-top:1px solid var(--border-lg); }
+  .testi-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; }
+  .testi-name { font-size:13px; font-weight:500; color:var(--ink); }
+  .testi-detail { font-size:11px; color:var(--muted); }
+  .verdict-badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:10px; font-weight:500; margin-top:3px; }
+  .badge-green { background:#d0e9e5; color:#1a5c52; }
+  .badge-yellow { background:#faeeda; color:#854f0b; }
+  .lg-cta { background:var(--teal); padding:96px 60px; text-align:center; position:relative; overflow:hidden; }
+  .lg-cta::before { content:''; position:absolute; top:-120px; left:50%; transform:translateX(-50%); width:600px; height:600px; background:radial-gradient(circle, rgba(247,244,238,0.06) 0%, transparent 70%); border-radius:50%; pointer-events:none; }
+  .lg-cta .lg-heading { color:var(--cream); }
+  .cta-sub { font-size:16px; color:rgba(247,244,238,0.65); max-width:500px; margin:0 auto 40px; line-height:1.7; }
+  .cta-actions { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; }
+  .lg-btn-cream { background:var(--cream); color:var(--teal); padding:15px 32px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+  .lg-btn-cream:hover { background:var(--ink); color:var(--cream); transform:translateY(-2px); }
+  .lg-btn-outline-cream { background:transparent; border:1px solid rgba(247,244,238,0.3); color:var(--cream); padding:15px 28px; border-radius:8px; font-size:14px; text-decoration:none; transition:all 0.2s; }
+  .lg-btn-outline-cream:hover { border-color:rgba(247,244,238,0.7); }
+  .wa-cta-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:20px; font-size:13px; color:rgba(247,244,238,0.5); }
+  .fade-up { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+  .fade-up:nth-child(2) { transition-delay:0.1s; }
+  .fade-up:nth-child(3) { transition-delay:0.2s; }
+  .fade-up:nth-child(4) { transition-delay:0.3s; }
+  @media (max-width: 1024px) {
+    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta { padding:72px 32px; }
+    .lg-hero-left { padding:60px 32px; }
+    .pkg-grid { grid-template-columns:1fr; }
+    .process-grid { grid-template-columns:1fr; }
+    .services-grid { grid-template-columns:1fr 1fr; }
+    .testi-grid { grid-template-columns:1fr 1fr; }
+    .why-grid { grid-template-columns:1fr; }
+    .lg-subnav { padding:0 32px; }
   }
   @media (max-width: 768px) {
-    .lg-hero { padding: 60px 24px; }
-    .lg-section, .lg-process, .lg-why, .lg-cta { padding: 56px 24px; }
-    .lg-services-grid { grid-template-columns: 1fr 1fr; }
-    .lg-process-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 480px) {
-    .lg-services-grid { grid-template-columns: 1fr; }
-    .lg-process-grid { grid-template-columns: 1fr; }
-    .lg-why-grid { grid-template-columns: 1fr; }
+    .lg-hero { grid-template-columns:1fr; }
+    .lg-hero-right { display:none; }
+    .lg-hero-left { padding:48px 20px; }
+    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta { padding:60px 20px; }
+    .services-grid { grid-template-columns:1fr; }
+    .testi-grid { grid-template-columns:1fr; }
+    .proc-visual { display:none; }
+    .process-grid { grid-template-columns:1fr; gap:0; }
+    .lg-subnav { padding:0 16px; }
   }
 </style>
 {% endblock %}
 
-{% block pre_footer %}{% endblock pre_footer %}
-
 {% block content %}
 <div class="lg-page">
 
-  <!-- ══════════════════ HERO ══════════════════════════════════ -->
-  <section class="lg-hero">
-    <div class="lg-hero-inner">
-      <div class="lg-hero-eyebrow">HOMEXO Legal Services</div>
-      <h1>Complete <em>Legal Protection</em><br>for Your Property</h1>
-      <p class="lg-hero-desc">Our empanelled property lawyers provide end-to-end legal services — from title verification and sale agreement drafting to final registration — ensuring your investment is completely watertight.</p>
+  <div class="lg-subnav">
+    <a href="#lg-services">Services</a>
+    <a href="#lg-packages">Packages</a>
+    <a href="#lg-process">How it works</a>
+    <a href="#lg-why">Why HOMEXO</a>
+    <a href="#lg-cta">Get Started</a>
+  </div>
+
+  <!-- HERO -->
+  <div class="lg-hero">
+    <div class="lg-hero-left">
+      <div class="lg-hero-eyebrow">Property Legal Verification &middot; Bangalore</div>
+      <h1 class="lg-hero-headline">Buy your home<br>with <em>complete</em><br>confidence</h1>
+      <p class="lg-hero-sub">India's most transparent property legal verification service. Fixed fees, real-time status tracking, and a 1-page Go/No-Go verdict &mdash; not a 20-page legal brief.</p>
       <div class="lg-hero-actions">
-        <a href="#consult" class="lg-hero-cta primary">Speak to a Lawyer →</a>
-        <a href="{% url 'pages:home_loan' %}" class="lg-hero-cta outline">Need a Home Loan?</a>
+        <a href="#lg-packages" class="lg-btn-primary">
+          View packages
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#lg-process" class="lg-btn-secondary">See how it works</a>
       </div>
-      <div class="lg-hero-cards">
-        <div class="lg-hero-card">
-          <div class="lg-hero-card-val">2,500<span>+</span></div>
-          <div class="lg-hero-card-lbl">Legal Cases Handled</div>
+      <div class="lg-trust">
+        <div class="lg-trust-item"><span class="lg-trust-num">&#8377;300Cr+</span><span class="lg-trust-label">Bad investments prevented</span></div>
+        <div class="lg-trust-item"><span class="lg-trust-num">5&ndash;7 days</span><span class="lg-trust-label">Full verification turnaround</span></div>
+        <div class="lg-trust-item"><span class="lg-trust-num">Fixed fee</span><span class="lg-trust-label">No hidden charges, ever</span></div>
+      </div>
+    </div>
+    <div class="lg-hero-right">
+      <div class="dash-card">
+        <div class="dash-hdr">
+          <span class="dash-hdr-title">Live order status</span>
+          <span class="dash-hdr-order">#HXL-2847</span>
         </div>
-        <div class="lg-hero-card">
-          <div class="lg-hero-card-val">30<span>yr</span></div>
-          <div class="lg-hero-card-lbl">Title Search Depth</div>
+        <div class="dash-prop">
+          <div class="dash-prop-lbl">Property under review</div>
+          <div class="dash-prop-name">3BHK Apartment, Koramangala</div>
+          <div class="dash-prop-addr">Plot 47, 5th Block, Bangalore &ndash; 560095</div>
         </div>
-        <div class="lg-hero-card">
-          <div class="lg-hero-card-val">100<span>%</span></div>
-          <div class="lg-hero-card-lbl">RERA Verified Projects</div>
+        <div class="dash-steps">
+          <div class="dash-step">
+            <div class="step-dot step-done">&#10003;</div>
+            <div class="step-info"><div class="step-name">Documents received</div><div class="step-detail">Title deed, EC, Khata &mdash; all uploaded</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-done">&#10003;</div>
+            <div class="step-info"><div class="step-name">RERA &amp; title check</div><div class="step-detail">RERA registered &middot; Title chain clear 2002&ndash;2024</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-active">&rarr;</div>
+            <div class="step-info"><div class="step-name">SRO field verification</div><div class="step-detail active-msg">Advocate at Koramangala SRO &middot; Expected 4:00 PM</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-pending">4</div>
+            <div class="step-info"><div class="step-name">Verdict report drafting</div><div class="step-detail">Awaiting SRO clearance</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-pending">5</div>
+            <div class="step-info"><div class="step-name">Final verdict delivered</div><div class="step-detail">PDF + WhatsApp &middot; Est. tomorrow by noon</div></div>
+          </div>
         </div>
-        <div class="lg-hero-card">
-          <div class="lg-hero-card-val">48<span>hr</span></div>
-          <div class="lg-hero-card-lbl">First Legal Opinion</div>
+        <div class="dash-verdict">
+          <div class="vd-dot">&#128994;</div>
+          <div><div class="vd-text">Preliminary: Green</div><div class="vd-sub">No critical issues found so far</div></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ══════════════════ SERVICES ══════════════════════════════ -->
-  <section class="lg-section" style="background:var(--ivory);" id="services">
-    <div class="lg-section-inner">
-      <div class="lg-2col">
-        <div>
-          <div class="section-eyebrow">Property Legal</div>
-          <h2 class="section-heading">Our <em>Legal Services</em> for Property Buyers</h2>
-          <p class="section-sub">Every service is handled by empanelled lawyers with deep expertise in property law, RERA, and registration procedures across India.</p>
-          <div class="lg-services-grid">
-
-            <div class="lg-svc-card">
-              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
-              <div class="lg-svc-name">Title Verification</div>
-              <p class="lg-svc-desc">Comprehensive title search and verification to confirm clear ownership, absence of encumbrances, and legal right to sell.</p>
-              <span class="lg-svc-tag">30-Year Search</span>
-            </div>
-
-            <div class="lg-svc-card">
-              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
-              <div class="lg-svc-name">Sale Agreement</div>
-              <p class="lg-svc-desc">Drafting and review of sale agreements, MOUs, and purchase contracts ensuring all terms are legally enforceable and buyer-protected.</p>
-              <span class="lg-svc-tag">Draft & Review</span>
-            </div>
-
-            <div class="lg-svc-card">
-              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-              <div class="lg-svc-name">Property Registration</div>
-              <p class="lg-svc-desc">Complete assistance with sub-registrar office registration, stamp duty calculations, and document filing to legally transfer ownership.</p>
-              <span class="lg-svc-tag">E-Registration</span>
-            </div>
-
-            <div class="lg-svc-card">
-              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg></div>
-              <div class="lg-svc-name">RERA Compliance</div>
-              <p class="lg-svc-desc">Verification of builder RERA registration, project approvals, and compliance status — protecting you from stalled or illegal projects.</p>
-              <span class="lg-svc-tag">Builder Checks</span>
-            </div>
-
-            <div class="lg-svc-card">
-              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-              <div class="lg-svc-name">Encumbrance Certificate</div>
-              <p class="lg-svc-desc">Obtaining and verifying the Encumbrance Certificate (EC) to confirm the property has no mortgage, lien, or legal liability.</p>
-              <span class="lg-svc-tag">EC · Khatha</span>
-            </div>
-
-            <div class="lg-svc-card">
-              <div class="lg-svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0113 0"/></svg></div>
-              <div class="lg-svc-name">NRI Property Services</div>
-              <p class="lg-svc-desc">Specialised legal support for NRI buyers and sellers covering FEMA regulations, POA drafting, and repatriation of sale proceeds.</p>
-              <span class="lg-svc-tag">FEMA · POA</span>
-            </div>
-
-          </div>
-        </div>
-        <div class="lg-sidebar">
-          <div class="lg-sidebar-card">
-            <div class="lg-sidebar-title">What's Included</div>
-            <div class="lg-sidebar-item">
-              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="lg-sidebar-item-text">30-year title search and verification report</div>
-            </div>
-            <div class="lg-sidebar-item">
-              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="lg-sidebar-item-text">Sale agreement drafting & legal review</div>
-            </div>
-            <div class="lg-sidebar-item">
-              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="lg-sidebar-item-text">Stamp duty & registration assistance</div>
-            </div>
-            <div class="lg-sidebar-item">
-              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="lg-sidebar-item-text">RERA compliance verification</div>
-            </div>
-            <div class="lg-sidebar-item">
-              <div class="lg-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="lg-sidebar-item-text">Dedicated lawyer for every transaction</div>
-            </div>
-            <a href="#consult" class="lg-enquire-btn">Speak to a Lawyer →</a>
-          </div>
-          <div class="lg-sidebar-card">
-            <div class="lg-sidebar-title">Typical Fees</div>
-            <div class="lg-sidebar-item">
-              <div class="lg-sidebar-item-text" style="font-size:12px;color:rgba(255,255,255,.5);">Title Verification</div>
-            </div>
-            <div class="lg-sidebar-item" style="justify-content:space-between;">
-              <span style="font-size:12px;color:rgba(255,255,255,.5)">Up to 1 Cr</span>
-              <span style="font-size:13px;font-weight:500;color:#fff"><span class="rupee">₹</span>5,000</span>
-            </div>
-            <div class="lg-sidebar-item" style="justify-content:space-between;">
-              <span style="font-size:12px;color:rgba(255,255,255,.5)">1 Cr – 5 Cr</span>
-              <span style="font-size:13px;font-weight:500;color:#fff"><span class="rupee">₹</span>10,000</span>
-            </div>
-            <div class="lg-sidebar-item" style="justify-content:space-between;">
-              <span style="font-size:12px;color:rgba(255,255,255,.5)">Above 5 Cr</span>
-              <span style="font-size:13px;font-weight:500;color:#fff">Custom Quote</span>
-            </div>
-          </div>
-          <div class="lg-sidebar-card" style="background:rgba(74,144,196,.12);border:1px solid rgba(74,144,196,.25);">
-            <div class="lg-sidebar-title">Also Need a Home Loan?</div>
-            <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:16px;">Combine legal services with our home loan advisory — same team, zero coordination hassle.</p>
-            <a href="{% url 'pages:home_loan' %}" class="lg-loan-link">Explore Home Loans →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ PROCESS ═══════════════════════════════ -->
-  <section class="lg-process">
-    <div class="lg-process-inner">
-      <div class="lg-process-header">
-        <div class="section-eyebrow">Legal Process</div>
-        <h2 class="section-heading" style="color:#fff;">How the <em>Legal Journey</em> Works</h2>
-        <p class="section-sub" style="color:rgba(255,255,255,.5);margin:0 auto;">Our lawyers guide you through every stage of the property transaction — from document collection to final registration.</p>
-      </div>
-      <div class="lg-process-grid">
-        <div class="lg-proc-step">
-          <div class="lg-proc-num">01</div>
-          <div class="lg-proc-title">Document Collection</div>
-          <p class="lg-proc-desc">Gather all title documents, past sale deeds, and property records for review.</p>
-        </div>
-        <div class="lg-proc-step">
-          <div class="lg-proc-num">02</div>
-          <div class="lg-proc-title">Title Search</div>
-          <p class="lg-proc-desc">30-year ownership history verified at sub-registrar office and revenue department.</p>
-        </div>
-        <div class="lg-proc-step">
-          <div class="lg-proc-num">03</div>
-          <div class="lg-proc-title">Legal Opinion</div>
-          <p class="lg-proc-desc">Comprehensive written opinion on marketability, encumbrance, and risk factors.</p>
-        </div>
-        <div class="lg-proc-step">
-          <div class="lg-proc-num">04</div>
-          <div class="lg-proc-title">Agreement Drafting</div>
-          <p class="lg-proc-desc">Sale agreement drafted with buyer-protective clauses and clear timeline milestones.</p>
-        </div>
-        <div class="lg-proc-step">
-          <div class="lg-proc-num">05</div>
-          <div class="lg-proc-title">Registration</div>
-          <p class="lg-proc-desc">End-to-end assistance at the sub-registrar office until the sale deed is registered.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ WHY US ════════════════════════════════ -->
-  <section class="lg-why">
-    <div class="lg-why-inner">
-      <div class="section-eyebrow">Why HOMEXO Legal</div>
-      <h2 class="section-heading">Why Clients Trust Our <em>Legal Team</em></h2>
-      <div class="lg-why-grid">
-        <div class="lg-why-item">
-          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div class="lg-why-title">Empanelled Lawyers</div>
-          <p class="lg-why-desc">Every lawyer on our panel holds specialisation in property law with a minimum 10 years of registration-office experience.</p>
-        </div>
-        <div class="lg-why-item">
-          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <div class="lg-why-title">48-Hour Opinion</div>
-          <p class="lg-why-desc">Receive your initial title opinion and risk assessment within 48 hours of document submission — so deals don't stall.</p>
-        </div>
-        <div class="lg-why-item">
-          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-          <div class="lg-why-title">Zero Hidden Fees</div>
-          <p class="lg-why-desc">All fees are quoted upfront before engagement. No surprise charges at any stage of the legal process.</p>
-        </div>
-        <div class="lg-why-item">
-          <div class="lg-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <div class="lg-why-title">NRI Specialists</div>
-          <p class="lg-why-desc">Dedicated NRI legal desk available across time zones for POA, FEMA compliance, and overseas transaction support.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ CTA + FORM ════════════════════════════ -->
-  <section class="lg-cta" id="consult">
-    <div class="lg-cta-inner">
-      <div>
-        <h2>Speak to a <em>Property Lawyer</em> Today</h2>
-        <p>Our legal advisors are available six days a week to help you navigate property documentation, title issues, and registration.</p>
-        <ul class="lg-checklist">
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Free initial legal consultation</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Title opinion within 48 hours</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>End-to-end registration assistance</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>NRI clients supported across time zones</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Transparent, upfront fee structure</li>
+  <!-- PACKAGES -->
+  <div id="lg-packages" class="lg-packages">
+    <div class="lg-section-label"><span class="lg-s-label">Service packages</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">One flat fee.<br><em style="color:var(--gold-light);">Everything included.</em></h2>
+    <p class="lg-sub-text" style="color:rgba(247,244,238,0.5);">No surprises, no hourly rates, no add-on charges. Stamp duty and government fees billed at actuals.</p>
+    <div class="pkg-grid">
+      <div class="pkg-card fade-up">
+        <div class="pkg-tier">Tier 01</div>
+        <div class="pkg-name">Shield Starter</div>
+        <div class="pkg-price"><sup>&#8377;</sup>4,999</div>
+        <div class="pkg-timeline">&#9201; Delivery in 48&ndash;72 hours</div>
+        <ul class="pkg-features">
+          <li><span class="feat-yes">&#10003;</span> Title deed verification</li>
+          <li><span class="feat-yes">&#10003;</span> Encumbrance certificate check</li>
+          <li><span class="feat-yes">&#10003;</span> RERA registration check</li>
+          <li><span class="feat-yes">&#10003;</span> Basic litigation check</li>
+          <li><span class="feat-yes">&#10003;</span> 1-page Go/No-Go verdict PDF</li>
+          <li><span class="feat-yes">&#10003;</span> WhatsApp status updates</li>
+          <li><span class="feat-no">&ndash;</span> SRO field verification</li>
+          <li><span class="feat-no">&ndash;</span> Sale Agreement drafting</li>
+          <li><span class="feat-no">&ndash;</span> Khata Transfer support</li>
         </ul>
+        <a href="#lg-cta" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
       </div>
-      <div>
-        <form class="lg-cta-form" method="post" action="{% url 'enquiries:create' %}">
-          {% csrf_token %}
-          <input type="hidden" name="service" value="legal">
-          <div class="lg-cta-form-title">Get Free Legal Consultation</div>
-          <p class="lg-cta-form-sub">Tell us what you need — we'll assign the right lawyer for your case.</p>
-          <input class="lg-cta-input" type="text" name="name" placeholder="Your Full Name" required>
-          <input class="lg-cta-input" type="tel" name="phone" placeholder="Phone Number" required>
-          <input class="lg-cta-input" type="email" name="email" placeholder="Email Address">
-          <select class="lg-cta-select" name="service_type">
-            <option value="" disabled selected>Service Required</option>
-            <option>Title Verification</option>
-            <option>Sale Agreement Drafting</option>
-            <option>Property Registration</option>
-            <option>RERA Compliance Check</option>
-            <option>Encumbrance Certificate</option>
-            <option>NRI Property Services</option>
-            <option>Full Legal Package</option>
-          </select>
-          <input class="lg-cta-input" type="text" name="property_location" placeholder="Property Location (City)">
-          <button type="submit" class="lg-cta-submit">Request Callback →</button>
-        </form>
+      <div class="pkg-card featured fade-up">
+        <div class="pkg-badge">Most popular</div>
+        <div class="pkg-tier">Tier 02</div>
+        <div class="pkg-name">Shield Pro</div>
+        <div class="pkg-price"><sup>&#8377;</sup>9,999</div>
+        <div class="pkg-timeline">&#9201; Delivery in 5&ndash;7 working days</div>
+        <ul class="pkg-features">
+          <li><span class="feat-yes">&#10003;</span> Everything in Starter</li>
+          <li><span class="feat-yes">&#10003;</span> 30-year title history check</li>
+          <li><span class="feat-yes">&#10003;</span> Mother Deed chain verification</li>
+          <li><span class="feat-yes">&#10003;</span> BBMP / BDA / BMRDA audit</li>
+          <li><span class="feat-yes">&#10003;</span> Land acquisition notice check</li>
+          <li><span class="feat-yes">&#10003;</span> SRO physical field verification</li>
+          <li><span class="feat-yes">&#10003;</span> Buyer-protective Sale Agreement</li>
+          <li><span class="feat-yes">&#10003;</span> Khata &amp; property tax records</li>
+          <li><span class="feat-no">&ndash;</span> Khata Transfer execution</li>
+        </ul>
+        <a href="#lg-cta" class="pkg-cta pkg-cta-gold">Get started &rarr;</a>
+      </div>
+      <div class="pkg-card fade-up">
+        <div class="pkg-tier">Tier 03</div>
+        <div class="pkg-name">Shield Complete</div>
+        <div class="pkg-price"><sup>&#8377;</sup>18,999</div>
+        <div class="pkg-timeline">&#9201; 7&ndash;10 days + 30&ndash;60 day post-purchase</div>
+        <ul class="pkg-features">
+          <li><span class="feat-yes">&#10003;</span> Everything in Pro</li>
+          <li><span class="feat-yes">&#10003;</span> Sale Deed drafting &amp; registration</li>
+          <li><span class="feat-yes">&#10003;</span> Khata Transfer (BBMP/BDA)</li>
+          <li><span class="feat-yes">&#10003;</span> Property tax name change</li>
+          <li><span class="feat-yes">&#10003;</span> BESCOM name change support</li>
+          <li><span class="feat-yes">&#10003;</span> Aadhaar eSign for all docs</li>
+          <li><span class="feat-yes">&#10003;</span> Secure document vault</li>
+          <li><span class="feat-yes">&#10003;</span> 12-month post-purchase helpline</li>
+          <li><span class="feat-yes">&#10003;</span> Dedicated advocate assigned</li>
+        </ul>
+        <a href="#lg-cta" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
       </div>
     </div>
-  </section>
+    <p style="font-size:12px;color:rgba(247,244,238,0.3);margin-top:20px;text-align:center;">* Stamp duty, registration fees, and all government charges billed at actuals separately.</p>
+  </div>
+
+  <!-- PROCESS -->
+  <div id="lg-process" class="lg-process">
+    <div class="lg-section-label"><span class="lg-s-label">How it works</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Real-time transparency<br><em>from day one</em></h2>
+    <p class="lg-sub-text">Every stage of your order is tracked and communicated. No more calling to find out what&rsquo;s happening.</p>
+    <div class="process-grid">
+      <div class="proc-steps">
+        <div class="proc-step fade-up">
+          <div class="proc-num">01</div>
+          <div class="proc-content">
+            <div class="proc-state">ORDER_PLACED</div>
+            <div class="proc-title">Place your order &amp; upload documents</div>
+            <div class="proc-desc">Submit property details, pay the flat fee, and upload your documents. Takes 5 minutes.</div>
+            <div class="wa-msg"><span class="wa-icon">&#128172;</span>&ldquo;Your Homexo Legal order #HXL-2847 is confirmed. Upload your documents here: [secure link]&rdquo;</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">02</div>
+          <div class="proc-content">
+            <div class="proc-state">TITLE_REVIEW_IN_PROGRESS</div>
+            <div class="proc-title">Title &amp; compliance check begins</div>
+            <div class="proc-desc">Our advocate reviews title deed chain, EC, RERA status, BBMP/BDA approvals, and checks for litigation or acquisition notices.</div>
+            <div class="wa-msg"><span class="wa-icon">&#128172;</span>&ldquo;Preliminary checks underway &mdash; RERA &#10003;, Encumbrance Certificate under review.&rdquo;</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">03</div>
+          <div class="proc-content">
+            <div class="proc-state">SRO_VERIFICATION_PENDING &#9889;</div>
+            <div class="proc-title">Sub-Registrar Office field visit</div>
+            <div class="proc-desc">Our advocate physically visits the SRO to cross-verify hard-copy records. We tell you exactly where they are and when to expect results.</div>
+            <div class="wa-msg" style="background:#fff8e1;color:#7a5200;"><span class="wa-icon">&#128205;</span>&ldquo;Our advocate is at the Koramangala SRO right now. Physical records expected to be verified by 4:00 PM today.&rdquo;</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">04</div>
+          <div class="proc-content">
+            <div class="proc-state">REPORT_DRAFTING</div>
+            <div class="proc-title">Verdict report compiled</div>
+            <div class="proc-desc">All checks complete. Our advocate writes the final legal opinion in a single-page, plain-English verdict PDF.</div>
+            <div class="wa-msg"><span class="wa-icon">&#128172;</span>&ldquo;All verifications done! Your verdict report is being drafted. Expected in 2 hours.&rdquo;</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">05</div>
+          <div class="proc-content">
+            <div class="proc-state">VERDICT_DELIVERED</div>
+            <div class="proc-title">Your Go/No-Go verdict is ready</div>
+            <div class="proc-desc">Your 1-page verdict PDF is delivered to your dashboard and WhatsApp. Green, Yellow, or Red &mdash; you know exactly what to do next.</div>
+            <div class="wa-msg" style="background:#d0f0e5;color:#0a4a30;"><span class="wa-icon">&#128994;</span>&ldquo;Your Homexo Legal Verdict is ready! Green &mdash; Safe to proceed. Download: [secure link]&rdquo;</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-visual">
+        <div class="verdict-display">
+          <div class="verdict-head">
+            <span>Homexo Legal Verdict</span>
+            <span class="verdict-stamp">Advocate Certified</span>
+          </div>
+          <div class="verdict-main">
+            <div class="big-dot">&#128994;</div>
+            <div>
+              <div class="verdict-title-big">Green &mdash; Safe to proceed</div>
+              <div class="verdict-sub-big">No critical issues detected &middot; 12 checks passed</div>
+            </div>
+          </div>
+          <div class="verdict-checks">
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Title deed clear</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>RERA registered</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>No encumbrances</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>BBMP approved</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>30-yr title clear</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>No litigation</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Khata verified</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Tax paid up to date</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>No BDA acquisition</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>SRO records match</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Mother Deed chain &#10003;</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Occupancy cert valid</div>
+          </div>
+          <div class="verdict-advocate">
+            <div class="adv-avatar">SR</div>
+            <div style="flex:1;">
+              <div class="adv-name">Adv. S. Ramesh, BCI Karnataka</div>
+              <div class="adv-role">Senior Property Advocate &middot; 14 years experience</div>
+            </div>
+            <div class="adv-certified">SIGNED</div>
+          </div>
+        </div>
+        <div style="background:var(--teal-light);border:1px solid rgba(26,92,82,0.15);border-radius:12px;padding:16px 20px;">
+          <div style="font-size:12px;font-weight:500;color:var(--teal);margin-bottom:6px;">What if the verdict is Red?</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">We explain exactly what the risk is, in plain English. No legalese. We also advise on whether it&rsquo;s fixable &mdash; and how.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div id="lg-services" class="lg-services">
+    <div class="lg-section-label"><span class="lg-s-label">What we verify</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Every angle of your<br><em>property&rsquo;s legal health</em></h2>
+    <p class="lg-sub-text">A complete audit of title, compliance, physical records, and post-purchase paperwork.</p>
+    <div class="services-grid">
+      <div class="svc-cell fade-up">
+        <div class="svc-num">01</div>
+        <div class="svc-icon">&#128269;</div>
+        <div class="svc-name">Title verification &amp; EC</div>
+        <div class="svc-body">30-year ownership history, Mother Deed chain, Encumbrance Certificate, marketable title confirmation. Checks for double-sale fraud, benami ownership, and court orders.</div>
+        <div class="svc-tags"><span class="svc-tag">Mother Deed</span><span class="svc-tag">EC check</span><span class="svc-tag">Title chain</span></div>
+      </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">02</div>
+        <div class="svc-icon">&#127963;</div>
+        <div class="svc-name">Approval &amp; compliance audit</div>
+        <div class="svc-body">RERA registration check, BBMP/BDA/BMRDA plan approvals, zoning compliance, OC and CC verification, land acquisition notices from BDA/KIADB.</div>
+        <div class="svc-tags"><span class="svc-tag">RERA</span><span class="svc-tag">BBMP</span><span class="svc-tag">BDA</span><span class="svc-tag">BMRDA</span></div>
+      </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">03</div>
+        <div class="svc-icon">&#128205;</div>
+        <div class="svc-name">SRO field verification</div>
+        <div class="svc-body">Advocate physically visits the Sub-Registrar Office to cross-check hard-copy records. Live WhatsApp ETA sent to the buyer. Flags any discrepancy between digital and physical records.</div>
+        <div class="svc-tags"><span class="svc-tag">Physical check</span><span class="svc-tag">SRO records</span><span class="svc-tag">Live ETA</span></div>
+      </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">04</div>
+        <div class="svc-icon">&#128196;</div>
+        <div class="svc-name">Drafting &amp; vetting</div>
+        <div class="svc-body">Sale Agreement and Sale Deed with buyer-protective clauses: penalty for possession delay, indemnity against future litigation, forfeiture terms, and Aadhaar eSign support.</div>
+        <div class="svc-tags"><span class="svc-tag">Sale Agreement</span><span class="svc-tag">Sale Deed</span><span class="svc-tag">Aadhaar eSign</span></div>
+      </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">05</div>
+        <div class="svc-icon">&#128202;</div>
+        <div class="svc-name">Go/No-Go verdict report</div>
+        <div class="svc-body">A single-page PDF in plain language. Traffic-light rating (Green/Yellow/Red), a risk summary in plain English, and a certified advocate&rsquo;s signature. Shareable with your bank for home loan.</div>
+        <div class="svc-tags"><span class="svc-tag">1-page PDF</span><span class="svc-tag">Bank-ready</span><span class="svc-tag">Certified</span></div>
+      </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">06</div>
+        <div class="svc-icon">&#127968;</div>
+        <div class="svc-name">Post-purchase care</div>
+        <div class="svc-body">Khata Transfer (BBMP/BDA), property tax name change, BESCOM name change. The step all buyers get stuck on after registration &mdash; handled end-to-end with full status tracking.</div>
+        <div class="svc-tags"><span class="svc-tag">Khata Transfer</span><span class="svc-tag">Property Tax</span><span class="svc-tag">BESCOM</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY HOMEXO -->
+  <div id="lg-why" class="lg-why">
+    <div class="lg-section-label"><span class="lg-s-label">Why Homexo Legal</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Not a law firm.<br><em>A legal product.</em></h2>
+    <div class="why-grid">
+      <div class="why-list">
+        <div class="why-item fade-up">
+          <div class="why-icon">&#128202;</div>
+          <div><div class="why-title">Traffic-light dashboard, not emails</div><div class="why-desc">Log in and see exactly where your order is &mdash; in real time. No more calling to find out if anything has happened.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#128172;</div>
+          <div><div class="why-title">WhatsApp updates at every stage</div><div class="why-desc">Every time your order moves forward, you get a WhatsApp message &mdash; including when our advocate is at the SRO, with a specific ETA.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#128196;</div>
+          <div><div class="why-title">1-page verdict, not a 20-page brief</div><div class="why-desc">Green, Yellow, or Red. Written for buyers, not lawyers. Our advocates summarise the risks in plain English that you can actually act on.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#128176;</div>
+          <div><div class="why-title">Fixed fee, no bill shock</div><div class="why-desc">You know exactly what you&rsquo;ll pay before you start. No hourly rates. No &ldquo;complexity surcharges&rdquo;. Stamp duty billed at actuals.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#127968;</div>
+          <div><div class="why-title">Post-purchase covered too</div><div class="why-desc">Khata Transfer, property tax name change, BESCOM name change &mdash; nobody else bundles this. We do, because that&rsquo;s where buyers actually get stuck.</div></div>
+        </div>
+      </div>
+      <div class="comp-wrap fade-up">
+        <div class="comp-title">Homexo vs competitors</div>
+        <table class="comp-table">
+          <thead>
+            <tr><th>Feature</th><th>Competitor 1</th><th>Competitor 2</th><th>Homexo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Fixed flat fee</td><td class="cell-yes">&#10003;</td><td class="cell-no">&#10007;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr><td>Live status dashboard</td><td class="cell-no">&#10007;</td><td class="cell-no">&#10007;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr><td>WhatsApp SRO updates</td><td class="cell-no">&#10007;</td><td class="cell-no">&#10007;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr><td>1-page verdict PDF</td><td class="cell-no">&#10007;</td><td class="cell-no">&#10007;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr><td>SRO field verification</td><td class="cell-no">&#10007;</td><td class="cell-yes">&#10003;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr><td>Khata Transfer</td><td class="cell-no">&#10007;</td><td class="cell-yes">&#10003;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr><td>Bundled packages</td><td class="cell-yes">&#10003;</td><td class="cell-no">&#10007;</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003;</td></tr>
+            <tr class="hl-row"><td>Starting price</td><td>&#8377;9,999</td><td>&#8377;12,000</td><td>&#8377;4,999</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="lg-testimonials">
+    <div class="lg-section-label"><span class="lg-s-label">Client stories</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Buyers who bought<br><em>with confidence</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card fade-up">
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">I was nervous about a 2BHK in Whitefield &mdash; the seller&rsquo;s papers had a gap in 2011. Homexo&rsquo;s advocate found the missing link at the SRO, and we got a Green verdict. Registration done last week.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--teal-light);color:var(--teal);">AK</div>
+          <div><div class="testi-name">Arun Krishnamurthy</div><div class="testi-detail">IT professional &middot; Whitefield</div><span class="verdict-badge badge-green">&#128994; Green verdict</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">The WhatsApp update when they were at the SRO blew my mind. No other service does that. I knew exactly what was happening at every stage. Got the verdict in 6 days.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--rust-light);color:var(--rust);">PD</div>
+          <div><div class="testi-name">Priya Deshmukh</div><div class="testi-detail">Product Manager &middot; Koramangala</div><span class="verdict-badge badge-green">&#128994; Green verdict</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">We got a Yellow verdict &mdash; minor property tax arrears. Homexo told us exactly how to get it resolved before registration. Saved us from a potential legal dispute down the road.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#faeeda;color:#854f0b;">RS</div>
+          <div><div class="testi-name">Rohit &amp; Sneha Iyer</div><div class="testi-detail">First-time buyers &middot; JP Nagar</div><span class="verdict-badge badge-yellow">&#127997; Yellow &mdash; resolved</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GET STARTED FORM -->
+  <div id="lg-cta" class="lg-cta">
+    <div class="lg-section-label" style="justify-content:center;"><span class="lg-s-label" style="color:rgba(247,244,238,0.5);">Start today</span></div>
+    <h2 class="lg-heading" style="text-align:center;color:var(--cream);">Your home is the biggest<br><em style="color:var(--gold-light);">purchase of your life</em></h2>
+    <p class="cta-sub">Don&rsquo;t let a legal gap cost you everything. Get a complete verification from &#8377;4,999 &mdash; and buy with complete confidence.</p>
+
+    <form method="POST" action="{% url 'enquiries:create' %}" style="max-width:560px;margin:0 auto;">
+      {% csrf_token %}
+      <input type="hidden" name="enquiry_type" value="general">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <input type="text" name="name" required placeholder="Full Name *"
+            value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}"
+            {% if user.is_authenticated %}readonly{% endif %}
+            style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <input type="tel" name="phone" required placeholder="Phone *"
+            value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% endif %}"
+            {% if user.is_authenticated and user.phone %}readonly{% endif %}
+            style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <input type="email" name="email" required placeholder="Email Address *"
+          value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+          {% if user.is_authenticated %}readonly{% endif %}
+          style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
+      </div>
+      <button type="submit" style="width:100%;padding:15px;background:var(--cream);color:var(--teal);font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:background 0.2s;">
+        Submit Enquiry &rarr;
+      </button>
+      <div style="display:flex;align-items:center;gap:12px;margin:14px 0;">
+        <div style="flex:1;height:1px;background:rgba(247,244,238,0.15);"></div>
+        <span style="font-size:12px;color:rgba(247,244,238,0.4);letter-spacing:0.08em;">OR</span>
+        <div style="flex:1;height:1px;background:rgba(247,244,238,0.15);"></div>
+      </div>
+      <a href="https://wa.me/918105568225" target="_blank" rel="noopener"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:12px;padding:14px;background:#25D366;color:#fff;font-size:14px;font-weight:600;border-radius:8px;text-decoration:none;box-sizing:border-box;transition:background 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.122 1.532 5.859L.057 23.571a.75.75 0 0 0 .916.937l5.878-1.538A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 0 1-4.932-1.341l-.353-.21-3.664.959.977-3.572-.23-.368A9.721 9.721 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </form>
+  </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+const steps = document.querySelectorAll('.dash-step .step-dot');
+let cur = 2;
+if (steps.length) {
+  setInterval(() => {
+    steps.forEach((dot, i) => {
+      if (i < cur) { dot.className = 'step-dot step-done'; dot.innerHTML = '&#10003;'; }
+      else if (i === cur) { dot.className = 'step-dot step-active'; dot.innerHTML = '&rarr;'; }
+      else { dot.className = 'step-dot step-pending'; dot.textContent = i + 1; }
+    });
+    cur = (cur + 1) % steps.length;
+    if (cur === 0) cur = 1;
+  }, 2500);
+}
+</script>
 {% endblock %}

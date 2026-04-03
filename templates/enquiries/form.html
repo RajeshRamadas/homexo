@@ -58,16 +58,16 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-group">
             <label>Full Name *</label>
-            <input type="text" name="name" required {% if user.is_authenticated %}value="{{ user.get_full_name }}"{% endif %}>
+            <input type="text" name="name" required value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}" {% if user.is_authenticated %}readonly style="background:var(--ivory,#f8f8f8);cursor:default;"{% endif %}>
           </div>
           <div class="form-group">
             <label>Phone *</label>
-            <input type="tel" name="phone" required value="{% if user.is_authenticated %}{{ user.phone }}{% elif request.GET.phone %}{{ request.GET.phone }}{% endif %}">
+            <input type="tel" name="phone" required value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% elif request.GET.phone %}{{ request.GET.phone }}{% endif %}" {% if user.is_authenticated and user.phone %}readonly style="background:var(--ivory,#f8f8f8);cursor:default;"{% endif %}>
           </div>
         </div>
         <div class="form-group">
           <label>Email Address *</label>
-          <input type="email" name="email" required {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
+          <input type="email" name="email" required value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" {% if user.is_authenticated %}readonly style="background:var(--ivory,#f8f8f8);cursor:default;"{% endif %}>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-group">
@@ -85,7 +85,7 @@
           </div>
           <div class="form-group">
             <label>Budget</label>
-            <input type="text" name="budget" placeholder="e.g. <span class="rupee">₹</span>50L – <span class="rupee">₹</span>1Cr">
+            <input type="text" name="budget" placeholder="e.g. ₹50L – ₹1Cr">
           </div>
         </div>
         {% if svc %}
