@@ -332,6 +332,11 @@ def home_service(request):
     return render(request, 'pages/home_service.html')
 
 
+def nri_service(request):
+    """NRI services landing page."""
+    return render(request, 'pages/nri_service.html')
+
+
 def legal(request):
     """Dedicated property legal services landing page."""
     return render(request, 'pages/legal.html')

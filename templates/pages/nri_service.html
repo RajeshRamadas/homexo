@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOMEXO — NRI Property Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* ── Original palette, elevated ── */
+  --cream:     #F0F4F8;
+  --ivory:     #F7F9FC;
+  --charcoal:  #0D1B2A;
+  --deep:      #071929;
+  --navy:      #0D2B4E;
+  --navy-mid:  #1A4A7A;
+  --soft-blue: #3A5F85;
+  --sky:       #4A90C4;
+  --sky-lt:    rgba(74,144,196,0.18);
+  --sky-xlt:   rgba(74,144,196,0.08);
+  --white:     #FFFFFF;
+  --warm-grey: #7A8A99;
+  --border:    rgba(10,46,92,0.11);
+  --border-md: rgba(10,46,92,0.18);
+  --green:     #2E7D32;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(.23,1,.32,1);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-sans); background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
+
+/* Safe area for notched phones */
+@supports (padding: env(safe-area-inset-left)) {
+  nav { padding-left: max(64px, env(safe-area-inset-left)); padding-right: max(64px, env(safe-area-inset-right)); }
+}
+
+/* ── SCROLL PROGRESS ── */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--sky), #7EC8F0);
+  z-index: 9999; width: 0%; transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(74,144,196,0.5);
+}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1100;
+  height: 74px; padding: 0 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(247,249,252,0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  animation: navDown 0.9s var(--ease) both;
+}
+@keyframes navDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.nav-logo { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.nav-logo svg { height: 42px; width: auto; }
+.nav-logo-name {
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+  letter-spacing: 6px; color: var(--navy);
+}
+.nav-links { display: flex; gap: 38px; align-items: center; }
+.nav-links a {
+  font-size: 11px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--soft-blue); text-decoration: none; transition: color 0.3s;
+  position: relative; padding-bottom: 3px;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 100%;
+  height: 1px; background: var(--navy);
+  transition: right 0.4s var(--ease);
+}
+.nav-links a:hover, .nav-links a.active { color: var(--navy); }
+.nav-links a:hover::after, .nav-links a.active::after { right: 0; }
+.nav-cta {
+  background: var(--navy); color: var(--white) !important;
+  padding: 11px 28px; font-size: 10px !important; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none;
+  transition: background 0.3s, transform 0.2s !important;
+  border: none; cursor: pointer;
+}
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { background: var(--sky) !important; transform: translateY(-1px); }
+
+/* Hamburger */
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1200; }
+.hamburger span { display: block; width: 22px; height: 1.5px; background: var(--navy); transition: all 0.3s; border-radius: 2px; }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; position: fixed; inset: 0;
+  background: rgba(247,249,252,0.98); backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 32px; z-index: 1050;
+  padding: 20px;
+}
+.mobile-menu.open { display: flex; animation: menuFade 0.25s var(--ease) both; }
+@keyframes menuFade { from { opacity: 0; } to { opacity: 1; } }
+.mobile-menu a {
+  font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--navy); text-decoration: none; font-weight: 500;
+  padding: 8px 0; border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+}
+.mobile-menu a:hover, .mobile-menu a.active { color: var(--sky); border-color: var(--sky); }
+.mobile-menu .nav-cta {
+  padding: 16px 48px; border: none;
+  font-size: 11px !important; letter-spacing: 2px;
+  margin-top: 8px;
+}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero {
+  min-height: 100svh;
+  padding-top: 74px;
+  background: linear-gradient(140deg, var(--deep) 0%, var(--navy) 55%, #1E5488 100%);
+  display: grid; grid-template-columns: 1fr 520px;
+  align-items: stretch; position: relative; overflow: hidden;
+}
+
+/* Animated mesh background */
+.hero-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.hero-bg-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(74,144,196,0.07);
+}
+.hero-bg-ring:nth-child(1) { width: 600px; height: 600px; top: -150px; left: -150px; animation: ringPulse 12s ease-in-out infinite; }
+.hero-bg-ring:nth-child(2) { width: 900px; height: 900px; top: -300px; left: -300px; animation: ringPulse 18s ease-in-out infinite 3s; border-color: rgba(74,144,196,0.04); }
+.hero-bg-ring:nth-child(3) { width: 400px; height: 400px; bottom: -100px; right: 520px; animation: ringPulse 10s ease-in-out infinite 6s; }
+@keyframes ringPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); opacity: 0.6; } }
+
+/* Grid texture */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background-image: 
+    linear-gradient(rgba(74,144,196,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,144,196,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 90% at 20% 50%, black 30%, transparent 80%);
+}
+
+/* Vertical separator line */
+.hero::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; right: 520px; width: 1px;
+  background: linear-gradient(to bottom, transparent 5%, rgba(74,144,196,0.2) 30%, rgba(74,144,196,0.2) 70%, transparent 95%);
+  z-index: 2;
+}
+
+.hero-content {
+  padding: 80px 72px 80px 80px;
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; justify-content: center;
+}
+
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 10px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--sky); margin-bottom: 28px;
+  animation: fadeUp 0.8s 0.3s var(--ease) both;
+}
+.eyebrow-line { width: 32px; height: 1px; background: var(--sky); flex-shrink: 0; }
+
+.hero-h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(42px, 4.8vw, 70px);
+  font-weight: 300; color: var(--white); line-height: 1.07;
+  margin-bottom: 26px; letter-spacing: -0.5px;
+  animation: fadeUp 0.8s 0.45s var(--ease) both;
+}
+.hero-h1 em { font-style: italic; color: var(--sky); font-weight: 400; }
+
+.hero-p {
+  font-size: 15px; line-height: 1.9; color: rgba(200,216,236,0.65);
+  font-weight: 300; max-width: 500px; margin-bottom: 52px;
+  animation: fadeUp 0.8s 0.6s var(--ease) both;
+}
+
+.hero-stats {
+  display: flex; align-items: stretch; gap: 0;
+  animation: fadeUp 0.8s 0.75s var(--ease) both;
+}
+.hero-stat {
+  padding-right: 32px; margin-right: 32px;
+  border-right: 1px solid rgba(74,144,196,0.2);
+  display: flex; flex-direction: column; gap: 5px;
+}
+.hero-stat:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+.stat-num {
+  font-family: var(--font-serif); font-size: 34px; font-weight: 400;
+  color: var(--white); line-height: 1;
+}
+.stat-num sup { font-size: 16px; color: var(--sky); vertical-align: super; }
+.stat-lbl { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(200,216,236,0.4); }
+
+/* ── Hero form panel ── */
+.hero-panel {
+  position: relative; z-index: 3;
+  background: var(--white);
+  display: flex; flex-direction: column;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.25);
+  animation: panelSlide 1s 0.4s var(--ease) both;
+  overflow: hidden;
+}
+@keyframes panelSlide { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+.panel-head {
+  background: var(--navy); padding: 32px 32px 26px;
+  border-bottom: 2px solid var(--sky);
+  flex-shrink: 0;
+}
+.panel-title { font-family: var(--font-serif); font-size: 22px; font-weight: 500; color: var(--white); margin-bottom: 6px; line-height: 1.3; }
+.panel-sub { font-size: 12px; color: rgba(200,216,236,0.55); line-height: 1.65; }
+
+.panel-body { padding: 22px 26px 26px; flex: 1; display: flex; flex-direction: column; gap: 0; overflow-y: auto; }
+
+/* Tabs */
+.nri-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 16px; }
+.nri-tab {
+  padding: 11px 8px; background: var(--ivory); border: 1px solid var(--border);
+  font-family: var(--font-sans); font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--warm-grey); cursor: pointer;
+  transition: all 0.22s; text-align: center; line-height: 1;
+}
+.nri-tab.active { background: var(--navy); border-color: var(--navy); color: var(--white); }
+.nri-tab:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+/* Phone code + number combo */
+.phone-wrap {
+  display: flex; align-items: stretch; gap: 0;
+  border: 1px solid var(--border);
+  background: var(--ivory);
+  transition: border-color 0.3s, box-shadow 0.25s;
+}
+.phone-wrap:focus-within {
+  border-color: var(--sky);
+  box-shadow: 0 0 0 3px rgba(74,144,196,0.1);
+}
+.phone-code {
+  width: 160px; min-width: 160px; max-width: 160px;
+  padding: 12px 22px 12px 10px;
+  border: none; border-right: 1px solid var(--border);
+  background: var(--cream); font-family: var(--font-sans); font-size: 11.5px;
+  color: var(--charcoal); outline: none; appearance: none;
+  cursor: pointer; flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A8A99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.phone-num {
+  flex: 1; padding: 12px 10px; border: none;
+  background: transparent; font-family: var(--font-sans); font-size: 13px;
+  color: var(--charcoal); outline: none; min-width: 0; width: 0;
+}
+.phone-num::placeholder { color: var(--warm-grey); opacity: 0.55; }
+/* Override field border since phone-wrap handles it */
+.field .phone-wrap + * { margin-top: 0; }
+
+
+.field { margin-bottom: 12px; }
+.field:last-of-type { margin-bottom: 0; }
+.field label {
+  display: block; font-size: 9.5px; font-weight: 600; letter-spacing: 1.6px;
+  text-transform: uppercase; color: var(--warm-grey); margin-bottom: 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.field input, .field select {
+  width: 100%; padding: 11px 12px; border: 1px solid var(--border);
+  background: var(--ivory); font-family: var(--font-sans); font-size: 13px;
+  color: var(--charcoal); outline: none; appearance: none;
+  transition: border-color 0.3s, background 0.25s, box-shadow 0.25s;
+  border-radius: 0;
+}
+.field input::placeholder { color: var(--warm-grey); opacity: 0.55; }
+.field input:focus, .field select:focus {
+  border-color: var(--sky); background: var(--white);
+  box-shadow: 0 0 0 3px rgba(74,144,196,0.1);
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-row .field { margin-bottom: 0; }
+
+/* Spacer between fields and submit */
+.panel-body .field-row { margin-bottom: 12px; }
+.panel-body > .field { margin-bottom: 12px; }
+
+.form-submit {
+  width: 100%; padding: 13px; background: var(--navy); color: var(--white);
+  border: none; cursor: pointer; font-family: var(--font-sans); font-size: 11px;
+  font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+  transition: background 0.3s, transform 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 14px; flex-shrink: 0;
+}
+.form-submit:hover { background: var(--sky); transform: translateY(-1px); }
+.form-note {
+  font-size: 10.5px; color: var(--warm-grey); text-align: center;
+  margin-top: 14px; line-height: 1.7; letter-spacing: 0.2px;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ══════════════════════════════
+   TRUST STRIP
+══════════════════════════════ */
+.trust-strip {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.trust-cell {
+  display: flex; align-items: flex-start; gap: 18px;
+  padding: 28px 28px; border-right: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.trust-cell:last-child { border-right: none; }
+.trust-cell:hover { background: var(--ivory); }
+.trust-n {
+  font-family: var(--font-serif); font-size: 38px; font-weight: 300;
+  color: var(--sky); opacity: 0.3; line-height: 1; flex-shrink: 0;
+}
+.trust-title { font-size: 13px; font-weight: 600; color: var(--charcoal); margin-bottom: 5px; }
+.trust-desc { font-size: 12px; color: var(--warm-grey); line-height: 1.65; font-weight: 300; }
+
+/* ══════════════════════════════
+   SECTION SYSTEM
+══════════════════════════════ */
+.section { padding: 96px 80px; }
+.s-dark  { background: var(--charcoal); }
+.s-cream { background: var(--cream); }
+.s-white { background: var(--white); }
+.s-navy  { background: var(--navy); }
+
+.eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 10px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--sky); margin-bottom: 16px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--sky); flex-shrink: 0; }
+
+.s-title {
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 3.5vw, 52px);
+  font-weight: 300; line-height: 1.1; color: var(--charcoal); margin-bottom: 14px;
+}
+.s-title em { font-style: italic; color: var(--sky); }
+.s-title--light { color: var(--white); }
+.s-sub { font-size: 15px; color: var(--warm-grey); font-weight: 300; line-height: 1.85; max-width: 580px; }
+.s-sub--dim { color: rgba(200,216,236,0.45); }
+
+.head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 60px; }
+
+/* ══════════════════════════════
+   PACKAGES
+══════════════════════════════ */
+.pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+.pkg-card {
+  background: var(--white); padding: 40px 36px;
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), box-shadow 0.35s;
+  display: flex; flex-direction: column;
+}
+.pkg-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; transition: background 0.4s;
+}
+.pkg-card.vis { opacity: 1; transform: translateY(0); }
+.pkg-card:nth-child(2) { transition-delay: 0.1s; }
+.pkg-card:nth-child(3) { transition-delay: 0.2s; }
+.pkg-card:nth-child(4) { transition-delay: 0.3s; }
+.pkg-card:nth-child(5) { transition-delay: 0.4s; }
+.pkg-card:nth-child(6) { transition-delay: 0.5s; }
+.pkg-card:hover { box-shadow: 0 16px 56px rgba(13,43,78,0.13); z-index: 1; transform: translateY(-6px); }
+.pkg-card.vis:hover { transform: translateY(-6px); }
+.pkg-card:hover::before, .pkg-card.popular::before { background: var(--sky); }
+.pkg-card.popular { border: 1px solid rgba(74,144,196,0.25); }
+
+.pkg-badge {
+  position: absolute; top: -1px; right: 24px;
+  background: var(--sky); color: var(--white);
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 14px;
+}
+.pkg-icon {
+  width: 52px; height: 52px; background: var(--sky-xlt); border: 1px solid rgba(74,144,196,0.18);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 22px; color: var(--sky);
+  transition: background 0.3s, border-color 0.3s;
+}
+.pkg-card:hover .pkg-icon { background: var(--sky-lt); border-color: rgba(74,144,196,0.35); }
+.pkg-name { font-family: var(--font-serif); font-size: 24px; font-weight: 500; color: var(--charcoal); margin-bottom: 6px; line-height: 1.2; }
+.pkg-tag { font-size: 12px; color: var(--warm-grey); margin-bottom: 22px; font-weight: 300; }
+.pkg-rule { height: 1px; background: var(--border); margin-bottom: 22px; }
+.pkg-features { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 32px; flex: 1; }
+.pkg-features li { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--charcoal); line-height: 1.55; font-weight: 300; }
+.pkg-features li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sky); flex-shrink: 0; margin-top: 6px; }
+.pkg-cta {
+  width: 100%; padding: 13px; background: transparent; border: 1.5px solid var(--navy);
+  color: var(--navy); font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+  transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.pkg-cta:hover, .pkg-card.popular .pkg-cta { background: var(--navy); color: var(--white); }
+
+/* ══════════════════════════════
+   PROCESS
+══════════════════════════════ */
+.process-wrap { position: relative; margin-top: 20px; }
+.process-steps { display: grid; grid-template-columns: repeat(5, 1fr); position: relative; gap: 0; }
+.process-steps::before {
+  content: ''; position: absolute; top: 27px; left: 10%; right: 10%;
+  height: 1px; background: var(--border-md); z-index: 0;
+}
+.process-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+.p-num {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--white); border: 1px solid var(--border-md);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--sky);
+  margin-bottom: 22px; flex-shrink: 0;
+  transition: all 0.35s var(--ease);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.process-step:hover .p-num { background: var(--navy); color: var(--white); border-color: var(--navy); transform: scale(1.08); box-shadow: 0 8px 24px rgba(13,43,78,0.25); }
+.p-title { font-size: 13px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px; }
+.p-desc { font-size: 12px; color: var(--warm-grey); line-height: 1.7; font-weight: 300; }
+
+/* ══════════════════════════════
+   WHY NRI
+══════════════════════════════ */
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.07); }
+.why-card {
+  padding: 52px 48px; background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(74,144,196,0.1);
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), background 0.3s;
+}
+.why-card.vis { opacity: 1; transform: translateY(0); }
+.why-card:nth-child(2) { transition-delay: 0.12s; }
+.why-card:nth-child(3) { transition-delay: 0.24s; }
+.why-card:nth-child(4) { transition-delay: 0.36s; }
+.why-card:hover { background: rgba(255,255,255,0.06); }
+.why-icon {
+  width: 50px; height: 50px; background: rgba(74,144,196,0.12);
+  border: 1px solid rgba(74,144,196,0.22);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; color: var(--sky);
+  transition: background 0.3s;
+}
+.why-card:hover .why-icon { background: rgba(74,144,196,0.2); }
+.why-title { font-family: var(--font-serif); font-size: 23px; font-weight: 400; color: var(--white); margin-bottom: 14px; line-height: 1.2; }
+.why-text { font-size: 14px; color: rgba(200,216,236,0.48); line-height: 1.9; font-weight: 300; }
+
+/* ══════════════════════════════
+   CITIES
+══════════════════════════════ */
+.cities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+.city-card {
+  background: var(--white); padding: 36px 32px;
+  text-decoration: none; display: block; position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease), box-shadow 0.35s;
+}
+.city-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--sky); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.city-card:hover::after { transform: scaleX(1); }
+.city-card.vis { opacity: 1; transform: translateY(0); }
+.city-card:nth-child(2) { transition-delay: 0.08s; }
+.city-card:nth-child(3) { transition-delay: 0.16s; }
+.city-card:nth-child(4) { transition-delay: 0.24s; }
+.city-card:nth-child(5) { transition-delay: 0.32s; }
+.city-card:nth-child(6) { transition-delay: 0.40s; }
+.city-card:hover { box-shadow: 0 12px 44px rgba(13,43,78,0.12); transform: translateY(-4px); z-index: 1; }
+.city-card.vis:hover { transform: translateY(-4px); }
+.city-name { font-family: var(--font-serif); font-size: 27px; font-weight: 500; color: var(--charcoal); margin-bottom: 4px; }
+.city-sub { font-size: 11px; color: var(--sky); letter-spacing: 0.5px; margin-bottom: 18px; }
+.city-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.city-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--warm-grey); line-height: 1.5; font-weight: 300; }
+.city-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--sky); flex-shrink: 0; margin-top: 5px; opacity: 0.7; }
+.city-arrow { margin-top: 22px; font-size: 20px; color: rgba(0,0,0,0.1); transition: color 0.3s, transform 0.3s; display: inline-block; }
+.city-card:hover .city-arrow { color: var(--sky); transform: translateX(5px); }
+
+/* ══════════════════════════════
+   COMPARISON
+══════════════════════════════ */
+.compare-wrap { border: 1px solid var(--border); overflow: hidden; }
+.compare-table { width: 100%; border-collapse: collapse; }
+.compare-table thead tr { background: var(--navy); }
+.compare-table th {
+  padding: 18px 24px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; text-align: left; color: rgba(255,255,255,0.45);
+  border-bottom: 2px solid var(--sky);
+}
+.compare-table th:not(:first-child) { text-align: center; }
+.compare-table th.th-homex { color: var(--sky); }
+.compare-table td { padding: 16px 24px; font-size: 13px; color: var(--warm-grey); border-bottom: 1px solid var(--border); font-weight: 300; transition: background 0.2s; }
+.compare-table td:not(:first-child) { text-align: center; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--ivory); }
+.check { color: var(--sky); font-size: 18px; font-weight: 700; }
+.cross  { color: rgba(0,0,0,0.18); font-size: 18px; }
+
+/* ══════════════════════════════
+   SERVICE TILES
+══════════════════════════════ */
+.services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
+.svc-tile {
+  background: var(--white); padding: 30px 26px; cursor: pointer;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease),
+              background 0.3s, color 0.3s;
+  position: relative; overflow: hidden;
+}
+.svc-tile::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--sky); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.svc-tile:hover::after { transform: scaleX(1); }
+.svc-tile.vis { opacity: 1; transform: translateY(0); }
+.svc-tile:hover { background: var(--navy); }
+.svc-icon { color: var(--sky); margin-bottom: 16px; transition: transform 0.3s; }
+.svc-tile:hover .svc-icon { transform: scale(1.1); }
+.svc-name { font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px; transition: color 0.3s; }
+.svc-tile:hover .svc-name { color: var(--white); }
+.svc-desc { font-size: 12px; color: var(--warm-grey); line-height: 1.65; font-weight: 300; transition: color 0.3s; }
+.svc-tile:hover .svc-desc { color: rgba(200,216,236,0.5); }
+.svc-arrow { margin-top: 16px; font-size: 17px; color: rgba(0,0,0,0.1); transition: color 0.3s, transform 0.3s; display: inline-block; }
+.svc-tile:hover .svc-arrow { color: var(--sky); transform: translateX(4px); }
+
+/* ══════════════════════════════
+   TESTIMONIALS
+══════════════════════════════ */
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.testi-card {
+  background: var(--white); padding: 36px 32px;
+  border: 1px solid var(--border); position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.65s var(--ease), transform 0.65s var(--ease), box-shadow 0.35s;
+}
+.testi-card.vis { opacity: 1; transform: translateY(0); }
+.testi-card:nth-child(2) { transition-delay: 0.1s; }
+.testi-card:nth-child(3) { transition-delay: 0.2s; }
+.testi-card:hover { box-shadow: 0 12px 44px rgba(13,43,78,0.1); }
+.testi-card::before {
+  content: '\201C';
+  position: absolute; top: 16px; right: 22px;
+  font-family: var(--font-serif); font-size: 80px; color: var(--sky); opacity: 0.08; line-height: 1;
+}
+.testi-stars { color: var(--sky); font-size: 13px; letter-spacing: 2px; margin-bottom: 16px; }
+.testi-text { font-size: 14px; color: var(--charcoal); line-height: 1.85; font-weight: 300; margin-bottom: 22px; font-style: italic; }
+.testi-rule { height: 1px; background: var(--border); margin-bottom: 16px; }
+.testi-name { font-size: 13px; font-weight: 600; color: var(--charcoal); margin-bottom: 3px; }
+.testi-meta { font-size: 11px; color: var(--warm-grey); font-weight: 300; }
+.testi-tag {
+  display: inline-block; margin-top: 10px;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--sky); border: 1px solid rgba(74,144,196,0.3); padding: 3px 10px;
+}
+
+/* ══════════════════════════════
+   FAQ
+══════════════════════════════ */
+.faq-wrap { border: 1px solid var(--border); }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 28px; background: none; border: none; cursor: pointer;
+  font-family: var(--font-sans); font-size: 15px; font-weight: 500;
+  color: var(--charcoal); text-align: left; gap: 20px;
+  transition: background 0.25s;
+}
+.faq-q:hover { background: var(--ivory); }
+.faq-q.active { background: var(--ivory); color: var(--navy); }
+.faq-icon {
+  width: 30px; height: 30px; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--warm-grey);
+  transition: background 0.3s, border-color 0.3s, transform 0.45s var(--ease);
+}
+.faq-q.active .faq-icon { background: var(--navy); border-color: var(--navy); color: var(--white); transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  font-size: 14px; color: var(--warm-grey); line-height: 1.85; font-weight: 300;
+  transition: max-height 0.5s var(--ease), padding 0.4s;
+  padding: 0 28px;
+}
+.faq-a.open { max-height: 420px; padding: 0 28px 24px; }
+
+/* ══════════════════════════════
+   CTA BANNER
+══════════════════════════════ */
+.cta-banner {
+  background: linear-gradient(135deg, var(--charcoal) 0%, var(--navy) 60%, var(--navy-mid) 100%);
+  padding: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.cta-banner::before {
+  content: 'NRI';
+  position: absolute; right: -24px; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-serif); font-size: 320px; font-weight: 600;
+  color: rgba(74,144,196,0.04); line-height: 1; pointer-events: none; letter-spacing: -16px;
+}
+.cta-banner::after {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+  background: linear-gradient(to bottom, var(--sky), transparent);
+}
+.cta-title { font-family: var(--font-serif); font-size: clamp(34px, 4vw, 60px); font-weight: 300; color: var(--white); line-height: 1.08; }
+.cta-title em { font-style: italic; color: var(--sky); }
+.cta-form { display: flex; flex-direction: column; gap: 12px; }
+.cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cta-form input, .cta-form select {
+  width: 100%; padding: 14px 16px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(74,144,196,0.22);
+  font-family: var(--font-sans); font-size: 14px; color: var(--white);
+  outline: none; appearance: none; transition: border-color 0.3s, background 0.3s;
+}
+.cta-form input::placeholder { color: rgba(200,216,236,0.35); }
+.cta-form select { color: rgba(200,216,236,0.6); }
+.cta-form select option { background: var(--navy); color: var(--white); }
+.cta-form input:focus, .cta-form select:focus { border-color: var(--sky); background: rgba(74,144,196,0.1); }
+.cta-submit {
+  width: 100%; padding: 16px; background: var(--sky); color: var(--white);
+  border: none; font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase; cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.cta-submit:hover { background: #5BA5D8; transform: translateY(-1px); }
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer { background: var(--deep); padding: 72px 80px 0; border-top: 1px solid rgba(74,144,196,0.1); }
+.footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 56px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.footer-brand-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-bottom: 18px; }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,0.28); line-height: 1.8; font-weight: 300; margin-bottom: 24px; }
+.footer-socials { display: flex; gap: 8px; }
+.f-social {
+  width: 36px; height: 36px; border: 1px solid rgba(74,144,196,0.15);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.f-social:hover { border-color: var(--sky); background: rgba(74,144,196,0.12); }
+.footer-col h5 { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 20px; opacity: 0.8; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-col a { font-size: 13px; color: rgba(255,255,255,0.28); text-decoration: none; transition: color 0.3s; font-weight: 300; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 0; font-size: 11px; color: rgba(255,255,255,0.2);
+}
+.footer-bottom a { color: rgba(255,255,255,0.28); text-decoration: none; transition: color 0.3s; }
+.footer-bottom a:hover { color: var(--sky); }
+
+/* ══════════════════════════════
+   COMPARISON TABLE — MOBILE SCROLL
+══════════════════════════════ */
+.compare-wrap {
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 2px;
+}
+.compare-table { min-width: 480px; }
+
+/* ══════════════════════════════
+   RESPONSIVE — TABLET (≤1100px)
+══════════════════════════════ */
+@media (max-width: 1100px) {
+  /* Nav */
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+
+  /* Hero — stack vertically */
+  .hero { grid-template-columns: 1fr; }
+  .hero::after { display: none; }
+  .hero-content { padding: 60px 40px 48px; }
+  .hero-panel {
+    width: 100%;
+    border-top: 2px solid var(--sky);
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+    min-height: unset;
+  }
+  .hero-panel .panel-head { padding: 32px 40px 26px; }
+  .hero-panel .panel-body { padding: 28px 40px 36px; }
+  .hero-panel .field-row { grid-template-columns: 1fr 1fr; }
+
+  /* Trust strip — 2×2 */
+  .trust-strip { grid-template-columns: 1fr 1fr; }
+  .trust-cell:nth-child(2) { border-right: none; }
+  .trust-cell:nth-child(3) { border-top: 1px solid var(--border); }
+  .trust-cell:nth-child(4) { border-right: none; border-top: 1px solid var(--border); }
+
+  /* Sections */
+  .section { padding: 72px 40px; }
+  .head-row { flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 48px; }
+
+  /* Packages — 2 columns */
+  .pkg-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Process — single column list */
+  .process-steps { grid-template-columns: 1fr; gap: 0; }
+  .process-steps::before { display: none; }
+  .process-step {
+    flex-direction: row; text-align: left;
+    align-items: flex-start; gap: 20px;
+    padding: 20px 0; border-bottom: 1px solid var(--border);
+  }
+  .process-step:last-child { border-bottom: none; }
+  .p-num { margin-bottom: 0; flex-shrink: 0; }
+
+  /* Why grid — single col */
+  .why-grid { grid-template-columns: 1fr; }
+  .why-card { padding: 40px 32px; }
+
+  /* Cities — 2×3 */
+  .cities-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Services — 2×4 */
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Testimonials — single col */
+  .testi-grid { grid-template-columns: 1fr; }
+
+  /* CTA Banner */
+  .cta-banner { grid-template-columns: 1fr; padding: 56px 40px; gap: 40px; }
+  .cta-row { grid-template-columns: 1fr 1fr; }
+
+  /* Footer */
+  footer { padding: 56px 40px 0; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+/* ══════════════════════════════
+   RESPONSIVE — MOBILE (≤768px)
+══════════════════════════════ */
+@media (max-width: 768px) {
+  /* Nav */
+  nav { height: 64px; padding: 0 20px; }
+  .nav-logo svg { height: 36px; }
+  .nav-logo-name { font-size: 12px; letter-spacing: 5px; }
+
+  /* Hero */
+  .hero-content { padding: 48px 24px 40px; }
+  .hero-h1 { font-size: clamp(34px, 8vw, 52px); margin-bottom: 20px; }
+  .hero-p { font-size: 14px; margin-bottom: 40px; }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .hero-stat {
+    padding: 0 16px 0 0;
+    margin: 0 16px 0 0;
+    border-right: 1px solid rgba(74,144,196,0.2);
+  }
+  .hero-stat:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+  .stat-num { font-size: 26px; }
+  .stat-lbl { font-size: 9px; }
+
+  /* Hero panel form — tighter padding */
+  .panel-head { padding: 26px 24px 20px; }
+  .panel-body { padding: 22px 24px 28px; }
+  .nri-tabs { grid-template-columns: 1fr 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .field-row .field { margin-bottom: 16px; }
+
+  /* Trust */
+  .trust-cell { padding: 24px 20px; gap: 14px; }
+  .trust-n { font-size: 30px; }
+
+  /* Sections */
+  .section { padding: 56px 24px; }
+  .head-row { margin-bottom: 36px; }
+  .s-sub { font-size: 14px; }
+
+  /* Packages — single col */
+  .pkg-grid { grid-template-columns: 1fr; }
+  .pkg-card { padding: 32px 28px; }
+
+  /* Process */
+  .process-step { gap: 16px; padding: 18px 0; }
+  .p-num { width: 46px; height: 46px; font-size: 18px; }
+
+  /* Why cards */
+  .why-card { padding: 32px 24px; }
+  .why-title { font-size: 20px; }
+
+  /* Cities — single col */
+  .cities-grid { grid-template-columns: 1fr; }
+  .city-card { padding: 28px 24px; }
+  .city-name { font-size: 22px; }
+
+  /* Comparison table */
+  .compare-table th, .compare-table td { padding: 14px 16px; font-size: 12px; }
+
+  /* Services — 2×4 still works */
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .svc-tile { padding: 24px 20px; }
+
+  /* Testimonials */
+  .testi-card { padding: 28px 24px; }
+
+  /* FAQ */
+  .faq-q { padding: 18px 20px; font-size: 14px; }
+  .faq-a { padding: 0 20px; }
+  .faq-a.open { padding: 0 20px 20px; }
+
+  /* CTA Banner */
+  .cta-banner { padding: 48px 24px; gap: 32px; }
+  .cta-banner::before { font-size: 180px; }
+  .cta-row { grid-template-columns: 1fr; }
+  .cta-title { font-size: clamp(28px, 6vw, 44px); }
+
+  /* Footer */
+  footer { padding: 48px 24px 0; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+/* ══════════════════════════════
+   RESPONSIVE — SMALL MOBILE (≤480px)
+══════════════════════════════ */
+@media (max-width: 480px) {
+  /* Nav */
+  nav { padding: 0 16px; }
+  .nav-logo-name { letter-spacing: 4px; font-size: 11px; }
+
+  /* Hero — reduce padding, keep legible */
+  .hero-content { padding: 40px 16px 36px; }
+  .hero-eyebrow { font-size: 9px; letter-spacing: 3px; }
+  .hero-h1 { font-size: clamp(30px, 9vw, 42px); line-height: 1.1; }
+  .hero-p { font-size: 13.5px; line-height: 1.8; margin-bottom: 36px; }
+  .hero-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .stat-num { font-size: 22px; }
+  .stat-lbl { font-size: 8px; letter-spacing: 1px; }
+
+  /* Panel */
+  .panel-head { padding: 22px 16px 18px; }
+  .panel-body { padding: 18px 16px 24px; }
+  .panel-title { font-size: 19px; }
+
+  /* Trust — single col */
+  .trust-strip { grid-template-columns: 1fr; }
+  .trust-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .trust-cell:last-child { border-bottom: none; }
+
+  /* Sections */
+  .section { padding: 48px 16px; }
+  .s-title { font-size: clamp(26px, 7vw, 40px); }
+
+  /* Packages */
+  .pkg-card { padding: 28px 20px; }
+  .pkg-name { font-size: 20px; }
+
+  /* Why */
+  .why-card { padding: 28px 20px; }
+
+  /* Cities */
+  .city-card { padding: 24px 20px; }
+
+  /* Services — single col on very small */
+  .services-grid { grid-template-columns: 1fr; }
+  .svc-tile { padding: 22px 18px; }
+
+  /* FAQ */
+  .faq-q { padding: 16px 16px; font-size: 13px; }
+  .faq-icon { width: 26px; height: 26px; flex-shrink: 0; }
+
+  /* CTA */
+  .cta-banner { padding: 40px 16px; }
+  .cta-banner::before { display: none; }
+  .cta-form input, .cta-form select { padding: 12px 14px; }
+
+  /* Footer */
+  footer { padding: 40px 16px 0; }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .footer-brand { grid-column: auto; }
+  .footer-col { padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .footer-col:last-child { border-bottom: none; }
+}
+
+/* ══════════════════════════════
+   TOUCH DEVICE ENHANCEMENTS
+══════════════════════════════ */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger tap targets */
+  .pkg-cta,
+  .form-submit,
+  .cta-submit,
+  .faq-q,
+  .nri-tab { min-height: 48px; }
+
+  /* Prevent iOS zoom on input focus */
+  .field input,
+  .field select,
+  .cta-form input,
+  .cta-form select { font-size: 16px !important; }
+
+  /* Remove hover-only transforms that feel broken on touch */
+  .pkg-card:hover { transform: none; box-shadow: none; }
+  .city-card:hover { transform: none; box-shadow: none; }
+  .svc-tile:hover { background: var(--white); }
+  .svc-tile:hover .svc-name { color: var(--charcoal); }
+  .svc-tile:hover .svc-desc { color: var(--warm-grey); }
+  .svc-tile:hover .svc-arrow { color: rgba(0,0,0,0.1); transform: none; }
+  .nav-cta:hover { transform: none; }
+  .form-submit:hover { transform: none; }
+  .cta-submit:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollBar"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Home</a>
+  <a href="#">Buy</a>
+  <a href="#">Rent</a>
+  <a href="#">New Projects</a>
+  <a href="#" class="active">NRI Services</a>
+  <a href="#" class="nav-cta">Talk to Expert</a>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 80 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="8,54 40,10 72,54" stroke="#0D2B4E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <line x1="25" y1="64" x2="55" y2="64" stroke="#0D2B4E" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-name">HOMEXO</span>
+  </a>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Buy</a>
+    <a href="#">Rent</a>
+    <a href="#">New Projects</a>
+    <a href="#" class="active">NRI Services</a>
+    <a href="#" class="nav-cta">Talk to Expert</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-ring"></div>
+    <div class="hero-bg-ring"></div>
+    <div class="hero-bg-ring"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="eyebrow-line"></span>NRI Property Services</div>
+    <h1 class="hero-h1">Own Indian Property.<br>Manage It From<br><em>Anywhere</em> in the World.</h1>
+    <p class="hero-p">Rent it, sell it, buy it — our dedicated managers handle every aspect of your Indian property remotely. Zero brokerage. Verified tenants. Full legal compliance. Total peace of mind.</p>
+
+  </div>
+
+  <div class="hero-panel">
+    <div class="panel-head">
+      <div class="panel-title">Get Free Expert Callback</div>
+      <div class="panel-sub">Our NRI specialist will call you within 2 hours — at your time zone</div>
+    </div>
+    <div class="panel-body">
+      <div class="nri-tabs">
+        <button class="nri-tab active" onclick="selectTab(this)">Rent Out</button>
+        <button class="nri-tab" onclick="selectTab(this)">Sell</button>
+        <button class="nri-tab" onclick="selectTab(this)">Buy</button>
+        <button class="nri-tab" onclick="selectTab(this)">Legal / Tax</button>
+      </div>
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" placeholder="Your Name">
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <div class="phone-wrap">
+          <select class="phone-code">
+            <option value="+91">🇮🇳 India (+91)</option>
+            <option value="+1">🇺🇸 United States (+1)</option>
+            <option value="+1">🇨🇦 Canada (+1)</option>
+            <option value="+44">🇬🇧 United Kingdom (+44)</option>
+            <option value="+971">🇦🇪 UAE (+971)</option>
+            <option value="+65">🇸🇬 Singapore (+65)</option>
+            <option value="+61">🇦🇺 Australia (+61)</option>
+            <option value="+64">🇳🇿 New Zealand (+64)</option>
+            <option value="+49">🇩🇪 Germany (+49)</option>
+            <option value="+31">🇳🇱 Netherlands (+31)</option>
+            <option value="+33">🇫🇷 France (+33)</option>
+            <option value="+41">🇨🇭 Switzerland (+41)</option>
+            <option value="+46">🇸🇪 Sweden (+46)</option>
+            <option value="+47">🇳🇴 Norway (+47)</option>
+            <option value="+45">🇩🇰 Denmark (+45)</option>
+            <option value="+60">🇲🇾 Malaysia (+60)</option>
+            <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
+            <option value="+974">🇶🇦 Qatar (+974)</option>
+            <option value="+973">🇧🇭 Bahrain (+973)</option>
+            <option value="+968">🇴🇲 Oman (+968)</option>
+            <option value="+965">🇰🇼 Kuwait (+965)</option>
+            <option value="+27">🇿🇦 South Africa (+27)</option>
+            <option value="+81">🇯🇵 Japan (+81)</option>
+            <option value="+82">🇰🇷 South Korea (+82)</option>
+            <option value="+55">🇧🇷 Brazil (+55)</option>
+            <option value="+52">🇲🇽 Mexico (+52)</option>
+            <option value="+54">🇦🇷 Argentina (+54)</option>
+            <option value="+39">🇮🇹 Italy (+39)</option>
+            <option value="+34">🇪🇸 Spain (+34)</option>
+            <option value="+351">🇵🇹 Portugal (+351)</option>
+            <option value="+32">🇧🇪 Belgium (+32)</option>
+            <option value="+43">🇦🇹 Austria (+43)</option>
+            <option value="+48">🇵🇱 Poland (+48)</option>
+            <option value="+420">🇨🇿 Czech Republic (+420)</option>
+            <option value="+36">🇭🇺 Hungary (+36)</option>
+            <option value="+40">🇷🇴 Romania (+40)</option>
+            <option value="+30">🇬🇷 Greece (+30)</option>
+            <option value="+90">🇹🇷 Turkey (+90)</option>
+            <option value="+380">🇺🇦 Ukraine (+380)</option>
+            <option value="+7">🇷🇺 Russia (+7)</option>
+            <option value="+86">🇨🇳 China (+86)</option>
+            <option value="+852">🇭🇰 Hong Kong (+852)</option>
+            <option value="+853">🇲🇴 Macau (+853)</option>
+            <option value="+886">🇹🇼 Taiwan (+886)</option>
+            <option value="+63">🇵🇭 Philippines (+63)</option>
+            <option value="+66">🇹🇭 Thailand (+66)</option>
+            <option value="+62">🇮🇩 Indonesia (+62)</option>
+            <option value="+84">🇻🇳 Vietnam (+84)</option>
+            <option value="+95">🇲🇲 Myanmar (+95)</option>
+            <option value="+880">🇧🇩 Bangladesh (+880)</option>
+            <option value="+94">🇱🇰 Sri Lanka (+94)</option>
+            <option value="+977">🇳🇵 Nepal (+977)</option>
+            <option value="+92">🇵🇰 Pakistan (+92)</option>
+            <option value="+93">🇦🇫 Afghanistan (+93)</option>
+            <option value="+98">🇮🇷 Iran (+98)</option>
+            <option value="+964">🇮🇶 Iraq (+964)</option>
+            <option value="+962">🇯🇴 Jordan (+962)</option>
+            <option value="+961">🇱🇧 Lebanon (+961)</option>
+            <option value="+972">🇮🇱 Israel (+972)</option>
+            <option value="+20">🇪🇬 Egypt (+20)</option>
+            <option value="+212">🇲🇦 Morocco (+212)</option>
+            <option value="+213">🇩🇿 Algeria (+213)</option>
+            <option value="+216">🇹🇳 Tunisia (+216)</option>
+            <option value="+234">🇳🇬 Nigeria (+234)</option>
+            <option value="+254">🇰🇪 Kenya (+254)</option>
+            <option value="+255">🇹🇿 Tanzania (+255)</option>
+            <option value="+256">🇺🇬 Uganda (+256)</option>
+            <option value="+233">🇬🇭 Ghana (+233)</option>
+            <option value="+251">🇪🇹 Ethiopia (+251)</option>
+            <option value="+1-876">🇯🇲 Jamaica (+1-876)</option>
+            <option value="+1-868">🇹🇹 Trinidad & Tobago (+1-868)</option>
+            <option value="+592">🇬🇾 Guyana (+592)</option>
+            <option value="+597">🇸🇷 Suriname (+597)</option>
+            <option value="+675">🇵🇬 Papua New Guinea (+675)</option>
+            <option value="+679">🇫🇯 Fiji (+679)</option>
+          </select>
+          <input type="tel" placeholder="Phone number" class="phone-num">
+        </div>
+      </div>
+      <div class="field">
+        <label>WhatsApp Number</label>
+        <div class="phone-wrap">
+          <select class="phone-code">
+            <option value="+91">🇮🇳 India (+91)</option>
+            <option value="+1">🇺🇸 United States (+1)</option>
+            <option value="+1">🇨🇦 Canada (+1)</option>
+            <option value="+44">🇬🇧 United Kingdom (+44)</option>
+            <option value="+971">🇦🇪 UAE (+971)</option>
+            <option value="+65">🇸🇬 Singapore (+65)</option>
+            <option value="+61">🇦🇺 Australia (+61)</option>
+            <option value="+64">🇳🇿 New Zealand (+64)</option>
+            <option value="+49">🇩🇪 Germany (+49)</option>
+            <option value="+31">🇳🇱 Netherlands (+31)</option>
+            <option value="+33">🇫🇷 France (+33)</option>
+            <option value="+41">🇨🇭 Switzerland (+41)</option>
+            <option value="+46">🇸🇪 Sweden (+46)</option>
+            <option value="+47">🇳🇴 Norway (+47)</option>
+            <option value="+45">🇩🇰 Denmark (+45)</option>
+            <option value="+60">🇲🇾 Malaysia (+60)</option>
+            <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
+            <option value="+974">🇶🇦 Qatar (+974)</option>
+            <option value="+973">🇧🇭 Bahrain (+973)</option>
+            <option value="+968">🇴🇲 Oman (+968)</option>
+            <option value="+965">🇰🇼 Kuwait (+965)</option>
+            <option value="+27">🇿🇦 South Africa (+27)</option>
+            <option value="+81">🇯🇵 Japan (+81)</option>
+            <option value="+82">🇰🇷 South Korea (+82)</option>
+            <option value="+55">🇧🇷 Brazil (+55)</option>
+            <option value="+52">🇲🇽 Mexico (+52)</option>
+            <option value="+54">🇦🇷 Argentina (+54)</option>
+            <option value="+39">🇮🇹 Italy (+39)</option>
+            <option value="+34">🇪🇸 Spain (+34)</option>
+            <option value="+351">🇵🇹 Portugal (+351)</option>
+            <option value="+32">🇧🇪 Belgium (+32)</option>
+            <option value="+43">🇦🇹 Austria (+43)</option>
+            <option value="+48">🇵🇱 Poland (+48)</option>
+            <option value="+420">🇨🇿 Czech Republic (+420)</option>
+            <option value="+36">🇭🇺 Hungary (+36)</option>
+            <option value="+40">🇷🇴 Romania (+40)</option>
+            <option value="+30">🇬🇷 Greece (+30)</option>
+            <option value="+90">🇹🇷 Turkey (+90)</option>
+            <option value="+380">🇺🇦 Ukraine (+380)</option>
+            <option value="+7">🇷🇺 Russia (+7)</option>
+            <option value="+86">🇨🇳 China (+86)</option>
+            <option value="+852">🇭🇰 Hong Kong (+852)</option>
+            <option value="+853">🇲🇴 Macau (+853)</option>
+            <option value="+886">🇹🇼 Taiwan (+886)</option>
+            <option value="+63">🇵🇭 Philippines (+63)</option>
+            <option value="+66">🇹🇭 Thailand (+66)</option>
+            <option value="+62">🇮🇩 Indonesia (+62)</option>
+            <option value="+84">🇻🇳 Vietnam (+84)</option>
+            <option value="+95">🇲🇲 Myanmar (+95)</option>
+            <option value="+880">🇧🇩 Bangladesh (+880)</option>
+            <option value="+94">🇱🇰 Sri Lanka (+94)</option>
+            <option value="+977">🇳🇵 Nepal (+977)</option>
+            <option value="+92">🇵🇰 Pakistan (+92)</option>
+            <option value="+93">🇦🇫 Afghanistan (+93)</option>
+            <option value="+98">🇮🇷 Iran (+98)</option>
+            <option value="+964">🇮🇶 Iraq (+964)</option>
+            <option value="+962">🇯🇴 Jordan (+962)</option>
+            <option value="+961">🇱🇧 Lebanon (+961)</option>
+            <option value="+972">🇮🇱 Israel (+972)</option>
+            <option value="+20">🇪🇬 Egypt (+20)</option>
+            <option value="+212">🇲🇦 Morocco (+212)</option>
+            <option value="+213">🇩🇿 Algeria (+213)</option>
+            <option value="+216">🇹🇳 Tunisia (+216)</option>
+            <option value="+234">🇳🇬 Nigeria (+234)</option>
+            <option value="+254">🇰🇪 Kenya (+254)</option>
+            <option value="+255">🇹🇿 Tanzania (+255)</option>
+            <option value="+256">🇺🇬 Uganda (+256)</option>
+            <option value="+233">🇬🇭 Ghana (+233)</option>
+            <option value="+251">🇪🇹 Ethiopia (+251)</option>
+            <option value="+1-876">🇯🇲 Jamaica (+1-876)</option>
+            <option value="+1-868">🇹🇹 Trinidad & Tobago (+1-868)</option>
+            <option value="+592">🇬🇾 Guyana (+592)</option>
+            <option value="+597">🇸🇷 Suriname (+597)</option>
+            <option value="+675">🇵🇬 Papua New Guinea (+675)</option>
+            <option value="+679">🇫🇯 Fiji (+679)</option>
+          </select>
+          <input type="tel" placeholder="WhatsApp number" class="phone-num">
+        </div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" placeholder="you@email.com">
+      </div>
+      <div class="field">
+        <label>Property City</label>
+        <select>
+          <option value="">Select City</option>
+          <option>Bengaluru</option>
+          <option>Mumbai</option>
+          <option>Delhi NCR</option>
+          <option>Chennai</option>
+          <option>Hyderabad</option>
+          <option>Pune</option>
+        </select>
+      </div>
+      <button class="form-submit">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.1a16 16 0 006 6l.53-.54a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Request Free Callback
+      </button>
+      <div class="form-note">International calls at no extra cost &nbsp;·&nbsp; Your data is safe with us</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST STRIP ── -->
+<div class="trust-strip">
+  <div class="trust-cell">
+    <div class="trust-n">01</div>
+    <div>
+      <div class="trust-title">Zero Brokerage</div>
+      <div class="trust-desc">No commission on rent or sale proceeds — transparent flat service fees, always disclosed upfront.</div>
+    </div>
+  </div>
+  <div class="trust-cell">
+    <div class="trust-n">02</div>
+    <div>
+      <div class="trust-title">Dedicated Relationship Manager</div>
+      <div class="trust-desc">A single point of contact handles your property end-to-end and keeps you updated.</div>
+    </div>
+  </div>
+  <div class="trust-cell">
+    <div class="trust-n">03</div>
+    <div>
+      <div class="trust-title">NRI Time-Zone Support</div>
+      <div class="trust-desc">Toll-free international calls — we work around your schedule, wherever you are in the world.</div>
+    </div>
+  </div>
+  <div class="trust-cell">
+    <div class="trust-n">04</div>
+    <div>
+      <div class="trust-title">Legal & FEMA Compliant</div>
+      <div class="trust-desc">TDS, capital gains, POA, and repatriation handled by certified experts who specialise in NRI law.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SERVICE PACKAGES ── -->
+<section class="section s-white" id="packages">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">Service Packages</div>
+      <h2 class="s-title">Choose Your <em>NRI</em> Plan</h2>
+      <p class="s-sub">Comprehensive packages for every stage of your Indian property journey — from renting out to selling, buying, and legal compliance.</p>
+    </div>
+  </div>
+  <div class="pkg-grid">
+    <div class="pkg-card popular">
+      <div class="pkg-badge">Most Popular</div>
+      <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="pkg-name">Property Management</div>
+      <div class="pkg-tag">Complete hands-off management from abroad</div>
+      <div class="pkg-rule"></div>
+      <ul class="pkg-features">
+        <li>Lifetime tenant search & background verification</li>
+        <li>On-time rent collection & direct bank transfer</li>
+        <li>Move-in, move-out and periodic inspections</li>
+        <li>Maintenance & repair coordination</li>
+        <li>Free rental agreement drafting</li>
+        <li>Monthly property status reports</li>
+      </ul>
+      <button class="pkg-cta">Get Started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="pkg-name">Sell Your Property</div>
+      <div class="pkg-tag">Best price, fastest closure — fully remote</div>
+      <div class="pkg-rule"></div>
+      <ul class="pkg-features">
+        <li>Premium listing on India's top platforms</li>
+        <li>Dedicated RM for buyer search & visits</li>
+        <li>Virtual property tour coordination</li>
+        <li>Price negotiation & deal closure</li>
+        <li>Complete legal & documentation support</li>
+        <li>Guaranteed buyers or money-back</li>
+      </ul>
+      <button class="pkg-cta">Get Started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div class="pkg-name">Buy Property in India</div>
+      <div class="pkg-tag">Invest with confidence from miles away</div>
+      <div class="pkg-rule"></div>
+      <ul class="pkg-features">
+        <li>6,000+ verified builder projects</li>
+        <li>Dedicated RM from shortlisting to registration</li>
+        <li>Video call & virtual site tours</li>
+        <li>Due diligence & title verification</li>
+        <li>Home loan & pre-approval assistance</li>
+        <li>FEMA & RBI compliance support</li>
+      </ul>
+      <button class="pkg-cta">Get Started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="pkg-card popular">
+      <div class="pkg-badge">Recommended</div>
+      <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="pkg-name">Legal & Tax Suite</div>
+      <div class="pkg-tag">Full NRI compliance — handled end-to-end</div>
+      <div class="pkg-rule"></div>
+      <ul class="pkg-features">
+        <li>Power of Attorney drafting & registration</li>
+        <li>Lower TDS Certificate application</li>
+        <li>NRI ITR filing & capital gains advisory</li>
+        <li>Khata / mutation transfer</li>
+        <li>BESCOM & property tax name change</li>
+        <li>6-month post-transaction advocate support</li>
+      </ul>
+      <button class="pkg-cta">Get Started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="pkg-name">Home Services</div>
+      <div class="pkg-tag">Keep your vacant property in prime condition</div>
+      <div class="pkg-rule"></div>
+      <ul class="pkg-features">
+        <li>Deep cleaning & painting</li>
+        <li>Plumbing, electrical & appliance repairs</li>
+        <li>Damage assessment & photo reports</li>
+        <li>Interior design & renovation</li>
+        <li>Packers & movers coordination</li>
+      </ul>
+      <button class="pkg-cta">Get Started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div class="pkg-name">NRI Consultation</div>
+      <div class="pkg-tag">Expert advice before you commit to any deal</div>
+      <div class="pkg-rule"></div>
+      <ul class="pkg-features">
+        <li>30-minute call with a senior NRI specialist</li>
+        <li>Property valuation guidance</li>
+        <li>Tax & repatriation planning overview</li>
+        <li>FEMA eligibility assessment</li>
+        <li>Red-flag report on proposed deal terms</li>
+      </ul>
+      <button class="pkg-cta">Get Started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section s-cream" id="process">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">How It Works</div>
+      <h2 class="s-title">Your Property Journey, <em>Simplified</em></h2>
+    </div>
+  </div>
+  <div class="process-wrap">
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="p-num">01</div>
+        <div>
+          <div class="p-title">Share Requirements</div>
+          <div class="p-desc">Tell us your property details, city, and what you need — rent, sell, buy, or legal assistance.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="p-num">02</div>
+        <div>
+          <div class="p-title">Meet Your Manager</div>
+          <div class="p-desc">A dedicated relationship manager is assigned — available at your time zone, any day of the week.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="p-num">03</div>
+        <div>
+          <div class="p-title">We Handle On-Ground</div>
+          <div class="p-desc">Property visits, tenant screening, buyer meetings, inspections — all done by our local team.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="p-num">04</div>
+        <div>
+          <div class="p-title">Sign Remotely</div>
+          <div class="p-desc">Agreements executed via Aadhaar eSign or through a POA holder — fully legally valid.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="p-num">05</div>
+        <div>
+          <div class="p-title">Earn from Abroad</div>
+          <div class="p-desc">Rent transferred directly to your NRE/NRO account. Monthly reports keep you fully informed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY NRI ── -->
+<section class="section s-dark" id="why">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">Why It Matters</div>
+      <h2 class="s-title s-title--light">Risks of Managing <em>Indian Property</em> Alone</h2>
+      <p class="s-sub s-sub--dim">Without a trusted on-ground partner, NRI property ownership can quickly become a source of stress, financial loss, and legal liability.</p>
+    </div>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+      <div class="why-title">Unverified Tenants Cost You</div>
+      <div class="why-text">Placing tenants without proper background checks exposes you to non-payment, property damage, and long legal eviction battles. Our 7-point verification process — CIBIL, employment, identity, and references — protects your asset from the start.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="why-title">NRI Tax Non-Compliance</div>
+      <div class="why-text">Rental income is taxable in India regardless of where you live. Buyers of NRI properties must deduct TDS at up to 20%. Without expert guidance on TDS certificates and ITR filing, you risk significant penalties and blocked repatriation of funds.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="why-title">Vacant Properties Deteriorate</div>
+      <div class="why-text">An unoccupied property without routine maintenance depreciates rapidly. Water damage, encroachment, and unauthorized occupation are real risks. Our periodic inspection and maintenance coordination ensures your property retains its value and remains secure.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="why-title">FEMA & RBI Compliance Gaps</div>
+      <div class="why-text">Transactions involving NRI property are subject to FEMA regulations. Errors in repatriation, incorrect account types (NRE vs NRO), or missing RBI approvals can lead to legal complications. Our specialists ensure every transaction is fully compliant.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CITIES ── -->
+<section class="section s-white" id="cities">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">Locations We Serve</div>
+      <h2 class="s-title">NRI Services <em>by City</em></h2>
+      <p class="s-sub">On-ground experts across India's top property markets, dedicated to managing NRI investments.</p>
+    </div>
+  </div>
+  <div class="cities-grid">
+    <a href="#" class="city-card">
+      <div class="city-name">Bengaluru</div>
+      <div class="city-sub">IT Hub · Whitefield · Sarjapur · Koramangala</div>
+      <ul class="city-list">
+        <li>Highest NRI rental demand in India</li>
+        <li>Strong capital appreciation in tech corridors</li>
+        <li>BBMP & BDA compliance specialists on ground</li>
+      </ul>
+      <div class="city-arrow">→</div>
+    </a>
+    <a href="#" class="city-card">
+      <div class="city-name">Mumbai</div>
+      <div class="city-sub">Financial Capital · Bandra · Powai · Thane</div>
+      <ul class="city-list">
+        <li>India's highest property values</li>
+        <li>Strong rental yields in premium zones</li>
+        <li>Expert MHADA & BMC compliance support</li>
+      </ul>
+      <div class="city-arrow">→</div>
+    </a>
+    <a href="#" class="city-card">
+      <div class="city-name">Delhi NCR</div>
+      <div class="city-sub">Capital Region · Gurgaon · Noida · Dwarka</div>
+      <ul class="city-list">
+        <li>Large NRI-owned property base</li>
+        <li>RERA-registered project expertise</li>
+        <li>MCD & DDA paperwork handled end-to-end</li>
+      </ul>
+      <div class="city-arrow">→</div>
+    </a>
+    <a href="#" class="city-card">
+      <div class="city-name">Chennai</div>
+      <div class="city-sub">Manufacturing Hub · OMR · Anna Nagar</div>
+      <ul class="city-list">
+        <li>Stable, consistent rental returns</li>
+        <li>High NRI investment from USA & UK diaspora</li>
+        <li>CMDA & DTCP approval verification experts</li>
+      </ul>
+      <div class="city-arrow">→</div>
+    </a>
+    <a href="#" class="city-card">
+      <div class="city-name">Hyderabad</div>
+      <div class="city-sub">HITEC City · Gachibowli · Financial District</div>
+      <ul class="city-list">
+        <li>Fastest growing NRI real estate market</li>
+        <li>Strong USD to INR returns on investments</li>
+        <li>GHMC & RERA specialists on ground</li>
+      </ul>
+      <div class="city-arrow">→</div>
+    </a>
+    <a href="#" class="city-card">
+      <div class="city-name">Pune</div>
+      <div class="city-sub">Education & IT · Kothrud · Wakad · Hinjewadi</div>
+      <ul class="city-list">
+        <li>Affordable entry point for NRI investors</li>
+        <li>Strong student & IT professional rental demand</li>
+        <li>PMC compliance & Khata transfer support</li>
+      </ul>
+      <div class="city-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<!-- ── COMPARISON ── -->
+<section class="section s-cream">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">Why HOMEXO</div>
+      <h2 class="s-title">HOMEXO vs <em>Traditional Brokers</em></h2>
+      <p class="s-sub">Built specifically for NRIs — transparent, tech-enabled, and with zero brokerage on your side.</p>
+    </div>
+  </div>
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="th-homex">HOMEXO</th>
+          <th>Traditional Broker</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Zero brokerage on rent & sale</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Dedicated Relationship Manager</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Tenant background verification</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>NRI time-zone support</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Legal & tax compliance (FEMA, TDS, ITR)</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Transparent flat pricing</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Direct rent transfer to NRE/NRO account</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td>Guaranteed buyers or money-back</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── ON-DEMAND SERVICES ── -->
+<section class="section s-white">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">À La Carte Services</div>
+      <h2 class="s-title">On-Demand <em>NRI</em> Services</h2>
+      <p class="s-sub">Need a specific service? Pick exactly what you need — no packages, no commitments.</p>
+    </div>
+  </div>
+  <div class="services-grid">
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+      <div class="svc-name">Power of Attorney</div>
+      <div class="svc-desc">Draft and register a General or Special POA so transactions proceed without you being in India.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="svc-name">NRI ITR Filing</div>
+      <div class="svc-desc">Accurate income tax return filing for rental income, capital gains, and overseas income as applicable.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="svc-name">Lower TDS Certificate</div>
+      <div class="svc-desc">Apply for a lower deduction certificate to reduce TDS on property sale — potentially saving lakhs.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div class="svc-name">Property Inspection</div>
+      <div class="svc-desc">Scheduled on-ground inspection with detailed photos and condition report — delivered to you digitally.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="svc-name">Khata Transfer</div>
+      <div class="svc-desc">Transfer BBMP/BDA revenue records to your name after property purchase — handled entirely remotely.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+      <div class="svc-name">Rental Agreement</div>
+      <div class="svc-desc">Professionally drafted, e-stamped rental agreements with Aadhaar eSign — no physical presence needed.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+      <div class="svc-name">Capital Gains Advisory</div>
+      <div class="svc-desc">Expert guidance on long-term vs short-term capital gains, indexation benefits, and reinvestment options.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-tile">
+      <div class="svc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div>
+      <div class="svc-name">Title Verification</div>
+      <div class="svc-desc">30-year ownership chain verification before you commit to buying — includes RERA & encumbrance check.</div>
+      <div class="svc-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="section s-cream">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">Client Stories</div>
+      <h2 class="s-title">Trusted by NRIs <em>Worldwide</em></h2>
+      <p class="s-sub">What our clients say after letting us manage their Indian properties.</p>
+    </div>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">I handed over my Bengaluru apartment to HOMEXO before moving to the US. Within 3 weeks, they found a verified tenant, drafted the agreement remotely, and the rent has been hitting my NRE account on the 1st of every month without fail.</p>
+      <div class="testi-rule"></div>
+      <div class="testi-name">Rajesh Nair</div>
+      <div class="testi-meta">San Jose, California &nbsp;·&nbsp; Whitefield, Bengaluru</div>
+      <span class="testi-tag">Property Management</span>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">Sold my Mumbai flat without visiting India once. The HOMEXO team handled everything — from getting a good buyer to coordinating with my POA holder for the registration. Got 6% above my asking price.</p>
+      <div class="testi-rule"></div>
+      <div class="testi-name">Priya Menon</div>
+      <div class="testi-meta">Dubai, UAE &nbsp;·&nbsp; Powai, Mumbai</div>
+      <span class="testi-tag">Sell Property</span>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">The legal and tax team is exceptional. They got me a Lower TDS Certificate that saved me ₹8 lakhs on my property sale. They also filed my NRI ITR and handled the entire FEMA compliance process. Highly recommend.</p>
+      <div class="testi-rule"></div>
+      <div class="testi-name">Arun Krishnamurthy</div>
+      <div class="testi-meta">London, UK &nbsp;·&nbsp; Anna Nagar, Chennai</div>
+      <span class="testi-tag">Legal & Tax Suite</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="section s-white" id="faq">
+  <div class="head-row">
+    <div>
+      <div class="eyebrow">Got Questions</div>
+      <h2 class="s-title">Frequently Asked <em>Questions</em></h2>
+      <p class="s-sub">Everything NRIs need to know about managing Indian property from abroad.</p>
+    </div>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can an NRI buy property in India?
+        <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      </button>
+      <div class="faq-a">Yes. NRIs can purchase residential and commercial property in India under FEMA guidelines without RBI permission. Agricultural land, plantation property, and farmhouses are excluded. Payments must be made through NRE/NRO accounts or home loan funds — foreign remittances are permitted. HOMEXO manages the entire buying process including title verification, RERA checks, and Sub-Registrar coordination.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What TDS is deducted when an NRI sells property in India?
+        <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      </button>
+      <div class="faq-a">When an NRI sells property, the buyer must deduct TDS at 20% (plus surcharge and cess) for long-term capital gains and 30% for short-term gains — applied on the full sale value, not just the gain. HOMEXO's tax team can apply for a Lower TDS Certificate under Section 197, which can dramatically reduce this deduction based on your actual taxable gain.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How is rent transferred to my overseas bank account?
+        <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      </button>
+      <div class="faq-a">Rent is collected from tenants and transferred to your NRE (repatriable) or NRO (non-repatriable) bank account in India. From your NRE account, funds can be freely repatriated abroad. For NRO accounts, repatriation up to USD 1 million per financial year is permitted under RBI guidelines with a CA certificate. HOMEXO provides monthly rent statements and coordinates all transfers.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What is a Power of Attorney and do I need one?
+        <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      </button>
+      <div class="faq-a">A Power of Attorney (POA) authorizes a trusted person in India to act on your behalf for property transactions — signing agreements, appearing at the Sub-Registrar Office, and handling government paperwork. For NRIs, a registered POA is usually essential for property registration. HOMEXO's advocates draft, notarize, and register your POA, including Apostille where required for foreign-executed documents.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Which cities does HOMEXO serve for NRI property management?
+        <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      </button>
+      <div class="faq-a">HOMEXO currently operates in Bengaluru, Mumbai, Delhi NCR (including Gurgaon and Noida), Chennai, Hyderabad, and Pune. We have dedicated on-ground teams in each city with deep expertise in local regulations, Sub-Registrar procedures, and municipal compliance. If your city is not listed, contact us — we may be able to assist through our extended network.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ── -->
+<div class="cta-banner">
+  <div>
+    <div class="eyebrow">Get Started Today</div>
+    <h2 class="cta-title">Your Property.<br>Our <em>Responsibility.</em></h2>
+  </div>
+  <div class="cta-form">
+    <div class="cta-row">
+      <input type="text" placeholder="Your Full Name">
+      <input type="tel" placeholder="Phone (with country code)">
+    </div>
+    <div class="cta-row">
+      <input type="email" placeholder="Email Address">
+      <select><option>Select Service</option><option>Property Management</option><option>Sell Property</option><option>Buy Property</option><option>Legal / Tax</option><option>Home Services</option><option>Other</option></select>
+    </div>
+    <button class="cta-submit">Get Free Expert Consultation →</button>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="footer-brand-logo">
+        <svg viewBox="0 0 80 70" fill="none" style="height:36px;width:auto;">
+          <polyline points="8,54 40,10 72,54" stroke="#C8D8EC" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <line x1="25" y1="64" x2="55" y2="64" stroke="#C8D8EC" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <span style="font-family:var(--font-sans);font-size:14px;font-weight:600;letter-spacing:6px;color:#C8D8EC;">HOMEXO</span>
+      </a>
+      <p>Connecting exceptional people with extraordinary homes. Trusted by NRIs worldwide for transparent, expert Indian property management.</p>
+      <div class="footer-socials">
+        <div class="f-social"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,216,236,0.5)" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div>
+        <div class="f-social"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,216,236,0.5)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+        <div class="f-social"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,216,236,0.5)" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+        <div class="f-social"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,216,236,0.5)" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></div>
+      </div>
+    </div>
+    <div class="footer-col"><h5>NRI Services</h5><ul><li><a href="#">Property Management</a></li><li><a href="#">Sell Property</a></li><li><a href="#">Buy Property</a></li><li><a href="#">Legal & Tax Suite</a></li><li><a href="#">Home Services</a></li><li><a href="#">Power of Attorney</a></li></ul></div>
+    <div class="footer-col"><h5>Cities</h5><ul><li><a href="#">Bengaluru</a></li><li><a href="#">Mumbai</a></li><li><a href="#">Delhi NCR</a></li><li><a href="#">Chennai</a></li><li><a href="#">Hyderabad</a></li><li><a href="#">Pune</a></li></ul></div>
+    <div class="footer-col"><h5>Resources</h5><ul><li><a href="#">About HOMEXO</a></li><li><a href="#">NRI Property Guide</a></li><li><a href="#">FEMA & RBI Rules</a></li><li><a href="#">Tax Calculator</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 HOMEXO Luxury Real Estate. All rights reserved.</p>
+    <p><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a> &nbsp;·&nbsp; <a href="#">Cookie Policy</a></p>
+  </div>
+</footer>
+
+<script>
+// Scroll progress
+const bar = document.getElementById('scrollBar');
+window.addEventListener('scroll', () => {
+  const s = document.documentElement.scrollTop;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  if (h > 0) bar.style.width = (s / h * 100) + '%';
+}, { passive: true });
+
+// Reveal on scroll
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.pkg-card,.why-card,.city-card,.testi-card,.svc-tile').forEach(el => obs.observe(el));
+
+// Hamburger
+const ham = document.getElementById('hamburger');
+const menu = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => {
+  const open = menu.classList.contains('open');
+  menu.classList.toggle('open', !open);
+  ham.classList.toggle('open', !open);
+  document.body.style.overflow = !open ? 'hidden' : '';
+});
+menu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => { menu.classList.remove('open'); ham.classList.remove('open'); document.body.style.overflow = ''; });
+});
+
+// FAQ
+function toggleFaq(btn) {
+  const a = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('active');
+  document.querySelectorAll('.faq-q').forEach(q => { q.classList.remove('active'); q.nextElementSibling.classList.remove('open'); });
+  if (!isOpen) { btn.classList.add('active'); a.classList.add('open'); }
+}
+
+// Tabs
+function selectTab(el) {
+  el.closest('.nri-tabs').querySelectorAll('.nri-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Package CTAs → scroll to form
+document.querySelectorAll('.pkg-cta').forEach(btn => {
+  btn.addEventListener('click', () => { document.querySelector('.hero-panel').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+});
+</script>
+</body>
+</html>

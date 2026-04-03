@@ -405,12 +405,10 @@
   /* ═══ DEV SLIDER (reuses property-card styles) ═══ */
   .dev-slider-wrapper { overflow:hidden;width:100%; }
   .dev-slider { display:flex;gap:2px;will-change:transform;transition:transform .55s cubic-bezier(.23,1,.32,1); }
-  .dev-slider .property-card { width:calc((100% - 6px) / 4);min-width:calc((100% - 6px) / 4);flex-shrink:0; }
+  .dev-slider .property-card { width:calc((100% - 8px) / 5);min-width:calc((100% - 8px) / 5);flex-shrink:0; }
   @media(max-width:1024px){
     .dev-slider .property-card { width:calc(50% - 1px);min-width:calc(50% - 1px); }
   }
-  /* Developer-specific badge colour override */
-  .dev-badge-featured { background:linear-gradient(90deg,var(--sky),#1A5A9A)!important;color:var(--white)!important; }
 
   /* ═══ SIGNATURE / FEATURED LARGE GRID ═══ */
   .property-grid-featured { display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:2px; }
@@ -790,11 +788,11 @@
     </div>
     <span class="service-label">Security &amp; Surveillance</span>
   </a>
-  <a href="{% url 'pages:home_service' %}" class="service-item-card">
+  <a href="{% url 'pages:nri_service' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/home_services.png' %}" alt="Home Services" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/nri.png' %}" alt="NRI Services" width="52" height="52" decoding="async">
     </div>
-    <span class="service-label">Home Services</span>
+    <span class="service-label">NRI Services</span>
   </a>
 </div>
 
@@ -963,15 +961,15 @@
     <div class="dev-slider" id="devSlider">
       {% for dev in featured_developers %}
       <a href="{% url 'pages:developer_profile' dev.slug %}" class="property-card" style="text-decoration:none;display:block;cursor:pointer;">
-        <div class="property-card-img">
+        <div class="property-card-img" style="height: 160px;">
           {% if dev.logo %}
-          <img src="{{ dev.logo.url }}" alt="{{ dev.name }}" style="width:100%;height:100%;object-fit:contain;padding:20px;background:#0D2B4E;">
+          <img src="{{ dev.logo.url }}" alt="{{ dev.name }}" style="width:100%;height:100%;object-fit:contain;padding:20px;background:var(--white);">
           {% else %}
-          <div style="width:100%;height:100%;background:linear-gradient(135deg,#071929 0%,#0D2B4E 50%,#1A4A7A 100%);display:flex;align-items:center;justify-content:center;">
-            <span style="font-family:'Source Sans 3',sans-serif;font-size:clamp(48px,7vw,80px);font-weight:300;color:rgba(74,144,196,.3);letter-spacing:-3px;">{{ dev.initials }}</span>
+          <div style="width:100%;height:100%;background:var(--white);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'Source Sans 3',sans-serif;font-size:clamp(48px,7vw,80px);font-weight:300;color:var(--navy);letter-spacing:-3px;">{{ dev.initials }}</span>
           </div>
           {% endif %}
-          <div class="property-tag dev-badge-featured">Featured Developer</div>
+
         </div>
         <div class="property-body">
           <div class="property-price" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(74,144,196,.85);">{% if dev.established_year %}Est. {{ dev.established_year }}{% else %}Verified Builder{% endif %}</div>
@@ -1218,7 +1216,7 @@ function slideDev(dir) {
   const wrapper = slider.parentElement;
   const isMobile = window.innerWidth <= 768;
   const isTablet = window.innerWidth <= 1024;
-  const visCount = isMobile ? 1 : (isTablet ? 2 : 4);
+  const visCount = isMobile ? 1 : (isTablet ? 2 : 5);
   const maxIdx   = Math.max(0, totalDevs - visCount);
   devIndex = Math.max(0, Math.min(devIndex + dir, maxIdx));
   const card = slider.querySelector('.property-card');

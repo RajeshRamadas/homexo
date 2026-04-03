@@ -25,3 +25,4 @@ def campaign_detail(request, slug):
         'campaign':   campaign,
         'properties': properties,
     })
+
