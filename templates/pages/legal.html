@@ -142,6 +142,9 @@
   .proc-desc { font-size:13px; color:var(--muted); line-height:1.6; }
   .wa-msg { margin-top:8px; display:inline-flex; align-items:flex-start; gap:6px; background:#e8f5e2; border-radius:6px; padding:7px 10px; font-size:11.5px; color:#1a5c1a; line-height:1.4; max-width:400px; }
   .wa-icon { font-size:13px; flex-shrink:0; }
+  .video-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
+  .video-card { background:var(--ink); border-radius:20px; padding:40px; position:relative; overflow:hidden; }
+  @media (max-width: 768px) { .video-card { padding: 28px 20px; } }
   .proc-visual { position:sticky; top:100px; }
   .verdict-display { background:var(--ink); border-radius:20px; padding:36px; margin-bottom:20px; }
   .verdict-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
@@ -213,25 +216,28 @@
   .fade-up:nth-child(2) { transition-delay:0.1s; }
   .fade-up:nth-child(3) { transition-delay:0.2s; }
   .fade-up:nth-child(4) { transition-delay:0.3s; }
+  .lg-video-call { padding: 96px 60px; }
   @media (max-width: 1024px) {
-    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta { padding:72px 32px; }
+    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta, .lg-video-call { padding:72px 32px; }
     .lg-hero-left { padding:60px 32px; }
     .pkg-grid { grid-template-columns:1fr; }
     .process-grid { grid-template-columns:1fr; }
     .services-grid { grid-template-columns:1fr 1fr; }
     .testi-grid { grid-template-columns:1fr 1fr; }
     .why-grid { grid-template-columns:1fr; }
+    .video-grid { grid-template-columns:1fr; }
     .lg-subnav { padding:0 32px; }
   }
   @media (max-width: 768px) {
     .lg-hero { grid-template-columns:1fr; }
     .lg-hero-right { display:none; }
     .lg-hero-left { padding:48px 20px; }
-    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta { padding:60px 20px; }
+    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta, .lg-video-call { padding:60px 20px; }
     .services-grid { grid-template-columns:1fr; }
     .testi-grid { grid-template-columns:1fr; }
     .proc-visual { display:none; }
     .process-grid { grid-template-columns:1fr; gap:0; }
+    .video-grid { grid-template-columns:1fr; }
     .lg-subnav { padding:0 16px; }
   }
 </style>
@@ -243,6 +249,7 @@
   <div class="lg-subnav">
     <a href="#lg-services">Services</a>
     <a href="#lg-packages">Packages</a>
+    <a href="#lg-video-call">Video Consultation</a>
     <a href="#lg-process">How it works</a>
     <a href="#lg-why">Why HOMEXO</a>
     <a href="#lg-cta">Get Started</a>
@@ -332,6 +339,7 @@
           <li><span class="feat-no">&ndash;</span> SRO field verification</li>
           <li><span class="feat-no">&ndash;</span> Sale Agreement drafting</li>
           <li><span class="feat-no">&ndash;</span> Khata Transfer support</li>
+          <li style="border-top:1px solid rgba(247,244,238,0.08); margin-top:8px; padding-top:8px;"><span class="feat-yes" style="color:var(--gold);">&#9695;</span> <a href="#lg-video-call" style="color:rgba(247,244,238,0.7); text-decoration:none;">1 Video Consultation session</a></li>
         </ul>
         <a href="{% url 'legal_services:request_order' %}?package=starter" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
       </div>
@@ -351,6 +359,7 @@
           <li><span class="feat-yes">&#10003;</span> Buyer-protective Sale Agreement</li>
           <li><span class="feat-yes">&#10003;</span> Khata &amp; property tax records</li>
           <li><span class="feat-no">&ndash;</span> Khata Transfer execution</li>
+          <li style="border-top:1px solid rgba(247,244,238,0.08); margin-top:8px; padding-top:8px;"><span class="feat-yes" style="color:var(--gold);">&#9695;</span> <a href="#lg-video-call" style="color:rgba(247,244,238,0.7); text-decoration:none;">2 Video Consultation sessions</a></li>
         </ul>
         <a href="{% url 'legal_services:request_order' %}?package=pro" class="pkg-cta pkg-cta-gold">Get started &rarr;</a>
       </div>
@@ -368,12 +377,101 @@
           <li><span class="feat-yes">&#10003;</span> Aadhaar eSign for all docs</li>
           <li><span class="feat-yes">&#10003;</span> Secure document vault</li>
           <li><span class="feat-yes">&#10003;</span> 12-month post-purchase helpline</li>
-          <li><span class="feat-yes">&#10003;</span> Dedicated advocate assigned</li>
+          <li><span class="feat-yes">&check;</span> Dedicated advocate assigned</li>
+          <li style="border-top:1px solid rgba(247,244,238,0.08); margin-top:8px; padding-top:8px;"><span class="feat-yes" style="color:var(--gold);">&#9695;</span> <a href="#lg-video-call" style="color:rgba(247,244,238,0.7); text-decoration:none;">3 Video Consultation sessions</a></li>
         </ul>
         <a href="{% url 'legal_services:request_order' %}?package=complete" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
       </div>
     </div>
     <p style="font-size:12px;color:rgba(247,244,238,0.3);margin-top:20px;text-align:center;">* Stamp duty, registration fees, and all government charges billed at actuals separately.</p>
+  </div>
+
+  <!-- VIDEO CALL ADD-ON -->
+  <div id="lg-video-call" class="lg-video-call" style="background:var(--cream);">
+    <div class="lg-section-label"><span class="lg-s-label">Add-on Service</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Not sure where to start?<br><em>Talk to an advocate first.</em></h2>
+    <p class="lg-sub-text" style="margin-bottom:52px;">Book a 30-minute video call with a senior property advocate. Get your specific questions answered before committing to a package — or as a standalone consultation.</p>
+
+    <div class="video-grid">
+
+      <!-- Video call card -->
+      <div class="video-card">
+        <div style="position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%); border-radius:50%;"></div>
+        <div style="position:absolute; bottom:-40px; left:-40px; width:160px; height:160px; background:radial-gradient(circle, rgba(26,92,82,0.18) 0%, transparent 70%); border-radius:50%;"></div>
+        <div style="position:relative; z-index:2;">
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.25); border-radius:99px; padding:6px 14px; margin-bottom:24px;">
+            <span style="font-size:16px;">🎥</span>
+            <span style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);">Video Consultation</span>
+          </div>
+          <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--cream); margin-bottom:6px;">₹999 <span style="font-size:18px; font-weight:300; color:rgba(247,244,238,0.5);">/ session</span></div>
+          <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); margin-bottom:28px;">⏱ 30 minutes · 1-on-1 with advocate</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:32px;">
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Live 1-on-1 video call with a senior property advocate
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Discuss your specific property, documents, or concerns
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Get a risk assessment before buying or placing an order
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Written summary of key points emailed after the call
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> ₹999 credited toward any Shield package if you order within 7 days
+            </li>
+          </ul>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="https://wa.me/918105568225?text=Hi%2C%20I%20want%20to%20book%20a%20video%20consultation%20with%20a%20property%20advocate" target="_blank"
+              style="flex:1; min-width:180px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 20px; background:var(--gold); color:var(--ink); font-size:14px; font-weight:600; border-radius:8px; text-decoration:none; transition:all 0.2s;">
+              📅 Book via WhatsApp
+            </a>
+            <a href="#lg-cta"
+              style="flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 20px; background:transparent; color:var(--cream); font-size:14px; font-weight:400; border-radius:8px; text-decoration:none; border:1px solid rgba(247,244,238,0.2); transition:all 0.2s;">
+              Send Enquiry
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- What to prepare / FAQ -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="background:var(--teal-light); border:1px solid rgba(26,92,82,0.15); border-radius:16px; padding:28px;">
+          <div style="font-size:14px; font-weight:600; color:var(--teal); margin-bottom:16px;">📋 What to bring to the call</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Property address and survey/katha number</li>
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Builder brochure or sale deed copy (if available)</li>
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Your specific concerns or red flags you've noticed</li>
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Questions about EC, RERA, khata, or approvals</li>
+          </ul>
+        </div>
+        <div style="background:white; border:1px solid var(--border-lg); border-radius:16px; padding:28px;">
+          <div style="font-size:14px; font-weight:600; color:var(--ink); margin-bottom:16px;">❓ Common questions answered in calls</div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div>
+              <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:4px;">"Is this property safe to buy?"</div>
+              <div style="font-size:12px; color:var(--muted); line-height:1.5;">Advocate reviews the headline risk profile based on what you share and advises proceed / investigate further / walk away.</div>
+            </div>
+            <div style="border-top:1px solid var(--border-lg); padding-top:14px;">
+              <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:4px;">"What documents should I ask the seller for?"</div>
+              <div style="font-size:12px; color:var(--muted); line-height:1.5;">Get a customized checklist for your specific property type — apartment, plot, resale, or under-construction.</div>
+            </div>
+            <div style="border-top:1px solid var(--border-lg); padding-top:14px;">
+              <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:4px;">"What package do I actually need?"</div>
+              <div style="font-size:12px; color:var(--muted); line-height:1.5;">The advocate recommends the right Shield tier based on your property's complexity — no upselling, just honest advice.</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:12px; padding:16px 20px; display:flex; align-items:center; gap:14px;">
+          <span style="font-size:28px; flex-shrink:0;">🎁</span>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:var(--gold); margin-bottom:4px;">₹999 credited toward your package</div>
+            <div style="font-size:12px; color:var(--muted); line-height:1.5;">Book any Shield package within 7 days of your call and we'll deduct the consultation fee from your order total.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- PROCESS -->
