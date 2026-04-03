@@ -14,7 +14,7 @@ from .models import WishlistItem
 @login_required
 def wishlist_list(request):
     items = WishlistItem.objects.filter(user=request.user).select_related(
-        'property__agent'
+        'property__developer'
     ).prefetch_related('property__images')
     return render(request, 'wishlist/list.html', {'items': items})
 
