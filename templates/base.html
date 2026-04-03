@@ -529,7 +529,6 @@
       <h5>Company</h5>
       <ul>
         <li><a href="{% url 'pages:about' %}">About HOMEXO</a></li>
-        <li><a href="{% url 'agents:list' %}">Our Agents</a></li>
         <li><a href="{% url 'pages:developers' %}">Developers</a></li>
         <li><a href="{% url 'blog:list' %}">Blog &amp; News</a></li>
         <li><a href="{% url 'pages:contact' %}">Contact</a></li>
@@ -549,7 +548,7 @@
   <div class="footer-bottom">
     <p>© {% now "Y" %} HOMEXO Luxury Real Estate. All rights reserved.</p>
     <p>Made with ❤️ &nbsp;·&nbsp; Powered by <a href="https://marketingadda.com/" target="_blank" rel="noopener">Marketingadda</a></p>
-    <p><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a></p>
+    <p><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="{% url 'pages:terms_and_conditions' %}">Terms &amp; Conditions</a></p>
   </div>
 </footer>
 

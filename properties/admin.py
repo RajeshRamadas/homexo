@@ -90,7 +90,7 @@ class PropertyAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Basic Info', {
             'fields': ('title', 'slug', 'developer', 'listing_type', 'property_type', 'description',
-                       'owner', 'agent', 'status')
+                       'owner', 'status')
         }),
         ('Pricing', {
             'fields': ('price', 'display_price', 'price_label', 'price_on_req')

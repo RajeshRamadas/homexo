@@ -42,7 +42,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
         return PropertyDetailSerializer
 
     def get_queryset(self):
-        qs = super().get_queryset().select_related('agent__user').prefetch_related('images', 'tags')
+        qs = super().get_queryset().select_related('developer').prefetch_related('images', 'tags')
 
         # Filter params
         listing_type  = self.request.query_params.get('type')

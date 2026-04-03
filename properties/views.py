@@ -29,7 +29,7 @@ PropertyFeatureFormSet = inlineformset_factory(
 
 def property_list(request):
     """Main listing page with search & filters."""
-    qs = Property.objects.filter(status='active').select_related('agent').prefetch_related('images', 'tags')
+    qs = Property.objects.filter(status='active').select_related('developer').prefetch_related('images', 'tags')
 
     form = PropertySearchForm(request.GET or None)
 

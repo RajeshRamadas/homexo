@@ -8,7 +8,7 @@ from .models import Enquiry
 @admin.register(Enquiry)
 class EnquiryAdmin(admin.ModelAdmin):
     list_display  = ('name', 'email', 'phone', 'enquiry_type', 'budget',
-                     'property', 'agent', 'status', 'created_at')
+                     'property', 'status', 'created_at')
     list_filter   = ('status', 'enquiry_type', 'created_at')
     search_fields = ('name', 'email', 'phone', 'message')
     list_editable = ('status',)
@@ -18,7 +18,7 @@ class EnquiryAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Contact',  {'fields': ('name', 'email', 'phone', 'user')}),
-        ('Details',  {'fields': ('enquiry_type', 'budget', 'message', 'property', 'agent')}),
+        ('Details',  {'fields': ('enquiry_type', 'budget', 'message', 'property')}),
         ('CRM',      {'fields': ('status', 'notes')}),
         ('Meta',     {'fields': ('created_at', 'updated_at'), 'classes': ('collapse',)}),
     )

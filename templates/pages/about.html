@@ -347,41 +347,9 @@
           <div class="ab-service-name">Home Services</div>
           <p class="ab-service-desc">Plumbing, electrical, painting, AC service, and 5+ more home maintenance services — 500+ vetted professionals at your doorstep.</p>
         </a>
-        <a href="{% url 'agents:list' %}" class="ab-service-card">
-          <div class="ab-service-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <div class="ab-service-name">Our Agent Network</div>
-          <p class="ab-service-desc">RERA-certified agents across India's top cities with deep local knowledge and a client-first approach to every transaction.</p>
-        </a>
       </div>
     </div>
   </section>
-
-  <!-- ══════════════════ TEAM ═══════════════════════════════════ -->
-  {% if agents %}
-  <section class="ab-team">
-    <div class="ab-team-inner">
-      <div class="section-eyebrow">Our People</div>
-      <h2 class="section-heading">Meet Some of Our <em>Expert Advisors</em></h2>
-      <div class="ab-team-grid">
-        {% for agent in agents %}
-        <div class="ab-agent-card">
-          <div class="ab-agent-avatar">
-            {% if agent.avatar %}
-              <img src="{{ agent.avatar.url }}" alt="{{ agent.user.get_full_name }}">
-            {% else %}
-              {{ agent.user.get_full_name|slice:":1"|upper }}
-            {% endif %}
-          </div>
-          <div class="ab-agent-body">
-            <div class="ab-agent-name">{{ agent.user.get_full_name }}</div>
-            <div class="ab-agent-role">{{ agent.specialization|default:"Property Advisor" }}</div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  {% endif %}
 
   <!-- ══════════════════ CTA ════════════════════════════════════ -->
   <section class="ab-cta">

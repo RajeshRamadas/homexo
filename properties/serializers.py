@@ -59,7 +59,6 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     images        = PropertyImageSerializer(many=True, read_only=True)
     features      = PropertyFeatureSerializer(many=True, read_only=True)
     tags          = PropertyTagSerializer(many=True, read_only=True)
-    agent         = serializers.SerializerMethodField()
 
     class Meta:
         model  = Property
@@ -74,21 +73,9 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             'age_years', 'parking_slots', 'possession_date',
             'is_featured', 'is_signature', 'is_new', 'is_exclusive',
             'status', 'views_count',
-            'images', 'features', 'tags', 'agent',
+            'images', 'features', 'tags',
             'created_at', 'updated_at',
         )
-
-    def get_agent(self, obj):
-        if obj.agent:
-            return {
-                'id':    obj.agent.id,
-                'name':  obj.agent.user.get_full_name(),
-                'phone': obj.agent.phone,
-                'photo': obj.agent.photo.url if obj.agent.photo else None,
-            }
-        return None
-
-
 class PropertyCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Property

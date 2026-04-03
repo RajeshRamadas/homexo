@@ -20,4 +20,5 @@ urlpatterns = [
     path('services/home-loan/',         views.home_loan,        name='home_loan'),
     path('emi/',             views.emi_calculator,  name='emi_calculator'),
     path('emi/calculate/',   views.emi_calculate_api, name='emi_calculate_api'),
+    path('terms-and-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
 ]

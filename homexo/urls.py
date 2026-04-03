@@ -31,7 +31,6 @@ urlpatterns = [
     # Frontend pages
     path('',               include('pages.urls',        namespace='pages')),
     path('properties/',    include('properties.urls',   namespace='properties')),
-    path('agents/',        include('agents.urls',        namespace='agents')),
     path('blog/',          include('blog.urls',          namespace='blog')),
     path('enquiries/',     include('enquiries.urls',     namespace='enquiries')),
     path('wishlist/',      include('wishlist.urls',      namespace='wishlist')),

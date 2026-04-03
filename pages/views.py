@@ -182,7 +182,6 @@ _DEVELOPER_PROFILES = {
 }
 
 from properties.models import Property, Developer
-from agents.models import Agent
 from blog.models import Post
 from testimonials.models import Testimonial
 from enquiries.forms import EnquiryForm
@@ -200,7 +199,6 @@ def home(request):
     }
 
     total_active = Property.objects.filter(status='active').count()
-    total_agents = Agent.objects.filter(is_active=True, is_verified=True).count()
     total_cities  = Property.objects.filter(status='active').values('city').distinct().count()
 
     context = {
@@ -219,11 +217,6 @@ def home(request):
         'featured_properties': Property.objects.filter(
             status='active', is_featured=True
         ).prefetch_related('images', 'tags').order_by('-created_at')[:6],
-
-        # Agents strip (4 highlighted)
-        'agents': Agent.objects.filter(
-            is_active=True, is_verified=True
-        ).select_related('user').order_by('-rating')[:4],
 
         # Testimonials carousel
         'testimonials': Testimonial.objects.filter(is_active=True).order_by('order')[:6],
@@ -252,7 +245,7 @@ def home(request):
             'properties':   total_active or 1200,
             'happy_clients': max(total_active * 4, 4800),
             'cities':       total_cities or 12,
-            'agents':       total_agents or 48,
+            'agents':       48,
             'years':        10,
         },
     }
@@ -260,8 +253,7 @@ def home(request):
 
 
 def about(request):
-    agents = Agent.objects.filter(is_active=True, is_verified=True).select_related('user')[:8]
-    return render(request, 'pages/about.html', {'agents': agents})
+    return render(request, 'pages/about.html')
 
 
 def faq(request):
@@ -387,3 +379,7 @@ def emi_calculate_api(request):
         })
     except (ValueError, ZeroDivisionError) as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+
+def terms_and_conditions(request):
+    return render(request, 'pages/terms_and_conditions.html')

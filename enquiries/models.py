@@ -30,8 +30,6 @@ class Enquiry(models.Model):
     # What they're enquiring about
     property     = models.ForeignKey('properties.Property', on_delete=models.SET_NULL,
                                      null=True, blank=True, related_name='enquiries')
-    agent        = models.ForeignKey('agents.Agent', on_delete=models.SET_NULL,
-                                     null=True, blank=True, related_name='enquiries')
 
     # Contact details (in case user is not logged in)
     name         = models.CharField(max_length=120)

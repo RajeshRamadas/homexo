@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Terms &amp; Conditions | HOMEXO{% endblock %}
+{% block meta_description %}Read HOMEXO's Terms and Conditions governing use of our real estate platform, property listings, advisory services, and digital tools.{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Hero ─────────────────────────────────────────────────── */
+  .tc-hero {
+    background: linear-gradient(135deg, #071929 0%, #0D2B4E 100%);
+    padding: 100px 40px 120px; position: relative; overflow: hidden;
+    text-align: center;
+  }
+  .tc-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.5;
+  }
+  .tc-hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+  .tc-eyebrow {
+    font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--sky);
+    margin-bottom: 16px; display: inline-block;
+  }
+  .tc-hero-title {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 52px);
+    font-weight: 300; color: var(--ivory); line-height: 1.15; margin-bottom: 20px;
+  }
+  .tc-hero-subtitle {
+    font-family: 'Source Sans 3', sans-serif; font-size: 15px;
+    color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto;
+    line-height: 1.7;
+  }
+  .tc-last-updated {
+    display: inline-block; margin-top: 20px;
+    font-size: 12px; color: rgba(255,255,255,.35); letter-spacing: .5px;
+  }
+
+  /* ── Layout ───────────────────────────────────────────────── */
+  .tc-wrapper {
+    max-width: 860px; margin: 0 auto; padding: 72px 40px 96px;
+    display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start;
+  }
+
+  /* ── TOC Sidebar ──────────────────────────────────────────── */
+  .tc-toc {
+    position: sticky; top: 100px;
+    background: var(--off-white); border: 1px solid var(--border);
+    border-left: 3px solid var(--sky); padding: 28px 24px;
+  }
+  .tc-toc h3 {
+    font-family: 'Source Sans 3', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase; color: var(--sky);
+    margin-bottom: 16px;
+  }
+  .tc-toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc-counter; }
+  .tc-toc ol li { counter-increment: toc-counter; margin-bottom: 10px; }
+  .tc-toc ol li a {
+    font-size: 13px; color: var(--warm-grey); text-decoration: none;
+    display: flex; align-items: baseline; gap: 8px; line-height: 1.4;
+    transition: color .2s;
+  }
+  .tc-toc ol li a::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-size: 10px; color: var(--sky); font-weight: 600; flex-shrink: 0;
+  }
+  .tc-toc ol li a:hover { color: var(--charcoal); }
+
+  /* ── Content ──────────────────────────────────────────────── */
+  .tc-content {}
+  .tc-section { margin-bottom: 52px; scroll-margin-top: 110px; }
+  .tc-section-num {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sky); font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .tc-section h2 {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500;
+    color: var(--charcoal); margin-bottom: 16px; line-height: 1.25;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .tc-section p {
+    font-size: 15px; color: var(--warm-grey); line-height: 1.85; margin-bottom: 14px;
+  }
+  .tc-section ul, .tc-section ol {
+    padding-left: 20px; margin-bottom: 14px;
+  }
+  .tc-section li {
+    font-size: 15px; color: var(--warm-grey); line-height: 1.8; margin-bottom: 6px;
+  }
+  .tc-highlight {
+    background: rgba(74,144,196,.06); border-left: 3px solid var(--sky);
+    padding: 16px 20px; margin: 20px 0; border-radius: 0 4px 4px 0;
+  }
+  .tc-highlight p { margin-bottom: 0; font-size: 14px; }
+
+  /* ── Contact CTA ──────────────────────────────────────────── */
+  .tc-contact-cta {
+    background: linear-gradient(135deg, #071929 0%, #0D2B4E 100%);
+    padding: 48px 40px; text-align: center; margin-top: 16px;
+  }
+  .tc-contact-cta p {
+    color: rgba(255,255,255,.65); font-size: 15px; margin-bottom: 20px;
+  }
+  .tc-contact-cta a.btn-primary {
+    display: inline-block; padding: 14px 32px;
+    background: var(--sky); color: #fff; font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; transition: background .2s;
+  }
+  .tc-contact-cta a.btn-primary:hover { background: #3a7fbb; }
+
+  @media(max-width: 900px) {
+    .tc-wrapper { grid-template-columns: 1fr; padding: 48px 24px 72px; gap: 32px; }
+    .tc-toc { position: static; }
+    .tc-hero { padding: 72px 24px 88px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════ HERO ══════════════════════════════════════ -->
+<section class="tc-hero">
+  <div class="tc-hero-inner">
+    <span class="tc-eyebrow">Legal</span>
+    <h1 class="tc-hero-title">Terms &amp; Conditions</h1>
+    <p class="tc-hero-subtitle">
+      Please read these terms carefully before using HOMEXO's platform, listings,
+      advisory services, or any associated digital tools.
+    </p>
+    <span class="tc-last-updated">Last updated: April 3, 2026</span>
+  </div>
+</section>
+
+<!-- ══════════════ MAIN CONTENT ═════════════════════════════ -->
+<div class="tc-wrapper">
+
+  <!-- Table of Contents -->
+  <aside class="tc-toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#acceptance">Acceptance of Terms</a></li>
+      <li><a href="#services">Services Provided</a></li>
+      <li><a href="#listings">Property Listings</a></li>
+      <li><a href="#user-accounts">User Accounts</a></li>
+      <li><a href="#conduct">User Conduct</a></li>
+      <li><a href="#intellectual-property">Intellectual Property</a></li>
+      <li><a href="#privacy">Privacy &amp; Data</a></li>
+      <li><a href="#disclaimers">Disclaimers</a></li>
+      <li><a href="#liability">Limitation of Liability</a></li>
+      <li><a href="#indemnification">Indemnification</a></li>
+      <li><a href="#governing-law">Governing Law</a></li>
+      <li><a href="#changes">Changes to Terms</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </aside>
+
+  <!-- Sections -->
+  <main class="tc-content">
+
+    <div class="tc-section" id="acceptance">
+      <div class="tc-section-num">01</div>
+      <h2>Acceptance of Terms</h2>
+      <p>
+        By accessing or using the HOMEXO website, mobile application, or any related
+        services (collectively, the "Platform"), you agree to be bound by these Terms
+        and Conditions ("Terms"), our Privacy Policy, and all applicable laws and
+        regulations. If you do not agree with any part of these Terms, you must
+        discontinue use of the Platform immediately.
+      </p>
+      <p>
+        These Terms constitute a legally binding agreement between you ("User") and
+        HOMEXO Real Estate Private Limited ("HOMEXO," "we," "us," or "our"), a company
+        incorporated under the laws of India and operating from Bengaluru, Karnataka.
+      </p>
+      <div class="tc-highlight">
+        <p>
+          Your continued use of the Platform following any posted changes constitutes
+          your acceptance of the revised Terms.
+        </p>
+      </div>
+    </div>
+
+    <div class="tc-section" id="services">
+      <div class="tc-section-num">02</div>
+      <h2>Services Provided</h2>
+      <p>HOMEXO provides an online real estate platform that facilitates:</p>
+      <ul>
+        <li>Searching and browsing property listings (residential, commercial, plots)</li>
+        <li>Connecting buyers, sellers, landlords, and tenants</li>
+        <li>Property advisory and transaction support services</li>
+        <li>Home loan facilitation and EMI calculation tools</li>
+        <li>Legal documentation and title verification referrals</li>
+        <li>Home maintenance and ancillary property services</li>
+        <li>Market research, reports, and blog content</li>
+      </ul>
+      <p>
+        HOMEXO acts as an intermediary platform only. We do not own, sell, rent, or
+        manage any properties listed on the Platform unless explicitly stated.
+      </p>
+    </div>
+
+    <div class="tc-section" id="listings">
+      <div class="tc-section-num">03</div>
+      <h2>Property Listings</h2>
+      <p>
+        Property listings on HOMEXO are submitted by developers, individual owners,
+        or authorised representatives. While we make reasonable efforts to verify
+        listing accuracy, HOMEXO does not guarantee the completeness, accuracy, or
+        legality of any listing.
+      </p>
+      <ul>
+        <li>Prices, availability, and specifications are subject to change without notice.</li>
+        <li>Images and renders may be indicative or for illustration purposes only.</li>
+        <li>RERA registration numbers, where displayed, are provided by the respective developers.</li>
+        <li>Users must independently verify all property details before making any financial commitment.</li>
+      </ul>
+      <p>
+        HOMEXO reserves the right to remove any listing that violates these Terms,
+        applicable law, or our internal quality standards, without prior notice.
+      </p>
+    </div>
+
+    <div class="tc-section" id="user-accounts">
+      <div class="tc-section-num">04</div>
+      <h2>User Accounts</h2>
+      <p>
+        Certain features of the Platform require you to register an account. You agree to:
+      </p>
+      <ol>
+        <li>Provide accurate, current, and complete information during registration.</li>
+        <li>Maintain and promptly update your account information.</li>
+        <li>Keep your password confidential and not share it with third parties.</li>
+        <li>Accept responsibility for all activity that occurs under your account.</li>
+        <li>Notify HOMEXO immediately of any unauthorised use of your account.</li>
+      </ol>
+      <p>
+        HOMEXO reserves the right to suspend or terminate accounts that violate these
+        Terms, engage in fraudulent activity, or are inactive for an extended period.
+      </p>
+    </div>
+
+    <div class="tc-section" id="conduct">
+      <div class="tc-section-num">05</div>
+      <h2>User Conduct</h2>
+      <p>You agree not to use the Platform to:</p>
+      <ul>
+        <li>Post false, misleading, or fraudulent property listings or enquiries.</li>
+        <li>Scrape, harvest, or extract data from the Platform without written consent.</li>
+        <li>Circumvent, disable, or interfere with security features of the Platform.</li>
+        <li>Upload viruses, malicious code, or any harmful content.</li>
+        <li>Impersonate any person or entity, or misrepresent your affiliation.</li>
+        <li>Send unsolicited commercial communications to other users.</li>
+        <li>Violate any applicable local, national, or international law or regulation.</li>
+      </ul>
+      <p>
+        Violation of this section may result in immediate account termination and
+        may be reported to the relevant authorities.
+      </p>
+    </div>
+
+    <div class="tc-section" id="intellectual-property">
+      <div class="tc-section-num">06</div>
+      <h2>Intellectual Property</h2>
+      <p>
+        All content on the Platform — including but not limited to text, graphics,
+        logos, icons, images, audio, video, data compilations, and software — is the
+        property of HOMEXO or its content suppliers and is protected under Indian
+        copyright, trademark, and intellectual property laws.
+      </p>
+      <p>
+        You are granted a limited, non-exclusive, non-transferable licence to access
+        and use the Platform for personal, non-commercial purposes only. This licence
+        does not permit:
+      </p>
+      <ul>
+        <li>Reproduction, distribution, or resale of any Platform content.</li>
+        <li>Modification or creation of derivative works based on Platform content.</li>
+        <li>Commercial exploitation of any content or listing without written consent from HOMEXO.</li>
+      </ul>
+    </div>
+
+    <div class="tc-section" id="privacy">
+      <div class="tc-section-num">07</div>
+      <h2>Privacy &amp; Data</h2>
+      <p>
+        Your privacy is important to us. Our Privacy Policy explains how we collect,
+        use, store, and protect your personal data when you use the Platform. By using
+        the Platform, you consent to the data practices described in our Privacy Policy.
+      </p>
+      <p>
+        When you submit an enquiry or contact form, your details may be shared with the
+        relevant property owner, developer, or HOMEXO advisor to facilitate your request.
+        We do not sell personal data to third-party marketers.
+      </p>
+    </div>
+
+    <div class="tc-section" id="disclaimers">
+      <div class="tc-section-num">08</div>
+      <h2>Disclaimers</h2>
+      <p>
+        The Platform and all content are provided on an <strong>"as is"</strong> and
+        <strong>"as available"</strong> basis without warranties of any kind, express
+        or implied. HOMEXO specifically disclaims:
+      </p>
+      <ul>
+        <li>Any warranty of merchantability or fitness for a particular purpose.</li>
+        <li>Any warranty that the Platform will be uninterrupted, error-free, or secure.</li>
+        <li>Any warranty regarding the accuracy or completeness of property listings.</li>
+        <li>Any warranty as to results that may be obtained from use of the Platform.</li>
+      </ul>
+      <div class="tc-highlight">
+        <p>
+          HOMEXO is not a licensed real estate agent for RERA purposes unless explicitly
+          stated. Advisory content on the Platform is for general informational purposes
+          only and does not constitute legal or financial advice.
+        </p>
+      </div>
+    </div>
+
+    <div class="tc-section" id="liability">
+      <div class="tc-section-num">09</div>
+      <h2>Limitation of Liability</h2>
+      <p>
+        To the maximum extent permitted by applicable law, HOMEXO and its directors,
+        employees, affiliates, and partners shall not be liable for any:
+      </p>
+      <ul>
+        <li>Indirect, incidental, special, consequential, or punitive damages.</li>
+        <li>Loss of profits, revenue, data, goodwill, or anticipated savings.</li>
+        <li>Damages arising from property transactions conducted through or facilitated by the Platform.</li>
+        <li>Loss or damage resulting from reliance on any information or content on the Platform.</li>
+      </ul>
+      <p>
+        In no event shall HOMEXO's total aggregate liability exceed the amount paid by
+        you, if any, to HOMEXO in the twelve (12) months preceding the event giving
+        rise to the claim.
+      </p>
+    </div>
+
+    <div class="tc-section" id="indemnification">
+      <div class="tc-section-num">10</div>
+      <h2>Indemnification</h2>
+      <p>
+        You agree to indemnify, defend, and hold harmless HOMEXO, its officers,
+        directors, employees, and agents from and against any claims, liabilities,
+        damages, judgements, awards, losses, costs, expenses, or fees (including
+        reasonable legal fees) arising out of or relating to:
+      </p>
+      <ul>
+        <li>Your violation of these Terms.</li>
+        <li>Your use of the Platform or any property purchased, rented, or listed through it.</li>
+        <li>Any content you submit, post, or transmit through the Platform.</li>
+        <li>Your violation of any third-party rights, including intellectual property rights.</li>
+      </ul>
+    </div>
+
+    <div class="tc-section" id="governing-law">
+      <div class="tc-section-num">11</div>
+      <h2>Governing Law &amp; Dispute Resolution</h2>
+      <p>
+        These Terms are governed by and construed in accordance with the laws of India,
+        without regard to conflict of law principles. Any disputes arising out of or
+        relating to these Terms or your use of the Platform shall be subject to the
+        exclusive jurisdiction of the courts of Bengaluru, Karnataka, India.
+      </p>
+      <p>
+        Prior to initiating any legal proceedings, you agree to attempt good-faith
+        resolution through HOMEXO's customer support team. HOMEXO may seek equitable
+        relief in any court of competent jurisdiction without prior notice.
+      </p>
+    </div>
+
+    <div class="tc-section" id="changes">
+      <div class="tc-section-num">12</div>
+      <h2>Changes to These Terms</h2>
+      <p>
+        HOMEXO reserves the right to modify, update, or replace these Terms at any time.
+        Material changes will be communicated via a notice on the Platform or by email
+        to registered users. The "Last updated" date at the top of this page reflects
+        the most recent revision.
+      </p>
+      <p>
+        It is your responsibility to review these Terms periodically. Continued use of
+        the Platform after any changes constitutes your acceptance of the new Terms.
+      </p>
+    </div>
+
+    <div class="tc-section" id="contact">
+      <div class="tc-section-num">13</div>
+      <h2>Contact Us</h2>
+      <p>
+        If you have questions, concerns, or complaints about these Terms or our data
+        practices, please reach out:
+      </p>
+      <ul>
+        <li><strong>Email:</strong> legal@homexo.in</li>
+        <li><strong>Address:</strong> HOMEXO Real Estate Pvt. Ltd., Bengaluru, Karnataka, India</li>
+        <li><strong>Phone:</strong> Available via the <a href="{% url 'pages:contact' %}" style="color:var(--sky);text-decoration:none;">Contact page</a></li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════════════ CTA ══════════════════════════════════ -->
+<div class="tc-contact-cta">
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--ivory);margin-bottom:12px;">
+    Have a Question About These Terms?
+  </h2>
+  <p>Our team is happy to clarify any aspect of these Terms before you proceed.</p>
+  <a href="{% url 'pages:contact' %}" class="btn-primary">Contact Us →</a>
+</div>
+
+{% endblock %}

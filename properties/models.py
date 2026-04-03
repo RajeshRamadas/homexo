@@ -130,8 +130,6 @@ class Property(models.Model):
     # ── Ownership & Classification ────────────────────────────────────────────
     owner          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                        related_name='owned_properties')
-    agent          = models.ForeignKey('agents.Agent', on_delete=models.SET_NULL,
-                                       null=True, blank=True, related_name='listings')
     listing_type   = models.CharField(max_length=20, choices=ListingType.choices, default=ListingType.BUY)
     property_type  = models.CharField(max_length=20, choices=PropertyType.choices, default=PropertyType.APARTMENT)
 

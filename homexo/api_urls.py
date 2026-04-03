@@ -9,7 +9,6 @@ app_name = 'api'
 
 urlpatterns = [
     path('properties/',  include('properties.api_urls')),
-    path('agents/',      include('agents.api_urls')),
     path('blog/',        include('blog.api_urls')),
     path('enquiries/',   include('enquiries.api_urls')),
     path('accounts/',    include('accounts.api_urls')),
