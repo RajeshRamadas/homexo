@@ -88,12 +88,14 @@ class OrderActivity(models.Model):
     """Immutable audit log entry recording every meaningful change on a LegalOrder."""
 
     class Category(models.TextChoices):
-        ASSIGNMENT = 'assignment', 'Advocate Assignment'
-        STEP       = 'step',       'Step Update'
-        VERDICT    = 'verdict',    'Verdict Update'
-        PAYMENT    = 'payment',    'Payment Update'
-        PACKAGE    = 'package',    'Package Change'
-        SYSTEM     = 'system',     'System'
+        ASSIGNMENT  = 'assignment',   'Advocate Assignment'
+        STEP        = 'step',         'Step Update'
+        VERDICT     = 'verdict',      'Verdict Update'
+        PAYMENT     = 'payment',      'Payment Update'
+        PACKAGE     = 'package',      'Package Change'
+        NOTE        = 'note',         'Message to Client'
+        CLIENT_NOTE = 'client_note',  'Message from Client'
+        SYSTEM      = 'system',       'System'
 
     order      = models.ForeignKey(LegalOrder, on_delete=models.CASCADE, related_name='activities')
     actor      = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='legal_activities')

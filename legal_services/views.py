@@ -10,12 +10,33 @@ def dashboard(request):
 
 @login_required
 def order_detail(request, uuid):
-    """Show details of a specific legal order."""
+    """Show details of a specific legal order. Client can also send messages to advocate."""
+    from .models import OrderActivity
+    from django.contrib import messages as django_messages
+
     order = get_object_or_404(LegalOrder, uuid=uuid, user=request.user)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'send_client_note':
+            note_text = request.POST.get('note_text', '').strip()
+            if note_text:
+                OrderActivity.objects.create(
+                    order=order,
+                    actor=request.user,
+                    category=OrderActivity.Category.CLIENT_NOTE,
+                    message=note_text,
+                )
+                django_messages.success(request, "Your message has been sent to your advocate.")
+            else:
+                django_messages.error(request, "Message cannot be empty.")
+        from django.shortcuts import redirect
+        return redirect('legal_services:order_detail', uuid=uuid)
+
     steps = order.steps.all()
     checks = order.verdict_checks.all()
     activities = order.activities.all()
-    
+
     context = {
         'order': order,
         'steps': steps,
@@ -44,6 +65,72 @@ def is_legal_admin(user):
         getattr(user, 'role', None) in ('admin', 'legal_admin')
     )
 
+# ── Package Workflow Definitions ─────────────────────────────────────────────
+PACKAGE_WORKFLOW = {
+    'starter': [
+        ('Order Placed',                 'Your request has been received.'),
+        ('Advocate Assignment',          'A legal expert is being assigned to your case.'),
+        ('Document Collection',          'Uploading and verifying your property documents.'),
+        ('Title Deed Verification',      'Checking ownership title and legitimacy of the deed.'),
+        ('Encumbrance Certificate Check','Verifying EC to detect loans, charges or liens.'),
+        ('RERA Registration Check',      'Confirming builder/project RERA registration status.'),
+        ('Basic Litigation Check',       'Scanning courts for any existing disputes on the property.'),
+        ('Report Drafting',              'Advocate is compiling the final 1-page verdict.'),
+        ('Verdict Delivered',            'Your Go/No-Go verdict PDF is ready on the dashboard.'),
+    ],
+    'pro': [
+        ('Order Placed',                     'Your request has been received.'),
+        ('Advocate Assignment',              'A legal expert is being assigned to your case.'),
+        ('Document Collection',              'Uploading and verifying your property documents.'),
+        ('30-Year Title History Check',      'Tracing full 30-year ownership chain.'),
+        ('Mother Deed Chain Verification',   'Verifying the chain from original grant to current owner.'),
+        ('RERA & Compliance Audit',          'RERA check + BBMP/BDA/BMRDA approvals audit.'),
+        ('Land Acquisition Notice Check',    'Checking BDA/KIADB acquisition notifications.'),
+        ('SRO Physical Field Verification',  'Advocate visiting Sub-Registrar Office for physical cross-check.'),
+        ('Buyer-Protective Sale Agreement',  'Drafting sale agreement with protective buyer clauses.'),
+        ('Khata & Property Tax Records',     'Verifying Khata and property tax payment history.'),
+        ('Report Drafting',                  'Advocate is compiling the comprehensive verdict report.'),
+        ('Verdict Delivered',                'Your Go/No-Go verdict PDF is ready on the dashboard.'),
+    ],
+    'complete': [
+        ('Order Placed',                     'Your request has been received.'),
+        ('Advocate Assignment',              'A dedicated advocate has been assigned to your case.'),
+        ('Document Collection',              'Uploading and verifying your property documents.'),
+        ('30-Year Title History Check',      'Tracing full 30-year ownership chain.'),
+        ('Mother Deed Chain Verification',   'Verifying the chain from original grant to current owner.'),
+        ('RERA & Compliance Audit',          'RERA check + BBMP/BDA/BMRDA approvals audit.'),
+        ('Land Acquisition Notice Check',    'Checking BDA/KIADB acquisition notifications.'),
+        ('SRO Physical Field Verification',  'Advocate visiting Sub-Registrar Office for physical cross-check.'),
+        ('Buyer-Protective Sale Agreement',  'Drafting sale agreement with protective buyer clauses.'),
+        ('Khata & Property Tax Records',     'Verifying Khata and property tax payment history.'),
+        ('Sale Deed Drafting & Registration','Preparing and registering the final Sale Deed.'),
+        ('Khata Transfer (BBMP/BDA)',        'Executing full Khata transfer in buyer\'s name.'),
+        ('Property Tax Name Change',         'Updating property tax records to buyer\'s name.'),
+        ('BESCOM Name Change Support',       'Processing electricity connection name change.'),
+        ('Report Drafting',                  'Advocate is compiling the comprehensive verdict report.'),
+        ('Verdict Delivered',                'Your Go/No-Go verdict PDF is ready. 12-month helpline active.'),
+    ],
+}
+
+def create_workflow_steps(order, advocate_assigned=False):
+    """Delete any old steps and create the full package workflow for this order."""
+    order.steps.all().delete()
+    steps_def = PACKAGE_WORKFLOW.get(order.package, PACKAGE_WORKFLOW['starter'])
+    for idx, (title, desc) in enumerate(steps_def, start=1):
+        if idx == 1:
+            status = 'done'       # Order Placed always done
+        elif idx == 2 and advocate_assigned:
+            status = 'done'       # Advocate Assignment done if already assigned
+        elif idx == 3 and advocate_assigned:
+            status = 'active'     # First real work step becomes active
+        elif idx == 2 and not advocate_assigned:
+            status = 'active'     # Waiting for assignment
+        else:
+            status = 'pending'
+        if idx == 2 and advocate_assigned:
+            desc = f"Case assigned to Adv. {order.advocate.get_full_name()}."
+        OrderStep.objects.create(order=order, order_idx=idx, title=title, description=desc, status=status)
+
 @login_required
 def request_order(request):
     """User requests a new legal package."""
@@ -57,15 +144,11 @@ def request_order(request):
             order.user = request.user
             order.save()
             
-            # Auto-create some default initial steps
-            OrderStep.objects.create(order=order, order_idx=1, title="Order Placed", description="We have received your verification request.", status="done")
+            create_workflow_steps(order, advocate_assigned=bool(order.advocate))
             
             if order.advocate:
-                OrderStep.objects.create(order=order, order_idx=2, title="Advocate Assignment", description=f"Case assigned to Adv. {order.advocate.get_full_name()}.", status="done")
-                OrderStep.objects.create(order=order, order_idx=3, title="Initial Review", description="Advocate is reviewing property details.", status="active")
                 OrderActivity.objects.create(order=order, actor=request.user, category=Act.ASSIGNMENT, message=f"Order placed and directly assigned to Adv. {order.advocate.get_full_name()}.")
             else:
-                OrderStep.objects.create(order=order, order_idx=2, title="Advocate Assignment", description="Assigning a legal expert to your case.", status="active")
                 OrderActivity.objects.create(order=order, actor=request.user, category=Act.SYSTEM, message="Order placed. Awaiting advocate assignment.")
             
             messages.success(request, f"Your order for the {order.get_package_display()} package has been successfully placed!")
@@ -108,12 +191,8 @@ def advocate_claim(request, uuid):
         order.advocate = request.user
         order.save()
         
-        step = order.steps.filter(title="Advocate Assignment").first()
-        if step:
-            step.status = 'done'
-            step.description = f"Case claimed by Adv. {request.user.get_full_name()}."
-            step.save()
-            OrderStep.objects.create(order=order, order_idx=3, title="Initial Review", description="Advocate is reviewing property details.", status="active")
+        # Rebuild the workflow with all package-specific steps now that advocate is set
+        create_workflow_steps(order, advocate_assigned=True)
         
         OrderActivity.objects.create(order=order, actor=request.user, category=Act.ASSIGNMENT, message=f"Adv. {request.user.get_full_name()} claimed this case from the open pool.")
         messages.success(request, f"You have successfully claimed the case for {order.property_name}.")
@@ -140,7 +219,42 @@ def advocate_order_detail(request, uuid):
         
         action = request.POST.get('action')
         
-        if action == 'update_step':
+        if action == 'mark_step_done':
+            # Sequential workflow: only the active step can be marked done
+            step_id = request.POST.get('step_id')
+            note = request.POST.get('note', '').strip()
+            if step_id:
+                step = get_object_or_404(OrderStep, id=step_id, order=order)
+                if step.status != 'active':
+                    messages.error(request, "Only the currently active step can be marked as done.")
+                else:
+                    if note:
+                        step.description = note
+                    step.status = 'done'
+                    step.save()
+                    # Activate the very next pending step
+                    next_step = order.steps.filter(status='pending').order_by('order_idx').first()
+                    if next_step:
+                        next_step.status = 'active'
+                        next_step.save()
+                    OrderActivity.objects.create(
+                        order=order, actor=request.user, category=Act.STEP,
+                        message=f"✅ '{step.title}' completed. {('Note: ' + note) if note else ''}".strip()
+                    )
+                    messages.success(request, f"'{step.title}' marked as done.")
+
+        elif action == 'send_note':
+            note_text = request.POST.get('note_text', '').strip()
+            if note_text:
+                OrderActivity.objects.create(
+                    order=order, actor=request.user, category=Act.NOTE,
+                    message=note_text
+                )
+                messages.success(request, "Your message has been sent to the client.")
+            else:
+                messages.error(request, "Message cannot be empty.")
+
+        elif action == 'update_step':
             step_id = request.POST.get('step_id')
             status = request.POST.get('status')
             desc = request.POST.get('description')
@@ -218,16 +332,11 @@ def admin_legal_dashboard(request):
                 order.advocate = advocate
                 order.save()
                 
-                step = order.steps.filter(title="Advocate Assignment").first()
-                if step:
-                    step.status = 'done'
-                    step.description = f"Case {'re' if was_reassignment else ''}assigned to Adv. {advocate.get_full_name()}."
-                    step.save()
-                    if not order.steps.filter(title="Initial Review").exists():
-                        OrderStep.objects.create(order=order, order_idx=3, title="Initial Review", description="Advocate is reviewing property details.", status="active")
+                # Rebuild full package workflow on assignment/reassignment
+                create_workflow_steps(order, advocate_assigned=True)
                 
                 if was_reassignment:
-                    msg = f"Case reassigned from Adv. {order.advocate.get_full_name()} to Adv. {advocate.get_full_name()} by {request.user.get_full_name()}."
+                    msg = f"Case reassigned to Adv. {advocate.get_full_name()} by {request.user.get_full_name()}."
                     messages.success(request, f"Successfully reassigned Case {order.order_id} to Adv. {advocate.get_full_name()}.")
                 else:
                     msg = f"Case assigned to Adv. {advocate.get_full_name()} by {request.user.get_full_name()}."

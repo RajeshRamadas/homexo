@@ -160,35 +160,96 @@
           {% endif %}
         </div>
     </div>
-  </div>
-
-  <!-- Activity Log -->
-  {% if activities %}
-  <div style="max-width:900px; margin: 32px auto 0;">
-    <div style="background:rgba(247,244,238,0.06); border:1px solid rgba(247,244,238,0.1); border-radius:16px; padding:28px;">
-      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px;">
-        📋 Case Activity Log
-      </div>
-      {% for act in activities %}
-      <div style="display:flex; gap:16px; padding:14px 0; border-bottom:1px solid rgba(247,244,238,0.06); {% if forloop.last %}border-bottom:none;{% endif %}">
-        <div style="flex-shrink:0; margin-top:2px; font-size:16px;">
-          {% if act.category == 'assignment' %}👤
-          {% elif act.category == 'step' %}📌
-          {% elif act.category == 'verdict' %}⚖️
-          {% elif act.category == 'payment' %}💳
-          {% elif act.category == 'package' %}📦
-          {% else %}🔔{% endif %}
-        </div>
-        <div>
-          <div style="font-size:13px; color:rgba(247,244,238,0.75); line-height:1.5;">{{ act.message }}</div>
-          <div style="font-size:11px; color:rgba(247,244,238,0.3); margin-top:4px;">
-            {{ act.created_at|date:"j M Y, g:i a" }}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+  </div>  <!-- Flash messages -->
+  {% if messages %}
+  <div style="max-width:900px; margin: 24px auto 0;">
+    {% for msg in messages %}
+    <div style="padding:13px 18px; border-radius:8px; margin-bottom:10px; font-size:13px;
+      background:{% if 'error' in msg.tags %}rgba(239,68,68,0.15){% else %}rgba(16,185,129,0.15){% endif %};
+      color:{% if 'error' in msg.tags %}#fca5a5{% else %}#6ee7b7{% endif %};
+      border:1px solid {% if 'error' in msg.tags %}rgba(239,68,68,0.3){% else %}rgba(16,185,129,0.3){% endif %};">
+      {{ msg }}
     </div>
+    {% endfor %}
   </div>
   {% endif %}
+
+  <!-- Messaging Panel -->
+  <div style="max-width:900px; margin: 32px auto 0;">
+    <div style="background:rgba(247,244,238,0.06); border:1px solid rgba(247,244,238,0.1); border-radius:16px; padding:28px;">
+
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid rgba(247,244,238,0.08);">
+        <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4);">
+          💬 Messages & Case Updates
+        </div>
+        <div style="font-size:11px; color:rgba(247,244,238,0.25);">Newest first</div>
+      </div>
+
+      <!-- Compose Box -->
+      <form method="POST" style="margin-bottom:28px;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send_client_note">
+        <div style="position:relative;">
+          <textarea name="note_text" rows="3"
+            placeholder="Send a message to your advocate… Ask a question, share additional documents info, or request an update."
+            style="width:100%; padding:14px 16px; padding-bottom:50px; background:rgba(247,244,238,0.06); border:1px solid rgba(247,244,238,0.15); border-radius:10px; color:rgba(247,244,238,0.85); font-family:'DM Sans',sans-serif; font-size:14px; resize:vertical; box-sizing:border-box; outline:none; line-height:1.5;"></textarea>
+          <button type="submit"
+            style="position:absolute; bottom:12px; right:12px; background:var(--gold); color:var(--ink); border:none; padding:8px 18px; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif;">
+            📨 Send
+          </button>
+        </div>
+      </form>
+
+      <!-- Message Thread -->
+      {% if activities %}
+        {% for act in activities %}
+
+        {% if act.category == 'note' %}
+        <!-- Advocate → Client message (gold bubble, right-labeled) -->
+        <div style="display:flex; gap:14px; padding:14px 0; border-bottom:1px solid rgba(247,244,238,0.06); {% if forloop.last %}border-bottom:none;{% endif %}">
+          <div style="font-size:18px; flex-shrink:0; margin-top:2px;">👨‍⚖️</div>
+          <div style="flex:1;">
+            <div style="background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.3); border-radius:0 10px 10px 10px; padding:12px 16px;">
+              <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--gold); margin-bottom:6px;">📨 Your Advocate</div>
+              <div style="font-size:14px; color:rgba(247,244,238,0.9); line-height:1.6;">{{ act.message }}</div>
+            </div>
+            <div style="font-size:11px; color:rgba(247,244,238,0.25); margin-top:5px; padding-left:2px;">{{ act.created_at|date:"j M Y, g:i a" }}</div>
+          </div>
+        </div>
+
+        {% elif act.category == 'client_note' %}
+        <!-- Client → Advocate message (blue bubble, you-side) -->
+        <div style="display:flex; gap:14px; padding:14px 0; border-bottom:1px solid rgba(247,244,238,0.06); {% if forloop.last %}border-bottom:none;{% endif %} flex-direction:row-reverse;">
+          <div style="font-size:18px; flex-shrink:0; margin-top:2px;">🙋</div>
+          <div style="flex:1; text-align:right;">
+            <div style="background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); border-radius:10px 0 10px 10px; padding:12px 16px; display:inline-block; text-align:left; max-width:90%;">
+              <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#38bdf8; margin-bottom:6px;">You</div>
+              <div style="font-size:14px; color:rgba(247,244,238,0.9); line-height:1.6;">{{ act.message }}</div>
+            </div>
+            <div style="font-size:11px; color:rgba(247,244,238,0.25); margin-top:5px; padding-right:2px;">{{ act.created_at|date:"j M Y, g:i a" }}</div>
+          </div>
+        </div>
+
+        {% else %}
+        <!-- System / step / verdict log entry -->
+        <div style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(247,244,238,0.06); {% if forloop.last %}border-bottom:none;{% endif %} align-items:flex-start;">
+          <div style="font-size:14px; flex-shrink:0; margin-top:2px; opacity:0.6;">
+            {% if act.category == 'assignment' %}👤{% elif act.category == 'step' %}📌{% elif act.category == 'verdict' %}⚖️{% elif act.category == 'payment' %}💳{% elif act.category == 'package' %}📦{% else %}🔔{% endif %}
+          </div>
+          <div>
+            <div style="font-size:12px; color:rgba(247,244,238,0.5); line-height:1.5;">{{ act.message }}</div>
+            <div style="font-size:10px; color:rgba(247,244,238,0.25); margin-top:3px;">{{ act.created_at|date:"j M Y, g:i a" }}</div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% endfor %}
+      {% else %}
+      <div style="text-align:center; padding:32px 0; color:rgba(247,244,238,0.3); font-size:13px;">No messages yet. Send your first message above.</div>
+      {% endif %}
+
+    </div>
+  </div>
 </div>
 {% endblock %}
