@@ -1060,7 +1060,7 @@
     <div class="news-carousel-wrapper">
       <div class="news-carousel" id="newsCarousel">
         {% for post in news_posts %}
-        <article class="property-card news-card" onclick="window.location.href='{{ post.get_absolute_url }}'" style="cursor: pointer; border:1px solid rgba(13,43,78,.07);">
+        <article class="property-card news-card" onclick="window.location.href='{{ post.get_absolute_url }}'" style="cursor: pointer;">
           <div class="property-card-img" style="height:200px;">
             {% if post.cover_image %}
             <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
@@ -1071,8 +1071,6 @@
             <span class="property-tag new" style="background: {{ post.categories.first.color }};">
               {{ post.categories.first.name }}
             </span>
-            {% else %}
-            <span class="property-tag new" style="background: #076df2;">Trends</span>
             {% endif %}
           </div>
           <div class="property-body" style="padding: 24px;">
