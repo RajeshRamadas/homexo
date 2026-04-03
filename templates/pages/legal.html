@@ -260,6 +260,9 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <a href="#lg-process" class="lg-btn-secondary">See how it works</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'legal_services:dashboard' %}" class="lg-btn-secondary" style="border-color: var(--teal); color: var(--teal); font-weight: 500;">Go to Dashboard</a>
+        {% endif %}
       </div>
       <div class="lg-trust">
         <div class="lg-trust-item"><span class="lg-trust-num">&#8377;300Cr+</span><span class="lg-trust-label">Bad investments prevented</span></div>
@@ -330,7 +333,7 @@
           <li><span class="feat-no">&ndash;</span> Sale Agreement drafting</li>
           <li><span class="feat-no">&ndash;</span> Khata Transfer support</li>
         </ul>
-        <a href="#lg-cta" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
+        <a href="{% url 'legal_services:request_order' %}?package=starter" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
       </div>
       <div class="pkg-card featured fade-up">
         <div class="pkg-badge">Most popular</div>
@@ -349,7 +352,7 @@
           <li><span class="feat-yes">&#10003;</span> Khata &amp; property tax records</li>
           <li><span class="feat-no">&ndash;</span> Khata Transfer execution</li>
         </ul>
-        <a href="#lg-cta" class="pkg-cta pkg-cta-gold">Get started &rarr;</a>
+        <a href="{% url 'legal_services:request_order' %}?package=pro" class="pkg-cta pkg-cta-gold">Get started &rarr;</a>
       </div>
       <div class="pkg-card fade-up">
         <div class="pkg-tier">Tier 03</div>
@@ -367,7 +370,7 @@
           <li><span class="feat-yes">&#10003;</span> 12-month post-purchase helpline</li>
           <li><span class="feat-yes">&#10003;</span> Dedicated advocate assigned</li>
         </ul>
-        <a href="#lg-cta" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
+        <a href="{% url 'legal_services:request_order' %}?package=complete" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
       </div>
     </div>
     <p style="font-size:12px;color:rgba(247,244,238,0.3);margin-top:20px;text-align:center;">* Stamp duty, registration fees, and all government charges billed at actuals separately.</p>

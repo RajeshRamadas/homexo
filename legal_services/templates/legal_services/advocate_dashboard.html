@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Advocate Dashboard | HOMEXO{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<style>
+  .adv-dash { background: #f7f9fc; padding: 60px 40px; min-height: 80vh; font-family: 'DM Sans', sans-serif; }
+  .adv-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .adv-title { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--charcoal); }
+  .adv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+  .adv-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; text-decoration: none; color: inherit; display: block; transition: all 0.2s; position: relative;}
+  .adv-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: var(--sky); }
+  .adv-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .order-id { font-family: monospace; font-size: 13px; font-weight: 500; color: var(--navy); }
+  .status { font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 600; }
+  .status-pending { background: #fff3e0; color: #e65100; }
+  .status-green { background: #e8f5e9; color: #2e7d32; }
+  .status-yellow { background: #fff8e1; color: #f57f17; }
+  .status-red { background: #ffebee; color: #c62828; }
+  .prop-name { font-size: 16px; font-weight: 500; margin-bottom: 4px; color: var(--charcoal); }
+  .prop-addr { font-size: 13px; color: var(--warm-grey); margin-bottom: 16px; }
+  .pkg-badge { display: inline-block; padding: 4px 10px; background: #f1f5f9; border-radius: 20px; font-size: 11px; color: #475569; font-weight: 600;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="adv-dash">
+  <div class="adv-header">
+    <div>
+      <h1 class="adv-title">Assigned Cases</h1>
+      <p style="color: var(--warm-grey); margin-top: 8px;">Welcome back, {{ user.get_full_name }}. Here are your active cases.</p>
+    </div>
+    <div>
+      <a href="{% url 'legal_services:advocate_pool' %}" style="display:inline-block; background:var(--teal); color:white; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:500; font-size:14px; transition:background 0.2s;">View Available Cases</a>
+    </div>
+  </div>
+  
+  <div class="adv-grid">
+    {% for order in orders %}
+      <a href="{% url 'legal_services:advocate_order_detail' order.uuid %}" class="adv-card">
+        <div class="adv-card-top">
+          <span class="order-id">{{ order.order_id }}</span>
+          <span class="status status-{{ order.verdict }}">{{ order.get_verdict_display }}</span>
+        </div>
+        <div class="prop-name">{{ order.property_name }}</div>
+        <div class="prop-addr">{{ order.property_address|truncatechars:50 }}</div>
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+          <span class="pkg-badge">{{ order.get_package_display }}</span>
+          <span style="font-size: 11px; color: var(--warm-grey);">Updated: {{ order.updated_at|date:"j M, g:i a" }}</span>
+        </div>
+      </a>
+    {% empty %}
+      <div style="grid-column: 1 / -1; padding: 60px; text-align: center; border: 1px dashed #cbd5e1; border-radius: 12px; color: var(--warm-grey);">
+        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 16px; opacity: 0.5;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <p>No cases assigned to you yet.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

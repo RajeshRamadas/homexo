@@ -274,6 +274,11 @@
         {% endif %}
       </a>
       <a href="{% url 'accounts:profile' %}">{{ user.first_name }}</a>
+      {% if user.role == 'advocate' or user.is_superuser or user.role == 'admin' or user.role == 'legal_admin' %}
+      <a href="{% url 'legal_services:admin_dashboard' %}" class="nav-cta" style="background:var(--teal)!important;">
+        {% if user.role == 'advocate' %}Advocate Portal{% else %}Legal Admin Portal{% endif %}
+      </a>
+      {% endif %}
       <a href="{% url 'properties:create' %}" class="nav-cta">List Property</a>
     {% else %}
       <a href="{% url 'accounts:login' %}">Login</a>

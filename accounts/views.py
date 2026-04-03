@@ -14,7 +14,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 
-from .forms import RegisterForm, LoginForm, ProfileUpdateForm, ProfileCompleteForm
+from .forms import RegisterForm, LoginForm, ProfileUpdateForm, ProfileCompleteForm, AdvocateRegisterForm
 from .models import User, PhoneOTP
 from .sms import generate_otp, send_otp_sms
 
@@ -43,6 +43,23 @@ def register_view(request):
         return redirect('accounts:email_confirm_sent')
 
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def advocate_register_view(request):
+    if request.user.is_authenticated:
+        return redirect('pages:home')
+
+    form = AdvocateRegisterForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save(commit=False)
+        user.is_active = False # Admin must approve
+        user.save()
+
+        messages.success(request, "Your application to join as an Advocate has been received! Our team will verify your credentials and activate your account shortly.")
+        return redirect('pages:home')
+
+    return render(request, 'accounts/advocate_register.html', {'form': form})
+
 
 
 def email_confirm_sent_view(request):

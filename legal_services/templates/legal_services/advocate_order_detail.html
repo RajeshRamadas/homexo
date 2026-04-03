@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Order {{ order.order_id }} | HOMEXO{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  .adv-detail { background: #f7f9fc; padding: 40px; min-height: 80vh; font-family: 'DM Sans', sans-serif; color: var(--charcoal); }
+  .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+  .panel { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+  .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
+  
+  .form-row { margin-bottom: 16px; }
+  .form-row label { display: block; font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
+  .form-control { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 14px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 13px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: var(--sky); }
+  .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+  .step-form { background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;}
+  .step-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
+  .step-title { font-weight: 600; font-size: 15px; }
+  
+  .check-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #f1f5f9;}
+  .check-label { font-size: 14px; }
+  
+  .toggle-switch { position: relative; width: 44px; height: 24px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+  input:checked + .slider { background-color: #10b981; }
+  input:checked + .slider:before { transform: translateX(20px); }
+  
+  .alert-box { padding: 16px; border-radius: 8px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; margin-bottom: 24px;}
+  .readonly-notice { padding: 16px; border-radius: 8px; background: #fff8e1; color: #92400e; border: 1px solid #fcd34d; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;}
+  
+  /* Read-only step block */
+  .step-view { background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;}
+  .status-dot-done { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; margin-right: 6px; }
+  .status-dot-active { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; margin-right: 6px; }
+  .status-dot-pending { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; margin-right: 6px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="adv-detail">
+  <div style="margin-bottom: 24px;">
+    <a href="{% url 'legal_services:advocate_dashboard' %}" style="color: var(--warm-grey); text-decoration: none; font-size: 14px;">&larr; Back to Dashboard</a>
+  </div>
+  
+  <div class="alert-box">
+    <strong>Order: {{ order.order_id }}</strong><br>
+    Client: {{ order.user.get_full_name }} ({{ order.user.email }})<br>
+    Property: {{ order.property_name }}
+    {% if order.advocate %}— Advocate: <strong>Adv. {{ order.advocate.get_full_name }}</strong>{% else %}— <em>No advocate assigned yet</em>{% endif %}
+  </div>
+
+  {% if not can_edit %}
+  <div class="readonly-notice">
+    <span style="font-size: 22px;">👁️</span>
+    <div>
+      <strong>View-Only Mode</strong><br>
+      <span style="font-size: 13px;">Only the assigned advocate (<strong>Adv. {{ order.advocate.get_full_name|default:"Unassigned" }}</strong>) can update this case. Use the <a href="{% url 'legal_services:admin_dashboard' %}" style="color: #92400e; font-weight: 600;">Admin Legal Portal</a> to reassign the advocate if needed.</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="grid-2">
+    <div>
+      <div class="panel">
+        <div class="panel-title">Tracking Steps</div>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
+          {% if can_edit %}Update individual steps in the tracking timeline. The client will see these updates live.
+          {% else %}Read-only view of tracking steps for this case.{% endif %}
+        </p>
+        
+        {% for step in steps %}
+        {% if can_edit %}
+        <form method="POST" class="step-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update_step">
+          <input type="hidden" name="step_id" value="{{ step.id }}">
+          
+          <div class="step-head">
+            <div class="step-title">{{ step.order_idx }}. {{ step.title }}</div>
+            <select name="status" class="form-control" style="width: 120px; padding: 6px; font-size: 12px; font-weight: 500;">
+              {% for choice in StepChoices %}
+              <option value="{{ choice.value }}" {% if step.status == choice.value %}selected{% endif %}>{{ choice.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-row" style="margin-bottom: 8px;">
+            <input type="text" name="description" value="{{ step.description|default:'' }}" placeholder="Add note for client…" class="form-control">
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-primary btn-sm">Save Step</button>
+          </div>
+        </form>
+        {% else %}
+        <div class="step-view">
+          <div class="step-head" style="margin-bottom:6px;">
+            <div class="step-title">
+              <span class="status-dot-{{ step.status }}"></span>{{ step.order_idx }}. {{ step.title }}
+            </div>
+            <span style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">{{ step.status }}</span>
+          </div>
+          {% if step.description %}<div style="font-size:13px; color:#475569;">{{ step.description }}</div>{% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <div>
+      <div class="panel">
+        <div class="panel-title">Final Verdict</div>
+        {% if can_edit %}
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update_verdict">
+          
+          <div class="form-row">
+            <label>Verdict Status</label>
+            <select name="verdict" class="form-control" style="font-weight: 600;">
+              {% for choice in VerdictChoices %}
+              <option value="{{ choice.value }}" {% if order.verdict == choice.value %}selected{% endif %}>{{ choice.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Verdict Summary</label>
+            <textarea name="verdict_summary" rows="3" class="form-control" placeholder="E.g., No critical issues detected · 12 checks passed">{{ order.verdict_summary|default:'' }}</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Update Verdict</button>
+        </form>
+        {% else %}
+        <div style="font-size: 14px;">
+          <div style="margin-bottom: 12px;"><strong>Status:</strong> {{ order.get_verdict_display }}</div>
+          <div><strong>Summary:</strong> {{ order.verdict_summary|default:"No summary yet." }}</div>
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="panel">
+        <div class="panel-title">Status Checklist</div>
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 16px;">
+          {% if can_edit %}Toggle checks below. Green is passed, Red is failed.
+          {% else %}Checklist status (read-only).{% endif %}
+        </p>
+        
+        {% for check in checks %}
+        {% if can_edit %}
+        <form method="POST" class="check-item">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="toggle_check">
+          <input type="hidden" name="check_id" value="{{ check.id }}">
+          
+          <span class="check-label">{{ check.title }}</span>
+          <label class="toggle-switch">
+             <input type="checkbox" name="is_passed" onchange="this.form.submit()" {% if check.is_passed %}checked{% endif %}>
+             <span class="slider"></span>
+          </label>
+        </form>
+        {% else %}
+        <div class="check-item">
+          <span class="check-label">{{ check.title }}</span>
+          <span style="font-size: 13px; font-weight: 600; color: {% if check.is_passed %}#10b981{% else %}#ef4444{% endif %};">
+            {% if check.is_passed %}✓ Passed{% else %}✗ Failed{% endif %}
+          </span>
+        </div>
+        {% endif %}
+        {% empty %}
+        <div style="font-size: 13px; color: #94a3b8; text-align: center; padding: 12px;">No checks configured for this order.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Log -->
+  <div class="panel" style="margin-top: 8px;">
+    <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+      <span>📋 Case Activity Log</span>
+      <span style="font-size:12px; font-weight:400; color:#94a3b8;">Auto-recorded · newest first</span>
+    </div>
+    {% if activities %}
+    <div style="display:flex; flex-direction:column; gap:0;">
+      {% for act in activities %}
+      <div style="display:flex; gap:16px; padding:14px 0; border-bottom:1px solid #f1f5f9; {% if forloop.last %}border-bottom:none;{% endif %}">
+        <div style="flex-shrink:0; margin-top:3px;">
+          {% if act.category == 'assignment' %}<span style="font-size:18px;">👤</span>
+          {% elif act.category == 'step' %}<span style="font-size:18px;">📌</span>
+          {% elif act.category == 'verdict' %}<span style="font-size:18px;">⚖️</span>
+          {% elif act.category == 'payment' %}<span style="font-size:18px;">💳</span>
+          {% elif act.category == 'package' %}<span style="font-size:18px;">📦</span>
+          {% else %}<span style="font-size:18px;">🔔</span>{% endif %}
+        </div>
+        <div>
+          <div style="font-size:13px; color:var(--charcoal); line-height:1.5;">{{ act.message }}</div>
+          <div style="font-size:11px; color:#94a3b8; margin-top:4px;">
+            {% if act.actor %}{{ act.actor.get_full_name }} · {% endif %}{{ act.created_at|date:"j M Y, g:i a" }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:#94a3b8; font-size:13px; text-align:center; padding:20px 0;">No activity recorded yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

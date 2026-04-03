@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order {{ order.order_id }} | HOMEXO{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .detail-page {
+    --ink: #0f0e0c; --cream: #f7f4ee; --warm: #e8e2d6;
+    --gold: #c9a84c; --gold-light: #e8d49a;
+    background: var(--ink); color: var(--cream);
+    padding: 60px 40px; min-height: 90vh;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .dash-container { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; gap: 40px; }
+  .dash-card {
+    background: rgba(247,244,238,0.06); border: 1px solid rgba(247,244,238,0.1);
+    border-radius: 16px; padding: 28px; width: 100%;backdrop-filter: blur(4px);
+  }
+  .dash-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .dash-hdr-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); }
+  .dash-hdr-order { font-family:'DM Mono',monospace; font-size:12px; color:var(--gold); letter-spacing:0.05em; font-weight: 500;}
+  .dash-prop { background:rgba(247,244,238,0.05); border-radius:10px; padding:16px; margin-bottom:24px; border:1px solid rgba(247,244,238,0.08); }
+  .dash-prop-lbl { font-size:10px; color:rgba(247,244,238,0.4); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.08em; }
+  .dash-prop-name { font-size:16px; color:rgba(247,244,238,0.9); font-weight:500; margin-bottom:4px; }
+  .dash-prop-addr { font-size:12px; color:rgba(247,244,238,0.4); }
+  .dash-steps { display:flex; flex-direction:column; gap:0; }
+  .dash-step { display:flex; align-items:flex-start; gap:16px; padding:14px 0; position:relative; }
+  .dash-step:not(:last-child)::after { content:''; position:absolute; left:16px; top:40px; width:1px; height:calc(100% - 10px); background:rgba(247,244,238,0.1); }
+  .step-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; font-weight:500; z-index: 2;}
+  .step-done { background:#1a5c52; color:#d0e9e5; }
+  .step-active { background:var(--gold); color:var(--ink); animation: pulse-dot 2s infinite; }
+  .step-pending { background:rgba(247,244,238,0.06); color:rgba(247,244,238,0.3); border:1px solid rgba(247,244,238,0.1); }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow:0 0 0 0 rgba(201,168,76,0.4); }
+    50% { box-shadow:0 0 0 6px rgba(201,168,76,0); }
+  }
+  .step-info { flex:1; padding-top:4px; }
+  .step-name { font-size:14px; font-weight:500; color:rgba(247,244,238,0.85); margin-bottom:4px; }
+  .step-detail { font-size:12px; color:rgba(247,244,238,0.4); line-height:1.4; }
+  .step-detail.active-msg { color:var(--gold-light); }
+  
+  .verdict-display { background:rgba(247,244,238,0.06); border-radius:20px; padding:28px; border: 1px solid rgba(247,244,238,0.1); }
+  .verdict-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
+  .verdict-stamp { font-size:10px; background:rgba(74,189,158,0.15); color:#4abd9e; padding:3px 10px; border-radius:99px; }
+  .verdict-main { display:flex; align-items:center; gap:16px; margin-bottom:24px; padding-bottom: 24px; border-bottom: 1px solid rgba(247,244,238, 0.1);}
+  .big-dot { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .vd-green { background:#1a5c52; border:2px solid rgba(74,189,158,0.4); }
+  .vd-yellow {background: #664d00; border: 2px solid #e6b800;}
+  .vd-red {background: #660000; border: 2px solid #e60000; }
+  .vd-pending {background: rgba(247,244,238,0.1); border: 2px solid rgba(247,244,238,0.2);}
+  .verdict-title-big { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:#4abd9e; line-height:1.1; }
+  .vt-green { color: #4abd9e;}
+  .vt-yellow { color: #ffd633;}
+  .vt-red { color: #ff4d4d; }
+  .vt-pending { color: rgba(247,244,238,0.8); }
+  .verdict-sub-big { font-size:12px; color:rgba(247,244,238,0.4); margin-top:4px; }
+  
+  .verdict-checks { display:grid; grid-template-columns:1fr; gap:8px; }
+  .v-check { display:flex; align-items:center; gap:8px; font-size:12px; color:rgba(247,244,238,0.6); background:rgba(247,244,238,0.04); padding:8px 12px; border-radius:6px; }
+  .v-check-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .dot-g { background:#4abd9e; }
+  .dot-r { background:#ff4d4d; }
+  
+  .verdict-advocate { margin-top:20px; padding-top:16px; border-top:1px solid rgba(247,244,238,0.08); display:flex; align-items:center; gap:12px; }
+  .adv-avatar { width:40px; height:40px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:var(--teal-light); flex-shrink:0; }
+  .adv-name { font-size:13px; font-weight:500; color:rgba(247,244,238,0.8); }
+  .adv-role { font-size:11px; color:rgba(247,244,238,0.35); }
+  .adv-certified { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:0.06em; }
+  
+  .btn-back { display: inline-block; color: rgba(247,244,238,0.5); text-decoration: none; font-size: 13px; margin-bottom: 24px; transition: color 0.2s;}
+  .btn-back:hover { color: var(--gold); }
+  
+  @media(max-width: 768px) {
+      .dash-container { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-page">
+  <div class="dash-container">
+    <div>
+      <a href="{% url 'legal_services:dashboard' %}" class="btn-back">← Back to Dashboard</a>
+      <div class="dash-card">
+        <div class="dash-hdr">
+          <span class="dash-hdr-title">Live Tracking</span>
+          <span class="dash-hdr-order">#{{ order.order_id }}</span>
+        </div>
+        <div class="dash-prop">
+          <div class="dash-prop-lbl">Property under review &middot; {{ order.get_package_display }}</div>
+          <div class="dash-prop-name">{{ order.property_name }}</div>
+          <div class="dash-prop-addr">{{ order.property_address }}</div>
+        </div>
+        
+        <div class="dash-steps">
+          {% for step in steps %}
+            <div class="dash-step">
+              <div class="step-dot {% if step.status == 'done' %}step-done{% elif step.status == 'active' %}step-active{% else %}step-pending{% endif %}">
+                {% if step.status == 'done' %}&#10003;{% elif step.status == 'active' %}&rarr;{% else %}{{ forloop.counter }}{% endif %}
+              </div>
+              <div class="step-info">
+                <div class="step-name">{{ step.title }}</div>
+                <div class="step-detail {% if step.status == 'active' %}active-msg{% endif %}">
+                  {{ step.description|default:"Waiting for previous steps" }}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+             <div class="step-detail">No tracking steps have been added yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    
+    <div>
+        <div style="margin-top: 40px; margin-bottom: 24px;"></div>
+        <div class="verdict-display">
+          <div class="verdict-head">
+            <span>Homexo Legal Verdict</span>
+            {% if order.verdict != 'pending' %}
+              <span class="verdict-stamp">Advocate Certified</span>
+            {% endif %}
+          </div>
+          <div class="verdict-main">
+            <div class="big-dot 
+                {% if order.verdict == 'green' %}vd-green{% elif order.verdict == 'yellow' %}vd-yellow{% elif order.verdict == 'red' %}vd-red{% else %}vd-pending{% endif %}">
+              {% if order.verdict == 'pending' %}?{% else %}&#128994;{% endif %}
+            </div>
+            <div>
+              <div class="verdict-title-big 
+                {% if order.verdict == 'green' %}vt-green{% elif order.verdict == 'yellow' %}vt-yellow{% elif order.verdict == 'red' %}vt-red{% else %}vt-pending{% endif %}">
+                {{ order.get_verdict_display }}
+              </div>
+              <div class="verdict-sub-big">{{ order.verdict_summary|default:"Verdict report is currently pending" }}</div>
+            </div>
+          </div>
+          
+          <div class="verdict-checks">
+            {% for check in checks %}
+              <div class="v-check">
+                <div class="v-check-dot {% if check.is_passed %}dot-g{% else %}dot-r{% endif %}"></div>
+                {{ check.title }}
+              </div>
+            {% empty %}
+              <div class="v-check" style="justify-content: center; background: transparent;">Checks will appear here once verified</div>
+            {% endfor %}
+          </div>
+          
+          {% if order.advocate %}
+          <div class="verdict-advocate">
+            <div class="adv-avatar">{{ order.advocate.first_name|slice:":1"|upper }}{{ order.advocate.last_name|slice:":1"|upper }}</div>
+            <div style="flex:1;">
+              <div class="adv-name">Adv. {{ order.advocate.get_full_name }}</div>
+              <div class="adv-role">Senior Property Advocate</div>
+            </div>
+            <div class="adv-certified">SIGNED</div>
+          </div>
+          {% endif %}
+        </div>
+    </div>
+  </div>
+
+  <!-- Activity Log -->
+  {% if activities %}
+  <div style="max-width:900px; margin: 32px auto 0;">
+    <div style="background:rgba(247,244,238,0.06); border:1px solid rgba(247,244,238,0.1); border-radius:16px; padding:28px;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px;">
+        📋 Case Activity Log
+      </div>
+      {% for act in activities %}
+      <div style="display:flex; gap:16px; padding:14px 0; border-bottom:1px solid rgba(247,244,238,0.06); {% if forloop.last %}border-bottom:none;{% endif %}">
+        <div style="flex-shrink:0; margin-top:2px; font-size:16px;">
+          {% if act.category == 'assignment' %}👤
+          {% elif act.category == 'step' %}📌
+          {% elif act.category == 'verdict' %}⚖️
+          {% elif act.category == 'payment' %}💳
+          {% elif act.category == 'package' %}📦
+          {% else %}🔔{% endif %}
+        </div>
+        <div>
+          <div style="font-size:13px; color:rgba(247,244,238,0.75); line-height:1.5;">{{ act.message }}</div>
+          <div style="font-size:11px; color:rgba(247,244,238,0.3); margin-top:4px;">
+            {{ act.created_at|date:"j M Y, g:i a" }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

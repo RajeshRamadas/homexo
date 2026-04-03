@@ -33,16 +33,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
 
     class Role(models.TextChoices):
-        BUYER  = 'buyer',  'Buyer'
-        SELLER = 'seller', 'Seller'
-        AGENT  = 'agent',  'Agent'
-        ADMIN  = 'admin',  'Admin'
+        BUYER       = 'buyer',       'Buyer'
+        SELLER      = 'seller',      'Seller'
+        AGENT       = 'agent',       'Agent'
+        ADMIN       = 'admin',       'Admin'
+        LEGAL_ADMIN = 'legal_admin', 'Legal Admin'
+        ADVOCATE    = 'advocate',    'Advocate'
 
     email        = models.EmailField(unique=True, db_index=True)
     first_name   = models.CharField(max_length=80)
     last_name    = models.CharField(max_length=80)
     phone        = models.CharField(max_length=20, blank=True, null=True, unique=True, db_index=True)
-    role         = models.CharField(max_length=10, choices=Role.choices, default=Role.BUYER)
+    role         = models.CharField(max_length=20, choices=Role.choices, default=Role.BUYER)
     avatar       = models.ImageField(upload_to='avatars/', blank=True, null=True)
     is_verified  = models.BooleanField(default=False)
     is_active    = models.BooleanField(default=True)
@@ -57,6 +59,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     preferred_listing_type  = models.CharField(max_length=20, blank=True)
     preferred_property_type = models.CharField(max_length=20, blank=True)
     preferred_bhk           = models.CharField(max_length=10, blank=True)
+    
+    # Advocate specific
+    address                 = models.TextField(blank=True, null=True)
+    bar_number              = models.CharField(max_length=50, blank=True)
+    bar_council_certificate = models.ImageField(upload_to='advocate_docs/bar/', blank=True, null=True)
+    aadhaar_image           = models.ImageField(upload_to='advocate_docs/aadhaar/', blank=True, null=True)
+    address_proof_image     = models.ImageField(upload_to='advocate_docs/address/', blank=True, null=True)
+    is_approved_advocate    = models.BooleanField(default=False)
 
     objects = UserManager()
 

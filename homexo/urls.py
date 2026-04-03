@@ -9,6 +9,7 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 from pages import views as pages_views
+from accounts import views as accounts_views
 
 from .sitemaps import sitemaps
 
@@ -28,6 +29,9 @@ urlpatterns = [
     # Direct developers link for debugging (ensures no shadowing)
     path('developers/', pages_views.developers, name='developers_root'),
 
+    # Advocate self-registration
+    path('advocate-signup/', accounts_views.advocate_register_view, name='advocate_signup'),
+
     # Frontend pages
     path('',               include('pages.urls',        namespace='pages')),
     path('properties/',    include('properties.urls',   namespace='properties')),
@@ -36,6 +40,7 @@ urlpatterns = [
     path('wishlist/',      include('wishlist.urls',      namespace='wishlist')),
     path('accounts/',      include('accounts.urls',      namespace='accounts')),
     path('social-auth/',   include('social_django.urls',  namespace='social')),
+    path('legal-tracking/', include('legal_services.urls', namespace='legal_services')),
 
     # REST API (v1)
     path('api/v1/',        include('homexo.api_urls',   namespace='api')),
