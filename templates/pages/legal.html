@@ -710,7 +710,8 @@
 
     <form method="POST" action="{% url 'enquiries:create' %}" style="max-width:560px;margin:0 auto;">
       {% csrf_token %}
-      <input type="hidden" name="enquiry_type" value="general">
+      <input type="hidden" name="enquiry_type" value="legal">
+      <input type="hidden" name="service_detail" value="Legal CTA Section">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
         <div>
           <input type="text" name="name" required placeholder="Full Name *"
@@ -732,7 +733,7 @@
           style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
       </div>
       <button type="submit" style="width:100%;padding:15px;background:var(--cream);color:var(--teal);font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:background 0.2s;">
-        Submit Enquiry &rarr;
+        Request Legal Callback &rarr;
       </button>
       <div style="display:flex;align-items:center;gap:12px;margin:14px 0;">
         <div style="flex:1;height:1px;background:rgba(247,244,238,0.15);"></div>
@@ -749,6 +750,45 @@
 
 </div>
 {% endblock %}
+
+{% block pre_footer %}
+<div class="cta-banner">
+  <div class="cta-bg-text">LEGAL</div>
+  <div>
+    <h2 class="cta-title">Need a Final <em>Legal</em><br>Go / No-Go Check?</h2>
+    <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Share your property details and our legal team will call you with the right verification package and timeline.</p>
+  </div>
+  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
+    {% csrf_token %}
+    <input type="hidden" name="enquiry_type" value="legal">
+    <div class="cta-form-row">
+      <input type="text" name="name" placeholder="Your Full Name" value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}" required>
+      <input type="tel" name="phone" placeholder="Phone Number" value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% endif %}" required>
+    </div>
+    <div class="cta-form-row">
+      <input type="email" name="email" placeholder="Email Address" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required>
+      <select name="service_detail" required>
+        <option value="">Legal Service Needed</option>
+        <option value="Title & Document Verification">Title &amp; Document Verification</option>
+        <option value="Sale Agreement Drafting">Sale Agreement Drafting</option>
+        <option value="Khata / Post-Purchase Support">Khata / Post-Purchase Support</option>
+        <option value="Video Consultation">Video Consultation</option>
+      </select>
+    </div>
+    <div class="cta-form-row">
+      <select name="budget">
+        <option value="">Property Value Range</option>
+        <option value="Under ₹50L">Under ₹50L</option>
+        <option value="₹50L – ₹1Cr">₹50L – ₹1Cr</option>
+        <option value="₹1Cr – ₹2Cr">₹1Cr – ₹2Cr</option>
+        <option value="Above ₹2Cr">Above ₹2Cr</option>
+      </select>
+      <input type="text" name="message" placeholder="Property area or concern (optional)">
+    </div>
+    <button type="submit" class="cta-submit">Request Legal Consultation &rarr;</button>
+  </form>
+</div>
+{% endblock pre_footer %}
 
 {% block extra_js %}
 <script>
