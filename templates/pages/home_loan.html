@@ -46,6 +46,20 @@ html{scroll-behavior:smooth}
 .hero-partners{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .hero-partners-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(232,213,183,0.45);flex-shrink:0}
 .pchip{background:rgba(255,255,255,0.07);border:1px solid rgba(184,153,106,0.3);padding:5px 13px;font-size:10px;font-weight:500;color:rgba(232,213,183,0.7);letter-spacing:1px;transition:border-color .3s}
+.hero-detail-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:26px;max-width:650px}
+.hero-detail{background:rgba(255,255,255,0.04);border:1px solid rgba(184,153,106,0.18);padding:14px 14px 13px;position:relative;overflow:hidden}
+.hero-detail::before{content:'';position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.hero-detail-k{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,213,183,0.42);margin-bottom:8px}
+.hero-detail-v{font-size:12px;font-weight:500;color:var(--white);line-height:1.55}
+.hero-float-card{position:absolute;right:608px;top:110px;width:252px;padding:20px 20px 18px;background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03));border:1px solid rgba(184,153,106,0.18);backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,0.22);z-index:1;overflow:hidden}
+.hero-float-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,153,106,0.12),transparent 48%);pointer-events:none}
+.hero-float-k{position:relative;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,213,183,0.55);margin-bottom:12px}
+.hero-float-rate{position:relative;font-family:'Playfair Display',serif;font-size:34px;line-height:1;color:var(--white);margin-bottom:16px}
+.hero-float-rate span{display:block;margin-top:6px;font-size:13px;color:var(--gold2);font-family:'Jost',sans-serif;letter-spacing:.4px}
+.hero-float-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.hero-float-stat{padding-top:11px;border-top:1px solid rgba(184,153,106,0.14)}
+.hero-float-l{font-size:8px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(232,213,183,0.42);margin-bottom:5px}
+.hero-float-v{font-size:13px;font-weight:600;color:var(--white)}
 
 /* PROMO BANNER */
 .promo-banner{background:var(--surface2);border-bottom:1px solid var(--border);padding:10px 60px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
@@ -95,16 +109,10 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .submit-btn:hover{background:var(--navy)}
 .form-note{font-size:9px;color:var(--text3);text-align:center;margin-top:13px;line-height:1.7;letter-spacing:.3px}
 .form-note span{color:var(--gold)}
-
-/* ─── STATS ───────────────────────────────────── */
-.stats{background:var(--ink2);border-bottom:1px solid rgba(184,153,106,0.1);display:grid;grid-template-columns:repeat(4,1fr)}
-.stat{padding:36px 28px;border-right:1px solid rgba(184,153,106,0.08);text-align:center;opacity:0;transform:translateY(14px);transition:all .6s cubic-bezier(.23,1,.32,1)}
-.stat:last-child{border-right:none}
-.stat.vis{opacity:1;transform:translateY(0)}
-.stat:nth-child(2){transition-delay:.08s}.stat:nth-child(3){transition-delay:.16s}.stat:nth-child(4){transition-delay:.24s}
-.stat-num{font-family:'Jost',sans-serif;font-size:46px;font-weight:300;color:var(--gold2);line-height:1;margin-bottom:8px}
-.stat-num sub{font-size:18px;font-family:'Jost',sans-serif;vertical-align:middle;color:var(--gold)}
-.stat-lbl{font-size:10px;color:rgba(232,213,183,0.35);letter-spacing:2px;text-transform:uppercase;font-weight:400}
+.form-proof-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+.form-proof{padding:10px 8px;background:var(--surface);border:1px solid rgba(184,153,106,0.16);text-align:center}
+.form-proof strong{display:block;font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.2px}
+.form-proof span{display:block;margin-top:4px;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
 
 /* ─── SECTIONS ────────────────────────────────── */
 .sec{padding:88px 60px}
@@ -160,8 +168,24 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .banks-more-card.vis{opacity:1;transform:translateY(0)}
 .banks-more-num{font-family:'Playfair Display',serif;font-size:48px;font-weight:300;color:var(--gold);opacity:.5;line-height:1}
 .banks-more-lbl{font-size:10px;color:var(--text3);text-align:center;line-height:1.6;letter-spacing:.5px}
+.compare-intel{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:1px;background:var(--border);margin-bottom:32px}
+.compare-card{background:var(--surface);padding:26px 28px}
+.compare-card.dark{background:var(--ink);color:var(--white)}
+.compare-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-weight:600}
+.compare-card.dark .compare-lbl{color:rgba(232,213,183,0.55)}
+.compare-val{font-family:'Playfair Display',serif;font-size:36px;line-height:1;color:var(--ink);margin-bottom:12px}
+.compare-card.dark .compare-val{color:var(--white)}
+.compare-desc{font-size:12px;line-height:1.75;color:var(--text2);font-weight:300}
+.compare-card.dark .compare-desc{color:rgba(232,213,183,0.72)}
+.compare-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.compare-chip{padding:5px 10px;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;background:var(--white);border:1px solid var(--border);color:var(--text2);font-weight:600}
+.compare-card.dark .compare-chip{background:rgba(255,255,255,0.06);border-color:rgba(184,153,106,0.18);color:var(--gold2)}
 
 /* ─── CALCULATORS ─────────────────────────────── */
+.calc-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px}
+.calc-meta-card{background:var(--white);padding:18px 20px}
+.calc-meta-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600}
+.calc-meta-text{font-size:12px;color:var(--text2);line-height:1.7;font-weight:300}
 .calc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:52px}
 .ctab{padding:15px 38px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;background:none;border:none;color:var(--text3);font-family:'Jost',sans-serif;font-weight:400;transition:all .3s;position:relative}
 .ctab.on{color:var(--ink);font-weight:600}
@@ -211,6 +235,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .feat:hover{background:rgba(255,255,255,0.05)}
 .feat-icon{width:48px;height:48px;background:rgba(184,153,106,0.1);border:1px solid rgba(184,153,106,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:22px}
 .feat-icon svg{color:var(--gold2)}
+.feat-icon-rupee-mark{display:inline-block;font-family:'Segoe UI Symbol','Arial Unicode MS','Noto Sans','Jost',sans-serif;font-size:25px;font-weight:500;line-height:1;color:var(--gold2);letter-spacing:-.04em;transform:translateY(-1px)}
 .feat-num{font-size:9px;letter-spacing:3px;color:rgba(184,153,106,0.6);text-transform:uppercase;margin-bottom:12px;font-weight:500}
 .feat-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--white);margin-bottom:12px;letter-spacing:.2px}
 .feat-desc{font-size:12px;color:rgba(232,213,183,0.6);line-height:1.85;font-weight:300}
@@ -250,6 +275,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .trust-item:hover{background:var(--white)}
 .trust-ico{width:38px;height:38px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .trust-ico svg{color:var(--gold)}
+.trust-ico-rupee{font-family:'Jost',sans-serif;font-size:18px;font-weight:600;color:var(--gold);line-height:1}
 .trust-title{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:.3px}
 .trust-sub{font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:.5px}
 
@@ -269,28 +295,41 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .cta{background:var(--ink2);padding:88px 60px;display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:center;position:relative;overflow:hidden;border-top:1px solid rgba(184,153,106,0.1)}
 .cta-decor{position:absolute;right:-100px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:280px;font-weight:300;color:rgba(184,153,106,0.03);line-height:1;pointer-events:none;white-space:nowrap;letter-spacing:-20px}
 .cta-gold-line{width:48px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:24px}
+.cta-copy{position:relative;z-index:2}
 .cta-title{font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,58px);font-weight:300;color:var(--white);line-height:1.08;letter-spacing:-.5px}
 .cta-title em{font-style:italic;color:var(--gold2)}
 .cta-sub{font-size:13px;color:rgba(232,213,183,0.55);margin-top:20px;line-height:1.8;font-weight:300;max-width:340px}
-.cta-form{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px}
+.cta-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:30px;max-width:580px}
+.cta-point{display:flex;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(184,153,106,0.16)}
+.cta-point svg{color:var(--gold2);flex-shrink:0;margin-top:2px}
+.cta-point-text{font-size:12px;line-height:1.65;color:rgba(232,213,183,0.78);font-weight:300}
+.cta-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cta-chip{padding:7px 12px;border:1px solid rgba(184,153,106,0.2);background:rgba(255,255,255,0.04);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);font-weight:600}
+.cta-form{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(184,153,106,0.18);padding:26px 26px 22px;box-shadow:0 24px 70px rgba(0,0,0,0.16)}
+.cta-form-head{margin-bottom:4px}
+.cta-form-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;color:var(--white);line-height:1.15}
+.cta-form-sub{font-size:12px;color:rgba(232,213,183,0.58);line-height:1.75;margin-top:8px}
 .cta-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .ci,.cs{width:100%;padding:15px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(184,153,106,0.3);color:var(--white);font-family:'Jost',sans-serif;font-size:13px;outline:none;transition:border-color .3s;appearance:none}
 .ci::placeholder{color:rgba(232,213,183,0.35)}
-.cs{color:rgba(232,213,183,0.45)}
+.cs{color:rgba(232,213,183,0.45);padding-right:44px;background-image:linear-gradient(45deg,transparent 50%,rgba(232,213,183,0.55) 50%),linear-gradient(135deg,rgba(232,213,183,0.55) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px);background-size:6px 6px,6px 6px;background-repeat:no-repeat}
 .ci:focus,.cs:focus{border-color:var(--gold2)}
 .cta-btn{background:var(--gold);color:var(--ink);border:none;padding:16px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:'Jost',sans-serif;font-weight:700;transition:background .3s,transform .2s}
 .cta-btn:hover{background:var(--gold2)}
+.cta-form-foot{font-size:10px;color:rgba(232,213,183,0.45);text-align:center;line-height:1.6}
 
 /* ─── RESPONSIVE ──────────────────────────────── */
 @media(max-width:1100px){
   .promo-banner{padding:10px 28px}
   .hero{padding:64px 28px 0;gap:36px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .stat:nth-child(2){border-right:none}.stat:nth-child(3){border-top:1px solid rgba(184,153,106,0.08)}.stat:nth-child(4){border-top:1px solid rgba(184,153,106,0.08);border-right:none}
+  .hero-float-card{display:none}
+  .hero-detail-strip{grid-template-columns:1fr 1fr;max-width:none}
   .sec{padding:68px 28px}
   .steps{grid-template-columns:1fr;gap:1px}
   .banks-grid{grid-template-columns:repeat(3,1fr)}
+  .compare-intel{grid-template-columns:1fr}
   .cpanel.on{grid-template-columns:1fr;gap:36px}
+  .calc-meta{grid-template-columns:1fr}
   .feats{grid-template-columns:repeat(2,1fr)}
   .elig-crit{grid-template-columns:1fr;gap:1px}
   .testis{grid-template-columns:1fr 1fr;gap:1px}
@@ -305,17 +344,23 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .promo-banner{padding:10px 16px;font-size:11px}
   .hero{margin-top:0;grid-template-columns:1fr;padding:40px 16px 0;gap:32px;min-height:auto}
   .hero-left{padding-bottom:0}.hero-title{font-size:clamp(32px,9vw,48px)}.hero-sub{font-size:13px;margin-bottom:28px}
+  .eyebrow{flex-wrap:wrap;gap:10px;font-size:9px;letter-spacing:3px}
+  .eyebrow-line{width:24px}
   .hero-pills{gap:8px}.hero-pill{padding:10px 14px}
+  .hero-partners{gap:8px}
+  .hero-partners-lbl{width:100%;margin-bottom:2px}
+  .pchip{padding:5px 10px;font-size:9px}
+  .hero-detail-strip{grid-template-columns:1fr}
   .elig-card{padding:26px 20px}
   .frow{grid-template-columns:1fr;gap:0}
-  .stats{grid-template-columns:1fr 1fr}
-  .stat{padding:22px 16px}.stat:nth-child(2){border-right:none}.stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid rgba(184,153,106,0.08)}.stat:nth-child(3){border-top:none}
   .sec{padding:48px 16px}
   .sec-hd{flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:36px}
   .steps{gap:1px}.step{padding:32px 22px}.step:hover{box-shadow:none}
   .bank-tabs{overflow-x:auto;scrollbar-width:none}.bank-tabs::-webkit-scrollbar{display:none}
   .btab{padding:12px 18px;font-size:9px;flex-shrink:0;cursor:pointer}
+  .compare-card{padding:20px 18px}
   .banks-grid{grid-template-columns:1fr 1fr;gap:1px}.bcard{padding:18px 16px}
+  .calc-meta-card{padding:16px 18px}
   .calc-tabs{overflow-x:auto;scrollbar-width:none}.calc-tabs::-webkit-scrollbar{display:none}
   .ctab{padding:13px 22px;font-size:9px;flex-shrink:0;cursor:pointer}
   .cpanel.on{grid-template-columns:1fr;gap:28px}
@@ -326,6 +371,9 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .faq-q{font-size:14px;padding:18px 0;cursor:pointer}
   .cta{display:flex;flex-direction:column;padding:44px 16px 40px;gap:32px}
   .cta-title{font-size:clamp(30px,9vw,48px)}.cta-decor{display:none}
+  .cta-points{grid-template-columns:1fr}
+  .cta-form{padding:22px 20px}
+  .cta-form-title{font-size:24px}
   .cta-row{grid-template-columns:1fr;gap:10px}
   .ci,.cs,.cta-btn{cursor:pointer}.ci,.cs{font-size:16px}
   .hl-premium input,.hl-premium select,.hl-premium .fi,.hl-premium .fs{font-size:16px!important}
@@ -337,6 +385,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 }
 @media(max-width:390px){
   .hero{padding:28px 12px 0}.sec{padding:40px 12px}
+  .form-proof-strip{grid-template-columns:1fr}
   .banks-grid{grid-template-columns:1fr}
 }
 @media(hover:none) and (pointer:coarse){
@@ -353,6 +402,16 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   <div class="hero-texture"></div>
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
+  <div class="hero-float-card">
+    <div class="hero-float-k">Today's Lending Pulse</div>
+    <div class="hero-float-rate">8.40<span>starting rate for strong profiles</span></div>
+    <div class="hero-float-grid">
+      <div class="hero-float-stat"><div class="hero-float-l">Top Funding</div><div class="hero-float-v">Up to 90%</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Sanction Pace</div><div class="hero-float-v">7 Days</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Partner Banks</div><div class="hero-float-v">15+</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Advisory Fee</div><div class="hero-float-v">Zero</div></div>
+    </div>
+  </div>
 
   <div class="hero-left">
     <div class="eyebrow"><span class="eyebrow-line"></span>HOMEXO Finance — Pre-Negotiated Rates</div>
@@ -379,6 +438,20 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <span class="hero-partners-lbl">15+ Banks:</span>
       <span class="pchip">SBI</span><span class="pchip">HDFC</span><span class="pchip">ICICI</span>
       <span class="pchip">Axis</span><span class="pchip">Kotak</span><span class="pchip">+10 more</span>
+    </div>
+    <div class="hero-detail-strip">
+      <div class="hero-detail">
+        <div class="hero-detail-k">Profile Review</div>
+        <div class="hero-detail-v">Same-day shortlist of the lenders most likely to approve you.</div>
+      </div>
+      <div class="hero-detail">
+        <div class="hero-detail-k">Negotiation Edge</div>
+        <div class="hero-detail-v">We compare slabs, fee waivers, and funding brackets before you commit.</div>
+      </div>
+      <div class="hero-detail">
+        <div class="hero-detail-k">Execution Support</div>
+        <div class="hero-detail-v">One expert manages docs, bank follow-up, and disbursal from start to finish.</div>
+      </div>
     </div>
   </div>
 
@@ -447,10 +520,13 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <span id="heroSubmitText">Get Best Offers Now</span>
     </button>
     <div class="form-note">No credit score impact. Data encrypted. <span>100% free service.</span></div>
+    <div class="form-proof-strip">
+      <div class="form-proof"><strong>30 Sec</strong><span>to get started</span></div>
+      <div class="form-proof"><strong>Same Day</strong><span>profile review</span></div>
+      <div class="form-proof"><strong>1 Expert</strong><span>till disbursal</span></div>
+    </div>
   </div>
 </section>
-
-
 
 <!-- ── HOW IT WORKS ── -->
 <section class="sec sec-surface">
@@ -498,6 +574,28 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <p class="sec-sub">Pre-negotiated exclusive rates — live EMI calculated for ₹50L loan over 20 years.</p>
     </div>
   </div>
+  <div class="compare-intel">
+    <div class="compare-card dark">
+      <div class="compare-lbl">Why This View Matters</div>
+      <div class="compare-val">One screen,<br>better decisions.</div>
+      <div class="compare-desc">Walk-in rates rarely show the full picture. We compare interest slabs, funding limits, tenure flexibility, and processing costs together so you can choose on outcome, not just headline rate.</div>
+      <div class="compare-chips">
+        <span class="compare-chip">Rate negotiation</span>
+        <span class="compare-chip">Funding fit</span>
+        <span class="compare-chip">Fee clarity</span>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-lbl">Typical Walk-In Range</div>
+      <div class="compare-val">8.75%+</div>
+      <div class="compare-desc">Often shared as a generic rate before your salary band, CIBIL tier, and property type are fully assessed.</div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-lbl">HOMEXO Negotiated Zone</div>
+      <div class="compare-val">8.40% to 8.55%</div>
+      <div class="compare-desc">Indicative range our strongest matches unlock after lender comparison, fee screening, and profile packaging.</div>
+    </div>
+  </div>
   <div class="bank-tabs">
     <button class="btab on" onclick="switchBank(this,'lowest')">Lowest Interest</button>
     <button class="btab" onclick="switchBank(this,'tenure')">Max Tenure</button>
@@ -514,6 +612,20 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Financial Tools</div>
       <h2 class="sec-title" style="margin-top:10px">Plan Your <em>Home Loan</em></h2>
       <p class="sec-sub">Use our live calculators to estimate your monthly EMI or find how much loan you qualify for before you apply.</p>
+    </div>
+  </div>
+  <div class="calc-meta">
+    <div class="calc-meta-card">
+      <div class="calc-meta-label">Live Assumptions</div>
+      <div class="calc-meta-text">Figures update instantly as you move the sliders, making it easier to test budget comfort before you speak to a lender.</div>
+    </div>
+    <div class="calc-meta-card">
+      <div class="calc-meta-label">Practical Planning</div>
+      <div class="calc-meta-text">Use EMI mode to compare affordability, then switch to eligibility mode to see how income and existing EMIs change your sanction range.</div>
+    </div>
+    <div class="calc-meta-card">
+      <div class="calc-meta-label">Advisor Review</div>
+      <div class="calc-meta-text">Once you find a comfortable number, our team can translate it into the most suitable bank shortlist and documentation path.</div>
     </div>
   </div>
   <div class="calc-tabs">
@@ -590,6 +702,25 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   </div>
 </section>
 
+<div class="trust-strip">
+  <div class="trust-item">
+    <div class="trust-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16"/><path d="M7 4h10v6H7z"/><path d="M6 11h12v9H6z"/></svg></div>
+    <div><div class="trust-title">Doorstep Document Support</div><div class="trust-sub">Collection, checklist, and bank-ready packaging handled for you.</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-ico trust-ico-rupee">₹</div>
+    <div><div class="trust-title">No Advisory Fee</div><div class="trust-sub">Comparison, negotiation, and handholding stay free for the borrower.</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <div><div class="trust-title">Secure Data Handling</div><div class="trust-sub">Sensitive profile and income details are reviewed in an encrypted workflow.</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div>
+    <div><div class="trust-title">Single Point of Contact</div><div class="trust-sub">One expert stays with you through eligibility, sanction, and final disbursal.</div></div>
+  </div>
+</div>
+
 <!-- ── WHY HOMEXO ── -->
 <section class="sec sec-dark">
   <div class="sec-hd">
@@ -601,13 +732,13 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   </div>
   <div class="feats">
     <div class="feat">
-      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6l3 1m0 0l-3 9a5.003 5.003 0 006.001.476m-.001-.476l3-9m0 0l3-1m0 1l3 9a5.003 5.003 0 01-6.001.476M9 7l3 1 3-1M7.5 21l3-9 3 9"/></svg></div>
+      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="5" height="11" rx="1.2"/><rect x="15" y="7" width="5" height="11" rx="1.2"/><path d="M6.5 7V5"/><path d="M17.5 7V5"/><path d="M12 8.5v7"/><path d="M10.5 10l1.5-1.5 1.5 1.5"/><path d="M10.5 14l1.5 1.5 1.5-1.5"/></svg></div>
       <div class="feat-num">01</div>
       <div class="feat-title">Compare 15+ Banks</div>
       <div class="feat-desc">See live offers from every major lender in India — side-by-side. No more calling banks individually or guessing which rate is best for your profile.</div>
     </div>
     <div class="feat">
-      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12M6 8h12M15 21L6 8"/><path d="M6 11h3a4 4 0 000-8"/></svg></div>
+      <div class="feat-icon"><span class="feat-icon-rupee-mark" aria-hidden="true">₹</span></div>
       <div class="feat-num">02</div>
       <div class="feat-title">Lowest Rate Guaranteed</div>
       <div class="feat-desc">Our pre-negotiated exclusive rates start at 8.40% p.a. — consistently better than walk-in bank rates. We leverage volume to get you better terms.</div>
@@ -699,7 +830,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 </section>
 
 <!-- ── FAQ ── -->
-<section class="sec sec-white">
+<section class="sec sec-white" id="faq">
   <div class="sec-hd" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;margin-bottom:52px;">
     <div class="eyebrow" style="color:var(--gold);justify-content:center"><span class="eyebrow-line"></span>Common Questions<span class="eyebrow-line" style="transform:scaleX(-1)"></span></div>
     <h2 class="sec-title" style="margin-top:10px">Home Loan <em>FAQs</em></h2>
@@ -735,12 +866,39 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 <!-- ── FINAL CTA ── -->
 <div class="cta">
   <div class="cta-decor">LOAN</div>
-  <div>
+  <div class="cta-copy">
     <div class="cta-gold-line"></div>
     <h2 class="cta-title">Your Dream Home<br>Deserves the <em>Best</em><br>Loan Deal.</h2>
     <p class="cta-sub">Let our experts compare every bank, negotiate your rate, and close your loan — all without a single rupee in fees.</p>
+    <div class="cta-points">
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">We shortlist banks by profile fit, not brand name, so you start with the strongest approval path.</div>
+      </div>
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">Your advisor compares rate slabs, processing fees, and tenure flexibility before any application is submitted.</div>
+      </div>
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">We coordinate document pickup, lender follow-ups, and sanction progress so you do not chase multiple teams.</div>
+      </div>
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">Ideal for purchase loans, balance transfers, top-up needs, and NRI-led residential financing.</div>
+      </div>
+    </div>
+    <div class="cta-meta">
+      <span class="cta-chip">30-minute callback</span>
+      <span class="cta-chip">No spam follow-ups</span>
+      <span class="cta-chip">Free advisory</span>
+    </div>
   </div>
   <div class="cta-form">
+    <div class="cta-form-head">
+      <div class="cta-form-title">Start Your Comparison</div>
+      <div class="cta-form-sub">Share four quick details. We will map your likely eligibility and the best bank shortlist for your profile.</div>
+    </div>
     <div class="cta-row">
       <input class="ci" type="text" placeholder="Your Full Name">
       <input class="ci" type="tel" placeholder="Phone Number">
@@ -750,6 +908,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <select class="cs"><option>Loan Amount Needed</option><option>Under ₹30L</option><option>₹30L – ₹50L</option><option>₹50L – ₹1Cr</option><option>₹1Cr – ₹2Cr</option><option>Above ₹2Cr</option></select>
     </div>
     <button class="cta-btn" id="ctaSubmit">Compare Offers — Free →</button>
+    <div class="cta-form-foot">No credit impact. No advisory cost. One dedicated expert until your loan closes.</div>
   </div>
 </div>
 </div>
