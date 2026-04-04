@@ -77,10 +77,10 @@ def email_confirm_view(request, token):
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, f'Welcome to HOMEXO, {user.first_name}! Your email has been confirmed.')
         return redirect('pages:home')
-    except (signing.BadSignature, User.DoesNotExist):
-        return render(request, 'accounts/email_confirm_done.html', {'invalid': True})
     except signing.SignatureExpired:
         return render(request, 'accounts/email_confirm_done.html', {'expired': True})
+    except (signing.BadSignature, User.DoesNotExist):
+        return render(request, 'accounts/email_confirm_done.html', {'invalid': True})
 
 
 def resend_confirmation_view(request):

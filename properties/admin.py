@@ -4,6 +4,7 @@ Rich admin panel for Property management.
 """
 
 from django.contrib import admin
+from django.db.models import Count
 from django.utils.html import format_html
 from .models import Developer, Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem
 
@@ -24,7 +25,10 @@ class DeveloperAdmin(admin.ModelAdmin):
         return format_html('<div style="width:32px;height:32px;background:#eef0f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9ca3af;font-weight:700;">{}</div>', obj.name[:2].upper())
 
     def total_projects(self, obj):
-        return obj.properties.count()
+        return obj.properties_count
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(properties_count=Count('properties'))
 
 class PropertyImageInline(admin.TabularInline):
     model      = PropertyImage

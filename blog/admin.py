@@ -30,6 +30,9 @@ class PostAdmin(admin.ModelAdmin):
         ('Stats', {'fields': ('views_count', 'created_at', 'updated_at'), 'classes': ('collapse',)}),
     )
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('categories')
+
     @admin.display(description='Categories')
     def category_badges(self, obj):
         cats = obj.categories.all()

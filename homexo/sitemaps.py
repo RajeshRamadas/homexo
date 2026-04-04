@@ -53,7 +53,6 @@ class StaticViewSitemap(Sitemap):
             'pages:market_reports',
             'properties:list',
             'blog:list',
-            'agents:list',
         ]
 
     def location(self, item):

@@ -4,6 +4,7 @@ Custom social-auth pipeline for the email-based custom User model.
 """
 
 from django.contrib.auth import get_user_model
+from social_core.exceptions import AuthMissingParameter
 
 
 def get_or_create_user(strategy, details, backend, uid, user=None, *args, **kwargs):
@@ -18,8 +19,8 @@ def get_or_create_user(strategy, details, backend, uid, user=None, *args, **kwar
     email = details.get('email')
     if not email:
         # Provider didn't return an email (e.g. Facebook with denied permission).
-        # Return None so the pipeline aborts without creating a broken account.
-        return None
+        # Raise AuthMissingParameter so the user gets a controlled error/redirect.
+        raise AuthMissingParameter(backend, 'email')
 
     User = get_user_model()
 

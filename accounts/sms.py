@@ -26,11 +26,17 @@ def send_otp_sms(phone: str, otp: str) -> bool:
     token  = getattr(settings, 'TWILIO_AUTH_TOKEN', '')
     sender = getattr(settings, 'TWILIO_PHONE_NUMBER', '')
 
+    dev_fallback_enabled = getattr(settings, 'OTP_DEV_FALLBACK', getattr(settings, 'DEBUG', False))
+
     if not all([sid, token, sender]):
-        # Dev fallback — print to console like the email backend
-        logger.warning(f'[DEV] OTP for {phone}: {otp}')
-        print(f'\n{"="*50}\n[DEV] OTP for {phone}: {otp}\n{"="*50}\n')
-        return True
+        if dev_fallback_enabled:
+            # Dev fallback — print to console like the email backend
+            logger.warning(f'[DEV] OTP for {phone}: {otp}')
+            print(f'\n{"="*50}\n[DEV] OTP for {phone}: {otp}\n{"="*50}\n')
+            return True
+
+        logger.error(f'SMS send failed for {phone}: Twilio is not configured.')
+        return False
 
     try:
         from twilio.rest import Client

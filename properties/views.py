@@ -293,6 +293,13 @@ def property_update(request, slug):
                 property=prop, image=img_file,
                 is_primary=(existing_count == 0 and i == 0)
             )
+        # Ensure at least one remaining image is primary
+        images_qs = prop.images.all()
+        if images_qs.exists() and not images_qs.filter(is_primary=True).exists():
+            first_image = images_qs.order_by('pk').first()
+            if first_image:
+                first_image.is_primary = True
+                first_image.save(update_fields=['is_primary'])
         feature_formset.save()
         messages.success(request, 'Property updated successfully.')
         return redirect('properties:detail', slug=prop.slug)

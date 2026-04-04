@@ -146,8 +146,8 @@ SOCIAL_AUTH_PIPELINE = (
     'accounts.pipeline.save_profile_data',           # custom: sync name fields
 )
 
-# Raise an error if GOOGLE/FB keys are missing in production
-SOCIAL_AUTH_RAISE_EXCEPTIONS = DEBUG
+# Raise an error if GOOGLE/FB keys are missing in production (fail fast on misconfiguration)
+SOCIAL_AUTH_RAISE_EXCEPTIONS = not DEBUG
 
 # ─── INTERNATIONALISATION ─────────────────────────────────────────────────────
 LANGUAGE_CODE = 'en-us'
