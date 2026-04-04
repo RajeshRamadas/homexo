@@ -1,0 +1,460 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Ticket #{{ enquiry.pk }} — {{ enquiry.name }} — HOMEXO{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ── Layout ──────────────────────────────────────────────────── */
+.tk-wrap   { max-width: 1200px; margin: 0 auto; padding: 28px 24px 80px; }
+.tk-topbar { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+.tk-back   { display: inline-flex; align-items: center; gap: 6px; color: #64748B;
+             text-decoration: none; font-size: 13px; padding: 6px 12px;
+             border: 1px solid #E2E8F0; border-radius: 8px; background: #fff; }
+.tk-back:hover { border-color: var(--sky); color: var(--sky); }
+.tk-id     { font-size: 13px; font-weight: 700; color: #94A3B8; }
+.tk-title  { font-size: 22px; font-weight: 700; color: var(--charcoal); margin-left: auto; }
+
+.tk-grid   { display: grid; grid-template-columns: 1fr 360px; gap: 20px; align-items: start; }
+@media(max-width: 860px) { .tk-grid { grid-template-columns: 1fr; } }
+
+/* ── Cards ───────────────────────────────────────────────────── */
+.tk-card {
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+  margin-bottom: 16px; overflow: hidden;
+}
+.tk-card-head {
+  padding: 14px 20px; border-bottom: 1px solid #F1F5F9;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: #94A3B8; display: flex;
+  align-items: center; justify-content: space-between;
+}
+.tk-card-body { padding: 20px; }
+
+/* ── Customer details ────────────────────────────────────────── */
+.tk-customer-name { font-size: 20px; font-weight: 700; color: var(--charcoal); margin-bottom: 4px; }
+.tk-customer-meta { font-size: 13px; color: #64748B; display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+.tk-customer-meta a { color: var(--sky); text-decoration: none; }
+.tk-customer-meta a:hover { text-decoration: underline; }
+
+.tk-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+@media(max-width:600px){ .tk-detail-grid{ grid-template-columns: 1fr; } }
+.tk-field { padding: 12px 14px; background: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0; }
+.tk-field-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+                  color: #94A3B8; margin-bottom: 4px; }
+.tk-field-val   { font-size: 13px; color: var(--charcoal); font-weight: 500; }
+
+/* ── Status badge ────────────────────────────────────────────── */
+.eq-status { display: inline-block; border-radius: 20px; padding: 4px 12px;
+             font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.status-new       { background: #FEF9C3; color: #854D0E; }
+.status-contacted { background: #DBEAFE; color: #1E40AF; }
+.status-qualified { background: #DCFCE7; color: #166534; }
+.status-closed    { background: #E0E7FF; color: #3730A3; }
+.status-lost      { background: #FEE2E2; color: #991B1B; }
+
+/* ── Message block ───────────────────────────────────────────── */
+.tk-message {
+  background: #FFFBEB; border-left: 3px solid #F59E0B; border-radius: 0 8px 8px 0;
+  padding: 14px 16px; font-size: 14px; color: #78350F; line-height: 1.7;
+  margin-top: 16px; white-space: pre-wrap; word-break: break-word;
+}
+
+/* ── Activity / history log ──────────────────────────────────── */
+.tk-activity { display: flex; flex-direction: column; gap: 0; }
+.tk-act-item { display: flex; gap: 12px; position: relative; padding-bottom: 20px; }
+.tk-act-item:last-child { padding-bottom: 0; }
+.tk-act-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 15px; top: 32px;
+  bottom: 0; width: 2px; background: #E2E8F0;
+}
+.tk-act-avatar {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; z-index: 1;
+}
+.av-comment       { background: var(--navy); }
+.av-status_change { background: #7C3AED; }
+.av-followup_set  { background: #0891B2; }
+.av-assigned      { background: #059669; }
+.av-system        { background: #94A3B8; }
+
+.tk-act-bubble {
+  flex: 1; background: #F8FAFC; border: 1px solid #E2E8F0;
+  border-radius: 0 10px 10px 10px; padding: 12px 14px;
+}
+.tk-act-bubble.is-comment { background: #fff; border-color: #CBD5E1; }
+.tk-act-meta { font-size: 11px; color: #94A3B8; margin-bottom: 6px; }
+.tk-act-meta strong { color: #475569; }
+.tk-act-body { font-size: 13px; color: var(--charcoal); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.tk-act-kind-badge {
+  display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; padding: 2px 7px; border-radius: 10px; margin-left: 6px;
+  vertical-align: middle;
+}
+.badge-comment       { background: #EFF6FF; color: #1D4ED8; }
+.badge-status_change { background: #F3E8FF; color: #7C3AED; }
+.badge-followup_set  { background: #ECFEFF; color: #0E7490; }
+.badge-assigned      { background: #ECFDF5; color: #065F46; }
+.badge-system        { background: #F1F5F9; color: #64748B; }
+
+/* ── Comment box ─────────────────────────────────────────────── */
+.tk-comment-box {
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+  padding: 16px; margin-top: 16px;
+}
+.tk-comment-box textarea {
+  width: 100%; border: 1px solid #CBD5E1; border-radius: 8px;
+  padding: 10px 12px; font-size: 13px; resize: vertical; min-height: 80px;
+  font-family: 'Source Sans 3', sans-serif; outline: none; color: var(--charcoal);
+}
+.tk-comment-box textarea:focus { border-color: var(--sky); }
+.tk-submit-btn {
+  margin-top: 10px; background: var(--navy); color: #fff; border: none;
+  border-radius: 8px; padding: 9px 22px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Source Sans 3', sans-serif;
+}
+.tk-submit-btn:hover { background: var(--sky); }
+
+/* ── Sidebar CRM panel ───────────────────────────────────────── */
+.tk-crm-row   { margin-bottom: 14px; }
+.tk-crm-label { font-size: 11px; font-weight: 700; letter-spacing: 1px;
+                text-transform: uppercase; color: #94A3B8; margin-bottom: 5px; }
+.tk-crm-select,
+.tk-crm-input,
+.tk-crm-textarea {
+  width: 100%; border: 1px solid #CBD5E1; border-radius: 8px;
+  padding: 8px 10px; font-size: 13px; color: var(--charcoal);
+  font-family: 'Source Sans 3', sans-serif; outline: none; background: #F8FAFC;
+}
+.tk-crm-select:focus,
+.tk-crm-input:focus,
+.tk-crm-textarea:focus { border-color: var(--sky); background: #fff; }
+.tk-crm-textarea { min-height: 80px; resize: vertical; }
+.tk-crm-save {
+  width: 100%; background: var(--navy); color: #fff; border: none;
+  border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Source Sans 3', sans-serif; margin-top: 4px;
+}
+.tk-crm-save:hover { background: var(--sky); }
+.tk-crm-saved { font-size: 12px; color: #10B981; text-align: center;
+                margin-top: 8px; display: none; }
+
+/* ── Property card ───────────────────────────────────────────── */
+.tk-prop-img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+.tk-prop-title { font-size: 14px; font-weight: 700; color: var(--charcoal); }
+.tk-prop-sub   { font-size: 12px; color: #64748B; margin-top: 3px; }
+.tk-prop-price { font-size: 16px; font-weight: 700; color: var(--navy); margin-top: 6px; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% with now=enquiry.created_at %}
+<div class="tk-wrap">
+
+  <!-- Top bar -->
+  <div class="tk-topbar">
+    <a href="{% url 'enquiries:dashboard' %}" class="tk-back">← Back to Dashboard</a>
+    <span class="tk-id">Ticket #{{ enquiry.pk }}</span>
+    <span class="eq-status status-{{ enquiry.status }}" id="tk-status-badge">{{ enquiry.get_status_display }}</span>
+    <span style="font-size:12px;color:#94A3B8;margin-left:auto;">Received {{ enquiry.created_at|date:"d M Y, H:i" }}</span>
+  </div>
+
+  <div class="tk-grid">
+
+    <!-- ── LEFT: main content ── -->
+    <div>
+
+      <!-- Customer Details -->
+      <div class="tk-card">
+        <div class="tk-card-head">
+          Customer Details
+          {% if enquiry.user %}
+            <span style="font-size:11px;color:#10B981;font-weight:600;">✓ Registered User</span>
+          {% else %}
+            <span style="font-size:11px;color:#F59E0B;font-weight:600;">Guest</span>
+          {% endif %}
+        </div>
+        <div class="tk-card-body">
+          <div class="tk-customer-name">{{ enquiry.name }}</div>
+          <div class="tk-customer-meta">
+            {% if enquiry.phone %}
+              <span>📞 <a href="tel:{{ enquiry.phone }}">{{ enquiry.phone }}</a></span>
+            {% endif %}
+            {% if enquiry.email %}
+              <span>✉ <a href="mailto:{{ enquiry.email }}">{{ enquiry.email }}</a></span>
+            {% endif %}
+          </div>
+
+          <div class="tk-detail-grid">
+            <div class="tk-field">
+              <div class="tk-field-label">Enquiry Type</div>
+              <div class="tk-field-val">{{ enquiry.get_enquiry_type_display }}</div>
+            </div>
+            <div class="tk-field">
+              <div class="tk-field-label">Source</div>
+              <div class="tk-field-val">{{ enquiry.source|default:"—" }}</div>
+            </div>
+            <div class="tk-field">
+              <div class="tk-field-label">Budget</div>
+              <div class="tk-field-val">{{ enquiry.budget|default:"—" }}</div>
+            </div>
+            <div class="tk-field">
+              <div class="tk-field-label">Follow-up</div>
+              <div class="tk-field-val" id="tk-followup-display">
+                {% if enquiry.follow_up_at %}
+                  {{ enquiry.follow_up_at|date:"d M Y, H:i" }}
+                {% else %}—{% endif %}
+              </div>
+            </div>
+            {% if enquiry.assigned_to %}
+            <div class="tk-field">
+              <div class="tk-field-label">Assigned To</div>
+              <div class="tk-field-val">{{ enquiry.assigned_to.get_full_name }}</div>
+            </div>
+            {% endif %}
+            {% if enquiry.user %}
+            <div class="tk-field">
+              <div class="tk-field-label">Joined</div>
+              <div class="tk-field-val">{{ enquiry.user.date_joined|date:"d M Y" }}</div>
+            </div>
+            {% endif %}
+          </div>
+
+          {% if enquiry.message %}
+          <div class="tk-message">{{ enquiry.message }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Activity / History Log -->
+      <div class="tk-card">
+        <div class="tk-card-head">Activity &amp; History Log
+          <span style="font-size:11px;color:#94A3B8;">{{ activities|length }} event{{ activities|length|pluralize }}</span>
+        </div>
+        <div class="tk-card-body">
+          {% if activities %}
+          <div class="tk-activity" id="activity-log">
+            {% for act in activities %}
+            <div class="tk-act-item" id="act-{{ act.pk }}">
+              <div class="tk-act-avatar av-{{ act.kind }}">
+                {% if act.kind == 'comment' %}💬
+                {% elif act.kind == 'status_change' %}↔
+                {% elif act.kind == 'followup_set' %}📅
+                {% elif act.kind == 'assigned' %}👤
+                {% else %}⚙{% endif %}
+              </div>
+              <div class="tk-act-bubble {% if act.kind == 'comment' %}is-comment{% endif %}">
+                <div class="tk-act-meta">
+                  <strong>{% if act.actor %}{{ act.actor.get_full_name|default:act.actor.email }}{% else %}System{% endif %}</strong>
+                  <span class="tk-act-kind-badge badge-{{ act.kind }}">{{ act.get_kind_display }}</span>
+                  &nbsp;·&nbsp; {{ act.created_at|date:"d M Y, H:i" }}
+                </div>
+                <div class="tk-act-body">{{ act.body }}</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p style="color:#94A3B8;font-size:13px;text-align:center;padding:20px 0;">No activity yet. Add a comment below to start the log.</p>
+          {% endif %}
+
+          <!-- Add comment -->
+          <div class="tk-comment-box">
+            <textarea id="comment-body" placeholder="Add a note, call outcome, or update…" rows="3"></textarea>
+            <button type="button" class="tk-submit-btn" onclick="addComment()">Add Comment</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT: sidebar CRM ── -->
+    <div>
+
+      <!-- CRM Controls -->
+      <div class="tk-card">
+        <div class="tk-card-head">CRM Controls</div>
+        <div class="tk-card-body">
+
+          <div class="tk-crm-row">
+            <div class="tk-crm-label">Status</div>
+            <select class="tk-crm-select" id="crm-status">
+              {% for val, label in status_choices %}
+                <option value="{{ val }}" {% if enquiry.status == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="tk-crm-row">
+            <div class="tk-crm-label">Assigned To</div>
+            <select class="tk-crm-select" id="crm-assigned">
+              <option value="">— Unassigned —</option>
+              {% for u in support_users %}
+                <option value="{{ u.pk }}" {% if enquiry.assigned_to_id == u.pk %}selected{% endif %}>
+                  {{ u.get_full_name }} ({{ u.get_role_display }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="tk-crm-row">
+            <div class="tk-crm-label">Schedule Follow-up</div>
+            <input type="datetime-local" class="tk-crm-input" id="crm-followup"
+              value="{{ enquiry.follow_up_at|date:'Y-m-d\TH:i'|default:'' }}">
+          </div>
+
+          <div class="tk-crm-row">
+            <div class="tk-crm-label">Internal Notes</div>
+            <textarea class="tk-crm-textarea" id="crm-notes">{{ enquiry.notes }}</textarea>
+          </div>
+
+          <button type="button" class="tk-crm-save" onclick="saveCRM()">Save Changes</button>
+          <div class="tk-crm-saved" id="crm-saved">✓ Saved successfully</div>
+        </div>
+      </div>
+
+      <!-- Property (if linked) -->
+      {% if enquiry.property %}
+      <div class="tk-card">
+        <div class="tk-card-head">Linked Property</div>
+        <div class="tk-card-body">
+          {% with p=enquiry.property %}
+          {% if p.primary_image %}
+            <img src="{{ p.primary_image.image.url }}" class="tk-prop-img" alt="{{ p.title }}">
+          {% endif %}
+          <div class="tk-prop-title">{{ p.title }}</div>
+          <div class="tk-prop-sub">{{ p.locality }}{% if p.city %}, {{ p.city }}{% endif %}</div>
+          <div class="tk-prop-price">{{ p.display_price }}</div>
+          <a href="{{ p.get_absolute_url }}" target="_blank"
+            style="display:inline-block;margin-top:10px;font-size:12px;color:var(--sky);">View Listing →</a>
+          {% endwith %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- All enquiries from same phone/email -->
+      {% with phone=enquiry.phone email=enquiry.email %}
+      {% if phone or email %}
+      <div class="tk-card">
+        <div class="tk-card-head">Other Tickets from This Customer</div>
+        <div class="tk-card-body" style="padding:0;">
+          {% with related=enquiry.user.enquiries.all|default_if_none:"" %}
+          {% for other in enquiry.user.enquiries.all %}
+            {% if other.pk != enquiry.pk %}
+            <a href="{% url 'enquiries:detail' other.pk %}"
+              style="display:flex;justify-content:space-between;align-items:center;
+                     padding:11px 16px;border-bottom:1px solid #F1F5F9;
+                     text-decoration:none;font-size:13px;color:var(--charcoal);"
+              onmouseover="this.style.background='#F8FAFC'"
+              onmouseout="this.style.background=''">
+              <span>#{{ other.pk }} {{ other.get_enquiry_type_display }}</span>
+              <span class="eq-status status-{{ other.status }}" style="font-size:10px;padding:2px 8px;">{{ other.get_status_display }}</span>
+            </a>
+            {% endif %}
+          {% empty %}
+            <p style="padding:14px 16px;font-size:13px;color:#94A3B8;">No other tickets found.</p>
+          {% endfor %}
+          {% endwith %}
+        </div>
+      </div>
+      {% endif %}
+      {% endwith %}
+
+    </div>
+  </div>
+</div>
+{% endwith %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const CSRF = '{{ csrf_token }}';
+  const PK   = {{ enquiry.pk }};
+
+  /* ── Add Comment ────────────────────────────────── */
+  window.addComment = function () {
+    const ta   = document.getElementById('comment-body');
+    const body = ta.value.trim();
+    if (!body) { ta.focus(); return; }
+
+    const btn = document.querySelector('.tk-submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const fd = new URLSearchParams({ csrfmiddlewaretoken: CSRF, body });
+    fetch('/enquiries/' + PK + '/comment/', { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.ok) { alert(data.error || 'Error saving comment.'); btn.disabled = false; btn.textContent = 'Add Comment'; return; }
+        window.location.reload();
+      })
+      .catch(() => { alert('Network error. Please try again.'); btn.disabled = false; btn.textContent = 'Add Comment'; });
+  };
+
+  function createLog () {
+    const box = document.querySelector('.tk-comment-box');
+    const div = document.createElement('div');
+    div.className = 'tk-activity';
+    div.id = 'activity-log';
+    box.parentNode.insertBefore(div, box);
+    return div;
+  }
+
+  function buildActivityHtml (data) {
+    return `
+    <div class="tk-act-item" id="act-${data.id}">
+      <div class="tk-act-avatar av-comment">💬</div>
+      <div class="tk-act-bubble is-comment">
+        <div class="tk-act-meta">
+          <strong>${data.actor}</strong>
+          <span class="tk-act-kind-badge badge-comment">Comment</span>
+          &nbsp;·&nbsp; ${data.created_at}
+        </div>
+        <div class="tk-act-body">${escHtml(data.body)}</div>
+      </div>
+    </div>`;
+  }
+
+  function escHtml (s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  /* ── Save CRM ───────────────────────────────────── */
+  window.saveCRM = function () {
+    const status     = document.getElementById('crm-status').value;
+    const followup   = document.getElementById('crm-followup').value;
+    const notes      = document.getElementById('crm-notes').value;
+    const assignedTo = document.getElementById('crm-assigned').value;
+
+    const saveBtn = document.querySelector('.tk-crm-save');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+
+    const fd = new URLSearchParams({
+      csrfmiddlewaretoken: CSRF,
+      status,
+      follow_up_at: followup,
+      notes,
+      assigned_to: assignedTo,
+    });
+
+    fetch('/enquiries/' + PK + '/update/', { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.ok) { saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; return; }
+        window.location.reload();
+      })
+      .catch(() => { alert('Error saving. Please try again.'); saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; });
+  };
+
+  /* Allow Ctrl+Enter to submit comment */
+  document.getElementById('comment-body').addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') addComment();
+  });
+})();
+</script>
+{% endblock %}

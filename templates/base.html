@@ -96,6 +96,18 @@
   .nav-mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(247,249,252,0.98); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; z-index: 1050; }
   .nav-mobile-overlay.open { display: flex; }
   .nav-mobile-overlay a { font-size: 16px; letter-spacing: 3px; text-transform: uppercase; color: var(--navy); text-decoration: none; }
+  .mobile-dropdown { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .mobile-dropdown-btn { background: none; border: none; font-size: 16px; letter-spacing: 3px; text-transform: uppercase; color: var(--navy); cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: inherit; }
+  .mobile-dropdown-menu { display: none; flex-direction: column; align-items: center; gap: 16px; padding-top: 8px; border-top: 1px solid rgba(13,43,78,0.1); width: 80%; }
+  .mobile-dropdown.open .mobile-dropdown-menu { display: flex; }
+  .mobile-dropdown-menu a { font-size: 13px; color: var(--soft-brown); letter-spacing: 2px; }
+  .mobile-dropdown-menu a:hover { color: var(--navy); }
+  
+  .nav-dropdown { position: relative; height: 100%; display: flex; align-items: center; }
+  .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 5px); left: 0; background: rgba(247,249,252,0.98); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 10px 30px rgba(13,43,78,.1); padding: 12px 0; z-index: 1200; min-width: 180px; }
+  .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; }
+  .nav-dropdown-menu a { padding: 10px 24px; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; color: var(--soft-brown); display: block; }
+  .nav-dropdown-menu a:hover { background: rgba(13,43,78,.04); color: var(--navy); }
 
   /* ── SCROLL PROGRESS ── */
   .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--sky); z-index: 9998; width: 0%; transition: width .1s linear; }
@@ -238,7 +250,17 @@
 
 <!-- Mobile nav overlay -->
 <div class="nav-mobile-overlay" id="navMobileOverlay">
-  <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
+  <div class="mobile-dropdown" id="mobileNavDropdown">
+    <button class="mobile-dropdown-btn">Services ▾</button>
+    <div class="mobile-dropdown-menu">
+      <a href="{% url 'properties:list' %}?type=new_project">Builder Projects</a>
+      <a href="{% url 'pages:legal' %}">Sale Agreement</a>
+      <a href="{% url 'pages:home_loan' %}">Home Loan</a>
+      <a href="{% url 'pages:legal' %}">Property Legal Services</a>
+      <a href="{% url 'pages:security' %}">Security & Surveillance</a>
+      <a href="{% url 'pages:nri_service' %}">NRI Services</a>
+    </div>
+  </div>
   <a href="{% url 'properties:list' %}">Properties</a>
   <a href="{% url 'pages:developers' %}">Developers</a>
   <a href="{% url 'blog:list' %}">Blog</a>
@@ -264,7 +286,17 @@
     <span class="nav-logo-text">HOME<span style="background-color: #0D2B4E; color: #FFFFFF; padding: 1px 4px; border-radius: 2px; margin-left: 0; letter-spacing: 0;">XO</span></span>
   </a>
   <div class="nav-links">
-    <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
+    <div class="nav-dropdown">
+      <a style="cursor: pointer; display: flex; align-items: center; gap: 4px;">Services ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="{% url 'properties:list' %}?type=new_project">Builder Projects</a>
+        <a href="{% url 'pages:legal' %}">Sale Agreement</a>
+        <a href="{% url 'pages:home_loan' %}">Home Loan</a>
+        <a href="{% url 'pages:legal' %}">Property Legal Services</a>
+        <a href="{% url 'pages:security' %}">Security & Surveillance</a>
+        <a href="{% url 'pages:nri_service' %}">NRI Services</a>
+      </div>
+    </div>
     <a href="{% url 'properties:list' %}">Properties</a>
     <a href="{% url 'pages:developers' %}">Developers</a>
     <a href="{% url 'blog:list' %}">Blog</a>
@@ -486,6 +518,7 @@
   </div>
   <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
     {% csrf_token %}
+    <input type="hidden" name="source" value="footer">
     <div class="cta-form-row">
       <input type="text" name="name" placeholder="Your Full Name" required>
       <input type="tel" name="phone" placeholder="Phone Number" required>
@@ -578,6 +611,15 @@ if (hamburger && overlay) {
     hamburger.classList.toggle('open', open);
     document.body.style.overflow = open ? 'hidden' : '';
   });
+  
+  const mDropdownBtn = document.querySelector('.mobile-dropdown-btn');
+  if (mDropdownBtn) {
+    mDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('mobileNavDropdown').classList.toggle('open');
+    });
+  }
+
   overlay.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     overlay.classList.remove('open');
     hamburger.classList.remove('open');

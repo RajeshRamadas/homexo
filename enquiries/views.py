@@ -5,8 +5,32 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.db.models import Count, Q
+from django.http import JsonResponse
+from django.utils import timezone
 from .forms import EnquiryForm
-from .models import Enquiry
+from .models import Enquiry, EnquiryActivity
+
+
+def _can_access_dashboard(user):
+    """Returns True for superusers, admins and customer_support agents."""
+    return user.is_authenticated and (
+        user.is_superuser or
+        getattr(user, 'role', None) in ('admin', 'customer_support')
+    )
+
+
+def dashboard_access_required(view_func):
+    """Decorator: allow only admin / customer_support roles."""
+    @login_required
+    def _wrapped(request, *args, **kwargs):
+        if not _can_access_dashboard(request.user):
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+    _wrapped.__name__ = view_func.__name__
+    return _wrapped
 
 
 def enquiry_create(request):
@@ -23,6 +47,19 @@ def enquiry_create(request):
         'pest_control': 'home_service', 'renovation': 'home_service',
         'home_service': 'home_service',
         'home_loan': 'home_loan',
+    }
+
+    # ── Determine source label from hidden field or HTTP Referer ─────────────
+    _PAGE_SOURCE_MAP = {
+        'legal':          'Legal Services Page',
+        'security':       'Security Services Page',
+        'home_service':   'Home Services Page',
+        'home_loan':      'Home Loan Page',
+        'legal_homeloan': 'Legal + Home Loan Page',
+        'nri':            'NRI Services Page',
+        'contact':        'Contact Page',
+        'property':       'Property Detail Page',
+        'footer':         'Footer CTA',
     }
 
     post_data = request.POST.copy() if request.method == 'POST' else None
@@ -43,6 +80,34 @@ def enquiry_create(request):
             enquiry.message = f'[Service: {service_detail}]\n\n{enquiry.message}'
         elif service_detail:
             enquiry.message = f'[Service: {service_detail}]'
+
+        # ── Capture source ────────────────────────────────────────────────────
+        raw_source = request.POST.get('source', '').strip()
+        if raw_source:
+            enquiry.source = _PAGE_SOURCE_MAP.get(raw_source, raw_source)
+        else:
+            referer = request.META.get('HTTP_REFERER', '')
+            if '/legal-homeloan' in referer or 'legal_homeloan' in referer:
+                enquiry.source = 'Legal + Home Loan Page'
+            elif '/legal' in referer:
+                enquiry.source = 'Legal Services Page'
+            elif '/security' in referer:
+                enquiry.source = 'Security Services Page'
+            elif '/home-service' in referer or '/home_service' in referer:
+                enquiry.source = 'Home Services Page'
+            elif '/home-loan' in referer or '/home_loan' in referer:
+                enquiry.source = 'Home Loan Page'
+            elif '/nri' in referer:
+                enquiry.source = 'NRI Services Page'
+            elif '/contact' in referer:
+                enquiry.source = 'Contact Page'
+            elif '/properties/' in referer:
+                enquiry.source = 'Property Detail Page'
+            elif referer:
+                enquiry.source = 'Website (other)'
+            else:
+                enquiry.source = 'Direct / Unknown'
+
         enquiry.save()
 
         # ── Admin notification email ─────────────────────────────────────────
@@ -172,3 +237,210 @@ def enquiry_create(request):
 
 def enquiry_success(request):
     return render(request, 'enquiries/success.html')
+
+
+# ── Enquiry Dashboard ─────────────────────────────────────────────────────────
+
+@dashboard_access_required
+def enquiry_dashboard(request):
+    qs = Enquiry.objects.select_related('property', 'assigned_to').all()
+
+    # ── Filters ───────────────────────────────────────────────────────────────
+    status_filter = request.GET.get('status', '')
+    type_filter   = request.GET.get('enquiry_type', '')
+    source_filter = request.GET.get('source', '')
+    search        = request.GET.get('q', '').strip()
+
+    if status_filter:
+        qs = qs.filter(status=status_filter)
+    if type_filter:
+        qs = qs.filter(enquiry_type=type_filter)
+    if source_filter:
+        qs = qs.filter(source__icontains=source_filter)
+    if search:
+        qs = qs.filter(
+            Q(name__icontains=search) |
+            Q(email__icontains=search) |
+            Q(phone__icontains=search) |
+            Q(message__icontains=search)
+        )
+
+    # ── Stats ─────────────────────────────────────────────────────────────────
+    total     = Enquiry.objects.count()
+    new_count = Enquiry.objects.filter(status='new').count()
+    contacted = Enquiry.objects.filter(status='contacted').count()
+    qualified = Enquiry.objects.filter(status='qualified').count()
+    closed    = Enquiry.objects.filter(status='closed').count()
+
+    # Source breakdown for chart
+    source_data = (
+        Enquiry.objects.values('source')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:10]
+    )
+
+    # Type breakdown
+    type_data = (
+        Enquiry.objects.values('enquiry_type')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    # Follow-ups due today or overdue
+    now = timezone.now()
+    followup_due = Enquiry.objects.filter(
+        follow_up_at__lte=now, status__in=['new', 'contacted', 'qualified']
+    ).count()
+
+    context = {
+        'enquiries':    qs,
+        'status_filter': status_filter,
+        'type_filter':   type_filter,
+        'source_filter': source_filter,
+        'search':        search,
+        'status_choices': Enquiry.Status.choices,
+        'type_choices':   Enquiry.EnquiryType.choices,
+        'stats': {
+            'total':     total,
+            'new':       new_count,
+            'contacted': contacted,
+            'qualified': qualified,
+            'closed':    closed,
+        },
+        'source_data':   list(source_data),
+        'type_data':     list(type_data),
+        'followup_due':  followup_due,
+    }
+    return render(request, 'enquiries/dashboard.html', context)
+
+
+@dashboard_access_required
+def enquiry_update_status(request, pk):
+    """AJAX endpoint: update status + notes + follow_up_at, log everything."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+
+    enquiry = get_object_or_404(Enquiry, pk=pk)
+    new_status   = request.POST.get('status', '').strip()
+    follow_up_at = request.POST.get('follow_up_at', '').strip()
+    notes        = request.POST.get('notes', None)
+    assigned_raw = request.POST.get('assigned_to', '').strip()
+
+    valid_statuses = [s[0] for s in Enquiry.Status.choices]
+    update_fields  = ['updated_at']
+    logs = []
+
+    if new_status and new_status in valid_statuses and new_status != enquiry.status:
+        old_label = enquiry.get_status_display()
+        enquiry.status = new_status
+        new_label = enquiry.get_status_display()
+        update_fields.append('status')
+        logs.append(EnquiryActivity(
+            enquiry=enquiry, actor=request.user,
+            kind=EnquiryActivity.Kind.STATUS_CHANGE,
+            body=f'Status changed from "{old_label}" → "{new_label}"',
+        ))
+
+    if follow_up_at:
+        try:
+            new_dt = timezone.datetime.fromisoformat(follow_up_at)
+            enquiry.follow_up_at = new_dt
+            update_fields.append('follow_up_at')
+            logs.append(EnquiryActivity(
+                enquiry=enquiry, actor=request.user,
+                kind=EnquiryActivity.Kind.FOLLOWUP_SET,
+                body=f'Follow-up scheduled for {new_dt.strftime("%d %b %Y at %H:%M")}',
+            ))
+        except ValueError:
+            pass
+    elif request.POST.get('clear_followup'):
+        enquiry.follow_up_at = None
+        update_fields.append('follow_up_at')
+
+    if notes is not None and notes != enquiry.notes:
+        old_notes = enquiry.notes
+        enquiry.notes = notes
+        update_fields.append('notes')
+        if notes:
+            logs.append(EnquiryActivity(
+                enquiry=enquiry, actor=request.user,
+                kind=EnquiryActivity.Kind.COMMENT,
+                body=notes,
+            ))
+
+    if assigned_raw:
+        from django.contrib.auth import get_user_model
+        try:
+            assignee = get_user_model().objects.get(pk=int(assigned_raw))
+            if enquiry.assigned_to_id != assignee.pk:
+                enquiry.assigned_to = assignee
+                update_fields.append('assigned_to')
+                logs.append(EnquiryActivity(
+                    enquiry=enquiry, actor=request.user,
+                    kind=EnquiryActivity.Kind.ASSIGNED,
+                    body=f'Assigned to {assignee.get_full_name() or assignee.email}',
+                ))
+        except (ValueError, get_user_model().DoesNotExist):
+            pass
+    elif 'assigned_to' in request.POST:
+        # empty string = unassign
+        enquiry.assigned_to = None
+        update_fields.append('assigned_to')
+
+    enquiry.save(update_fields=list(dict.fromkeys(update_fields)))
+    EnquiryActivity.objects.bulk_create(logs)
+
+    return JsonResponse({
+        'ok': True,
+        'status': enquiry.status,
+        'status_display': enquiry.get_status_display(),
+        'updated_at': enquiry.updated_at.strftime('%d %b %Y, %H:%M'),
+    })
+
+
+@dashboard_access_required
+def enquiry_add_comment(request, pk):
+    """AJAX endpoint: add a comment to the activity log."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+
+    enquiry = get_object_or_404(Enquiry, pk=pk)
+    body = request.POST.get('body', '').strip()
+    if not body:
+        return JsonResponse({'error': 'Comment cannot be empty.'}, status=400)
+
+    activity = EnquiryActivity.objects.create(
+        enquiry=enquiry,
+        actor=request.user,
+        kind=EnquiryActivity.Kind.COMMENT,
+        body=body,
+    )
+    return JsonResponse({
+        'ok': True,
+        'id': activity.pk,
+        'actor': request.user.get_full_name() or request.user.email,
+        'body': activity.body,
+        'created_at': activity.created_at.strftime('%d %b %Y, %H:%M'),
+        'kind': activity.kind,
+    })
+
+
+@dashboard_access_required
+def enquiry_detail_view(request, pk):
+    enquiry = get_object_or_404(
+        Enquiry.objects.select_related('property', 'user', 'assigned_to'),
+        pk=pk,
+    )
+    activities  = enquiry.activities.select_related('actor').order_by('created_at')
+    from accounts.models import User as UserModel
+    support_users = UserModel.objects.filter(
+        role__in=['admin', 'customer_support'], is_active=True
+    ).order_by('first_name')
+
+    return render(request, 'enquiries/ticket.html', {
+        'enquiry':       enquiry,
+        'activities':    activities,
+        'status_choices': Enquiry.Status.choices,
+        'support_users': support_users,
+    })
+

@@ -611,6 +611,7 @@
         <form class="ll-cta-form" method="post" action="{% url 'enquiries:create' %}">
           {% csrf_token %}
           <input type="hidden" name="enquiry_type" value="home_loan">
+          <input type="hidden" name="source" value="legal_homeloan">
           <input type="hidden" name="service_detail" value="legal_homeloan">
           <div class="ll-cta-form-title">Get Expert Assistance</div>
           <p class="ll-cta-form-sub">Tell us what you need — legal help, a loan, or both.</p>

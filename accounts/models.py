@@ -33,12 +33,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
 
     class Role(models.TextChoices):
-        BUYER       = 'buyer',       'Buyer'
-        SELLER      = 'seller',      'Seller'
-        AGENT       = 'agent',       'Agent'
-        ADMIN       = 'admin',       'Admin'
-        LEGAL_ADMIN = 'legal_admin', 'Legal Admin'
-        ADVOCATE    = 'advocate',    'Advocate'
+        BUYER            = 'buyer',            'Buyer'
+        SELLER           = 'seller',           'Seller'
+        AGENT            = 'agent',            'Agent'
+        ADMIN            = 'admin',            'Admin'
+        LEGAL_ADMIN      = 'legal_admin',      'Legal Admin'
+        ADVOCATE         = 'advocate',         'Advocate'
+        CUSTOMER_SUPPORT = 'customer_support', 'Customer Support'
 
     email        = models.EmailField(unique=True, db_index=True)
     first_name   = models.CharField(max_length=80)

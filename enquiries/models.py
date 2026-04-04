@@ -41,8 +41,19 @@ class Enquiry(models.Model):
     budget       = models.CharField(max_length=50, blank=True)
     message      = models.TextField(blank=True)
 
+    # Source tracking — which page / section the form was submitted from
+    source       = models.CharField(max_length=120, blank=True,
+                                    help_text='Page or section the form was submitted from')
+
     # CRM
     status       = models.CharField(max_length=15, choices=Status.choices, default=Status.NEW)
+    assigned_to  = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='assigned_enquiries',
+        help_text='Team member responsible for follow-up',
+    )
+    follow_up_at = models.DateTimeField(null=True, blank=True,
+                                        help_text='Scheduled follow-up date/time')
     notes        = models.TextField(blank=True, help_text='Internal agent/admin notes')
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField(auto_now=True)
@@ -54,3 +65,30 @@ class Enquiry(models.Model):
 
     def __str__(self):
         return f'{self.name} — {self.enquiry_type} ({self.status})'
+
+
+class EnquiryActivity(models.Model):
+    """Append-only history log for a single enquiry ticket."""
+
+    class Kind(models.TextChoices):
+        COMMENT       = 'comment',       'Comment'
+        STATUS_CHANGE = 'status_change', 'Status Change'
+        FOLLOWUP_SET  = 'followup_set',  'Follow-up Scheduled'
+        ASSIGNED      = 'assigned',      'Assigned'
+        SYSTEM        = 'system',        'System'
+
+    enquiry   = models.ForeignKey(Enquiry, on_delete=models.CASCADE, related_name='activities')
+    actor     = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='enquiry_activities',
+    )
+    kind      = models.CharField(max_length=20, choices=Kind.choices, default=Kind.COMMENT)
+    body      = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        actor = self.actor.get_full_name() if self.actor else 'System'
+        return f'[{self.kind}] {actor}: {self.body[:60]}'

@@ -304,6 +304,7 @@
         <form class="ct-form" action="{% url 'enquiries:create' %}" method="POST" novalidate>
           {% csrf_token %}
           <input type="hidden" name="enquiry_type" value="general">
+          <input type="hidden" name="source" value="contact">
           <div class="ct-field-row">
             <div class="ct-field">
               <label for="ct-name">Full Name *</label>

@@ -785,6 +785,7 @@
     <form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
       {% csrf_token %}
       <input type="hidden" name="enquiry_type" value="general">
+      <input type="hidden" name="source" value="nri">
       <input type="hidden" name="service_detail" id="heroServiceDetail" value="Rent Out">
       <input type="hidden" name="message" id="heroMessage">
       <div class="nri-tabs">
@@ -1460,6 +1461,7 @@
   <form class="cta-form" id="nri-cta-form" method="post" action="{% url 'enquiries:create' %}">
     {% csrf_token %}
     <input type="hidden" name="enquiry_type" value="general">
+    <input type="hidden" name="source" value="nri">
     <input type="hidden" name="service_detail" id="ctaServiceDetail" value="Property Management">
     <input type="hidden" name="message" id="ctaMessage">
     <div class="cta-row">
