@@ -516,7 +516,8 @@
     <h2 class="cta-title">Ready To Find<br>Your <em>Dream</em><br>Property?</h2>
     <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Let our expert team guide you to the perfect property. Reach out today.</p>
   </div>
-  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
+  
+<form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
     {% csrf_token %}
     <input type="hidden" name="source" value="footer">
     <div class="cta-form-row">

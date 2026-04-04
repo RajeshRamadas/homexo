@@ -2152,7 +2152,8 @@
             </div>
           </div>
           {% endif %}
-          <form action="{% url 'enquiries:create' %}" method="POST" class="pd-form" id="pd-contact-form">
+          
+<form action="{% url 'enquiries:create' %}" method="POST" class="pd-form" id="pd-contact-form">
             {% csrf_token %}
             <input type="hidden" name="property" value="{{ property.id }}">
             <input type="hidden" name="enquiry_type" value="{% if property.listing_type == 'rent' %}rent{% else %}buy{% endif %}">
@@ -2248,7 +2249,8 @@
 <div class="pd-sheet" id="pdSheet">
   <div class="pd-sheet-handle"></div>
   <div class="pd-sheet-title">Enquire About This Property</div>
-  <form action="{% url 'enquiries:create' %}" method="POST" class="pd-form">
+  
+<form action="{% url 'enquiries:create' %}" method="POST" class="pd-form">
     {% csrf_token %}
     <input type="hidden" name="property" value="{{ property.id }}">
     <input type="hidden" name="enquiry_type" value="{% if property.listing_type == 'rent' %}rent{% else %}buy{% endif %}">

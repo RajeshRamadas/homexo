@@ -37,6 +37,83 @@
 .bar-contact  { background: #3B82F6; }
 .bar-qualify  { background: #10B981; }
 .bar-closed   { background: #64748B; }
+.bar-critical { background: #EF4444; }
+
+/* ── Priority badges ───────────────────────────────────────────── */
+.prio-dot { display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;flex-shrink:0; }
+.prio-critical { background:#EF4444; }
+.prio-high     { background:#F97316; }
+.prio-medium   { background:#EAB308; }
+.prio-low      { background:#22C55E; }
+.prio-badge {
+  display:inline-flex;align-items:center;font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:10px;white-space:nowrap;
+}
+.prio-badge-critical { background:#FEE2E2;color:#991B1B; }
+.prio-badge-high     { background:#FFEDD5;color:#C2410C; }
+.prio-badge-medium   { background:#FEF9C3;color:#854D0E; }
+.prio-badge-low      { background:#DCFCE7;color:#166534; }
+
+/* ── Bulk action toolbar ─────────────────────────────────────────── */
+.eq-bulk-bar {
+  display:none;position:sticky;top:0;z-index:100;
+  background:#1A2E44;color:#fff;padding:10px 20px;
+  border-radius:12px;margin-bottom:12px;
+  align-items:center;gap:12px;flex-wrap:wrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
+}
+.eq-bulk-bar.show { display:flex; }
+.eq-bulk-bar select, .eq-bulk-bar .bulk-assign-sel {
+  border:1px solid rgba(255,255,255,.25);border-radius:6px;
+  background:rgba(255,255,255,.1);color:#fff;
+  padding:6px 10px;font-size:13px;outline:none;
+}
+.eq-bulk-bar select option { background:#1A2E44; }
+.eq-bulk-apply {
+  background:#38BDF8;color:#0C1B2A;border:none;border-radius:6px;
+  padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;
+}
+.eq-bulk-apply:hover { background:#7DD3FA; }
+.eq-bulk-cancel { font-size:12px;color:rgba(255,255,255,.6);margin-left:auto;cursor:pointer; }
+.eq-bulk-cancel:hover { color:#fff; }
+.eq-bulk-count { font-size:13px;font-weight:600; }
+
+/* ── Sortable header ────────────────────────────────────────────── */
+th.sortable a { color:inherit;text-decoration:none;display:flex;align-items:center;gap:4px; }
+th.sortable a:hover { color:var(--sky); }
+.sort-arrow { font-size:10px;color:#CBD5E1; }
+.sort-arrow.active { color:var(--sky); }
+
+/* ── Pagination ───────────────────────────────────────────────── */
+.eq-pagination {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-top:1px solid #F1F5F9;flex-wrap:wrap;gap:10px;
+}
+.eq-page-info { font-size:13px;color:#64748B; }
+.eq-page-links { display:flex;gap:4px; }
+.eq-page-links a, .eq-page-links span {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:6px;font-size:13px;
+  border:1px solid #E2E8F0;text-decoration:none;color:#64748B;
+}
+.eq-page-links a:hover { background:#F1F5F9;color:var(--navy); }
+.eq-page-links span.current { background:var(--navy);color:#fff;border-color:var(--navy);font-weight:700; }
+.eq-page-links span.disabled { color:#CBD5E1;cursor:default; }
+
+/* ── My-tickets tab strip ───────────────────────────────────── */
+.eq-tabs { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.eq-tab {
+  padding: 7px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
+  border: 1.5px solid #E2E8F0; text-decoration: none; color: #64748B;
+  background: #fff; transition: all .15s;
+}
+.eq-tab:hover { border-color: var(--sky); color: var(--sky); }
+.eq-tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.eq-tab .eq-tab-badge {
+  display: inline-block; background: rgba(255,255,255,.25); color: inherit;
+  border-radius: 10px; padding: 1px 7px; font-size: 11px; margin-left: 5px;
+}
+.eq-tab:not(.active) .eq-tab-badge { background: #F1F5F9; color: #64748B; }
 
 /* ── Filter bar ─────────────────────────────────────────────── */
 .eq-filters {
@@ -186,6 +263,18 @@
     {% endif %}
   </div>
 
+  <!-- My Tickets / All Tickets tab strip -->
+  <div class="eq-tabs">
+    <a href="{% url 'enquiries:dashboard' %}{% if status_filter or type_filter or source_filter or search %}?status={{ status_filter }}&enquiry_type={{ type_filter }}&source={{ source_filter }}&q={{ search }}{% endif %}"
+       class="eq-tab {% if not mine %}active{% endif %}">All Tickets
+      <span class="eq-tab-badge">{{ stats.total }}</span>
+    </a>
+    <a href="?mine=1{% if status_filter %}&status={{ status_filter }}{% endif %}{% if type_filter %}&enquiry_type={{ type_filter }}{% endif %}{% if search %}&q={{ search }}{% endif %}"
+       class="eq-tab {% if mine %}active{% endif %}">My Tickets
+      <span class="eq-tab-badge">{{ my_count }}</span>
+    </a>
+  </div>
+
   <!-- Stat Cards -->
   <div class="eq-stats">
     <div class="eq-stat">
@@ -213,7 +302,18 @@
       <div class="eq-stat-value">{{ stats.closed }}</div>
       {% if stats.total %}<div class="eq-stat-bar bar-closed" style="width:{% widthratio stats.closed stats.total 100 %}%"></div>{% endif %}
     </div>
+    <div class="eq-stat">
+      <div class="eq-stat-label">Critical Open</div>
+      <div class="eq-stat-value" style="color:#EF4444;">{{ stats.critical_open }}</div>
+      {% if stats.total %}<div class="eq-stat-bar bar-critical" style="width:{% widthratio stats.critical_open stats.total 100 %}%"></div>{% endif %}
+    </div>
   </div>
+
+  {% if avg_response_hours is not None %}
+  <div style="font-size:12px;color:#64748B;margin:-16px 0 20px;">
+    ⏱ Avg first response time: <strong>{{ avg_response_hours }}h</strong>
+  </div>
+  {% endif %}
 
   <!-- Source + Type Breakdown -->
   {% if source_data or type_data %}
@@ -262,6 +362,7 @@
 
   <!-- Filter Bar -->
   <form class="eq-filters" method="GET">
+    {% if mine %}<input type="hidden" name="mine" value="1">{% endif %}
     <input type="text" name="q" value="{{ search }}" placeholder="Search name, phone, email…">
     <select name="status">
       <option value="">All Statuses</option>
@@ -275,11 +376,45 @@
         <option value="{{ val }}" {% if type_filter == val %}selected{% endif %}>{{ label }}</option>
       {% endfor %}
     </select>
-    <input type="text" name="source" value="{{ source_filter }}" placeholder="Source (e.g. Legal)">
+    <select name="priority">
+      <option value="">All Priorities</option>
+      {% for val, label in priority_choices %}
+        <option value="{{ val }}" {% if priority_filter == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <input type="date" name="date_from" value="{{ date_from }}" title="From date" style="font-size:13px;">
+    <input type="date" name="date_to"   value="{{ date_to }}"   title="To date"   style="font-size:13px;">
+    <input type="text" name="source" value="{{ source_filter }}" placeholder="Source…" style="min-width:120px;">
     <button type="submit" class="eq-filter-btn">Filter</button>
-    <a href="{% url 'enquiries:dashboard' %}" class="eq-filter-clear">Clear</a>
-    <div class="eq-results-count">{{ enquiries|length }} result{{ enquiries|length|pluralize }}</div>
+    <a href="{% url 'enquiries:dashboard' %}{% if mine %}?mine=1{% endif %}" class="eq-filter-clear">Clear</a>
+    <div class="eq-results-count">{{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }}</div>
   </form>
+
+  <!-- Bulk Action Toolbar (appears when checkboxes selected) -->
+  <div class="eq-bulk-bar" id="bulk-bar">
+    <span class="eq-bulk-count"><span id="bulk-count">0</span> selected</span>
+    <select id="bulk-action">
+      <optgroup label="Status">
+        {% for val, label in status_choices %}
+          <option value="status:{{ val }}">Status → {{ label }}</option>
+        {% endfor %}
+      </optgroup>
+      <optgroup label="Priority">
+        {% for val, label in priority_choices %}
+          <option value="priority:{{ val }}">Priority → {{ label }}</option>
+        {% endfor %}
+      </optgroup>
+      <option value="assign">Assign to…</option>
+    </select>
+    <select class="bulk-assign-sel" id="bulk-assign-to" style="display:none;">
+      <option value="">Unassigned</option>
+      {% for u in support_users %}
+        <option value="{{ u.pk }}">{{ u.get_full_name }}</option>
+      {% endfor %}
+    </select>
+    <button class="eq-bulk-apply" onclick="applyBulk()">Apply</button>
+    <span class="eq-bulk-cancel" onclick="clearBulk()">✕ Deselect all</span>
+  </div>
 
   <!-- Enquiry Table -->
   <div class="eq-table-wrap">
@@ -287,21 +422,26 @@
     <table class="eq-table" id="eq-table">
       <thead>
         <tr>
-          <th>Lead</th>
+          <th style="width:36px;"><input type="checkbox" id="chk-all" title="Select all" onchange="toggleAll(this)"></th>
+          <th class="sortable"><a href="?{% if mine %}mine=1&{% endif %}sort={% if sort == 'name' %}-name{% else %}name{% endif %}&status={{ status_filter }}&enquiry_type={{ type_filter }}&priority={{ priority_filter }}&q={{ search }}">Lead <span class="sort-arrow {% if sort == 'name' or sort == '-name' %}active{% endif %}">{% if sort == 'name' %}▲{% elif sort == '-name' %}▼{% else %}⇅{% endif %}</span></a></th>
           <th>Source</th>
           <th>Type</th>
-          <th>Message / Budget</th>
-          <th>Property</th>
-          <th>Status</th>
-          <th>Follow-up</th>
-          <th>Received</th>
+          <th class="sortable"><a href="?{% if mine %}mine=1&{% endif %}sort={% if sort == 'priority' %}-priority{% else %}priority{% endif %}&status={{ status_filter }}&enquiry_type={{ type_filter }}&q={{ search }}">Priority <span class="sort-arrow {% if sort == 'priority' or sort == '-priority' %}active{% endif %}">{% if sort == 'priority' %}▲{% elif sort == '-priority' %}▼{% else %}⇅{% endif %}</span></a></th>
+          <th class="sortable"><a href="?{% if mine %}mine=1&{% endif %}sort={% if sort == 'status' %}-status{% else %}status{% endif %}&enquiry_type={{ type_filter }}&priority={{ priority_filter }}&q={{ search }}">Status <span class="sort-arrow {% if sort == 'status' or sort == '-status' %}active{% endif %}">{% if sort == 'status' %}▲{% elif sort == '-status' %}▼{% else %}⇅{% endif %}</span></a></th>
+          <th>Assigned</th>
+          <th class="sortable"><a href="?{% if mine %}mine=1&{% endif %}sort={% if sort == 'followup' %}-followup{% else %}followup{% endif %}&status={{ status_filter }}&priority={{ priority_filter }}&q={{ search }}">Follow-up <span class="sort-arrow {% if sort == 'followup' or sort == '-followup' %}active{% endif %}">{% if sort == 'followup' %}▲{% elif sort == '-followup' %}▼{% else %}⇅{% endif %}</span></a></th>
+          <th class="sortable"><a href="?{% if mine %}mine=1&{% endif %}sort={% if sort == '-created_at' %}created_at{% else %}-created_at{% endif %}&status={{ status_filter }}&priority={{ priority_filter }}&q={{ search }}">Received <span class="sort-arrow {% if sort == 'created_at' or sort == '-created_at' %}active{% endif %}">{% if sort == 'created_at' %}▲{% elif sort == '-created_at' %}▼{% else %}⇅{% endif %}</span></a></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         {% for eq in enquiries %}
-        {% with now=eq.created_at %}
         <tr class="eq-row" id="row-{{ eq.pk }}">
+          <!-- Checkbox -->
+          <td style="width:36px;text-align:center;">
+            <input type="checkbox" class="eq-chk" value="{{ eq.pk }}" onchange="updateBulk()">
+          </td>
+
           <!-- Lead -->
           <td>
             <div class="eq-name">{{ eq.name }}</div>
@@ -317,29 +457,29 @@
           <!-- Type -->
           <td><span class="eq-type">{{ eq.get_enquiry_type_display }}</span></td>
 
-          <!-- Message / Budget -->
+          <!-- Priority -->
           <td>
-            {% if eq.message %}<div class="eq-msg" title="{{ eq.message }}">{{ eq.message }}</div>{% endif %}
-            {% if eq.budget %}<div style="font-size:12px;color:#64748B;margin-top:3px;">&#128176; {{ eq.budget }}</div>{% endif %}
+            <span class="prio-badge prio-badge-{{ eq.priority }}">
+              <span class="prio-dot prio-{{ eq.priority }}"></span>{{ eq.get_priority_display }}
+            </span>
           </td>
 
-          <!-- Property -->
-          <td style="font-size:12px;color:#475569;">
-            {% if eq.property %}
-              <a href="{{ eq.property.get_absolute_url }}" style="color:var(--sky);text-decoration:none;" target="_blank">{{ eq.property.title|truncatechars:30 }}</a>
-            {% else %}—{% endif %}
-          </td>
-
-          <!-- Status badge (updates live via JS) -->
+          <!-- Status -->
           <td>
             <span class="eq-status status-{{ eq.status }}" id="badge-{{ eq.pk }}">{{ eq.get_status_display }}</span>
+          </td>
+
+          <!-- Assigned -->
+          <td style="font-size:12px;color:#475569;">
+            {% if eq.assigned_to %}{{ eq.assigned_to.get_full_name|default:eq.assigned_to.email }}
+            {% else %}<span style="color:#CBD5E1;">Unassigned</span>{% endif %}
           </td>
 
           <!-- Follow-up -->
           <td>
             {% if eq.follow_up_at %}
-              <div class="eq-followup {% if eq.follow_up_at < now %}overdue{% endif %}" id="fu-{{ eq.pk }}">
-                {{ eq.follow_up_at|date:"d M, H:i" }}
+              <div class="eq-followup{% if eq.is_overdue %} overdue{% endif %}" id="fu-{{ eq.pk }}">
+                {% if eq.is_overdue %}⚠ {% endif %}{{ eq.follow_up_at|date:"d M, H:i" }}
               </div>
             {% else %}
               <span style="color:#CBD5E1;font-size:12px;" id="fu-{{ eq.pk }}">Not set</span>
@@ -368,7 +508,7 @@
 
         <!-- Inline edit panel -->
         <tr class="eq-panel" id="panel-{{ eq.pk }}">
-          <td colspan="9">
+          <td colspan="10">
             <div class="eq-panel-inner">
               <div class="eq-panel-grid">
                 <div>
@@ -376,6 +516,23 @@
                   <select id="sel-status-{{ eq.pk }}">
                     {% for val, label in status_choices %}
                       <option value="{{ val }}" {% if eq.status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label>Priority</label>
+                  <select id="sel-priority-{{ eq.pk }}">
+                    {% for val, label in priority_choices %}
+                      <option value="{{ val }}" {% if eq.priority == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label>Assigned To</label>
+                  <select id="sel-assigned-{{ eq.pk }}">
+                    <option value="">— Unassigned —</option>
+                    {% for u in support_users %}
+                      <option value="{{ u.pk }}" {% if eq.assigned_to_id == u.pk %}selected{% endif %}>{{ u.get_full_name }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -396,10 +553,39 @@
             </div>
           </td>
         </tr>
-        {% endwith %}
         {% endfor %}
       </tbody>
     </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="eq-pagination">
+      <div class="eq-page-info">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        &mdash; {{ page_obj.paginator.count }} total
+      </div>
+      <div class="eq-page-links">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}&sort={{ sort }}&status={{ status_filter }}&enquiry_type={{ type_filter }}&priority={{ priority_filter }}&q={{ search }}&date_from={{ date_from }}&date_to={{ date_to }}{% if mine %}&mine=1{% endif %}">&lsaquo;</a>
+        {% else %}
+          <span class="disabled">&lsaquo;</span>
+        {% endif %}
+        {% for p in page_obj.paginator.page_range %}
+          {% if p == page_obj.number %}
+            <span class="current">{{ p }}</span>
+          {% elif p >= page_obj.number|add:"-3" and p <= page_obj.number|add:"3" %}
+            <a href="?page={{ p }}&sort={{ sort }}&status={{ status_filter }}&enquiry_type={{ type_filter }}&priority={{ priority_filter }}&q={{ search }}&date_from={{ date_from }}&date_to={{ date_to }}{% if mine %}&mine=1{% endif %}">{{ p }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}&sort={{ sort }}&status={{ status_filter }}&enquiry_type={{ type_filter }}&priority={{ priority_filter }}&q={{ search }}&date_from={{ date_from }}&date_to={{ date_to }}{% if mine %}&mine=1{% endif %}">&rsaquo;</a>
+        {% else %}
+          <span class="disabled">&rsaquo;</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
     {% else %}
     <div class="eq-empty">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5">
@@ -418,11 +604,65 @@
 (function () {
   const CSRF = '{{ csrf_token }}';
 
+  /* ── Select All / individual checkboxes ────── */
+  window.toggleAll = function (master) {
+    document.querySelectorAll('.eq-chk').forEach(c => c.checked = master.checked);
+    updateBulk();
+  };
+
+  window.updateBulk = function () {
+    const checked = document.querySelectorAll('.eq-chk:checked');
+    const bar     = document.getElementById('bulk-bar');
+    document.getElementById('bulk-count').textContent = checked.length;
+    if (checked.length > 0) bar.classList.add('show');
+    else                     bar.classList.remove('show');
+
+    // Sync select-all master checkbox state
+    const all = document.querySelectorAll('.eq-chk');
+    const master = document.getElementById('chk-all');
+    master.indeterminate = checked.length > 0 && checked.length < all.length;
+    master.checked = checked.length === all.length && all.length > 0;
+  };
+
+  window.clearBulk = function () {
+    document.querySelectorAll('.eq-chk, #chk-all').forEach(c => { c.checked = false; c.indeterminate = false; });
+    document.getElementById('bulk-bar').classList.remove('show');
+    document.getElementById('bulk-count').textContent = '0';
+  };
+
+  /* Show/hide assign-to selector */
+  document.getElementById('bulk-action').addEventListener('change', function () {
+    const assignSel = document.getElementById('bulk-assign-to');
+    assignSel.style.display = this.value === 'assign' ? 'inline-block' : 'none';
+  });
+
+  window.applyBulk = function () {
+    const action  = document.getElementById('bulk-action').value;
+    const pks     = [...document.querySelectorAll('.eq-chk:checked')].map(c => c.value);
+    if (!pks.length) return;
+
+    const fd = new URLSearchParams({ csrfmiddlewaretoken: CSRF, action });
+    pks.forEach(pk => fd.append('pks', pk));
+
+    if (action === 'assign') {
+      const aid = document.getElementById('bulk-assign-to').value;
+      fd.append('assigned_to', aid);
+    }
+
+    fetch('/enquiries/bulk/', { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok) window.location.reload();
+        else alert(data.error || 'Bulk action failed.');
+      })
+      .catch(() => alert('Network error.'));
+  };
+
+  /* ── Inline panel toggle ────────────────────── */
   window.togglePanel = function (pk) {
     const panel  = document.getElementById('panel-' + pk);
     const toggle = document.getElementById('toggle-' + pk);
     const isOpen = panel.classList.contains('open');
-    // Close all
     document.querySelectorAll('.eq-panel.open').forEach(p => p.classList.remove('open'));
     document.querySelectorAll('.eq-btn-edit').forEach(b => b.innerHTML = 'Edit &#9660;');
     if (!isOpen) {
@@ -431,37 +671,28 @@
     }
   };
 
+  /* ── Inline save (now includes priority + assigned_to) ── */
   window.saveEnquiry = function (pk) {
-    const status   = document.getElementById('sel-status-' + pk).value;
+    const status   = document.getElementById('sel-status-'  + pk).value;
+    const priority = document.getElementById('sel-priority-' + pk).value;
+    const assigned = document.getElementById('sel-assigned-' + pk).value;
     const followup = document.getElementById('sel-followup-' + pk).value;
-    const notes    = document.getElementById('sel-notes-' + pk).value;
+    const notes    = document.getElementById('sel-notes-'   + pk).value;
     const msgEl    = document.getElementById('msg-' + pk);
 
     const body = new URLSearchParams({
       csrfmiddlewaretoken: CSRF,
-      status:  status,
-      notes:   notes,
-      follow_up_at: followup || '',
+      status, priority, assigned_to: assigned,
+      notes, follow_up_at: followup || '',
     });
 
-    fetch('/enquiries/' + pk + '/update/', { method: 'POST', body: body })
+    fetch('/enquiries/' + pk + '/update/', { method: 'POST', body })
       .then(r => r.json())
       .then(data => {
         if (data.ok) {
-          // Update badge in table row
           const badge = document.getElementById('badge-' + pk);
           badge.textContent = data.status_display;
           badge.className = 'eq-status status-' + data.status;
-
-          // Update follow-up display
-          const fuEl = document.getElementById('fu-' + pk);
-          if (fuEl) {
-            fuEl.textContent = followup
-              ? new Date(followup).toLocaleString('en-IN', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
-              : 'Not set';
-          }
-
-          // Flash saved message
           msgEl.style.display = 'inline';
           setTimeout(() => { msgEl.style.display = 'none'; }, 2500);
         }

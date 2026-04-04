@@ -47,7 +47,8 @@
     <!-- Form -->
     <div style="background:var(--white);padding:40px;border:1px solid var(--border);">
       <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Send Us a Message</div>
-      <form method="POST" action="{% url 'enquiries:create' %}">
+      
+<form method="POST" action="{% url 'enquiries:create' %}">
         {% csrf_token %}
         {% if request.GET.property %}<input type="hidden" name="property" value="{{ request.GET.property }}">{% endif %}
         {% if request.GET.agent %}<input type="hidden" name="agent" value="{{ request.GET.agent }}">{% endif %}

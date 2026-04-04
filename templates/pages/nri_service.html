@@ -782,7 +782,8 @@
       <div class="panel-title">Get Free Expert Callback</div>
       <div class="panel-sub">Our NRI specialist will call you within 2 hours — at your time zone</div>
     </div>
-    <form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
+    
+<form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
       {% csrf_token %}
       <input type="hidden" name="enquiry_type" value="general">
       <input type="hidden" name="source" value="nri">
@@ -1458,7 +1459,8 @@
     <div class="eyebrow">Get Started Today</div>
     <h2 class="cta-title">Your Property.<br>Our <em>Responsibility.</em></h2>
   </div>
-  <form class="cta-form" id="nri-cta-form" method="post" action="{% url 'enquiries:create' %}">
+  
+<form class="cta-form" id="nri-cta-form" method="post" action="{% url 'enquiries:create' %}">
     {% csrf_token %}
     <input type="hidden" name="enquiry_type" value="general">
     <input type="hidden" name="source" value="nri">

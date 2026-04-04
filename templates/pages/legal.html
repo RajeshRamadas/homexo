@@ -319,7 +319,8 @@
           <div class="panel-title">Get Free Expert Callback</div>
           <div class="panel-sub">Our legal specialist will call you within 2 hours to discuss your property verification needs.</div>
         </div>
-        <form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
+        
+<form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
           {% csrf_token %}
           <input type="hidden" name="enquiry_type" value="legal">
           <input type="hidden" name="service_detail" id="heroServiceDetail" value="Title Verification">
@@ -749,7 +750,8 @@
     <h2 class="cta-title">Need a Final <em>Legal</em><br>Go / No-Go Check?</h2>
     <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Share your property details and our legal team will call you with the right verification package and timeline.</p>
   </div>
-  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
+  
+<form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
     {% csrf_token %}
     <input type="hidden" name="enquiry_type" value="legal">
     <input type="hidden" name="source" value="legal">

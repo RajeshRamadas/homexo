@@ -301,7 +301,8 @@
           <h3>Send Us a Message</h3>
           <p>Fill in your details and the right advisor will be in touch</p>
         </div>
-        <form class="ct-form" action="{% url 'enquiries:create' %}" method="POST" novalidate>
+        
+<form class="ct-form" action="{% url 'enquiries:create' %}" method="POST" novalidate>
           {% csrf_token %}
           <input type="hidden" name="enquiry_type" value="general">
           <input type="hidden" name="source" value="contact">

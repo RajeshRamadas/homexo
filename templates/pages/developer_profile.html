@@ -566,7 +566,8 @@
 
     <div class="sidebar-card">
       <h4>Send Enquiry</h4>
-      <form class="dp-contact-form" action="{% url 'enquiries:create' %}" method="POST">
+      
+<form class="dp-contact-form" action="{% url 'enquiries:create' %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="developer" value="{{ developer.name }}">
         <input type="text" name="name" class="dp-form-input" placeholder="Your Name" required>

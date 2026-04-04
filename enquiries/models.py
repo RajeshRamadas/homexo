@@ -24,6 +24,12 @@ class Enquiry(models.Model):
         CLOSED     = 'closed',     'Closed'
         LOST       = 'lost',       'Lost'
 
+    class Priority(models.TextChoices):
+        CRITICAL = 'critical', 'Critical'
+        HIGH     = 'high',     'High'
+        MEDIUM   = 'medium',   'Medium'
+        LOW      = 'low',      'Low'
+
     # Who submitted
     user         = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                      null=True, blank=True, related_name='enquiries')
@@ -47,13 +53,16 @@ class Enquiry(models.Model):
 
     # CRM
     status       = models.CharField(max_length=15, choices=Status.choices, default=Status.NEW)
+    priority     = models.CharField(max_length=10, choices=Priority.choices, default=Priority.MEDIUM)
     assigned_to  = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
         null=True, blank=True, related_name='assigned_enquiries',
         help_text='Team member responsible for follow-up',
     )
-    follow_up_at = models.DateTimeField(null=True, blank=True,
-                                        help_text='Scheduled follow-up date/time')
+    follow_up_at      = models.DateTimeField(null=True, blank=True,
+                                             help_text='Scheduled follow-up date/time')
+    first_response_at = models.DateTimeField(null=True, blank=True,
+                                             help_text='When first agent action was taken on this ticket')
     notes        = models.TextField(blank=True, help_text='Internal agent/admin notes')
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField(auto_now=True)

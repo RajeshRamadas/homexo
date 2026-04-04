@@ -463,6 +463,12 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   <div class="elig-card">
     <div class="card-badge">Instant &amp; Free</div>
     <div class="elig-title">Check Your Eligibility</div>
+    <form id="hero-form" method="POST" action="{% url 'enquiries:create' %}">
+      {% csrf_token %}
+      <input type="hidden" name="enquiry_type" value="home_loan">
+      <input type="hidden" name="source" value="home_loan">
+      <input type="hidden" name="next" value="{% url 'pages:home_loan' %}#compare">
+      <input type="hidden" name="message" id="hiddenMessage" value="">
     <div class="elig-sub">Personalised result in seconds <span class="free-tag">Free</span></div>
     <!-- LOAN TYPE TABS -->
     <div class="loan-type-tabs">
@@ -473,11 +479,11 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
     <div class="frow">
       <div>
         <label class="lbl">Full Name</label>
-        <input class="fi" type="text" placeholder="Your Name">
+        <input class="fi" type="text" name="name" placeholder="Your Name" required>
       </div>
       <div>
         <label class="lbl">Mobile Number</label>
-        <input class="fi" type="tel" placeholder="+91 XXXXX XXXXX">
+        <input class="fi" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required>
       </div>
     </div>
     <div class="frow">
@@ -487,7 +493,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       </div>
       <div>
         <label class="lbl">Loan Required</label>
-        <input class="fi" type="text" placeholder="₹ Amount needed">
+        <input class="fi" type="text" name="budget" placeholder="₹ Amount needed" required>
       </div>
     </div>
     <div class="frow">
@@ -523,6 +529,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <span id="heroSubmitText">Get Best Offers Now</span>
     </button>
+    </form>
     <div class="form-note">No credit score impact. Data encrypted. <span>100% free service.</span></div>
     <div class="form-proof-strip">
       <div class="form-proof"><strong>30 Sec</strong><span>to get started</span></div>
@@ -864,15 +871,22 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <div class="cta-form-title">Start Your Comparison</div>
       <div class="cta-form-sub">Share four quick details. We will map your likely eligibility and the best bank shortlist for your profile.</div>
     </div>
+    <form id="cta-form" method="POST" action="{% url 'enquiries:create' %}">
+      {% csrf_token %}
+      <input type="hidden" name="enquiry_type" value="home_loan">
+      <input type="hidden" name="source" value="home_loan">
+      <input type="hidden" name="next" value="{% url 'pages:home_loan' %}#compare">
+      <input type="hidden" name="message" id="ctaHiddenMessage" value="">
     <div class="cta-row">
-      <input class="ci" type="text" placeholder="Your Full Name">
-      <input class="ci" type="tel" placeholder="Phone Number">
+      <input class="ci" type="text" name="name" placeholder="Your Full Name" required>
+      <input class="ci" type="tel" name="phone" placeholder="Phone Number" required>
     </div>
     <div class="cta-row">
       <input class="ci" type="text" placeholder="Monthly Income (₹)">
       <select class="cs"><option>Loan Amount Needed</option><option>Under ₹30L</option><option>₹30L – ₹50L</option><option>₹50L – ₹1Cr</option><option>₹1Cr – ₹2Cr</option><option>Above ₹2Cr</option></select>
     </div>
-    <button class="cta-btn" id="ctaSubmit">Compare Offers — Free →</button>
+    <button class="cta-btn" type="submit" id="ctaSubmit">Compare Offers — Free →</button>
+    </form>
     <div class="cta-form-foot">No credit impact. No advisory cost. One dedicated expert until your loan closes.</div>
   </div>
 </div>
@@ -895,18 +909,33 @@ function pickLoanType(b){document.querySelectorAll('.ltab').forEach(x=>x.classLi
 function pickProp(b){document.querySelectorAll('.popt').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
 
 // ── HERO FORM ────────────────────────────────────
-document.getElementById('heroSubmit').addEventListener('click',function(){
-  const t=document.getElementById('heroSubmitText');
-  this.style.background='var(--navy)';
+document.getElementById('hero-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Compose message
+  const ltype = document.querySelector('.ltab.on').textContent;
+  const inc = document.querySelector('input[placeholder="₹ Net salary"]').value;
+  const pVal = document.querySelector('input[placeholder="₹ Market value"]').value;
+  const city = document.querySelector('.fs').value;
+  const pProp = document.querySelector('.popt.on').textContent;
+  const rEmp = document.querySelector('.ropt.on').textContent;
+  
+  const msg = `Loan Type: ${ltype}\nIncome: ${inc}\nProperty Value: ${pVal}\nCity: ${city}\nProperty Finalised: ${pProp}\nEmployment: ${rEmp}`;
+  document.getElementById('hiddenMessage').value = msg;
+
+  const btn = document.getElementById('heroSubmit');
+  const t = document.getElementById('heroSubmitText');
+  btn.style.background='var(--navy)';
   t.textContent='Comparing Offers…';
-  let d=0;const iv=setInterval(()=>{d=(d+1)%4;t.textContent='Comparing Offers'+'.'.repeat(d);},350);
+  
+  let d=0; const iv=setInterval(()=>{d=(d+1)%4;t.textContent='Comparing Offers'+'.'.repeat(d);},350);
+  
   setTimeout(()=>{
     clearInterval(iv);
-    this.style.background='var(--green)';
-    t.textContent='✓ Offers Ready — See Below';
-    document.getElementById('compare').scrollIntoView({behavior:'smooth'});
-    setTimeout(()=>{this.style.background='';t.textContent='Get Best Offers Now';},4000);
-  },2000);
+    btn.style.background='var(--green)';
+    t.textContent='✓ Offers Ready — Redirecting...';
+    this.submit();
+  }, 2000);
 });
 
 // ── BANK DATA ────────────────────────────────────
@@ -1053,11 +1082,19 @@ function switchCalc(btn,id){
 }
 
 // ── CTA FORM ─────────────────────────────────────
-document.getElementById('ctaSubmit').addEventListener('click',function(){
-  this.style.background='var(--green)';
-  this.style.color='white';
-  this.textContent='✓ Request Received — We\'ll Call You Shortly';
-  setTimeout(()=>{this.style.background='';this.style.color='';this.textContent='Compare Offers — Free →';},4000);
+document.getElementById('cta-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const inc = document.querySelector('input[placeholder="Monthly Income (₹)"]').value;
+  const amt = document.querySelector('select.cs').value;
+  document.getElementById('ctaHiddenMessage').value = `Income: ${inc}\nAmount Needed: ${amt}`;
+  
+  const btn = document.getElementById('ctaSubmit');
+  btn.style.background='var(--green)';
+  btn.style.color='white';
+  btn.textContent='✓ Request Received — Redirecting...';
+  setTimeout(()=>{
+    this.submit();
+  }, 1000);
 });
 
 // ── FAQ ──────────────────────────────────────────

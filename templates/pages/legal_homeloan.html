@@ -608,7 +608,8 @@
         </ul>
       </div>
       <div>
-        <form class="ll-cta-form" method="post" action="{% url 'enquiries:create' %}">
+        
+<form class="ll-cta-form" method="post" action="{% url 'enquiries:create' %}">
           {% csrf_token %}
           <input type="hidden" name="enquiry_type" value="home_loan">
           <input type="hidden" name="source" value="legal_homeloan">

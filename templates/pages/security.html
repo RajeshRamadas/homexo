@@ -280,6 +280,7 @@
       <div class="elig-title">Get Free Expert Callback</div>
       <div class="elig-sub">Our security specialist will reach out within 2 hours.</div>
       
+      
       <form id="hero-form" method="post" action="{% url 'enquiries:create' %}">
         {% csrf_token %}
         <input type="hidden" name="enquiry_type" value="security">
@@ -288,22 +289,20 @@
           <div>
             <label class="lbl">Full Name</label>
             <input class="fi" type="text" name="name" placeholder="Your Name" required
-              value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}"
-              {% if user.is_authenticated %}readonly{% endif %}>
+              value="{{ user.get_full_name|default:'' }}" {% if user.is_authenticated %}readonly{% endif %}>
           </div>
           <div>
             <label class="lbl">Mobile Number</label>
             <input class="fi" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required
-              value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% endif %}"
-              {% if user.is_authenticated and user.phone %}readonly{% endif %}>
+              value="{{ user.phone|default:'' }}"
+              {% if user.phone %}readonly{% endif %}>
           </div>
         </div>
         <div class="frow">
           <div>
             <label class="lbl">Email Address</label>
             <input class="fi" type="email" name="email" placeholder="Your Email" required
-              value="{% if user.is_authenticated %}{{ user.email|default:'' }}{% endif %}"
-              {% if user.is_authenticated and user.email %}readonly{% endif %}>
+              value="{{ user.email|default:'' }}" {% if user.is_authenticated %}readonly{% endif %}>
           </div>
           <div>
             <label class="lbl">Service Needed</label>
@@ -623,19 +622,20 @@
     <h2 class="cta-title">Need a free<br><em>Site</em> Survey?</h2>
     <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Share your property details and our expert team will visit you at no cost to offer the best security solution.</p>
   </div>
+  
   <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
     {% csrf_token %}
     <input type="hidden" name="enquiry_type" value="security">
     <input type="hidden" name="source" value="security">
     <div class="cta-form-row">
-      <input type="text" name="name" placeholder="Your Full Name" value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}" required>
-      <input type="tel" name="phone" placeholder="Phone Number" value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% endif %}" required>
+      <input type="text" name="name" placeholder="Your Full Name" value="{{ user.get_full_name|default:'' }}" required {% if user.is_authenticated %}readonly{% endif %}>
+      <input type="tel" name="phone" placeholder="Phone Number" value="{{ user.phone|default:'' }}" required {% if user.phone %}readonly{% endif %}>
     </div>
     <div class="cta-form-row">
-      <input type="email" name="email" placeholder="Email Address" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required>
+      <input type="email" name="email" placeholder="Email Address" value="{{ user.email }}" required {% if user.is_authenticated %}readonly{% endif %}>
       <select name="service_detail" required>
         <option value="">Security Service Needed</option>
-        <option value="Title & Document Verification">CCTV Installation</option>
+        <option value="CCTV Installation">CCTV Installation</option>
         <option value="Access Control & Alarms">Access Control & Alarms</option>
         <option value="Physical Property Guardian">Physical Property Guardian</option>
         <option value="Security Audit">Security Audit</option>
