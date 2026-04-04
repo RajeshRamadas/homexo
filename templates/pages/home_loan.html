@@ -22,7 +22,6 @@
   font-family:'Jost',sans-serif;background:var(--surface);color:var(--text);overflow-x:hidden;
 }
 html{scroll-behavior:smooth}
-#scroll-progress{height:1.5px;background:linear-gradient(90deg,#B8996A,#D4B896)}
 
 /* ─── HERO ────────────────────────────────────── */
 .hero{margin-top:0;background:var(--ink);padding:84px 60px 0;display:grid;grid-template-columns:1fr 520px;gap:60px;align-items:end;position:relative;overflow:hidden;min-height:calc(100vh - 72px)}
@@ -54,7 +53,7 @@ html{scroll-behavior:smooth}
 .hero-float-card{position:absolute;right:608px;top:110px;width:252px;padding:20px 20px 18px;background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03));border:1px solid rgba(184,153,106,0.18);backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,0.22);z-index:1;overflow:hidden}
 .hero-float-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,153,106,0.12),transparent 48%);pointer-events:none}
 .hero-float-k{position:relative;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,213,183,0.55);margin-bottom:12px}
-.hero-float-rate{position:relative;font-family:'Playfair Display',serif;font-size:34px;line-height:1;color:var(--white);margin-bottom:16px}
+.hero-float-rate{position:relative;font-family:'Jost',sans-serif;font-size:34px;font-weight:400;letter-spacing:-.04em;line-height:1;color:var(--white);margin-bottom:16px}
 .hero-float-rate span{display:block;margin-top:6px;font-size:13px;color:var(--gold2);font-family:'Jost',sans-serif;letter-spacing:.4px}
 .hero-float-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
 .hero-float-stat{padding-top:11px;border-top:1px solid rgba(184,153,106,0.14)}
@@ -133,7 +132,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .step.vis{opacity:1;transform:translateY(0)}
 .step:nth-child(2){transition-delay:.1s}.step:nth-child(3){transition-delay:.2s}
 .step:hover{box-shadow:inset 0 0 0 1px var(--gold-line)}
-.step-ghost{position:absolute;bottom:-20px;right:-10px;font-family:'Playfair Display',serif;font-size:160px;font-weight:300;color:var(--ink);opacity:.025;line-height:1;pointer-events:none;letter-spacing:-10px}
+.step-ghost{position:absolute;bottom:-20px;right:-10px;font-family:'Jost',sans-serif;font-size:160px;font-weight:300;color:var(--ink);opacity:.025;line-height:1;pointer-events:none;letter-spacing:-8px}
 .step-num{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;font-weight:500;display:flex;align-items:center;gap:12px}
 .step-num-line{width:20px;height:1px;background:var(--gold);opacity:.5}
 .step-icon{width:52px;height:52px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:24px;transition:border-color .3s}
@@ -166,14 +165,14 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .bcard-apply:hover,.bcard-apply.applied{background:var(--ink);color:var(--gold);border-color:var(--ink)}
 .banks-more-card{background:var(--surface);border:none;padding:28px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:background .3s;opacity:0;transform:translateY(14px)}
 .banks-more-card.vis{opacity:1;transform:translateY(0)}
-.banks-more-num{font-family:'Playfair Display',serif;font-size:48px;font-weight:300;color:var(--gold);opacity:.5;line-height:1}
+.banks-more-num{font-family:'Jost',sans-serif;font-size:48px;font-weight:300;color:var(--gold);opacity:.5;line-height:1}
 .banks-more-lbl{font-size:10px;color:var(--text3);text-align:center;line-height:1.6;letter-spacing:.5px}
 .compare-intel{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:1px;background:var(--border);margin-bottom:32px}
 .compare-card{background:var(--surface);padding:26px 28px}
 .compare-card.dark{background:var(--ink);color:var(--white)}
 .compare-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-weight:600}
 .compare-card.dark .compare-lbl{color:rgba(232,213,183,0.55)}
-.compare-val{font-family:'Playfair Display',serif;font-size:36px;line-height:1;color:var(--ink);margin-bottom:12px}
+.compare-val{font-family:'Jost',sans-serif;font-size:36px;font-weight:400;letter-spacing:-.04em;line-height:1;color:var(--ink);margin-bottom:12px}
 .compare-card.dark .compare-val{color:var(--white)}
 .compare-desc{font-size:12px;line-height:1.75;color:var(--text2);font-weight:300}
 .compare-card.dark .compare-desc{color:rgba(232,213,183,0.72)}
@@ -208,7 +207,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .cright-decor2{position:absolute;bottom:-60px;right:-60px;width:300px;height:300px;border:1px solid rgba(184,153,106,0.06);border-radius:50%}
 .cr-main{text-align:center;padding-bottom:32px;margin-bottom:32px;border-bottom:1px solid rgba(184,153,106,0.2)}
 .cr-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:12px;font-weight:500}
-.cr-val{font-family:'Playfair Display',serif;font-size:58px;font-weight:300;color:var(--white);line-height:1}
+.cr-val{font-family:'Jost',sans-serif;font-size:58px;font-weight:300;letter-spacing:-.04em;color:var(--white);line-height:1}
 .cr-val span{font-family:'Jost',sans-serif;font-size:20px;color:var(--gold2)}
 .cr-note{font-size:11px;color:rgba(232,213,183,0.7);margin-top:10px;letter-spacing:.5px}
 .cr-rows{display:flex;flex-direction:column;gap:16px;margin-bottom:32px}
@@ -259,9 +258,10 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .testi.vis{opacity:1;transform:translateY(0)}
 .testi:nth-child(2){transition-delay:.1s}.testi:nth-child(3){transition-delay:.2s}
 .testi:hover{box-shadow:inset 0 0 0 1px var(--gold-line)}
-.testi-q{font-family:'Playfair Display',serif;font-size:72px;color:var(--gold);opacity:.12;line-height:.5;margin-bottom:22px}
+.testi-q{font-family:'Jost',sans-serif;font-size:68px;font-weight:300;color:var(--gold);opacity:.12;line-height:.5;margin-bottom:22px}
 .testi-stars{color:var(--gold);font-size:11px;margin-bottom:16px;letter-spacing:3px}
-.testi-text{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;line-height:1.8;color:var(--ink);margin-bottom:28px;font-weight:300}
+.testi-text{font-family:'Jost',sans-serif;font-size:15px;font-style:normal;line-height:1.85;color:var(--ink);margin-bottom:28px;font-weight:400}
+.voices-title{font-family:'Jost',sans-serif;font-style:normal;font-weight:400;letter-spacing:-.2px}
 .testi-author{display:flex;align-items:center;gap:15px}
 .testi-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--ink),var(--navy2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold2);flex-shrink:0;border:1px solid var(--gold-line)}
 .testi-name{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.3px}
@@ -317,6 +317,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .cta-btn{background:var(--gold);color:var(--ink);border:none;padding:16px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:'Jost',sans-serif;font-weight:700;transition:background .3s,transform .2s}
 .cta-btn:hover{background:var(--gold2)}
 .cta-form-foot{font-size:10px;color:rgba(232,213,183,0.45);text-align:center;line-height:1.6}
+.page-cond-note{padding:18px 60px 26px;background:var(--ink2);border-top:1px solid rgba(184,153,106,0.08);font-size:10px;line-height:1.7;color:rgba(232,213,183,0.48);text-align:left;letter-spacing:.2px}
 
 /* ─── RESPONSIVE ──────────────────────────────── */
 @media(max-width:1100px){
@@ -334,6 +335,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .elig-crit{grid-template-columns:1fr;gap:1px}
   .testis{grid-template-columns:1fr 1fr;gap:1px}
   .cta{padding:64px 28px;gap:48px}
+  .page-cond-note{padding:16px 28px 22px}
   .trust-strip{grid-template-columns:repeat(2,1fr)}
   .trust-item:nth-child(2){border-right:none}.trust-item:nth-child(3){border-top:1px solid var(--border)}
 }
@@ -375,6 +377,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .cta-form{padding:22px 20px}
   .cta-form-title{font-size:24px}
   .cta-row{grid-template-columns:1fr;gap:10px}
+  .page-cond-note{padding:14px 16px 20px;font-size:9px}
   .ci,.cs,.cta-btn{cursor:pointer}.ci,.cs{font-size:16px}
   .hl-premium input,.hl-premium select,.hl-premium .fi,.hl-premium .fs{font-size:16px!important}
   .ropt{cursor:pointer}
@@ -404,9 +407,9 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   <div class="hero-glow"></div>
   <div class="hero-float-card">
     <div class="hero-float-k">Today's Lending Pulse</div>
-    <div class="hero-float-rate">8.40<span>starting rate for strong profiles</span></div>
+    <div class="hero-float-rate">8.40%<span>starting rate for strong profiles</span></div>
     <div class="hero-float-grid">
-      <div class="hero-float-stat"><div class="hero-float-l">Top Funding</div><div class="hero-float-v">Up to 90%</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Top Funding</div><div class="hero-float-v">Up to 80%</div></div>
       <div class="hero-float-stat"><div class="hero-float-l">Sanction Pace</div><div class="hero-float-v">7 Days</div></div>
       <div class="hero-float-stat"><div class="hero-float-l">Partner Banks</div><div class="hero-float-v">15+</div></div>
       <div class="hero-float-stat"><div class="hero-float-l">Advisory Fee</div><div class="hero-float-v">Zero</div></div>
@@ -804,7 +807,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   <div class="sec-hd">
     <div>
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Customer Stories</div>
-      <h2 class="sec-title" style="margin-top:10px">Voices of <em>Trust</em></h2>
+      <h2 class="sec-title voices-title" style="margin-top:10px">Voices of <em>Trust</em></h2>
     </div>
   </div>
   <div class="testis">
@@ -823,7 +826,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
     <div class="testi">
       <div class="testi-q">"</div>
       <div class="testi-stars">★★★★☆</div>
-      <div class="testi-text">The EMI calculator helped me realise I could afford a bigger loan than I thought. HOMEXO's manager then found 90% funding from Axis — something I'd given up on after two bank rejections.</div>
+      <div class="testi-text">The EMI calculator helped me realise I could afford a bigger loan than I thought. HOMEXO's manager then found 80% funding from Axis — something I'd given up on after two bank rejections.</div>
       <div class="testi-author"><div class="testi-av">RK</div><div><div class="testi-name">Rohit Kapoor</div><div class="testi-role">Business Owner, Pune</div><div class="testi-loan">₹95L · Axis · 8.75% p.a.</div></div></div>
     </div>
   </div>
@@ -838,7 +841,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   <div class="faq-wrap">
     <div class="faq-item">
       <button class="faq-q" onclick="tFaq(this)">How much home loan can I get?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
-      <div class="faq-ans">Banks typically allow 50–60% of your net monthly income as the maximum EMI. Most lenders offer 80–90% of the property's market or guidance value, whichever is lower. Your CIBIL score, existing liabilities, and employer profile also influence the final amount. Use our Eligibility Calculator above for a personalised estimate.</div>
+      <div class="faq-ans">Banks typically allow 50–60% of your net monthly income as the maximum EMI. Most lenders offer up to 80% of the property's market or guidance value, whichever is lower. Your CIBIL score, existing liabilities, and employer profile also influence the final amount. Use our Eligibility Calculator above for a personalised estimate.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="tFaq(this)">Which bank gives the lowest home loan rate?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
@@ -911,6 +914,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
     <div class="cta-form-foot">No credit impact. No advisory cost. One dedicated expert until your loan closes.</div>
   </div>
 </div>
+<div class="page-cond-note">Conditions apply: interest rate, funding percentage and eligible loan amount vary by bank, property, applicant income, credit profile and supporting documents.</div>
 </div>
 
 {% endblock %}
@@ -949,11 +953,11 @@ function fmtEMI(n){return Math.round(n).toLocaleString('en-IN');}
 
 const banks={
   lowest:[
-    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Up to 90% · 30 yrs',badge:'Lowest Rate',bt:'green'},
-    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Up to 90% · 30 yrs',badge:'',bt:''},
+    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Up to 80% · 30 yrs',badge:'Lowest Rate',bt:'green'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
     {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'0.35%',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
-    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Up to 90% · 30 yrs',badge:'Most Popular',bt:'gold'},
-    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Up to 90% · 30 yrs',badge:'',bt:''},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Up to 80% · 30 yrs',badge:'Most Popular',bt:'gold'},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
     {abbr:'IDBI',name:'IDBI Bank',rate:8.60,fee:'0.50%',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
     {abbr:'ICICI',name:'ICICI Bank',rate:8.65,fee:'0.50%',detail:'Up to 85% · 30 yrs',badge:'',bt:''},
     {abbr:'AXIS',name:'Axis Bank',rate:8.75,fee:'1%+GST',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
@@ -971,10 +975,10 @@ const banks={
     {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.85,fee:'0.25%',detail:'Max 25 years tenure',badge:'25 Yrs Max',bt:''},
   ],
   funding:[
-    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Up to 90% of value',badge:'90% Funding',bt:'green'},
-    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Up to 90% of value',badge:'90% Funding',bt:'gold'},
-    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Up to 90% of value',badge:'90% Funding',bt:'gold'},
-    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Up to 90% of value',badge:'',bt:''},
+    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Up to 80% of value',badge:'80% Funding',bt:'green'},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Up to 80% of value',badge:'80% Funding',bt:'gold'},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Up to 80% of value',badge:'80% Funding',bt:'gold'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Up to 80% of value',badge:'',bt:''},
     {abbr:'ICICI',name:'ICICI Bank',rate:8.65,fee:'0.50%',detail:'Up to 85% of value',badge:'85% Funding',bt:''},
     {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'0.35%',detail:'Up to 80% of value',badge:'',bt:''},
     {abbr:'AXIS',name:'Axis Bank',rate:8.75,fee:'1%+GST',detail:'Up to 80% of value',badge:'',bt:''},
@@ -982,13 +986,13 @@ const banks={
     {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.85,fee:'0.25%',detail:'Up to 80% of value',badge:'',bt:''},
   ],
   bt:[
-    {abbr:'SBI',name:'State Bank of India',rate:8.35,fee:'NIL',detail:'Transfer + Top-Up up to 90%',badge:'No Fee',bt:'green'},
-    {abbr:'HDFC',name:'HDFC Bank',rate:8.50,fee:'₹3,000',detail:'Transfer + Top-Up up to 90%',badge:'Most Popular',bt:'gold'},
-    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'NIL',detail:'Transfer + Top-Up up to 90%',badge:'No Fee',bt:'green'},
+    {abbr:'SBI',name:'State Bank of India',rate:8.35,fee:'NIL',detail:'Transfer + Top-Up up to 80%',badge:'No Fee',bt:'green'},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.50,fee:'₹3,000',detail:'Transfer + Top-Up up to 80%',badge:'Most Popular',bt:'gold'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'NIL',detail:'Transfer + Top-Up up to 80%',badge:'No Fee',bt:'green'},
     {abbr:'ICICI',name:'ICICI Bank',rate:8.60,fee:'0.50%',detail:'Transfer up to 85%',badge:'',bt:''},
     {abbr:'AXIS',name:'Axis Bank',rate:8.70,fee:'0.50%',detail:'Transfer up to 80%',badge:'',bt:''},
     {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'NIL',detail:'Transfer up to 80%',badge:'',bt:''},
-    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Transfer up to 90%',badge:'',bt:''},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Transfer up to 80%',badge:'',bt:''},
     {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.80,fee:'0.25%',detail:'Transfer up to 80%',badge:'',bt:''},
     {abbr:'IDBI',name:'IDBI Bank',rate:8.60,fee:'0.50%',detail:'Transfer up to 80%',badge:'',bt:''},
   ]
