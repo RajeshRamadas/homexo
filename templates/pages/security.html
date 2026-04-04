@@ -7,29 +7,29 @@
 {% block extra_head %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block extra_css %}
 <style>
   .security-page-exact {
-    --obsidian: #080C10;
-    --void: #0C1117;
-    --deep: #111820;
-    --surface: #161E28;
-    --panel: #1C2636;
-    --glass: rgba(255,255,255,0.04);
-    --glass-border: rgba(255,255,255,0.08);
-    --glass-hover: rgba(255,255,255,0.07);
+    --obsidian: #f7f4ee;
+    --void: #f0ede5;
+    --deep: #e8e2d6;
+    --surface: #ffffff;
+    --panel: #f5f2ea;
+    --glass: rgba(15,14,12,0.04);
+    --glass-border: rgba(15,14,12,0.12);
+    --glass-hover: rgba(15,14,12,0.06);
     --gold: #C9A84C;
     --gold-bright: #E2C06A;
     --gold-dim: rgba(201,168,76,0.35);
     --gold-glow: rgba(201,168,76,0.12);
     --white: #FFFFFF;
-    --text-primary: #F0EEE8;
-    --text-secondary: rgba(240,238,232,0.55);
-    --text-muted: rgba(240,238,232,0.28);
-    --border: rgba(255,255,255,0.07);
+    --text-primary: #0f0e0c;
+    --text-secondary: rgba(15,14,12,0.6);
+    --text-muted: rgba(15,14,12,0.4);
+    --border: rgba(15,14,12,0.12);
     --border-gold: rgba(201,168,76,0.25);
     --sky: #4A90C4;
     --green: #6FCF97;
@@ -40,21 +40,13 @@
   html { scroll-behavior: smooth; }
 
   body.security-exact-page {
-    font-family: 'Outfit', sans-serif;
-    background: #080C10;
-    color: #F0EEE8;
+    font-family: 'DM Sans', sans-serif;
+    background: #f7f4ee;
+    color: #0f0e0c;
     overflow-x: hidden;
   }
 
-  body.security-exact-page::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 999;
-    opacity: 0.6;
-  }
+
 
   body.security-exact-page .floating-actions {
     display: none;
@@ -113,6 +105,7 @@
 
   .eyebrow {
     font-size: 11px;
+    font-family: 'DM Mono', monospace;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--gold);
@@ -232,10 +225,11 @@
     background: var(--surface);
     border: 1px solid var(--glass-border);
     border-top: 2px solid var(--gold);
+    border-radius: 12px;
     padding: 40px 36px;
     position: relative;
     z-index: 1;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    box-shadow: 0 40px 100px rgba(15,14,12,0.12), inset 0 1px 0 rgba(15,14,12,0.05);
   }
 
   .hero-form-card::before {
@@ -277,7 +271,7 @@
     padding: 12px 14px;
     background: var(--glass);
     border: 1px solid var(--border);
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     color: var(--text-primary);
     outline: none;
@@ -334,7 +328,7 @@
     cursor: pointer;
     transition: all .3s;
     text-align: center;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
   }
 
   .ropt:hover {
@@ -360,7 +354,7 @@
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     transition: all .3s;
     display: flex;
     align-items: center;
@@ -419,11 +413,11 @@
   }
 
   .sec-white {
-    background: var(--void);
+    background: #ffffff;
   }
 
   .sec-cream {
-    background: var(--deep);
+    background: var(--obsidian);
   }
 
   .sec-title {
@@ -466,6 +460,7 @@
 
   .sec-eyebrow {
     font-size: 10px;
+    font-family: 'DM Mono', monospace;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--gold);
@@ -486,12 +481,13 @@
   .services-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    gap: 1px;
-    background: var(--border);
+    gap: 20px;
+    background: transparent;
   }
 
   .service-tile {
     background: var(--void);
+    border-radius: 12px;
     padding: 48px 40px;
     position: relative;
     overflow: hidden;
@@ -537,7 +533,7 @@
     position: absolute;
     bottom: -16px;
     right: -8px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 130px;
     font-weight: 400;
     color: var(--gold);
@@ -554,8 +550,8 @@
   .tile-icon {
     width: 56px;
     height: 56px;
-    background: var(--glass);
-    border: 1px solid var(--border);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -652,7 +648,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto 28px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 30px;
     font-weight: 400;
     color: var(--gold);
@@ -684,13 +680,14 @@
   .packages {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    gap: 1px;
-    background: var(--border);
+    gap: 20px;
+    background: transparent;
   }
 
   .pkg {
     background: var(--void);
-    border: none;
+    border: 1px solid rgba(15,14,12,0.12);
+    border-radius: 12px;
     padding: 52px 40px;
     position: relative;
     overflow: hidden;
@@ -717,6 +714,7 @@
     background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
     opacity: 0;
     transition: opacity .4s;
+    border-radius: 12px;
   }
 
   .pkg:hover::before {
@@ -851,7 +849,7 @@
     font-weight: 600;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     cursor: pointer;
     transition: all .3s;
     position: relative;
@@ -899,13 +897,13 @@
   .why-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    gap: 1px;
-    background: var(--border);
+    gap: 20px;
+    background: transparent;
   }
 
   .why-card {
     background: var(--void);
-    border: none;
+    border-radius: 12px;
     padding: 36px 32px;
     opacity: 0;
     transform: translateY(20px);
@@ -948,8 +946,8 @@
   .why-icon {
     width: 44px;
     height: 44px;
-    background: var(--glass);
-    border: 1px solid var(--border);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -998,7 +996,7 @@
     padding: 28px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    box-shadow: 0 40px 80px rgba(15,14,12,0.1);
   }
 
   .tech-display::before {
@@ -1166,12 +1164,13 @@
   .testimonials-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    gap: 1px;
-    background: var(--border);
+    gap: 20px;
+    background: transparent;
   }
 
   .testimonial-card {
     background: var(--void);
+    border-radius: 12px;
     padding: 40px 36px;
     position: relative;
     opacity: 0;
@@ -1282,7 +1281,7 @@
     background: none;
     border: none;
     padding: 24px 0;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 15px;
     font-weight: 400;
     color: var(--text-secondary);
@@ -1404,7 +1403,7 @@
     padding: 14px 16px;
     background: var(--glass);
     border: 1px solid var(--border);
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     color: var(--text-primary);
     outline: none;
@@ -1442,7 +1441,7 @@
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     transition: all .3s;
   }
 
@@ -1496,7 +1495,7 @@
     padding: 10px 16px;
     border-radius: 6px;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 24px rgba(15,14,12,0.08);
     white-space: nowrap;
     opacity: 0;
     transform: translateY(8px);
@@ -1594,7 +1593,7 @@
     background: var(--glass);
     border: 1px solid var(--border);
     color: var(--text-secondary);
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
@@ -1651,7 +1650,7 @@
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     cursor: pointer;
     transition: all .3s;
     border: none;
@@ -1731,7 +1730,7 @@
   }
 
   .quiz-score-num {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 44px;
     font-weight: 400;
     color: var(--text-primary);
@@ -1917,6 +1916,7 @@
     background: var(--surface);
     border: 1px solid var(--glass-border);
     border-top: 2px solid var(--gold);
+    border-radius: 16px;
     max-width: 520px;
     width: 90%;
     padding: 48px 44px;
@@ -1924,7 +1924,7 @@
     max-height: 90vh;
     overflow-y: auto;
     animation: bookIn .4s cubic-bezier(.23,1,.32,1);
-    box-shadow: 0 60px 120px rgba(0,0,0,0.7);
+    box-shadow: 0 60px 120px rgba(15,14,12,0.18);
   }
 
   @keyframes bookIn {
@@ -2114,7 +2114,7 @@
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     transition: all .3s;
   }
 
@@ -2201,8 +2201,8 @@
   }
 
   .rg-feature-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(15,14,12,0.04);
+    border: 1px solid rgba(15,14,12,0.08);
     padding: 36px 30px;
   }
 
@@ -2237,7 +2237,7 @@
 
   .rg-feature-desc {
     font-size: 13px;
-    color: rgba(240,238,232,0.45);
+    color: rgba(240,238,232,0.65);
     line-height: 1.8;
     font-weight: 300;
   }
@@ -2283,7 +2283,7 @@
 
   .rg-list-text {
     font-size: 14px;
-    color: rgba(240,238,232,0.6);
+    color: rgba(240,238,232,0.7);
     line-height: 1.7;
     font-weight: 300;
   }
@@ -2294,7 +2294,7 @@
   }
 
   .rg-plan-card {
-    background: rgba(255,255,255,0.03);
+    background: rgba(255,255,255,0.04);
     border: 1px solid rgba(201,168,76,0.2);
     padding: 40px;
   }
@@ -2303,12 +2303,12 @@
     font-size: 10px;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: rgba(201,168,76,0.6);
+    color: #C9A84C;
     margin-bottom: 20px;
   }
 
   .rg-plan-price {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 38px;
     font-weight: 300;
     color: #F0EEE8;
@@ -2318,13 +2318,13 @@
   .rg-plan-price span {
     font-size: 16px;
     color: rgba(200,216,236,0.4);
-    font-family: 'Outfit', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 300;
   }
 
   .rg-plan-note {
     font-size: 11px;
-    color: rgba(240,238,232,0.28);
+    color: rgba(240,238,232,0.45);
     margin-top: 6px;
     margin-bottom: 28px;
   }
@@ -2338,7 +2338,7 @@
 
   .rg-plan-feature {
     font-size: 13px;
-    color: rgba(240,238,232,0.45);
+    color: rgba(240,238,232,0.7);
     display: flex;
     gap: 10px;
     align-items: center;
@@ -2649,13 +2649,13 @@
     </div>
   </section>
 
-  <section class="sec sec-dark" id="remoteGuardian" style="background:linear-gradient(135deg,#080C10 0%,#0C1117 60%,#111820 100%);position:relative;overflow:hidden;">
+  <section class="sec sec-dark" id="remoteGuardian" style="background:linear-gradient(135deg,#0f0e0c 0%,#1a1918 60%,#232220 100%);position:relative;overflow:hidden;">
     <div class="rg-pattern"></div>
     <div class="sec-hd" style="margin-bottom:56px;">
       <div>
-        <div class="sec-eyebrow" style="color:rgba(201,168,76,0.7);">New Service</div>
+        <div class="sec-eyebrow" style="color:#C9A84C;">New Service</div>
         <h2 class="sec-title" style="color:#F0EEE8;">No Camera Needed. <em style="color:#C9A84C;">Real People.</em><br>Real Protection.</h2>
-        <p class="sec-sub" style="color:rgba(240,238,232,0.45);max-width:560px;">Some properties can't have cameras — or the owner simply prefers not to. Our Physical Property Guardian service deploys trained on-ground personnel to visit, inspect, and report on your property on a scheduled basis. No hardware. No installation. Just trusted human eyes.</p>
+        <p class="sec-sub" style="color:rgba(240,238,232,0.75);max-width:560px;">Some properties can't have cameras — or the owner simply prefers not to. Our Physical Property Guardian service deploys trained on-ground personnel to visit, inspect, and report on your property on a scheduled basis. No hardware. No installation. Just trusted human eyes.</p>
       </div>
     </div>
 
