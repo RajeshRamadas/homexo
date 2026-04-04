@@ -161,8 +161,6 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .bcard-badge{display:inline-block;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;align-self:flex-start}
 .bcard-badge.green{background:var(--green-bg);color:var(--green)}
 .bcard-badge.gold{background:rgba(184,153,106,0.1);color:var(--gold);border:1px solid var(--gold-line)}
-.bcard-apply{width:100%;padding:10px;background:none;border:1px solid var(--border);color:var(--text2);font-family:'Jost',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:600;transition:all .3s;margin-top:auto}
-.bcard-apply:hover,.bcard-apply.applied{background:var(--ink);color:var(--gold);border-color:var(--ink)}
 .banks-more-card{background:var(--surface);border:none;padding:28px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:background .3s;opacity:0;transform:translateY(14px)}
 .banks-more-card.vis{opacity:1;transform:translateY(0)}
 .banks-more-num{font-family:'Jost',sans-serif;font-size:48px;font-weight:300;color:var(--gold);opacity:.5;line-height:1}
@@ -179,6 +177,10 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 .compare-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .compare-chip{padding:5px 10px;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;background:var(--white);border:1px solid var(--border);color:var(--text2);font-weight:600}
 .compare-card.dark .compare-chip{background:rgba(255,255,255,0.06);border-color:rgba(184,153,106,0.18);color:var(--gold2)}
+
+/* ─── BANK SLIDERS ────────────────────────────── */
+.compare-sliders{background:var(--surface);border:1px solid var(--border);padding:26px 30px;margin-bottom:32px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+@media(max-width:768px){.compare-sliders{grid-template-columns:1fr;gap:24px;padding:20px;}}
 
 /* ─── CALCULATORS ─────────────────────────────── */
 .calc-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px}
@@ -384,7 +386,6 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .trust-strip{grid-template-columns:1fr 1fr}
   .trust-item:nth-child(2){border-right:none}.trust-item:nth-child(3){border-top:1px solid var(--border)}.trust-item:nth-child(4){border-top:1px solid var(--border);border-right:none}
   .trust-item{padding:20px 16px}
-  .bcard-apply{cursor:pointer}
 }
 @media(max-width:390px){
   .hero{padding:28px 12px 0}.sec{padding:40px 12px}
@@ -582,7 +583,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
     <div>
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Our Banking Partners</div>
       <h2 class="sec-title" style="margin-top:10px">Compare Rates from<br><em>15+ Leading Banks</em></h2>
-      <p class="sec-sub">Pre-negotiated exclusive rates — live EMI calculated for ₹50L loan over 20 years.</p>
+      <p class="sec-sub">Pre-negotiated exclusive rates. Adjust the sliders below to calculate live EMIs tailored to your requirement.</p>
     </div>
   </div>
   <div class="compare-intel">
@@ -605,6 +606,16 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
       <div class="compare-lbl">HOMEXO Negotiated Zone</div>
       <div class="compare-val">8.40% to 8.55%</div>
       <div class="compare-desc">Indicative range our strongest matches unlock after lender comparison, fee screening, and profile packaging.</div>
+    </div>
+  </div>
+  <div class="compare-sliders">
+    <div class="cfield" style="margin-bottom:0;">
+      <label>Loan Amount <span class="cval" id="cbAmt">₹ 50,00,000</span></label>
+      <input type="range" class="cslider" id="slCbAmt" min="500000" max="50000000" step="100000" value="5000000" oninput="updateCompareBanks()">
+    </div>
+    <div class="cfield" style="margin-bottom:0;">
+      <label>Loan Tenure <span class="cval" id="cbTenure">20 Years</span></label>
+      <input type="range" class="cslider" id="slCbTenure" min="1" max="30" step="1" value="20" oninput="updateCompareBanks()">
     </div>
   </div>
   <div class="bank-tabs">
@@ -991,7 +1002,8 @@ const banks={
 
 function renderBanks(key){
   const g=document.getElementById('banksGrid');
-  const LOAN=5000000,TENURE=20;
+  const LOAN=document.getElementById('slCbAmt') ? parseInt(document.getElementById('slCbAmt').value) : 5000000;
+  const TENURE=document.getElementById('slCbTenure') ? parseInt(document.getElementById('slCbTenure').value) : 20;
   g.innerHTML=banks[key].map((b,i)=>`
     <div class="bcard" style="transition-delay:${i*.04}s">
       <div class="bcard-abbr">${b.abbr}</div>
@@ -1007,17 +1019,9 @@ function renderBanks(key){
       <div class="bcard-detail">${b.detail}</div>
       <div class="bcard-fee">Processing: ${b.fee}</div>
       ${b.badge?`<div class="bcard-badge ${b.bt}">${b.badge}</div>`:''}
-      <button class="bcard-apply" onclick="applyBank(this,'${b.abbr}')">Apply Now</button>
     </div>
   `).join('')+`<div class="banks-more-card"><div class="banks-more-num">+6</div><div class="banks-more-lbl" style="font-size:10px;color:var(--text3)">More Banking Partners</div></div>`;
   g.querySelectorAll('.bcard,.banks-more-card').forEach(el=>{el.classList.remove('vis');setTimeout(()=>obs.observe(el),10);});
-}
-
-function applyBank(btn,abbr){
-  btn.classList.add('applied');
-  btn.textContent='✓ Applied';
-  document.querySelector('.elig-card').scrollIntoView({behavior:'smooth'});
-  setTimeout(()=>{btn.classList.remove('applied');btn.textContent='Apply Now';},2500);
 }
 
 function switchBank(btn,key){
@@ -1027,6 +1031,31 @@ function switchBank(btn,key){
 }
 renderBanks('lowest');
 
+function updateCompareBanks() {
+  const amtInput = document.getElementById('slCbAmt');
+  const tenInput = document.getElementById('slCbTenure');
+  if(!amtInput || !tenInput) return;
+  const LOAN = parseInt(amtInput.value);
+  const TENURE = parseInt(tenInput.value);
+  
+  document.getElementById('cbAmt').textContent = '₹ ' + f(LOAN);
+  document.getElementById('cbTenure').textContent = TENURE + ' Year' + (TENURE===1?'':'s');
+  slFill(amtInput);
+  slFill(tenInput);
+
+  const activeTab = document.querySelector('.btab.on');
+  let currentKey = 'lowest';
+  if(activeTab) {
+    const txt = activeTab.textContent;
+    if(txt.includes('Tenure')) currentKey='tenure';
+    else if(txt.includes('Funding')) currentKey='funding';
+    else if(txt.includes('Transfer')) currentKey='bt';
+  }
+  
+  // Re-render but avoid animation re-trigger manually if we want, or just let it animate
+  renderBanks(currentKey);
+}
+
 // ── CALC HELPERS ─────────────────────────────────
 function fmt(n){if(n>=10000000)return(n/10000000).toFixed(2)+' Cr';if(n>=100000)return(n/100000).toFixed(2)+' L';return Math.round(n).toLocaleString('en-IN');}
 function f(n){return Math.round(n).toLocaleString('en-IN');}
@@ -1034,7 +1063,9 @@ function slFill(el){const p=(el.value-el.min)/(el.max-el.min)*100;el.style.backg
 
 // ── EMI CALC ─────────────────────────────────────
 function runEmi(){
-  const P=parseInt(document.getElementById('slEAmt').value)*100000;
+  const slEAmtNode = document.getElementById('slEAmt');
+  if(!slEAmtNode) return;
+  const P=parseInt(slEAmtNode.value)*100000;
   const r=parseFloat(document.getElementById('slERate').value)/12/100;
   const n=parseInt(document.getElementById('slETenure').value)*12;
   const t=parseInt(document.getElementById('slETenure').value);
@@ -1105,6 +1136,6 @@ function tFaq(btn){
 }
 
 // ── INIT ─────────────────────────────────────────
-runEmi();runElig();
+if(document.getElementById('slCbAmt')){ slFill(document.getElementById('slCbAmt')); slFill(document.getElementById('slCbTenure')); } runEmi();runElig();
 </script>
 {% endblock %}
