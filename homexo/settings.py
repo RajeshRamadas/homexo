@@ -256,3 +256,11 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    # Trust the HTTPS origins declared in ALLOWED_HOSTS for CSRF
+    CSRF_TRUSTED_ORIGINS = [
+        f'https://{host}' for host in ALLOWED_HOSTS if host not in ('', '*')
+    ]
+
+    # Reuse DB connections across requests (seconds)
+    DATABASES['default']['CONN_MAX_AGE'] = 60

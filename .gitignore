@@ -1,9 +1,44 @@
 
-properties/__pycache__/views.cpython-312.pyc
-*.pyc
-*.pyc
-*.pyc
-blog/__pycache__/views.cpython-312.pyc
-*.pyc
-*.pyc
-*.pyc
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ─── Virtual Environments ────────────────────────────────────────────────────
+venv/
+env/
+ENV/
+.venv/
+virtualenv/
+
+# ─── Django ───────────────────────────────────────────────────────────────────
+*.log
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+staticfiles/
+static_root/
+
+# ─── Environment Variables ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+# (docker-compose.yml is tracked; .env is not)
+
+# ─── IDEs & Editors ───────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+*.code-workspace
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Coverage & Test output ───────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/

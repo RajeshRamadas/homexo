@@ -1,0 +1,49 @@
+# ─── Version control ──────────────────────────────────────────────────────────
+.git
+.gitignore
+
+# ─── Python bytecode ──────────────────────────────────────────────────────────
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+.eggs
+
+# ─── Virtual environments ─────────────────────────────────────────────────────
+venv/
+env/
+.venv/
+
+# ─── Development databases ─────────────────────────────────────────────────────
+db.sqlite3
+*.db
+
+# ─── Secrets — never bake into image ─────────────────────────────────────────
+.env
+.env.*
+
+# ─── Media & collected static (mounted via volumes in prod) ───────────────────
+media/
+staticfiles/
+
+# ─── CI / Testing ─────────────────────────────────────────────────────────────
+.github/
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ─── Editor / OS files ────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ─── Docs & misc ──────────────────────────────────────────────────────────────
+README.md
+*.md
+nobroker.html
+analyze_corners.py
+get_prop.py
+rewrite_security.py
+write_sec.py
