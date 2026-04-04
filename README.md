@@ -1,106 +1,149 @@
 <div align="center">
 
-```
-  ╱╲
- ╱  ╲
-╱____╲  HOMEXO
-```
+# 🏛️ HOMEXO
 
-# HOMEXO — Luxury Real Estate Portal
+### Premium Real Estate & Property Services Platform
 
-**A full-stack Django web application for a luxury real estate platform.**  
-Built with Django 4.2, Django REST Framework, and a bespoke navy-and-sky design system.
+**A full-stack Django web application powering a luxury real estate portal with integrated financial, legal, and home services.**
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)](https://python.org)
-[![Django](https://img.shields.io/badge/Django-4.2-green?style=flat-square&logo=django)](https://djangoproject.com)
-[![DRF](https://img.shields.io/badge/DRF-3.15-red?style=flat-square)](https://django-rest-framework.org)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Django](https://img.shields.io/badge/Django-4.2-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com)
+[![DRF](https://img.shields.io/badge/REST_API-DRF_3.15-DC3545?style=for-the-badge)](https://django-rest-framework.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Ready-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![License](https://img.shields.io/badge/License-MIT-F7DF1E?style=for-the-badge)](LICENSE)
 
 </div>
 
 ---
 
-## 📸 Features
+## Overview
 
-| Feature | Details |
-|---|---|
-| 🏠 **Property Listings** | Buy, Rent, New Projects, Commercial with advanced filtering |
-| 💎 **Signature Collection** | Ultra-premium featured property showcase |
-| 🔍 **Smart Search** | Filter by location, type, BHK, price range, sort options |
-| 👤 **Authentication** | Custom email-based User model with roles (Buyer / Seller / Agent / Admin) |
-| 🤝 **Agent Profiles** | RERA-verified agent pages with listings and contact |
-| 💾 **Wishlist** | AJAX-powered save/unsave properties |
-| 📩 **Enquiry CRM** | Lead capture form with email notification and status pipeline |
-| 📰 **Blog & News** | Post management with categories, cover images, related posts |
-| 🧮 **EMI Calculator** | Live slider-based home loan calculator with canvas pie chart |
-| 🔌 **REST API** | Full DRF API with token authentication for all core resources |
-| ⚙️ **Admin Panel** | Rich Django admin with image thumbnails, inline editors, list_editable |
-| 🌱 **Seed Data** | One command seeds 10 properties, 3 agents, testimonials, blog posts |
+HOMEXO is a comprehensive real estate platform that goes beyond property listings. It combines property search, home loan comparison, legal verification, security services, NRI assistance, and a full CRM — all within a single, premium-designed web application.
 
 ---
 
-## 🗂️ Project Structure
+## ✨ Features
+
+### 🏠 Property Platform
+- **Property Listings** — Buy, Rent, New Projects, Commercial with advanced filtering & sorting
+- **Signature Collection** — Ultra-premium featured property showcase
+- **Smart Search** — Filter by city, locality, BHK, price range, property type, furnishing
+- **Interactive Floor Plans** — Tabbed 2D/3D viewer with room dimensions and price variants
+- **Developer Directory** — Dynamic builder profiles with project portfolios
+- **Wishlist** — AJAX-powered save/unsave with dedicated wishlist page
+
+### 💰 Financial Services
+- **Home Loan Comparison** — Live EMI calculator with 15+ bank rate comparison grid
+- **Dynamic Bank Sliders** — Adjust loan amount & tenure to see real-time EMI across all banks
+- **Eligibility Calculator** — Income-based loan eligibility estimation
+
+### ⚖️ Legal Services
+- **Legal Verification Orders** — Shield Starter / Pro / Complete packages
+- **Case Tracking Dashboard** — Step-by-step order progress with verdict system (Green/Yellow/Red)
+- **Advocate Management** — Advocate assignment, self-registration, and client-advocate messaging
+- **Payment Tracking** — Payment status, proof uploads, and transaction history
+
+### 🔒 Additional Services
+- **Security Services** — CCTV, access control, and home security enquiry system
+- **NRI Services** — Dedicated NRI property management, legal, and rental assistance
+- **Home Services** — Plumbing, electrical, painting, cleaning, and renovation leads
+
+### 📊 CRM & Admin
+- **Enquiry Dashboard** — Full CRM pipeline (New → Contacted → Qualified → Closed)
+- **Ticket System** — Activity logs, comments, priority, follow-up scheduling, agent assignment
+- **Bulk Actions** — Mass assign, status change, and priority update
+- **Email Notifications** — Auto-reply to leads + admin notification with rich HTML emails
+- **Source Tracking** — Every enquiry records which page/form it originated from
+
+### 🔐 Authentication
+- **Email-Based Login** — Custom user model (no username field)
+- **Phone OTP** — SMS-based login via Twilio
+- **Social OAuth** — Google and Facebook sign-in
+- **Role-Based Access** — Buyer, Seller, Agent, Admin, Customer Support, Legal Admin, Advocate
+
+### 📰 Content
+- **Blog & News** — Posts with categories, cover images, key takeaways, and reading time
+- **Testimonials** — Customer reviews with ratings, displayed on homepage
+- **SEO** — Sitemap, robots.txt, meta tags, semantic HTML
+
+---
+
+## 🏗️ Architecture
 
 ```
 homexo/
-├── homexo/                  # Project config
-│   ├── settings.py          # All settings (DB, DRF, CORS, email, auth)
+├── homexo/                  # Project configuration
+│   ├── settings.py          # Environment-aware settings (dev/prod)
 │   ├── urls.py              # Root URL dispatcher
-│   ├── api_urls.py          # /api/v1/ aggregator
-│   └── wsgi.py
+│   ├── api_urls.py          # REST API v1 aggregator
+│   ├── sitemaps.py          # SEO sitemaps
+│   └── wsgi.py              # WSGI entry point
 │
-├── accounts/                # Custom User model, auth views & API
-├── properties/              # Core listing models, views, API, admin
-├── agents/                  # Agent profiles linked to User
-├── enquiries/               # Lead capture + CRM status pipeline
-├── blog/                    # Posts, categories, news carousel
-├── testimonials/            # Client reviews
-├── wishlist/                # Saved properties (AJAX toggle)
-├── pages/                   # Home, About, FAQ, EMI Calculator
-│   └── management/
-│       └── commands/
-│           └── seed_data.py # 🌱 Sample data generator
+├── accounts/                # Custom User model, auth, OAuth, phone OTP
+├── properties/              # Listings, images, floor plans, features, developers
+├── enquiries/               # Lead capture, CRM dashboard, activity logs
+├── legal_services/          # Legal verification orders, steps, verdicts
+├── blog/                    # Posts, categories
+├── testimonials/            # Customer reviews
+├── wishlist/                # Saved properties
+├── pages/                   # All public-facing pages & service pages
 │
-├── templates/               # All HTML templates
+├── templates/
 │   ├── base.html            # Master layout (nav, footer, messages)
-│   ├── pages/               # home.html, emi_calculator.html
-│   ├── properties/          # list, detail, create, update, delete
-│   ├── agents/              # list, detail
-│   ├── blog/                # list, detail
-│   ├── accounts/            # login, register, profile
-│   ├── enquiries/           # form, success
-│   └── wishlist/            # list
+│   ├── pages/               # 15 service & content pages
+│   ├── properties/          # List, detail, create, update
+│   ├── accounts/            # Login, register, profile, OTP
+│   ├── enquiries/           # CRM dashboard, ticket detail
+│   ├── legal_services/      # Order tracking, advocate dashboard
+│   ├── blog/                # List, detail
+│   └── wishlist/            # Saved properties list
 │
-├── static/
-│   └── css/homexo.css       # Supplemental styles
-│
-├── requirements.txt
-├── .env.example             # Environment variable reference
-├── .gitignore
+├── static/                  # CSS, JS, icons, images
+├── media/                   # User-uploaded files (gitignored)
+├── requirements.txt         # Python dependencies
+├── env.example              # Environment variable reference
 └── manage.py
 ```
 
 ---
 
+## 🗄️ Database Schema
+
+**7 apps · 16 models · SQLite (dev) / PostgreSQL (prod)**
+
+| App | Models | Purpose |
+|-----|--------|---------|
+| **accounts** | `User`, `PhoneOTP` | Authentication, roles, preferences |
+| **properties** | `Property`, `Developer`, `PropertyImage`, `PropertyFloorPlan`, `PropertyFeature`, `PropertyTag`, `ConnectivityItem` | Listings with rich media & metadata |
+| **enquiries** | `Enquiry`, `EnquiryActivity` | Lead management & CRM pipeline |
+| **legal_services** | `LegalOrder`, `OrderStep`, `VerdictCheck`, `OrderActivity` | Legal verification workflow |
+| **blog** | `Post`, `Category` | Content management |
+| **testimonials** | `Testimonial` | Customer reviews |
+| **wishlist** | `WishlistItem` | Saved properties |
+
+---
+
 ## ⚡ Quick Start
 
-### 1 — Clone & Unzip
+### Prerequisites
+
+- Python 3.10+
+- pip
+- Git
+
+### 1 — Clone
 
 ```bash
-unzip homexo_django_project.zip
+git clone https://github.com/RajeshRamadas/homexo.git
 cd homexo
 ```
 
-### 2 — Create Virtual Environment
+### 2 — Virtual Environment
 
 ```bash
 python -m venv venv
-
-# macOS / Linux
-source venv/bin/activate
-
-# Windows
-venv\Scripts\activate
+source venv/bin/activate        # macOS / Linux
+# venv\Scripts\activate         # Windows
 ```
 
 ### 3 — Install Dependencies
@@ -113,196 +156,166 @@ pip install -r requirements.txt
 
 ```bash
 cp env.example .env
-# Edit .env with your settings (optional for local dev — defaults work out of the box)
+# Edit .env if needed — defaults work out of the box for local dev
 ```
 
-### 5 — Run Migrations
+### 5 — Migrate & Create Admin
 
 ```bash
-python manage.py makemigrations accounts properties agents enquiries blog testimonials wishlist
 python manage.py migrate
+python manage.py createsuperuser
 ```
 
-### 6 — Seed Sample Data
+### 6 — Seed Sample Data (Optional)
 
 ```bash
 python manage.py seed_data
 ```
 
-This creates:
-- 1 superuser (`admin@homexo.in` / `admin123`)
-- 3 verified agents with profiles
-- 10 property listings (mix of buy/rent/commercial/signature)
-- 7 property tags (Pool, Gym, Clubhouse, etc.)
-- 3 client testimonials
-- 3 blog posts under Market Reports
+Creates sample properties, agents, testimonials, and blog posts.
 
-### 7 — Run the Server
+### 7 — Run
 
 ```bash
 python manage.py runserver
 ```
 
 | URL | Description |
-|---|---|
-| `http://127.0.0.1:8000/` | Homepage |
-| `http://127.0.0.1:8000/admin/` | Admin Panel |
-| `http://127.0.0.1:8000/api/v1/` | REST API root |
+|-----|-------------|
+| https://homexo.in/ | Homepage |
+| https://homexo.in/admin/ | Admin Panel |
+| https://homexo.in/properties/ | Property Listings |
+| https://homexo.in/services/home-loan/ | Home Loan Comparison |
+| https://homexo.in/services/legal/ | Legal Services |
+| https://homexo.in/services/security/ | Security Services |
+| https://homexo.in/services/nri/ | NRI Services |
+| https://homexo.in/developers/ | Developer Directory |
+| https://homexo.in/blog/ | Blog & News |
+| https://homexo.in/api/v1/ | REST API |
 
 ---
 
-## 🔌 REST API Reference
+## 🔌 REST API
 
-All API endpoints are under `/api/v1/`. Token authentication is used — include `Authorization: Token <token>` in the header after login.
+All API endpoints are under `/api/v1/`. Authentication via DRF Token — include `Authorization: Token <token>` in headers.
 
-### Auth
+### Authentication
 
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| `POST` | `/api/v1/accounts/register/` | Register a new user | Public |
-| `POST` | `/api/v1/accounts/login/` | Login, receive token | Public |
-| `POST` | `/api/v1/accounts/logout/` | Invalidate token | Required |
-| `GET/PUT` | `/api/v1/accounts/me/` | View / update own profile | Required |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/accounts/register/` | Register new user |
+| `POST` | `/api/v1/accounts/login/` | Login, receive token |
+| `POST` | `/api/v1/accounts/logout/` | Invalidate token |
+| `GET/PUT` | `/api/v1/accounts/me/` | View / update profile |
 
 ### Properties
 
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| `GET` | `/api/v1/properties/` | List with filters | Public |
-| `POST` | `/api/v1/properties/` | Create listing | Required |
-| `GET` | `/api/v1/properties/<slug>/` | Property detail | Public |
-| `PUT` | `/api/v1/properties/<slug>/` | Update listing | Owner |
-| `DELETE` | `/api/v1/properties/<slug>/` | Delete listing | Owner |
-| `GET` | `/api/v1/properties/featured/` | Featured properties | Public |
-| `GET` | `/api/v1/properties/signature/` | Signature collection | Public |
-| `GET` | `/api/v1/properties/my_listings/` | My own listings | Required |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/properties/` | List with filters |
+| `POST` | `/api/v1/properties/` | Create listing |
+| `GET` | `/api/v1/properties/<slug>/` | Property detail |
+| `PUT` | `/api/v1/properties/<slug>/` | Update listing |
+| `DELETE` | `/api/v1/properties/<slug>/` | Delete listing |
+| `GET` | `/api/v1/properties/featured/` | Featured properties |
+| `GET` | `/api/v1/properties/signature/` | Signature collection |
 
 **Query Parameters:**
 ```
 ?type=buy|rent|new_project|commercial
 ?property_type=apartment|villa|penthouse|plot|office
 ?city=Bengaluru
-?bhk=1bhk|2bhk|3bhk|4bhk
-?min_price=5000000
-?max_price=30000000
+?bhk=2bhk|3bhk|4bhk
+?min_price=5000000&max_price=30000000
 ?search=whitefield
 ?ordering=price|-price|created_at|-views_count
-?page=2
 ```
 
 ### Other Endpoints
 
-```
-GET   /api/v1/agents/                  List all agents
-GET   /api/v1/agents/<id>/             Agent detail
-GET   /api/v1/blog/posts/              Blog posts
-GET   /api/v1/blog/posts/<slug>/       Post detail
-GET   /api/v1/blog/categories/         Blog categories
-POST  /api/v1/enquiries/               Submit enquiry
-GET   /api/v1/wishlist/                Saved properties
-POST  /api/v1/wishlist/toggle/<id>/    Toggle save/unsave
-```
-
----
-
-## 🗃️ Data Models
-
-### Property
-
-```python
-listing_type    # buy | rent | new_project | commercial
-property_type   # apartment | villa | penthouse | plot | office | shop | warehouse
-price           # DecimalField — display_price property auto-formats to ₹Cr / ₹L
-is_featured     # Appears in homepage carousel
-is_signature    # Ultra-premium collection
-status          # active | sold | rented | pending | draft | inactive
-```
-
-### User (Custom)
-
-```python
-email           # Primary identifier (instead of username)
-role            # buyer | seller | agent | admin
-is_verified     # Email verification flag
-```
-
-### Enquiry (CRM)
-
-```python
-status          # new → contacted → qualified → closed | lost
-enquiry_type    # buy | rent | sell | home_loan | general
-```
-
----
-
-## 🏗️ Apps Overview
-
-| App | Key Models | Key Views |
-|---|---|---|
-| `accounts` | `User` | register, login, logout, profile, profile_update |
-| `properties` | `Property`, `PropertyImage`, `PropertyFeature`, `PropertyTag` | list, detail, create, update, delete |
-| `agents` | `Agent` | list, detail |
-| `enquiries` | `Enquiry` | create, success |
-| `blog` | `Post`, `Category` | list, detail |
-| `testimonials` | `Testimonial` | (used in homepage context) |
-| `wishlist` | `WishlistItem` | list, toggle (AJAX), remove |
-| `pages` | — | home, about, faq, area_guides, market_reports, emi_calculator |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/blog/posts/` | Blog posts |
+| `GET` | `/api/v1/blog/categories/` | Blog categories |
+| `POST` | `/api/v1/enquiries/` | Submit enquiry |
+| `GET` | `/api/v1/wishlist/` | Saved properties |
+| `POST` | `/api/v1/wishlist/toggle/<id>/` | Toggle save/unsave |
 
 ---
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
-|---|---|
-| Backend | Django 4.2 |
-| API | Django REST Framework 3.15 |
-| Auth | Custom `AbstractBaseUser` + DRF Token Auth |
-| Database | SQLite (dev) → PostgreSQL (production) |
-| Images | Pillow |
-| CORS | django-cors-headers |
-| Frontend | Django Templates + vanilla JS |
-| Fonts | Google Fonts — Cormorant Garamond, DM Sans |
+|-------|------------|
+| **Backend** | Django 4.2, Python 3.12 |
+| **API** | Django REST Framework 3.15 |
+| **Database** | SQLite (dev) → PostgreSQL (prod) |
+| **Auth** | Custom `AbstractBaseUser` + Token Auth + Google/Facebook OAuth + Phone OTP |
+| **Email** | Django Email (SMTP / Console backend) |
+| **Images** | Pillow |
+| **CORS** | django-cors-headers |
+| **Frontend** | Django Templates, Vanilla JS, Vanilla CSS |
+| **Fonts** | Google Fonts — Inter, Jost, Playfair Display |
+| **Icons** | Inline SVGs (zero dependencies) |
+| **Server** | Gunicorn + Nginx (production) |
 
 ---
 
-## 🚀 Production Checklist
+## 🚀 Production Deployment
 
-Before deploying to production:
+The project is configured for **DigitalOcean Droplet** deployment with:
 
-- [ ] Set `DEBUG=False` in `.env`
-- [ ] Set a strong `SECRET_KEY`
-- [ ] Set `ALLOWED_HOSTS` to your domain
-- [ ] Switch `DATABASES` to PostgreSQL
-- [ ] Configure SMTP email settings
-- [ ] Run `python manage.py collectstatic`
-- [ ] Set up media file storage (AWS S3 recommended)
-- [ ] Enable HTTPS / SSL
-- [ ] Set `CORS_ALLOW_ALL_ORIGINS=False` and whitelist your frontend domain
-- [ ] Use Gunicorn + Nginx in production
+- **Gunicorn** — WSGI application server
+- **Nginx** — Reverse proxy, SSL termination, static/media serving
+- **PostgreSQL** — Production database
+- **Let's Encrypt** — Free SSL certificates
+- **systemd** — Process management with auto-restart
+
+### Environment-Aware Settings
+
+The `settings.py` reads from environment variables with safe development defaults:
 
 ```bash
-# Install production extras
-pip install gunicorn psycopg2-binary django-storages boto3
+# Production .env
+SECRET_KEY=your-64-char-secret
+DEBUG=False
+ALLOWED_HOSTS=homexo.in,www.homexo.in
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=homexo_db
+DB_USER=homexo_user
+DB_PASSWORD=strong-password
+```
 
-# Collect static
+When `DEBUG=False`, production security settings auto-activate:
+- HTTPS redirect
+- Secure cookies
+- HSTS headers
+- Content-Type sniffing protection
+
+### Deploy
+
+```bash
+pip install gunicorn psycopg2-binary
+python manage.py migrate
 python manage.py collectstatic --noinput
-
-# Start with Gunicorn
 gunicorn homexo.wsgi:application --bind 0.0.0.0:8000 --workers 3
 ```
 
 ---
 
-## 👤 Default Credentials
+## 📁 Environment Variables
 
-> ⚠️ **Change these immediately after setup.**
+See [`env.example`](env.example) for the full list. Key variables:
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | `admin@homexo.in` | `admin123` |
-| Agent 1 | `priya@homexo.in` | `agent123` |
-| Agent 2 | `rahul@homexo.in` | `agent123` |
-| Agent 3 | `ananya@homexo.in` | `agent123` |
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `SECRET_KEY` | Django secret | Dev placeholder |
+| `DEBUG` | Debug mode | `True` |
+| `ALLOWED_HOSTS` | Comma-separated domains | `*` |
+| `DB_ENGINE` | Database backend | SQLite |
+| `EMAIL_BACKEND` | Email delivery | Console (prints to terminal) |
+| `GOOGLE_OAUTH2_KEY` | Google sign-in | — |
+| `TWILIO_ACCOUNT_SID` | Phone OTP via SMS | — (prints to console in dev) |
 
 ---
 
@@ -312,14 +325,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ---
 
-## 🙏 Acknowledgements
-
-- UI Design: Inspired by the **HOMEXO** luxury real estate HTML template
-- Fonts: [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond) & [DM Sans](https://fonts.google.com/specimen/DM+Sans) via Google Fonts
-- Icons: Inline SVGs (no external icon library dependency)
-
----
-
 <div align="center">
-  <sub>Built with ❤️ for the HOMEXO luxury real estate portal.</sub>
+  <sub>Built with ❤️ by Rajesh Kumar Ramadas</sub>
 </div>

@@ -158,5 +158,5 @@ class Command(BaseCommand):
                 )
         self.stdout.write(self.style.SUCCESS(f'  ✓ {len(posts)} blog posts created'))
 
-        self.stdout.write('\n' + self.style.SUCCESS('✅ Seed complete! Visit http://127.0.0.1:8000'))
+        self.stdout.write('\n' + self.style.SUCCESS('✅ Seed complete! Visit https://homexo.in'))
         self.stdout.write(self.style.WARNING('   Admin: admin@homexo.in / admin123'))

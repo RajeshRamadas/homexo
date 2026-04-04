@@ -158,7 +158,7 @@ def enquiry_create(request):
       {property_block}
     </table>
     {'<div style="margin-top:20px;padding:16px;background:#f9f9f9;border-left:3px solid #1a2e44;font-size:14px;"><em>' + enquiry.message + '</em></div>' if enquiry.message else ''}
-    <a href="http://127.0.0.1:8000/admin/enquiries/enquiry/{enquiry.id}/change/"
+    <a href="https://homexo.in/admin/enquiries/enquiry/{enquiry.id}/change/"
        style="display:inline-block;margin-top:24px;padding:10px 20px;background:#1a2e44;color:#fff;border-radius:4px;text-decoration:none;font-size:13px;">View in Admin →</a>
   </div>
   <div style="padding:16px 32px;background:#f5f5f5;font-size:11px;color:#aaa;">Homexo — automated notification</div>

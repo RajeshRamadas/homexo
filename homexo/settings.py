@@ -9,11 +9,11 @@ import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-homexo-change-this-in-production-use-env-variable'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-homexo-change-this-in-production-use-env-variable')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # ─── APPLICATIONS ────────────────────────────────────────────────────────────
 DJANGO_APPS = [
@@ -91,24 +91,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'homexo.wsgi.application'
 
 # ─── DATABASE ─────────────────────────────────────────────────────────────────
+# Reads from environment: uses PostgreSQL if DB_ENGINE is set, otherwise SQLite.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3'),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
-
-# For production, switch to PostgreSQL:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME', 'homexo_db'),
-#         'USER': os.environ.get('DB_USER', 'postgres'),
-#         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-#         'HOST': os.environ.get('DB_HOST', 'localhost'),
-#         'PORT': os.environ.get('DB_PORT', '5432'),
-#     }
-# }
 
 # ─── AUTH ─────────────────────────────────────────────────────────────────────
 AUTH_USER_MODEL = 'accounts.User'
@@ -251,3 +244,15 @@ LOGGING = {
         },
     },
 }
+
+# ─── PRODUCTION SECURITY ──────────────────────────────────────────────────────
+# These only activate when DEBUG=False (i.e., on the live server).
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
