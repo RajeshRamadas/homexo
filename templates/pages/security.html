@@ -48,7 +48,7 @@
 
 
 
-  body.security-exact-page .floating-actions {
+  body.security-exact-page .fab-wrap:has(.fab-emi) {
     display: none;
   }
 
@@ -66,11 +66,11 @@
   .hero {
     margin-top: 80px;
     background: var(--obsidian);
-    padding: 80px 64px 0;
+    padding: 48px 64px 120px;
     display: grid;
     grid-template-columns: 1fr 420px;
     gap: 64px;
-    align-items: end;
+    align-items: center;
     position: relative;
     overflow: hidden;
     min-height: calc(100vh - 80px);
@@ -100,7 +100,6 @@
   .hero-left {
     position: relative;
     z-index: 1;
-    padding-bottom: 80px;
   }
 
   .eyebrow {
@@ -221,179 +220,121 @@
     color: var(--gold);
   }
 
-  .hero-form-card {
-    background: var(--surface);
-    border: 1px solid var(--glass-border);
-    border-top: 2px solid var(--gold);
-    border-radius: 12px;
-    padding: 40px 36px;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 40px 100px rgba(15,14,12,0.12), inset 0 1px 0 rgba(15,14,12,0.05);
-  }
-
-  .hero-form-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .form-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-    position: relative;
-  }
-
-  .form-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-    position: relative;
-  }
-
-  label.lbl {
-    display: block;
-    font-size: 9px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-
-  .fi,
-  .fs {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--glass);
-    border: 1px solid var(--border);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text-primary);
-    outline: none;
-    appearance: none;
-    transition: border-color .3s, background .3s;
-  }
-
-  .fi::placeholder {
-    color: var(--text-muted);
-  }
-
-  .fi:focus,
-  .fs:focus {
-    border-color: var(--border-gold);
-    background: rgba(201,168,76,0.04);
-  }
-
-  .fs {
-    color: var(--text-secondary);
-  }
-
-  .fs option {
-    background: var(--surface);
-    color: var(--text-primary);
-  }
-
-  .frow {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-
-  .ffield {
-    margin-bottom: 14px;
-  }
-
-  .radio-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .ropt {
-    flex: 1;
-    min-width: 72px;
-    padding: 10px 6px;
-    border: 1px solid var(--border);
-    background: var(--glass);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all .3s;
-    text-align: center;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .ropt:hover {
-    border-color: var(--border-gold);
-    color: var(--gold);
-  }
-
-  .ropt.on {
-    background: var(--gold);
-    color: var(--obsidian);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    color: var(--obsidian);
-    border: none;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    transition: all .3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 8px;
-    position: relative;
+  .hero-panel {
+    position: relative; z-index: 1;
+    background: #ffffff;
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 60px rgba(0,0,0,0.15);
     overflow: hidden;
   }
 
-  .submit-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-    opacity: 0;
-    transition: opacity .3s;
+  .panel-head {
+    background: #0f0e0c;
+    padding: 32px 24px 26px 32px;
+    border-bottom: 2px solid var(--gold);
+    flex-shrink: 0;
   }
 
-  .submit-btn:hover::before {
-    opacity: 1;
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 500; color: #f7f4ee;
+    margin-bottom: 6px; line-height: 1.3;
   }
 
-  .submit-btn > * {
-    position: relative;
-    z-index: 1;
+  .panel-sub { font-size: 12px; color: rgba(247,244,238,0.5); line-height: 1.65; }
+
+  .panel-body {
+    padding: 22px 24px 26px;
+    flex: 1; display: flex; flex-direction: column; overflow-y: auto;
   }
 
-  .submit-btn:hover {
-    box-shadow: 0 8px 32px rgba(201,168,76,0.4);
-    transform: translateY(-1px);
+  .sec-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 16px; }
+
+  .sec-tab {
+    padding: 11px 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(15,14,12,0.45);
+    cursor: pointer; transition: all 0.22s; text-align: center; line-height: 1;
   }
+
+  .sec-tab.active { background: #0f0e0c; border-color: #0f0e0c; color: #f7f4ee; }
+  .sec-tab:hover:not(.active) { border-color: #0f0e0c; color: #0f0e0c; }
+
+  .field { margin-bottom: 12px; }
+  .field:last-of-type { margin-bottom: 0; }
+
+  .field label {
+    display: block; font-size: 9.5px; font-weight: 600; letter-spacing: 1.6px;
+    text-transform: uppercase; color: rgba(15,14,12,0.45); margin-bottom: 6px;
+  }
+
+  .field input, .field select {
+    border-radius: 8px;
+    width: 100%; padding: 11px 12px; border: 1px solid var(--border);
+    background: var(--panel); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--text-primary); outline: none; appearance: none;
+    transition: border-color 0.3s, background 0.25s, box-shadow 0.25s;
+  }
+
+  .field input::placeholder { color: rgba(15,14,12,0.35); opacity: 1; }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--gold); background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .phone-wrap {
+    border-radius: 8px; overflow: hidden;
+    display: flex; align-items: stretch;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    transition: border-color 0.3s, box-shadow 0.25s;
+  }
+
+  .phone-wrap:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .phone-code {
+    width: 130px; min-width: 130px; max-width: 130px;
+    padding: 11px 22px 11px 10px;
+    border: none; border-right: 1px solid var(--border);
+    background: var(--panel); font-family: 'DM Sans', sans-serif; font-size: 11.5px;
+    color: var(--text-primary); outline: none; appearance: none;
+    cursor: pointer; flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A8A99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .phone-num {
+    flex: 1; padding: 11px 10px; border: none;
+    background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--text-primary); outline: none; min-width: 0; width: 0;
+  }
+
+  .phone-num::placeholder { color: rgba(15,14,12,0.35); opacity: 1; }
+
+  .form-submit {
+    border-radius: 8px;
+    width: 100%; padding: 13px; background: #0f0e0c; color: #f7f4ee;
+    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 14px; flex-shrink: 0;
+  }
+
+  .form-submit:hover { background: var(--gold); transform: translateY(-1px); }
 
   .form-note {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-align: center;
-    margin-top: 12px;
-    line-height: 1.7;
+    font-size: 10.5px; color: rgba(15,14,12,0.4); text-align: center;
+    margin-top: 14px; line-height: 1.7; letter-spacing: 0.2px;
   }
 
   .sec {
@@ -1450,71 +1391,6 @@
     transform: translateY(-1px);
   }
 
-  .wa-float {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 9000;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-  }
-
-  .wa-float-btn {
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    background: #25D366;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 28px rgba(37,211,102,0.4);
-    transition: transform .3s, box-shadow .3s;
-    animation: waPulse 2.5s infinite;
-  }
-
-  .wa-float-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 36px rgba(37,211,102,0.55);
-  }
-
-  .wa-float-btn svg {
-    width: 28px;
-    height: 28px;
-    fill: #fff;
-  }
-
-  .wa-tooltip {
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 16px;
-    border-radius: 6px;
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 24px rgba(15,14,12,0.08);
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(8px);
-    animation: waTooltipIn .5s 2s forwards;
-    pointer-events: none;
-  }
-
-  @keyframes waPulse {
-    0%,100% { box-shadow: 0 6px 28px rgba(37,211,102,0.4); }
-    50% { box-shadow: 0 6px 36px rgba(37,211,102,0.65); }
-  }
-
-  @keyframes waTooltipIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   .quiz-section {
     background: var(--surface);
     position: relative;
@@ -2386,9 +2262,14 @@
       grid-template-columns: 1fr;
     }
 
-    .hero-form-card {
-      margin-top: 40px;
+    .hero-panel {
+      width: 100%;
+      border-top: 2px solid var(--gold);
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.1);
     }
+
+    .panel-head { padding: 26px 24px 20px; }
+    .panel-body { padding: 22px 24px 28px; }
 
     .sec {
       padding: 72px 20px;
@@ -2422,16 +2303,6 @@
 
     .booking-slots {
       grid-template-columns: repeat(2,1fr);
-    }
-
-    .wa-float {
-      bottom: 20px;
-      right: 20px;
-    }
-
-    .wa-float-btn {
-      width: 52px;
-      height: 52px;
     }
 
   }
@@ -2481,48 +2352,53 @@
       </div>
     </div>
 
-    <div class="hero-form-card">
-      <div class="form-title">Get a Free Site Survey</div>
-      <div class="form-sub">Our security consultant visits your property at no cost.</div>
-      <div class="ffield">
-        <label class="lbl">Property Type</label>
-        <div class="radio-row">
-          <button class="ropt on" type="button" onclick="selectRopt(this)">Apartment</button>
-          <button class="ropt" type="button" onclick="selectRopt(this)">Villa</button>
-          <button class="ropt" type="button" onclick="selectRopt(this)">Commercial</button>
-          <button class="ropt" type="button" onclick="selectRopt(this)">Plot</button>
+    <div class="hero-panel">
+      <div class="panel-head">
+        <div class="panel-title">Get a Free Site Survey</div>
+        <div class="panel-sub">Our security consultant visits your property at no cost</div>
+      </div>
+      <form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
+        {% csrf_token %}
+        <input type="hidden" name="enquiry_type" value="general">
+        <input type="hidden" name="service_detail" id="secServiceDetail" value="CCTV Installation">
+        <div class="sec-tabs">
+          <button type="button" class="sec-tab active" data-service="CCTV Installation" onclick="selectSecTab(this)">CCTV</button>
+          <button type="button" class="sec-tab" data-service="Alarm System" onclick="selectSecTab(this)">Alarm</button>
+          <button type="button" class="sec-tab" data-service="Access Control" onclick="selectSecTab(this)">Access</button>
+          <button type="button" class="sec-tab" data-service="Full Security Audit" onclick="selectSecTab(this)">Audit</button>
         </div>
-      </div>
-      <div class="frow">
-        <div class="ffield" style="margin-bottom:0">
-          <label class="lbl">Full Name</label>
-          <input type="text" class="fi" placeholder="Arjun Sharma">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" name="name" placeholder="Your Name" required>
         </div>
-        <div class="ffield" style="margin-bottom:0">
-          <label class="lbl">Phone Number</label>
-          <input type="tel" class="fi" placeholder="+91 98765 43210">
+        <div class="field">
+          <label>Phone Number</label>
+          <div class="phone-wrap">
+            <select class="phone-code" name="phone_code">
+              <option value="+91">🇮🇳 India (+91)</option>
+              <option value="+1">🇺🇸 US (+1)</option>
+              <option value="+44">🇬🇧 UK (+44)</option>
+              <option value="+971">🇦🇪 UAE (+971)</option>
+              <option value="+65">🇸🇬 Singapore (+65)</option>
+              <option value="+61">🇦🇺 Australia (+61)</option>
+              <option value="+966">🇸🇦 KSA (+966)</option>
+              <option value="+974">🇶🇦 Qatar (+974)</option>
+              <option value="+60">🇲🇾 Malaysia (+60)</option>
+              <option value="+49">🇩🇪 Germany (+49)</option>
+            </select>
+            <input type="tel" name="phone" placeholder="Phone number" class="phone-num" required>
+          </div>
         </div>
-      </div>
-      <div class="ffield" style="margin-top:14px">
-        <label class="lbl">Property Location</label>
-        <input type="text" class="fi" placeholder="e.g. Whitefield, Bengaluru">
-      </div>
-      <div class="ffield">
-        <label class="lbl">Service Needed</label>
-        <select class="fs">
-          <option>CCTV Installation</option>
-          <option>Video Door Phone</option>
-          <option>Smart Access Control</option>
-          <option>Alarm Systems</option>
-          <option>Remote Monitoring</option>
-          <option>Full Security Audit</option>
-        </select>
-      </div>
-      <button class="submit-btn" type="button" onclick="openBooking()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Book Free Site Survey
-      </button>
-      <p class="form-note">100% free consultation · No hidden charges · Expert assigned within 24 hrs</p>
+        <div class="field">
+          <label>Property Location</label>
+          <input type="text" name="location" placeholder="e.g. Whitefield, Bengaluru">
+        </div>
+        <button type="submit" class="form-submit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Request Free Survey
+        </button>
+        <div class="form-note">Free site visit &nbsp;·&nbsp; No hidden charges &nbsp;·&nbsp; Expert within 24 hrs</div>
+      </form>
     </div>
   </section>
 
@@ -2644,7 +2520,7 @@
           <div class="quiz-rec-reason" id="quizRecReason"></div>
         </div>
         <button class="quiz-nav-btn primary" type="button" onclick="quizReset()">Retake Quiz</button>
-        <button class="quiz-nav-btn primary" type="button" style="margin-left:12px;" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Get Free Survey</button>
+        <button class="quiz-nav-btn primary" type="button" style="margin-left:12px;" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Get Free Survey</button>
       </div>
     </div>
   </section>
@@ -2724,7 +2600,7 @@
           <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Instant WhatsApp alert if any issue found</div>
           <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> No cameras, no installation, no tech needed</div>
         </div>
-        <button class="pkg-cta rg-plan-cta" type="button" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Enquire About This Plan</button>
+        <button class="pkg-cta rg-plan-cta" type="button" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Enquire About This Plan</button>
       </div>
     </div>
   </section>
@@ -2943,9 +2819,9 @@
         <tfoot>
           <tr>
             <td></td>
-            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
-            <td><button class="pkg-cta" type="button" style="background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--obsidian);border-color:var(--gold);" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
-            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Request Quote</button></td>
+            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
+            <td><button class="pkg-cta" type="button" style="background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--obsidian);border-color:var(--gold);" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
+            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Request Quote</button></td>
           </tr>
         </tfoot>
       </table>
@@ -3125,13 +3001,6 @@
     </div>
   </div>
 
-  <div class="wa-float">
-    <div class="wa-tooltip">Need help? Chat with us</div>
-    <a href="https://wa.me/919876543210?text=Hi%2C%20I%27m%20interested%20in%20HOMEXO%20Security%20services.%20Please%20share%20details." target="_blank" rel="noopener" class="wa-float-btn" aria-label="Chat on WhatsApp">
-      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    </a>
-  </div>
-
   <div class="booking-overlay" id="bookingOverlay">
     <div class="booking-card">
       <button class="booking-close" type="button" onclick="closeBooking()">
@@ -3193,14 +3062,16 @@ function toggleFaq(btn) {
   }
 }
 
-function selectRopt(btn) {
-  btn.closest('.radio-row').querySelectorAll('.ropt').forEach(r => r.classList.remove('on'));
-  btn.classList.add('on');
+function selectSecTab(btn) {
+  btn.closest('.sec-tabs').querySelectorAll('.sec-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const el = document.getElementById('secServiceDetail');
+  if (el) el.value = btn.dataset.service || btn.textContent.trim();
 }
 
 document.querySelectorAll('.pkg-cta').forEach(btn => {
   btn.addEventListener('click', () => {
-    const form = document.querySelector('.hero-form-card');
+    const form = document.querySelector('.hero-panel');
     if (form) form.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 });
