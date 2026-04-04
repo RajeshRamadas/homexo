@@ -4,9 +4,31 @@ Rich admin panel for Property management.
 """
 
 from django.contrib import admin
+from django.db.models import Count
 from django.utils.html import format_html
-from .models import Property, PropertyImage, PropertyFeature, PropertyTag
+from .models import Developer, Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem
 
+
+@admin.register(Developer)
+class DeveloperAdmin(admin.ModelAdmin):
+    list_display        = ('logo_thumb', 'name', 'tagline', 'location', 'tags', 'total_projects', 'is_featured')
+    list_display_links  = ('name',)
+    list_filter         = ('is_featured', 'location')
+    search_fields       = ('name', 'tagline', 'location', 'tags')
+    prepopulated_fields = {'slug': ('name',)}
+    list_editable       = ('is_featured',)
+
+    @admin.display(description='Logo')
+    def logo_thumb(self, obj):
+        if obj.logo:
+            return format_html('<img src="{}" height="32" style="border-radius:4px;" />', obj.logo.url)
+        return format_html('<div style="width:32px;height:32px;background:#eef0f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9ca3af;font-weight:700;">{}</div>', obj.name[:2].upper())
+
+    def total_projects(self, obj):
+        return obj.properties_count
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(properties_count=Count('properties'))
 
 class PropertyImageInline(admin.TabularInline):
     model      = PropertyImage
@@ -21,15 +43,40 @@ class PropertyImageInline(admin.TabularInline):
         return '—'
 
 
+class PropertyFloorPlanInline(admin.TabularInline):
+    model      = PropertyFloorPlan
+    extra      = 2
+    fields     = ('image', 'fp_thumb', 'image_3d', 'fp_thumb_3d', 'bhk_type', 'caption', 'size_sqft', 'price_display', 'room_data', 'order')
+    readonly_fields = ('fp_thumb', 'fp_thumb_3d')
+
+    @admin.display(description='2D Preview')
+    def fp_thumb(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" height="60" style="border-radius:4px;object-fit:cover;" />', obj.image.url)
+        return '—'
+
+    @admin.display(description='3D Preview')
+    def fp_thumb_3d(self, obj):
+        if obj.image_3d:
+            return format_html('<img src="{}" height="60" style="border-radius:4px;object-fit:cover;" />', obj.image_3d.url)
+        return '—'
+
+
 class PropertyFeatureInline(admin.TabularInline):
     model = PropertyFeature
     extra = 4
-    fields = ('name', 'icon')
+    fields = ('name', 'icon', 'icon_image')
+
+
+class ConnectivityItemInline(admin.TabularInline):
+    model = ConnectivityItem
+    extra = 3
+    fields = ('category', 'name', 'distance', 'order')
 
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display   = ('primary_thumb', 'title', 'listing_type', 'property_type',
+    list_display   = ('primary_thumb', 'title', 'developer', 'listing_type', 'property_type',
                       'display_price', 'locality', 'city', 'bedrooms', 'bathrooms',
                       'is_featured', 'is_signature', 'status', 'views_count', 'created_at')
     list_display_links = ('title',)
@@ -41,13 +88,13 @@ class PropertyAdmin(admin.ModelAdmin):
     list_editable  = ('is_featured', 'is_signature', 'status')
     date_hierarchy = 'created_at'
     ordering       = ('-created_at',)
-    inlines        = [PropertyImageInline, PropertyFeatureInline]
+    inlines        = [PropertyImageInline, PropertyFloorPlanInline, PropertyFeatureInline, ConnectivityItemInline]
     filter_horizontal = ('tags',)
 
     fieldsets = (
         ('Basic Info', {
-            'fields': ('title', 'slug', 'listing_type', 'property_type', 'description',
-                       'owner', 'agent', 'status')
+            'fields': ('title', 'slug', 'developer', 'listing_type', 'property_type', 'description',
+                       'owner', 'status')
         }),
         ('Pricing', {
             'fields': ('price', 'display_price', 'price_label', 'price_on_req')
@@ -61,7 +108,9 @@ class PropertyAdmin(admin.ModelAdmin):
                        'floor_no', 'total_floors')
         }),
         ('Details', {
-            'fields': ('furnishing', 'facing', 'age_years', 'parking_slots', 'possession_date')
+            'fields': ('furnishing', 'construction_status', 'facing', 'age_years',
+                       'parking_slots', 'two_wheeler_parking', 'four_wheeler_parking',
+                       'possession_date')
         }),
         ('Flags & Tags', {
             'fields': ('is_featured', 'is_signature', 'is_new', 'is_exclusive', 'tags')

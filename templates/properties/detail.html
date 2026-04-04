@@ -3,9 +3,78 @@
 
 {% block title %}{{ property.title }} — HOMEXO{% endblock %}
 {% block meta_description %}{{ property.title }} in {{ property.locality }}, {{ property.city }}. {{ property.display_price }}.{% endblock %}
+{% block og_type %}realestate.listing{% endblock %}
+{% block og_title %}{{ property.title }} — {{ property.display_price }}{% endblock %}
+{% block og_description %}{% if property.bhk %}{{ property.get_bhk_display }} {% endif %}{{ property.get_property_type_display }} in {{ property.locality }}, {{ property.city }} — {{ property.display_price }}{% endblock %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% if property.primary_image %}{{ property.primary_image.image.url }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ property.title }} — {{ property.display_price }}{% endblock %}
+{% block twitter_description %}{% if property.bhk %}{{ property.get_bhk_display }} {% endif %}in {{ property.locality }}, {{ property.city }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateListing",
+  "name": "{{ property.title }}",
+  "description": "{{ property.description|truncatewords:50|escapejs }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if property.primary_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ property.primary_image.image.url }}",{% endif %}
+  "datePosted": "{{ property.created_at|date:'c' }}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": "{{ property.price }}",
+    "availability": "https://schema.org/InStock"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ property.address|escapejs }}",
+    "addressLocality": "{{ property.locality }}",
+    "addressRegion": "{{ property.state }}",
+    "addressCountry": "IN"{% if property.pincode %},
+    "postalCode": "{{ property.pincode }}"{% endif %}
+  }{% if property.latitude and property.longitude %},
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "{{ property.latitude }}",
+    "longitude": "{{ property.longitude }}"
+  }{% endif %}{% if property.area_sqft %},
+  "floorSize": {
+    "@type": "QuantitativeValue",
+    "value": {{ property.area_sqft }},
+    "unitCode": "FTK"
+  }{% endif %}{% if property.bedrooms %},
+  "numberOfRooms": {{ property.bedrooms }}{% endif %}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Properties", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'properties:list' %}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ property.city }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'properties:list' %}?location={{ property.city }}"},
+    {"@type": "ListItem", "position": 4, "name": "{{ property.title }}"}
+  ]
+}
+</script>
+{% endblock %}
 
 {% block extra_head %}
+<!-- NoBroker Typography Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* NoBroker Font Adaptation */
+  body, h1, h2, h3, h4, h5, h6, select, input, textarea, button, .property-tag, .fp-tab-title, .fp-price {
+    font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important;
+  }
+  .pd-price, .pd-ov-val, .pd-hl-val, .pd-emi-val, .pd-price-block {
+    font-family: 'Source Sans 3', sans-serif !important;
+  }
+  
   /* ── Breadcrumb ── */
   .pd-breadcrumb {
     background: var(--white); padding: 11px 60px;
@@ -25,18 +94,27 @@
     display: grid; grid-template-columns: 1fr 360px;
     gap: 24px; align-items: start;
   }
-  .pd-main { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
-  .pd-side { display: flex; flex-direction: column; gap: 16px; }
-  .pd-sticky { position: sticky; top: 96px; }
+  .pd-main { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .pd-side { display: flex; flex-direction: column; gap: 8px; min-width: 0; max-width: 100%; }
+  .pd-sticky { position: sticky; top: 96px; max-width: 100%; }
 
   /* ── Card base ── */
-  .pd-card { background: var(--white); border: 1px solid var(--border); overflow: hidden; }
+  .pd-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;
+  }
   .pd-card-header {
-    padding: 18px 28px; border-bottom: 1px solid var(--border);
+    padding: 14px 22px; border-bottom: 1.5px solid #e3eaf3;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .pd-card-title { font-size: 13px; font-weight: 600; color: var(--charcoal); letter-spacing: .2px; }
-  .pd-card-link { font-size: 12px; color: var(--sky); text-decoration: none; font-weight: 500; transition: color .2s; }
+  .pd-card-title { font-size: 17px; font-weight: 700; color: var(--navy); letter-spacing: .1px; }
+  .pd-card-link { font-size: 12px; color: var(--sky); text-decoration: none; font-weight: 600; transition: color .2s; }
   .pd-card-link:hover { color: var(--navy); }
 
   /* ── Gallery ── */
@@ -53,10 +131,22 @@
   .pd-gallery-main:hover img { transform: scale(1.03); }
   .pd-gallery-cell { overflow: hidden; position: relative; cursor: pointer; background: linear-gradient(135deg,#1A3A5C,#4A90C4); }
   .pd-gallery-cell:nth-child(3) { background: linear-gradient(135deg,#0D2B4E,#2a6090); }
-  .pd-gallery-cell:nth-child(4) { background: linear-gradient(135deg,#071929,#0D2B4E); }
-  .pd-gallery-cell:nth-child(5) { background: linear-gradient(135deg,#1A4A7A,#4A90C4); }
+  .pd-img-num {
+    position: absolute; top: 12px; left: 12px; z-index: 3;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(13,27,42,.75); backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,.18);
+    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
   .pd-gallery-cell img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; display: block; }
   .pd-gallery-cell:hover img { transform: scale(1.04); }
+  /* ── Slideshow slides ── */
+  .prop-img-slide { display:none; position:absolute; top:0;left:0;right:0;bottom:0; align-items:center; justify-content:center; }
+  .prop-img-slide.pi-active { display:flex; }
+  .fp-slide { display:none; position:absolute; top:0;left:0;right:0;bottom:0; align-items:center; justify-content:center; }
+  .fp-slide.fp-active { display:flex; }
   .pd-gallery-cell::after {
     content: ''; position: absolute; inset: 0;
     background: rgba(7,25,41,.2); pointer-events: none;
@@ -83,11 +173,11 @@
     display: inline-flex; align-items: center; gap: 4px;
     font-size: 11px; font-weight: 600; color: #2E7D32; margin-left: 10px;
   }
-  .pd-prop-name { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; color: var(--charcoal); line-height: 1.3; margin-bottom: 8px; }
+  .pd-prop-name { font-family: 'Source Sans 3', sans-serif; font-size: 24px; font-weight: 500; color: var(--charcoal); line-height: 1.3; margin-bottom: 8px; }
   .pd-prop-address { font-size: 13px; color: var(--warm-grey); display: flex; align-items: center; gap: 5px; }
   .pd-prop-address svg { color: var(--sky); flex-shrink: 0; }
   .pd-price-block { text-align: right; flex-shrink: 0; }
-  .pd-price { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 500; color: var(--navy); line-height: 1; }
+  .pd-price { font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important; font-size: 32px; font-weight: 500; color: var(--navy); line-height: 1; }
   .pd-price-per { font-size: 12px; color: var(--warm-grey); margin-top: 4px; }
 
   /* ── Actions ── */
@@ -95,7 +185,7 @@
   .pd-btn {
     font-size: 12px; font-weight: 600; padding: 10px 20px; border: none;
     display: flex; align-items: center; gap: 7px; cursor: pointer;
-    transition: all .3s; font-family: 'DM Sans', sans-serif; text-decoration: none; white-space: nowrap;
+    transition: all .3s; font-family: 'Source Sans 3', sans-serif; text-decoration: none; white-space: nowrap;
   }
   .pd-btn-primary { background: var(--navy); color: var(--white); flex: 1; justify-content: center; min-width: 140px; }
   .pd-btn-primary:hover { background: var(--sky); color: var(--white); }
@@ -105,15 +195,28 @@
   .pd-btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
 
   /* ── Highlights ── */
-  .pd-highlights { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--border); }
-  .pd-hl {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 5px; text-align: center; padding: 18px 8px;
+  .pd-highlights {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; padding: 4px 22px 14px;
+    background: #ffffff;
+    border-top: 1.5px solid #e3eaf3;
   }
-  .pd-hl + .pd-hl { border-left: 1px solid var(--border); }
-  .pd-hl-icon { color: var(--sky); margin-bottom: 2px; }
-  .pd-hl-val { font-size: 15px; font-weight: 600; color: var(--charcoal); line-height: 1; }
-  .pd-hl-lbl { font-size: 9px; color: var(--warm-grey); text-transform: uppercase; letter-spacing: .8px; font-weight: 500; }
+  .pd-hl {
+    display: flex; flex-direction: row; align-items: center; gap: 12px;
+    padding: 12px 8px; background: none; border: none;
+    border-radius: 10px; transition: background .18s;
+  }
+    .pd-hl-icon {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--sky);
+      border: 1.5px solid #dbeaf7;
+      transition: background .18s, color .18s;
+    }
+  .pd-hl-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .pd-hl-val { font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pd-hl-lbl { font-size: 10px; color: var(--warm-grey); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 
   /* ── Tabs ── */
   .pd-tabs {
@@ -122,96 +225,363 @@
   }
   .pd-tabs::-webkit-scrollbar { display: none; }
   .pd-tab {
-    font-size: 12px; letter-spacing: .3px; font-weight: 500; color: var(--warm-grey);
+    font-size: 12px; letter-spacing: .3px; font-weight: 600; color: var(--warm-grey);
     padding: 13px 18px; border: none; background: none; border-bottom: 2px solid transparent;
     margin-bottom: -1px; white-space: nowrap; cursor: pointer; transition: all .2s;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Source Sans 3', sans-serif; text-transform: uppercase;
   }
-  .pd-tab.active { color: var(--charcoal); border-bottom-color: var(--navy); font-weight: 600; }
-  .pd-tab:hover:not(.active) { color: var(--navy); }
+  .pd-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .pd-tab:hover:not(.active) { color: var(--sky); }
   .pd-tab-panel { display: block; }
 
   /* ── Overview grid ── */
-  .pd-ov-grid { display: grid; grid-template-columns: 1fr 1fr; }
-  .pd-ov-item { padding: 14px 28px; display: flex; flex-direction: column; gap: 3px; border-bottom: 1px solid var(--border); }
-  .pd-ov-item:nth-child(odd) { border-right: 1px solid var(--border); }
-  .pd-ov-lbl { font-size: 10px; color: var(--warm-grey); text-transform: uppercase; letter-spacing: .8px; font-weight: 500; }
-  .pd-ov-val { font-size: 14px; font-weight: 600; color: var(--charcoal); }
+  /* ── Property Overview (Modernized) ── */
+  .pd-card.pd-ov-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+  .pd-ov-header {
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-ov-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-ov-title svg { width: 18px; height: 18px; }
+  .pd-ov-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-ov-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 0 0;
+    border: none;
+  }
+  .pd-ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; padding: 6px 22px 18px; }
+  .pd-ov-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1.5px dashed #e3eaf3; }
+  .pd-ov-item:nth-last-child(-n+2) { border-bottom: none; }
+  .pd-ov-lbl { font-size: 13px; color: var(--warm-grey); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .pd-ov-lbl::before { content: ''; display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--sky); }
+  .pd-ov-val { font-size: 14px; font-weight: 600; color: var(--navy); text-align: right; }
   .pd-ov-val.ready { color: #2E7D32; }
 
   /* ── Description ── */
-  .pd-desc { font-size: 14px; color: #4A5568; line-height: 1.85; }
+  .pd-desc { font-size: 15px; color: #3a4a5e; line-height: 1.8; letter-spacing: 0.2px; }
   .pd-read-more {
     display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
     font-size: 13px; font-weight: 600; color: var(--sky); background: none;
-    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; padding: 0; transition: color .3s;
+    border: none; cursor: pointer; font-family: 'Source Sans 3', sans-serif; padding: 0; transition: color .3s;
   }
   .pd-read-more:hover { color: var(--navy); }
 
-  /* ── Amenities ── */
-  .pd-amenities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px 28px; }
-  .pd-amenity {
-    display: flex; align-items: center; gap: 9px; padding: 10px 12px;
-    background: var(--ivory); border: 1px solid var(--border);
-    font-size: 12px; color: var(--soft-brown); font-weight: 500; transition: all .3s;
+  /* ── About this Property (Modernized) ── */
+  .pd-card.pd-about-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 0;
+    overflow: hidden;
   }
-  .pd-amenity:hover { border-color: var(--navy); color: var(--navy); background: var(--white); }
-  .pd-amenity-icon { color: var(--sky); flex-shrink: 0; font-size: 14px; }
+  .pd-about-header {
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-about-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-about-title svg { width: 18px; height: 18px; }
+  .pd-about-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-about-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 0 0;
+    border: none;
+  }
+  .pd-desc { font-size: 15px; line-height: 1.8; color: var(--charcoal); }
 
-  /* ── Floor plan ── */
+  /* ── Amenities (Modernized) ── */
+  .pd-card.pd-amen-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+  .pd-amen-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-amen-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-amen-title svg { width: 18px; height: 18px; }
+  .pd-amen-count {
+    background: var(--sky); color: #fff; font-size: 12px; font-weight: 700;
+    border-radius: 8px; padding: 2px 10px; margin-left: 4px;
+  }
+  .pd-amen-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-amen-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
+  .pd-amenities-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 18px; padding: 18px 28px 10px 28px;
+  }
+  .pd-amenity {
+    display: flex; flex-direction: row; align-items: center; gap: 14px;
+    padding: 10px 0; background: none; border: none;
+    border-radius: 10px; font-size: 15px; color: var(--charcoal); font-weight: 600;
+    text-align: left; line-height: 1.3; cursor: default;
+    transition: background .18s;
+  }
+    .pd-amenity-icon {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--sky); flex-shrink: 0; font-size: 18px; box-shadow: 0 1px 4px 0 rgba(74,144,196,0.08);
+      border: 1.5px solid #dbeaf7;
+      transition: background .18s, color .18s;
+    }
+  .pd-amenity-name { word-break: break-word; font-size: 15px; font-weight: 600; color: var(--charcoal); }
+  .pd-amenities-grid.pd-collapsed .pd-amenity:nth-child(n+13) { display: none; }
+  .pd-amenities-toggle {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 14px 28px; border-top: 1px solid var(--border);
+    font-size: 13px; font-weight: 700; color: var(--sky);
+    background: none; border-left: none; border-right: none; border-bottom: none;
+    cursor: pointer; width: 100%; font-family: 'Source Sans 3', sans-serif;
+    transition: color .2s;
+  }
+    /* .pd-amenities-toggle:hover { color: var(--navy); } */
+  .pd-amenities-toggle svg { transition: transform .3s; }
+  .pd-amenities-toggle.pd-expanded svg { transform: rotate(180deg); }
+
+  /* ── Connectivity (Modernized) ── */
+  .pd-card.pd-conn-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+  .pd-conn-header {
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-conn-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-conn-title svg { width: 18px; height: 18px; }
+  .pd-conn-count {
+    background: var(--sky); color: #fff; font-size: 12px; font-weight: 700;
+    border-radius: 8px; padding: 2px 10px; margin-left: 4px;
+  }
+  .pd-conn-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-conn-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
+  .pd-conn-cats {
+    padding: 0 18px 10px 18px; display: flex; gap: 8px; border-bottom: 1.5px solid #e3eaf3;
+    overflow-x: auto; scrollbar-width: none; margin-top: 4px;
+    -webkit-overflow-scrolling: touch; touch-action: pan-x;
+  }
+  .pd-conn-cats::-webkit-scrollbar { display: none; }
+  .pd-conn-cat-btn {
+    flex-shrink: 0; padding: 6px 16px; border: 1.5px solid #dbeaf7;
+    background: #fff; border-radius: 20px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .2px;
+    color: var(--warm-grey); cursor: pointer; white-space: nowrap;
+    transition: all .2s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .pd-conn-cat-btn svg { opacity: 0.8; width: 14px; height: 14px; }
+  .pd-conn-cat-btn:hover { color: var(--sky); background: #eaf3fa; border-color: var(--sky); }
+  .pd-conn-cat-btn.active {
+    color: var(--navy); background: #eaf3fa; border-color: var(--sky);
+    box-shadow: 0 1px 4px 0 rgba(74,144,196,0.12);
+  }
+  .pd-conn-list {
+    padding: 10px 18px 18px 18px; display: flex; flex-direction: column; gap: 0;
+  }
+  .pd-conn-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 13px 0 13px 0; border-bottom: 1.5px dashed #e3eaf3;
+    border-radius: 10px; background: none; transition: background .18s;
+    position: relative;
+  }
+    .pd-conn-item:last-child { border-bottom: none; }
+  .pd-conn-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, #eaf3fa 60%, #cbe0f7 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sky); flex-shrink: 0; font-size: 18px; box-shadow: 0 1px 4px 0 rgba(74,144,196,0.08);
+    border: 1.5px solid #dbeaf7;
+    transition: background .18s, color .18s;
+  }
+  .pd-conn-name {
+    flex: 1; font-size: 15px; font-weight: 600; color: var(--charcoal);
+    letter-spacing: 0.1px;
+  }
+  .pd-conn-dist {
+    font-size: 13px; font-weight: 700; color: var(--sky); white-space: nowrap;
+    background: #eaf3fa; border-radius: 7px; padding: 2px 10px;
+    margin-left: 8px;
+  }
+
+  /* ── Similar Properties (Modernized) ── */
+  .pd-card.pd-sim-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+  .pd-sim-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-sim-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-sim-title svg { width: 18px; height: 18px; }
+  .pd-sim-link {
+    font-size: 12px; color: var(--sky); text-decoration: none; font-weight: 600;
+    transition: color .2s;
+  }
+  .pd-sim-link:hover { color: var(--navy); }
+  .pd-sim-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-sim-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
+
+  /* ── Floor plan (Modernized) ── */
+  .pd-card.pd-fp-card {
+    background: #ffffff;
+    box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+    border: 1.5px solid #e3eaf3;
+    border-radius: 18px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+  .pd-fp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 0 22px;
+    gap: 10px;
+  }
+  .pd-fp-title {
+    font-size: 17px; font-weight: 700; color: var(--navy);
+    letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+  }
+  .pd-fp-title svg { width: 18px; height: 18px; }
+  .pd-fp-count {
+    background: var(--sky); color: #fff; font-size: 12px; font-weight: 700;
+    border-radius: 8px; padding: 2px 10px; margin-left: 4px;
+  }
+  .pd-fp-sub {
+    font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+    font-weight: 500;
+  }
+  .pd-fp-divider {
+    height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+    margin: 12px 0 10px 0;
+    border: none;
+  }
   .pd-fp-preview {
-    margin: 14px 28px 22px; background: var(--ivory); border: 1px solid var(--border);
+    margin: 10px 22px 18px; background: var(--ivory); border: 1px solid var(--border);
     height: 220px; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
   }
   .pd-fp-ph { text-align: center; color: var(--warm-grey); }
   .pd-fp-ph svg { opacity: .35; margin-bottom: 10px; }
   .pd-fp-ph p { font-size: 13px; }
-  .pd-fp-sub { font-size: 12px; color: var(--sky); margin-top: 5px; }
-
   /* ── Map ── */
-  .pd-map-wrapper { position: relative; height: 300px; overflow: hidden; border-bottom: 1px solid var(--border); }
-  .pd-map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; filter: saturate(.85) contrast(1.05); }
+  .pd-map-wrapper { position: relative; height: 420px; overflow: hidden; border-bottom: 1px solid var(--border); }
+  .pd-map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
   .pd-map-pin {
     position: absolute; top: 14px; left: 14px;
     display: flex; align-items: center; gap: 9px;
     background: rgba(13,27,42,.88); backdrop-filter: blur(8px);
-    border: 1px solid rgba(74,144,196,.3); padding: 9px 13px; max-width: 250px; pointer-events: none;
+    border: 1px solid rgba(74,144,196,.3); padding: 9px 13px; max-width: 250px; pointer-events: none; z-index: 500;
   }
   .pd-map-pin-icon { width: 26px; height: 26px; background: var(--sky); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .pd-map-pin-title { font-size: 12px; font-weight: 600; color: var(--white); line-height: 1.3; }
   .pd-map-pin-sub { font-size: 11px; color: rgba(200,216,236,.6); margin-top: 2px; }
-  .pd-map-ctrl { position: absolute; bottom: 14px; right: 14px; display: flex; z-index: 2; border: 1px solid rgba(200,216,236,.2); overflow: hidden; }
+  #pdMapOverlay { position: absolute; inset: 0; z-index: 5; cursor: pointer; background: rgba(0,0,0,0.01); }
+  .pd-map-ctrl { position: absolute; bottom: 16px; right: 14px; display: flex; z-index: 10; border: 1px solid rgba(200,216,236,.2); overflow: hidden; }
   .pd-map-ctrl-btn {
     font-size: 11px; font-weight: 500; padding: 7px 13px; border: none; cursor: pointer;
     background: rgba(13,27,42,.82); color: rgba(200,216,236,.55);
-    backdrop-filter: blur(6px); transition: all .2s; font-family: 'DM Sans', sans-serif;
+    backdrop-filter: blur(6px); transition: all .2s; font-family: 'Source Sans 3', sans-serif;
   }
   .pd-map-ctrl-btn + .pd-map-ctrl-btn { border-left: 1px solid rgba(200,216,236,.15); }
   .pd-map-ctrl-btn.active, .pd-map-ctrl-btn:hover { background: var(--navy); color: var(--white); }
 
   /* ── Similar (sidebar list) ── */
   .pd-sim-item {
-    display: flex; gap: 14px; padding: 14px 28px; border-bottom: 1px solid var(--border);
-    align-items: flex-start; cursor: pointer; transition: background .2s; text-decoration: none; color: inherit;
+    display: flex; gap: 14px; padding: 14px 22px; border-bottom: 1.5px dashed #e3eaf3;
+    align-items: flex-start; cursor: pointer; transition: background .18s; text-decoration: none; color: inherit;
   }
   .pd-sim-item:last-child { border-bottom: none; }
-  .pd-sim-item:hover { background: var(--ivory); }
-  .pd-sim-thumb { width: 90px; height: 68px; flex-shrink: 0; overflow: hidden; background: linear-gradient(135deg,#1A3A5C,#4A90C4); }
+  .pd-sim-item:hover { background: linear-gradient(90deg, #fafdff 80%, #eaf3fa 100%); }
+  .pd-sim-thumb {
+    width: 90px; height: 68px; flex-shrink: 0; overflow: hidden;
+    background: linear-gradient(135deg,#1A3A5C,#4A90C4); border-radius: 10px;
+  }
   .pd-sim-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .pd-sim-price { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; color: var(--charcoal); line-height: 1; }
+  .pd-sim-price { font-size: 18px; font-weight: 500; color: var(--charcoal); line-height: 1; }
   .pd-sim-name { font-size: 12px; color: var(--soft-brown); font-weight: 500; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
   .pd-sim-loc { font-size: 11px; color: var(--warm-grey); margin-top: 2px; }
   .pd-sim-tags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
-  .pd-sim-tag { font-size: 10px; color: var(--warm-grey); background: var(--ivory); border: 1px solid var(--border); padding: 2px 8px; }
+  .pd-sim-tag { font-size: 10px; color: var(--sky); background: #eaf3fa; border: 1px solid #dbeaf7; border-radius: 6px; padding: 2px 8px; font-weight: 600; }
 
   /* ── Badge ── */
   .pd-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 10px; }
   .pd-badge-blue { background: rgba(74,144,196,.12); color: var(--sky); }
   .pd-badge-navy { background: rgba(13,43,78,.08); color: var(--navy); }
 
+  /* ── Plan counter (1/3 style) ── */
+  .pd-plan-counter { display: inline-flex; align-items: center; gap: 0; border: none; overflow: visible; }
+  .pd-plan-counter-arr { width: 26px; height: 26px; border: none; background: var(--ivory); color: var(--warm-grey); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; padding: 0; font-size: 14px; line-height: 1; }
+  .pd-plan-counter-arr:hover { background: var(--navy); color: var(--white); }
+  .pd-plan-counter-txt { font-size: 11px; font-weight: 600; color: var(--navy); padding: 4px 10px; background: rgba(13,43,78,.06); min-width: 42px; text-align: center; white-space: nowrap; user-select: none; }
+
   /* ── Contact card ── */
-  .pd-contact { padding: 22px; }
-  .pd-agent-row { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
+  .pd-contact { padding: 22px; box-sizing: border-box; width: 100%; overflow: hidden; }
+  .pd-agent-row { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; min-width: 0; }
   .pd-agent-av {
     width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
     background: linear-gradient(135deg, var(--navy), var(--sky));
@@ -219,14 +589,16 @@
     font-size: 18px; font-weight: 600; color: var(--white); overflow: hidden;
   }
   .pd-agent-av img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-  .pd-agent-name { font-size: 15px; font-weight: 600; color: var(--charcoal); }
+  .pd-agent-name { font-size: 15px; font-weight: 600; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pd-agent-role { font-size: 12px; color: var(--warm-grey); margin-top: 2px; }
   .pd-agent-verified { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #2E7D32; font-weight: 500; margin-top: 4px; }
-  .pd-form { display: flex; flex-direction: column; gap: 9px; }
+  @keyframes pdShake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+  .pd-shake { animation: pdShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+  .pd-form { display: flex; flex-direction: column; gap: 9px; width: 100%; box-sizing: border-box; }
   .pd-input {
     border: 1px solid var(--border); padding: 10px 13px; font-size: 13px;
-    font-family: 'DM Sans', sans-serif; color: var(--charcoal); outline: none;
-    background: var(--ivory); transition: border-color .3s; width: 100%;
+    font-family: 'Source Sans 3', sans-serif; color: var(--charcoal); outline: none;
+    background: var(--ivory); transition: border-color .3s; width: 100%; box-sizing: border-box;
   }
   .pd-input:focus { border-color: var(--navy); background: var(--white); }
   .pd-textarea { height: 76px; resize: none; }
@@ -235,23 +607,23 @@
   .pd-phone-btn {
     display: flex; align-items: center; justify-content: center; gap: 7px;
     padding: 11px; border: 1px solid var(--sky); color: var(--sky); background: var(--white);
-    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer;
-    width: 100%; transition: all .3s;
+    font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer;
+    width: 100%; box-sizing: border-box; transition: all .3s;
   }
   .pd-phone-btn:hover { background: var(--navy); border-color: var(--navy); color: var(--white); }
   .pd-phone-btn a { color: inherit; text-decoration: none; }
 
   /* ── EMI card ── */
-  .pd-emi { padding: 22px; }
+  .pd-emi { padding: 22px; box-sizing: border-box; width: 100%; overflow: hidden; }
   .pd-emi-title { font-size: 14px; font-weight: 600; margin-bottom: 18px; color: var(--charcoal); }
-  .pd-emi-lbl { font-size: 11px; color: var(--warm-grey); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 7px; display: flex; justify-content: space-between; font-weight: 500; }
+  .pd-emi-lbl { font-size: 11px; color: var(--warm-grey); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 7px; display: flex; justify-content: space-between; font-weight: 500; flex-wrap: wrap; gap: 4px; }
   .pd-emi-lbl span { color: var(--charcoal); font-weight: 600; font-size: 13px; text-transform: none; letter-spacing: 0; }
-  .pd-emi-field { margin-bottom: 15px; }
-  .pd-emi-slider { -webkit-appearance: none; width: 100%; height: 3px; background: linear-gradient(to right, var(--navy) 0%, var(--navy) 60%, rgba(10,46,92,.15) 60%); outline: none; }
+  .pd-emi-field { margin-bottom: 15px; width: 100%; box-sizing: border-box; }
+  .pd-emi-slider { -webkit-appearance: none; appearance: none; width: 100%; max-width: 100%; height: 3px; background: linear-gradient(to right, var(--navy) 0%, var(--navy) 60%, rgba(10,46,92,.15) 60%); outline: none; padding: 0; box-sizing: border-box; display: block; }
   .pd-emi-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--navy); border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,.2); cursor: pointer; }
-  .pd-emi-result { background: rgba(13,43,78,.06); border: 1px solid var(--border); padding: 14px 18px; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .pd-emi-result { background: rgba(13,43,78,.06); border: 1px solid var(--border); padding: 14px 18px; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; width: 100%; gap: 10px; }
   .pd-emi-res-lbl { font-size: 11px; color: var(--warm-grey); font-weight: 500; text-transform: uppercase; letter-spacing: .5px; }
-  .pd-emi-res-val { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; color: var(--navy); }
+  .pd-emi-res-val { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 500; color: var(--navy); flex-shrink: 0; }
   .pd-emi-res-sub { font-size: 11px; color: var(--warm-grey); margin-top: 3px; }
 
   /* ── Report link ── */
@@ -269,8 +641,8 @@
   .pd-lightbox.open { opacity: 1; pointer-events: all; }
   .pd-lb-inner { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   .pd-lb-stage { position: relative; max-width: 880px; width: calc(100% - 160px); max-height: 80vh; display: flex; align-items: center; justify-content: center; }
-  .pd-lb-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .4s; pointer-events: none; }
-  .pd-lb-slide.active { opacity: 1; pointer-events: all; position: relative; }
+  .pd-lb-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .4s; }
+  .pd-lb-slide.active { opacity: 1; position: relative; z-index: 2; }
   .pd-lb-slide img { max-width: 100%; max-height: 80vh; object-fit: contain; display: block; }
   .pd-lb-placeholder { width: 100%; height: 520px; }
   .pd-lb-close { position: absolute; top: 22px; right: 26px; width: 42px; height: 42px; border: 1px solid rgba(200,216,236,.25); background: rgba(13,43,78,.5); color: #C8D8EC; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .3s; z-index: 10; }
@@ -300,49 +672,461 @@
   @media (max-width: 1024px) {
     .pd-layout { padding: 18px 28px 48px; gap: 18px; grid-template-columns: 1fr 300px; }
     .pd-breadcrumb { padding: 11px 28px; }
-    .pd-amenities-grid { grid-template-columns: repeat(3, 1fr); }
+    .pd-amenities-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .pd-gallery { grid-template-rows: 260px 130px; }
     .pd-price { font-size: 28px; }
     .pd-prop-name { font-size: 22px; }
   }
   @media (max-width: 768px) {
-    .pd-breadcrumb { padding: 9px 14px; font-size: 11px; }
-    .pd-layout { display: flex; flex-direction: column; padding: 10px 12px 40px; gap: 12px; }
+    .pd-breadcrumb { padding: 10px 16px; font-size: 11px; }
+    .pd-layout { display: flex; flex-direction: column; padding: 12px 12px 80px; gap: 12px; }
     .pd-sticky { position: static; }
-    .pd-gallery { grid-template-columns: 3fr 2fr; grid-template-rows: 52vw 26vw; }
-    .pd-gallery-cell:nth-child(4), .pd-gallery-cell:nth-child(5) { display: none; }
-    .pd-prop-header { padding: 14px 14px 10px; }
-    .pd-prop-top { flex-direction: column; gap: 6px; }
+    .pd-card { border-radius: 14px; }
+    .pd-gallery { grid-template-columns: 1fr; grid-template-rows: 56vw; }
+    .pd-gallery-main { grid-row: auto; }
+    .pd-gallery-cell { display: none; }
+    .pd-prop-header { padding: 16px 16px 10px; }
+    .pd-prop-top { flex-direction: column; gap: 8px; }
     .pd-price-block { text-align: left; }
-    .pd-prop-name { font-size: clamp(15px,4.5vw,20px); }
-    .pd-price { font-size: clamp(20px,5.5vw,26px); }
-    .pd-actions { padding: 0 14px 14px; }
+    .pd-prop-name { font-size: clamp(17px,4.8vw,22px); line-height: 1.3; }
+    .pd-price { font-size: clamp(22px,6vw,28px); }
+    .pd-price-per { font-size: 11px; }
+    .pd-actions { padding: 0 16px 16px; gap: 8px; }
     .pd-btn-primary { flex: 1 1 100%; order: -1; }
-    .pd-highlights { grid-template-columns: repeat(2, 1fr); }
-    .pd-hl + .pd-hl { border-left: none; }
-    .pd-hl:nth-child(2) { border-left: 1px solid var(--border); }
-    .pd-hl:nth-child(3), .pd-hl:nth-child(4) { border-top: 1px solid var(--border); }
-    .pd-hl:nth-child(4) { border-left: 1px solid var(--border); }
-    .pd-card-header { padding: 12px 14px; }
-    .pd-ov-grid { grid-template-columns: 1fr; }
-    .pd-ov-item { padding: 10px 14px; }
-    .pd-ov-item:nth-child(odd) { border-right: none; }
-    .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); padding: 12px 14px; }
-    .pd-prop-header, .pd-actions, .pd-tabs, .pd-card-header { padding-left: 14px; padding-right: 14px; }
-    .pd-ov-item, .pd-amenity, .pd-sim-item { padding-left: 14px; padding-right: 14px; }
-    .pd-map-wrapper { height: 52vw; min-height: 180px; }
-    .pd-fp-preview { margin: 10px 14px 16px; }
-    .pd-contact, .pd-emi { padding: 14px; }
-    .pd-lb-stage { width: calc(100% - 70px); }
-    .pd-lb-arrow.prev { left: 6px; width: 40px; height: 40px; }
-    .pd-lb-arrow.next { right: 6px; width: 40px; height: 40px; }
+    .pd-btn { min-height: 44px; font-size: 13px; }
+    .pd-highlights { grid-template-columns: repeat(2, 1fr); padding: 4px 12px 10px; gap: 0; }
+    .pd-ov-grid { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
+    .pd-ov-item { padding-bottom: 10px; }
+    .pd-ov-lbl { font-size: 12px; }
+    .pd-ov-val { font-size: 13px; }
+    .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); padding: 12px 16px; }
+    .pd-prop-header, .pd-actions, .pd-tabs, .pd-card-header { padding-left: 16px; padding-right: 16px; }
+    .pd-amenity { padding: 10px 16px; min-height: 44px; }
+    .pd-sim-item { padding-left: 16px; padding-right: 16px; }
+    .pd-map-wrapper { height: 56vw; min-height: 240px; }
+    .pd-map-pin { max-width: 200px; }
+    .pd-fp-preview { margin: 10px 16px 16px; }
+    .pd-contact, .pd-emi { padding: 16px; }
+    .pd-side { gap: 8px; }
+    .pd-lb-stage { width: calc(100% - 40px); }
+    .pd-lb-arrow.prev { left: 4px; width: 42px; height: 42px; }
+    .pd-lb-arrow.next { right: 4px; width: 42px; height: 42px; }
     .pd-lb-thumbs { display: none; }
-    .pd-lb-placeholder { height: 52vw; min-height: 220px; }
+    .pd-lb-placeholder { height: 56vw; min-height: 220px; }
+    .pd-lb-close { top: 14px; right: 14px; width: 40px; height: 40px; }
+    /* Floor plan viewer mobile fix */
+    #pdFpViewer { width: 100%; max-width: 100%; overflow: hidden; margin-top: 0; border-left: none; border-right: none; }
+    /* Image slideshow — full bleed, proper height */
+    #propImgBox { height: 56vw !important; max-height: 380px; }
+    /* Hide desktop-only hint text on touch devices */
+    .pd-img-hint { display: none; }
+    /* Description & location footer inline padding overrides */
+    .pd-desc-body { padding: 16px !important; }
+    .pd-loc-footer { padding: 12px 16px !important; }
+    /* Overflow protection */
+    .pd-main, .pd-side { max-width: 100%; overflow-x: hidden; }
+    /* EMI slider bigger touch target */
+    .pd-emi-slider::-webkit-slider-thumb { width: 20px; height: 20px; }
+    /* Property address wrap */
+    .pd-prop-address { font-size: 12px; flex-wrap: wrap; }
+    /* Photo count badge */
+    .pd-photo-count { bottom: 10px; right: 10px; padding: 6px 12px; font-size: 11px; }
+    /* Agent row on mobile */
+    .pd-agent-name { font-size: 14px; }
+    .pd-agent-av { width: 44px; height: 44px; font-size: 16px; }
+  }
+  @media (max-width: 480px) {
+    #propImgBox { height: 66vw !important; max-height: 280px; }
+    .pd-layout { padding: 8px 8px 88px; gap: 8px; }
+    .pd-breadcrumb { padding: 8px 12px; font-size: 10px; }
+    .pd-breadcrumb-cur { max-width: 140px; }
+    /* Property header */
+    .pd-prop-header { padding: 14px 14px 8px; }
+    .pd-prop-name { font-size: clamp(16px,4.5vw,20px); }
+    .pd-price { font-size: clamp(20px,5.5vw,26px); }
+    .pd-actions { padding: 0 14px 14px; gap: 6px; }
+    /* Action buttons: outline/ghost go 50-50 */
+    .pd-btn-ghost, .pd-btn-outline { flex: 1 1 calc(50% - 3px); justify-content: center; min-width: 0; font-size: 11px; padding: 10px 8px; }
+    /* Highlights: keep 2-col but tighter */
+    .pd-highlights { padding: 2px 8px 8px; }
+    .pd-hl { padding: 10px 6px; gap: 9px; }
+    .pd-hl-icon { width: 30px; height: 30px; }
+    .pd-hl-val { font-size: 13px; }
+    .pd-hl-lbl { font-size: 9px; }
+    /* Amenities: single column on very small screens */
+    .pd-amenities-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pd-amenity { font-size: 11px; padding: 14px 8px 12px; }
+    .pd-amenity-icon { width: 34px; height: 34px; font-size: 14px; }
+    /* Similar properties */
+    .pd-sim-thumb { width: 80px; height: 60px; }
+    .pd-sim-price { font-size: 16px; }
+    .pd-sim-name { max-width: 160px; font-size: 12px; }
+    .pd-sim-tags { gap: 4px; }
+    /* EMI */
+    .pd-emi-res-val { font-size: 18px; }
+    .pd-emi-result { padding: 12px; flex-wrap: wrap; }
+    /* Card header & tab padding */
+    .pd-card-header { padding: 14px 12px; }
+    .pd-tabs { padding: 0 12px; }
+    .pd-tab { padding: 12px 12px; font-size: 11px; min-height: 44px; }
+    /* Overview */
+    .pd-ov-grid { padding: 14px; }
+    .pd-ov-item { gap: 8px; }
+    /* Map */
+    .pd-map-wrapper { height: 60vw; min-height: 200px; }
+    .pd-map-ctrl-btn { padding: 8px 14px; min-height: 36px; }
+    .pd-loc-footer { flex-direction: column; align-items: flex-start !important; gap: 8px; }
+    /* Contact / EMI padding */
+    .pd-contact, .pd-emi { padding: 14px; }
+    /* Lightbox */
+    .pd-lb-stage { width: calc(100% - 20px); }
+    .pd-lb-arrow.prev { left: 2px; }
+    .pd-lb-arrow.next { right: 2px; }
+    .pd-lb-close { top: 10px; right: 10px; }
+    /* Photo count */
+    .pd-photo-count { bottom: 8px; right: 8px; padding: 5px 10px; font-size: 10px; }
+    /* Description */
+    .pd-desc { font-size: 14px; line-height: 1.7; }
+    .pd-desc-body { padding: 14px !important; }
   }
   @media (hover: none) and (pointer: coarse) {
     .pd-tab, .pd-map-ctrl-btn { min-height: 44px; }
     .pd-input, .pd-textarea { font-size: 16px !important; }
     .pd-emi-slider::-webkit-slider-thumb { width: 22px; height: 22px; }
+    .pd-btn { min-height: 44px; }
+    .pd-amenity { min-height: 44px; }
+    .pd-read-more { min-height: 44px; }
+  }
+
+  /* ── IMAGE SLIDESHOW DOT INDICATORS ── */
+  .pd-slide-dots {
+    display: none;
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    gap: 6px; align-items: center; z-index: 4;
+  }
+  .pd-slide-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,.4);
+    border: none; padding: 0; cursor: pointer;
+    transition: all .3s;
+  }
+  .pd-slide-dot.active {
+    background: var(--white);
+    width: 18px; border-radius: 4px;
+  }
+  @media (max-width: 768px) {
+    .pd-slide-dots { display: flex; }
+    /* Always show slideshow arrows on mobile for discoverability */
+    #propImgPrev, #propImgNext { display: flex !important; }
+    #propImgPrev { opacity: 0.7; }
+    #propImgNext { opacity: 0.7; }
+    /* Larger touch targets for slideshow arrows on mobile */
+    #propImgPrev, #propImgNext { width: 40px !important; height: 40px !important; }
+  }
+
+  /* ── Gallery Conditional Visibility ── */
+  .pi-show-mobile { display: none; }
+  @media (max-width: 768px) {
+    .pi-hide-mobile { display: none !important; }
+    .pi-show-mobile { display: block !important; }
+  }
+
+  /* ── MOBILE STICKY BOTTOM BAR ── */
+  .pd-mobile-bar {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .pd-mobile-bar {
+      display: flex;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      gap: 10px;
+      z-index: 900;
+      box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+    }
+    .pd-mobile-bar-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 13px 10px;
+      border: none;
+      border-radius: 2px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .5px;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 48px;
+    }
+    .pd-mobile-bar-primary { background: var(--navy); color: var(--white); }
+    .pd-mobile-bar-wa      { background: #25D366;       color: #fff; }
+    /* hide global floating actions behind mobile bar */
+    .floating-actions { bottom: 80px !important; }
+  }
+
+  /* ── BOTTOM SHEET ── */
+  .pd-sheet-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(7,25,41,.55);
+    z-index: 1100;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .pd-sheet-backdrop.open {
+    display: block;
+    opacity: 1;
+  }
+  .pd-sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--white);
+    border-radius: 16px 16px 0 0;
+    padding: 0 20px 32px;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
+    z-index: 1101;
+    transform: translateY(100%);
+    transition: transform .35s cubic-bezier(.32,1,.32,1);
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .pd-sheet.open {
+    transform: translateY(0);
+  }
+  .pd-sheet-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto 20px;
+  }
+  .pd-sheet-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ══════════════ FLOOR PLAN VIEWER (fpw) ══════════════ */
+  .fpw { width: 100%; box-sizing: border-box; overflow: hidden; }
+
+  /* ── Config tabs — bottom highlight only ── */
+  .fpw-config-wrap { display: flex; align-items: stretch; background: #fafdff; border-bottom: 1.5px solid #e3eaf3; padding: 0 16px; gap: 0; }
+  .fpw-config-arr { flex-shrink: 0; width: 22px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
+  .fpw-config-arr:hover { color: var(--sky); }
+  .fpw-config-tabs { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; padding: 0; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-config-tabs::-webkit-scrollbar { display: none; }
+  .fpw-config-tab {
+    flex-shrink: 0; padding: 10px 16px 8px; border: none;
+    border-bottom: 2.5px solid transparent;
+    background: transparent; cursor: pointer; text-align: left;
+    transition: all .2s; position: relative;
+    box-sizing: border-box; overflow: hidden;
+    max-width: 180px;
+  }
+  .fpw-config-tab:hover { background: transparent; }
+  .fpw-config-tab.active { border-bottom-color: var(--sky); background: transparent; }
+  .fpw-config-name { font-size: 12px; font-weight: 700; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+  .fpw-config-tab.active .fpw-config-name { color: var(--navy); }
+
+  /* ── Size sub-tabs — flat style ── */
+  .fpw-size-wrap { display: flex; align-items: center; border-bottom: 1.5px solid #e3eaf3; background: #fafdff; padding: 0 16px; gap: 0; }
+  .fpw-size-arr { flex-shrink: 0; width: 22px; height: 42px; border: none; background: none; color: var(--warm-grey); font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s; padding: 0; }
+  .fpw-size-arr:hover { color: var(--sky); }
+  .fpw-size-tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; gap: 0; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fpw-size-tabs::-webkit-scrollbar { display: none; }
+  .fpw-size-tab {
+    flex-shrink: 0; padding: 12px 18px; border: none; border-right: 1px solid rgba(200,216,236,.3);
+    border-bottom: 2.5px solid transparent;
+    background: transparent; color: var(--warm-grey); cursor: pointer; white-space: nowrap;
+    font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .2px;
+    transition: all .2s;
+  }
+  .fpw-size-tab:hover { color: var(--sky); background: transparent; }
+  .fpw-size-tab.active { color: var(--navy); background: transparent; border-bottom-color: var(--sky); }
+
+  /* ── Price bar ── */
+  .fpw-price-bar { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: #fafdff; border-bottom: 1.5px solid #e3eaf3; }
+  .fpw-price-val { font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important; font-size: 17px; font-weight: 700; color: var(--navy); }
+  .fpw-price-info { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #dbeaf7; background: #eaf3fa; color: var(--sky); font-size: 9px; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
+
+  /* ── Image stage ── */
+  .fpw-stage {
+    position: relative; background: #eef0f3; overflow: hidden;
+    height: 380px; min-height: 380px; max-height: 380px;
+    display: flex; align-items: center; justify-content: center;
+    user-select: none;
+  }
+  .fpw-slide { display: none; width: 100%; height: 380px; align-items: center; justify-content: center; padding: 20px 16px; box-sizing: border-box; overflow: hidden; }
+  .fpw-slide.active { display: flex; }
+  .fpw-img {
+    max-width: 90%; max-height: 340px; object-fit: contain; display: block;
+    transition: transform .25s cubic-bezier(.23,1,.32,1); transform-origin: center;
+    cursor: zoom-in;
+  }
+
+  /* ── 2D / 3D toggle (floating top-right of stage) ── */
+  .fpw-2d3d { position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.12); border: 1px solid rgba(0,0,0,.08); }
+  .fpw-view-btn { width: 36px; height: 30px; border: none; background: #fff; color: var(--warm-grey); font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s; }
+  .fpw-view-btn.active { background: var(--navy); color: #fff; }
+  .fpw-view-btn:hover:not(.active) { background: var(--ivory); color: var(--navy); }
+
+  /* ── Zoom controls (floating right-center) ── */
+  .fpw-overlay {
+    position: absolute; top: 50%; right: 12px; z-index: 10;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 2px;
+    background: rgba(255,255,255,.95); border: 1px solid rgba(0,0,0,.08);
+    border-radius: 8px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  }
+  .fpw-oc-btn {
+    width: 32px; height: 32px; border: none; background: transparent;
+    color: var(--charcoal); cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background .15s, color .15s;
+  }
+  .fpw-oc-btn:hover { background: var(--navy); color: #fff; }
+  .fpw-oc-sep { height: 1px; background: var(--border); margin: 0 4px; }
+
+  /* ── Fullscreen button (bottom-right of stage) ── */
+  .fpw-fs-btn {
+    position: absolute; bottom: 12px; right: 12px; z-index: 10;
+    width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(0,0,0,.08);
+    background: rgba(255,255,255,.95); color: var(--charcoal); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1); transition: all .2s;
+  }
+  .fpw-fs-btn:hover { background: var(--navy); color: #fff; }
+
+  /* ── Explore caption ── */
+  .fpw-explore-caption {
+    text-align: center; padding: 10px 16px; font-size: 12px;
+    font-weight: 500; color: var(--warm-grey); background: #eef0f3;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Prev/Next arrows ── */
+  .fpw-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.7);
+    background: rgba(255,255,255,.88); color: var(--navy); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 6px rgba(0,0,0,.1); transition: all .2s; z-index: 10;
+  }
+  .fpw-arrow:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .fpw-arrow-prev { left: 10px; }
+  .fpw-arrow-next { right: 56px; }
+
+  /* ── Zoom badge ── */
+  .fpw-zoom-badge {
+    position: absolute; bottom: 12px; left: 12px; z-index: 10;
+    background: rgba(13,27,42,.6); color: #fff; font-size: 9px;
+    font-weight: 600; padding: 2px 6px; border-radius: 3px;
+    pointer-events: none; backdrop-filter: blur(4px);
+    opacity: 0; transition: opacity .3s;
+  }
+  .fpw-stage:hover .fpw-zoom-badge { opacity: 1; }
+
+  /* ── Room dimensions strip ── */
+  .fpw-dims-wrap { display: flex; align-items: stretch; border-top: 1px solid var(--border); background: #fff; }
+  .fpw-dims-arr { flex-shrink: 0; width: 22px; border: none; background: #fff; color: var(--warm-grey); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .2s, background .2s; padding: 0; }
+  .fpw-dims-arr:hover { color: var(--navy); background: var(--ivory); }
+  .fpw-dims-arr-l { border-right: 1px solid var(--border); }
+  .fpw-dims-arr-r { border-left: 1px solid var(--border); }
+  .fpw-dims { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+  .fpw-dims::-webkit-scrollbar { display: none; }
+  .fpw-dim-card { flex-shrink: 0; min-width: 130px; padding: 10px 14px; border-right: 1px solid var(--border); box-sizing: border-box; }
+  .fpw-dim-card:last-child { border-right: none; }
+  .fpw-dim-title { font-size: 12px; font-weight: 700; color: var(--charcoal); margin-bottom: 2px; }
+  .fpw-dim-val { font-size: 11px; color: var(--warm-grey); }
+
+  /* ── Stats strip ── */
+  .fpw-stats {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0;
+    border-top: none !important; background: none !important;
+    padding: 0;
+  }
+  .fpw-stat {
+    display: flex; align-items: center; gap: 5px;
+    padding: 8px 16px; border-right: none !important; border-bottom: none !important;
+    font-size: 11px; font-weight: 500; color: var(--charcoal);
+  }
+  .fpw-stat svg { color: var(--sky); flex-shrink: 0; }
+  .fpw-stat-right { margin-left: auto; border-right: none; }
+  .fpw-dl-btn {
+    display: flex; align-items: center; gap: 5px; text-decoration: none;
+    font-size: 11px; font-weight: 600; color: var(--sky);
+    transition: color .2s;
+  }
+  .fpw-dl-btn:hover { color: var(--navy); }
+
+  /* ── CTA row ── */
+  .fpw-cta {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 10px 16px; border-top: 1px solid var(--border); background: #fafafa;
+  }
+  .fpw-cta-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--navy); color: #fff; border: none;
+    font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 600;
+    padding: 8px 14px; cursor: pointer; transition: background .2s; letter-spacing: .3px;
+  }
+  .fpw-cta-btn:hover { background: var(--sky); }
+  .fpw-cta-note { font-size: 10px; color: var(--warm-grey); line-height: 1.4; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .fpw-config-wrap { padding: 8px 12px; }
+    .fpw-config-tabs { gap: 6px; }
+    .fpw-config-tab { padding: 6px 10px; max-width: 140px; }
+    .fpw-stage { height: 52vw; min-height: 52vw; max-height: 52vw; }
+    .fpw-slide { padding: 14px 10px; height: 52vw; }
+    .fpw-img { max-height: calc(52vw - 28px); }
+    .fpw-config-price { font-size: 9px; }
+    .fpw-size-tab { padding: 6px 10px; font-size: 10px; }
+    .fpw-price-val { font-size: 14px; }
+    .fpw-price-bar { padding: 8px 14px; }
+    .fpw-2d3d { top: 8px; right: 8px; }
+    .fpw-view-btn { width: 30px; height: 26px; font-size: 10px; }
+    .fpw-overlay { right: 8px; }
+    .fpw-oc-btn { width: 28px; height: 28px; }
+    .fpw-fs-btn { width: 32px; height: 32px; bottom: 8px; right: 8px; }
+    .fpw-arrow { width: 28px; height: 28px; }
+    .fpw-arrow-prev { left: 8px; }
+    .fpw-arrow-next { right: 48px; }
+    .fpw-dim-card { min-width: 110px; padding: 8px 10px; }
+    .fpw-dim-title { font-size: 11px; }
+    .fpw-dim-val { font-size: 10px; }
+    .fpw-stat { padding: 7px 12px; font-size: 10px; }
+    .fpw-cta { padding: 8px 12px; gap: 8px; }
+    .fpw-cta-btn { font-size: 10px; padding: 7px 12px; }
+  }
+  @media (max-width: 480px) {
+    .fpw-config-wrap { padding: 8px 10px; }
+    .fpw-config-tabs { gap: 6px; }
+    .fpw-config-tab { padding: 6px 10px; max-width: 120px; font-size: 11px; }
+    .fpw-stage { height: 68vw; min-height: 68vw; max-height: 68vw; }
+    .fpw-img { max-height: calc(68vw - 32px); }
+    /* hide zoom +/- on mobile — pinch-to-zoom is available */
+    .fpw-overlay { display: none; }
+    /* bigger prev/next touch targets */
+    .fpw-arrow { width: 34px; height: 34px; }
+    .fpw-arrow-next { right: 10px; }
+    /* stats: 2-column grid */
+    .fpw-stat { flex: 0 0 50%; box-sizing: border-box; border-bottom: none !important; border-right: none !important; }
+    .fpw-stat-right { flex: 1 0 100%; margin-left: 0; border-right: none !important; border-top: none !important; justify-content: center; }
+    .fpw-cta { flex-direction: column; align-items: flex-start; }
+    .fpw-cta-btn { width: 100%; justify-content: center; }
   }
 </style>
 {% endblock %}
@@ -365,24 +1149,88 @@
 
     {# GALLERY + PROPERTY HEADER #}
     <div class="pd-card" style="overflow:hidden;">
-      <div class="pd-gallery">
-        {# Main image #}
+
+      {# ── Desktop: Grid Gallery ── #}
+      <div class="pd-gallery pi-hide-mobile">
+        {# Main image — slot 1 #}
         <div class="pd-gallery-main" onclick="pdOpenLightbox(0)">
-          {% if property.primary_image %}
-          <img src="{{ property.primary_image.image.url }}" alt="{{ property.title }}">
+          {% with first_img=images.0 %}
+          {% if first_img %}
+          <img src="{{ first_img.image.url }}" alt="{{ property.title }}">
           {% endif %}
-          <div class="pd-photo-count" onclick="pdOpenLightbox(0)">
+          {% endwith %}
+          <span class="pd-img-num">1</span>
+          <div class="pd-photo-count" onclick="pdOpenLightbox(0);event.stopPropagation()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             View All {{ images.count }} Photo{{ images.count|pluralize }}
           </div>
         </div>
-        {# Thumbnail cells — up to 4 extra #}
-        {% for img in images %}{% if not img.is_primary and forloop.counter <= 5 %}
-        <div class="pd-gallery-cell" onclick="pdOpenLightbox({{ forloop.counter0 }})">
-          <img src="{{ img.image.url }}" alt="Photo {{ forloop.counter }}">
-        </div>
-        {% endif %}{% endfor %}
+        {# Thumbnail cells — slots 2 & 3 only #}
+        {% for img in images %}
+          {% if not forloop.first and forloop.counter0 <= 2 %}
+          <div class="pd-gallery-cell" onclick="pdOpenLightbox({{ forloop.counter0 }})">
+            <img src="{{ img.image.url }}" alt="Photo {{ forloop.counter }}">
+            <span class="pd-img-num">{{ forloop.counter }}</span>
+          </div>
+          {% endif %}
+        {% endfor %}
       </div>
+
+      {# ── Mobile: Swipe Slideshow ── #}
+      <div class="pi-show-mobile">
+        {% with all_images=images %}
+        <div id="propImgBox" style="position:relative;width:100%;background:#0D2B4E;overflow:hidden;display:flex;align-items:center;justify-content:center;user-select:none;cursor:pointer;">
+          {# Slides #}
+          {% for img in all_images %}
+          <div class="prop-img-slide{% if forloop.first %} pi-active{% endif %}"
+               onclick="pdOpenLightbox({{ forloop.counter0 }})">
+            <img src="{{ img.image.url }}" alt="{{ img.caption|default:property.title }}" loading="lazy"
+                 style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+            {% if img.caption %}
+            <div style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); background:rgba(7,25,41,.7); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,.1); box-shadow:0 4px 12px rgba(0,0,0,.2); color:#fff; font-size:13px; font-weight:500; padding:6px 14px; border-radius:24px; pointer-events:none; z-index:2; max-width:85%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+              {{ img.caption }}
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div style="color:#4A90C4;font-size:13px;opacity:.7;">No photos available</div>
+          {% endfor %}
+
+          {# Arrows & Dots (only on mobile) #}
+          {% if images.count > 1 %}
+          <button id="propImgPrev" type="button" onclick="event.stopPropagation();propImgSlide(-1)" aria-label="Previous photo"
+                  style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:background .15s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button id="propImgNext" type="button" onclick="event.stopPropagation();propImgSlide(1)" aria-label="Next photo"
+                  style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:background .15s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          
+          <div class="pd-slide-dots" id="propImgDots">
+            {% for img in images %}
+            <button class="pd-slide-dot{% if forloop.first %} active{% endif %}" type="button" aria-label="Go to photo {{ forloop.counter }}" onclick="event.stopPropagation();propImgGoTo({{ forloop.counter0 }})"></button>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          {# View all badge also on mobile slider #}
+          <div class="pd-photo-count" onclick="pdOpenLightbox(0);event.stopPropagation()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            {{ images.count }} Photos
+          </div>
+        </div>
+
+        {# Mobile slider counter #}
+        {% if images.count > 1 %}
+        <div style="display:flex;align-items:center;justify-content:center;padding:10px;background:var(--charcoal);">
+          <span id="propImgCounter" style="font-size:11px;color:#aaa;">1 / {{ images.count }}</span>
+        </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+
 
       {# PROPERTY TITLE #}
       <div class="pd-prop-header">
@@ -398,6 +1246,11 @@
               {% endif %}
             </div>
             <div class="pd-prop-name">{{ property.title }}</div>
+            {% if property.developer %}
+            <div class="pd-prop-developer" style="font-size:13px;font-weight:600;margin:2px 0 6px 0;">
+              <a href="{% url 'pages:developer_profile' property.developer.slug %}" style="color:var(--sky);text-decoration:none;">By {{ property.developer.name }}</a>
+            </div>
+            {% endif %}
             <div class="pd-prop-address">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
               {{ property.address }}
@@ -414,18 +1267,28 @@
 
       {# QUICK ACTIONS #}
       <div class="pd-actions">
-        <a href="{% url 'enquiries:create' %}?property={{ property.id }}" class="pd-btn pd-btn-primary">
+        <button class="pd-btn pd-btn-primary" onclick="pdEnquireNow()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 9.8 19.79 19.79 0 011 1.18 2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.36 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.1a16 16 0 006 6l.53-.54a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
           Enquire Now
-        </a>
-        <button class="pd-btn pd-btn-outline" data-prop-id="{{ property.id }}" onclick="handleSave(this, {{ property.id }})">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-          Save
         </button>
-        <button class="pd-btn pd-btn-ghost" onclick="navigator.share ? navigator.share({title:'{{ property.title|escapejs }}',url:location.href}) : navigator.clipboard.writeText(location.href)">
+        <button class="pd-btn {% if is_saved %}pd-btn-primary{% else %}pd-btn-outline{% endif %}"
+                id="pdSaveBtn"
+                data-prop-id="{{ property.id }}"
+                data-csrf="{{ csrf_token }}"
+                data-toggle-url="{% url 'wishlist:toggle' property.id %}"
+                data-login-url="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"
+                onclick="handleSave(this)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="{% if is_saved %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          {% if is_saved %}Saved{% else %}Save{% endif %}
+        </button>
+        <button class="pd-btn pd-btn-ghost" onclick="pdShare(this)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           Share
         </button>
+        <a href="https://wa.me/?text={{ property.title|urlencode }}%20-%20{{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="pd-btn pd-btn-ghost" style="color: #25D366; border-color: #25D366;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
         {% if user == property.owner or user.is_staff %}
         <a href="{% url 'properties:update' property.slug %}" class="pd-btn pd-btn-ghost">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -438,37 +1301,60 @@
       <div class="pd-highlights">
         {% if property.bedrooms %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <div class="pd-hl-val">{{ property.bedrooms }} {% if property.bhk %}{{ property.get_bhk_display }}{% else %}BHK{% endif %}</div>
-          <div class="pd-hl-lbl">Bedrooms</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{% if property.bhk %}{{ property.get_bhk_display }}{% else %}{{ property.bedrooms }} BHK{% endif %}</div>
+            <div class="pd-hl-lbl">Bedrooms</div>
+          </div>
         </div>
         {% endif %}
         {% if property.area_sqft %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <div class="pd-hl-val">{{ property.area_sqft|floatformat:0 }} sq.ft</div>
-          <div class="pd-hl-lbl">Super Built-up</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{{ property.area_sqft|floatformat:0 }} sq.ft</div>
+            <div class="pd-hl-lbl">Super Built-up</div>
+          </div>
         </div>
         {% endif %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l4 4L7 17l-4-4 10-10z"/></svg>
-          <div class="pd-hl-val">{% if property.possession_date %}{{ property.possession_date|date:"M Y" }}{% elif property.age_years == 0 %}New{% else %}Ready{% endif %}</div>
-          <div class="pd-hl-lbl">Possession</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l4 4L7 17l-4-4 10-10z"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{% if property.possession_date %}{{ property.possession_date|date:"M Y" }}{% elif property.age_years == 0 %}New{% else %}Ready{% endif %}</div>
+            <div class="pd-hl-lbl">Possession</div>
+          </div>
         </div>
         {% if property.floor_no %}
         <div class="pd-hl">
-          <svg class="pd-hl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-          <div class="pd-hl-val">{{ property.floor_no }}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div>
-          <div class="pd-hl-lbl">Floor</div>
+          <div class="pd-hl-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+          </div>
+          <div class="pd-hl-text">
+            <div class="pd-hl-val">{{ property.floor_no }}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div>
+            <div class="pd-hl-lbl">Floor</div>
+          </div>
         </div>
         {% endif %}
       </div>
     </div>
 
     {# DESCRIPTION #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">About this Property</div></div>
-      <div style="padding:22px 28px;">
+    <div class="pd-card pd-about-card">
+      <div class="pd-about-header">
+        <div class="pd-about-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          About this Property
+        </div>
+      </div>
+      <div class="pd-about-sub">Description and highlights of this listing</div>
+      <div class="pd-about-divider"></div>
+      <div class="pd-desc-body" style="padding:16px 22px 22px;">
         <div class="pd-desc">
           {% if property.description %}
           <span id="pdDescShort">{{ property.description|truncatechars:320 }}</span>
@@ -487,8 +1373,15 @@
     </div>
 
     {# PROPERTY OVERVIEW #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">Property Overview</div></div>
+    <div class="pd-card pd-ov-card">
+      <div class="pd-ov-header">
+        <div class="pd-ov-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Property Overview
+        </div>
+      </div>
+      <div class="pd-ov-sub">Key details and specifications of this property</div>
+      <div class="pd-ov-divider"></div>
 
       <div id="panel-overview">
         <div class="pd-ov-grid">
@@ -497,45 +1390,545 @@
           {% if property.area_sqft %}<div class="pd-ov-item"><div class="pd-ov-lbl">Super Built-up Area</div><div class="pd-ov-val">{{ property.area_sqft|floatformat:0 }} sq.ft.</div></div>{% endif %}
           {% if property.carpet_area %}<div class="pd-ov-item"><div class="pd-ov-lbl">Carpet Area</div><div class="pd-ov-val">{{ property.carpet_area|floatformat:0 }} sq.ft.</div></div>{% endif %}
           {% if property.bathrooms %}<div class="pd-ov-item"><div class="pd-ov-lbl">Bathrooms</div><div class="pd-ov-val">{{ property.bathrooms }}</div></div>{% endif %}
-          {% if property.parking_slots %}<div class="pd-ov-item"><div class="pd-ov-lbl">Parking</div><div class="pd-ov-val">{{ property.parking_slots }} Slot{{ property.parking_slots|pluralize }}</div></div>{% endif %}
+          {% if property.parking_slots %}<div class="pd-ov-item"><div class="pd-ov-lbl">Parking</div><div class="pd-ov-val">{{ property.parking_slots }} Slot{{ property.parking_slots|pluralize }}{% if property.two_wheeler_parking or property.four_wheeler_parking %} &middot; {% if property.two_wheeler_parking %}2W{% endif %}{% if property.two_wheeler_parking and property.four_wheeler_parking %} &amp; {% endif %}{% if property.four_wheeler_parking %}4W{% endif %}{% endif %}</div></div>{% endif %}
           {% if property.furnishing %}<div class="pd-ov-item"><div class="pd-ov-lbl">Furnishing</div><div class="pd-ov-val">{{ property.get_furnishing_display }}</div></div>{% endif %}
+          {% if property.construction_status %}<div class="pd-ov-item"><div class="pd-ov-lbl">Construction Status</div><div class="pd-ov-val">{{ property.get_construction_status_display }}</div></div>{% endif %}
           <div class="pd-ov-item"><div class="pd-ov-lbl">Transaction</div><div class="pd-ov-val">{{ property.get_listing_type_display }}</div></div>
           {% if property.age_years is not None %}<div class="pd-ov-item"><div class="pd-ov-lbl">Age of Property</div><div class="pd-ov-val">{% if property.age_years == 0 %}New Construction{% else %}{{ property.age_years }} Year{{ property.age_years|pluralize }}{% endif %}</div></div>{% endif %}
           {% if property.total_floors %}<div class="pd-ov-item"><div class="pd-ov-lbl">Total Floors</div><div class="pd-ov-val">{{ property.total_floors }}</div></div>{% endif %}
           {% if property.facing %}<div class="pd-ov-item"><div class="pd-ov-lbl">Facing</div><div class="pd-ov-val">{{ property.facing }}</div></div>{% endif %}
+          {% if property.ownership_type %}<div class="pd-ov-item"><div class="pd-ov-lbl">Ownership</div><div class="pd-ov-val">{{ property.get_ownership_type_display }}</div></div>{% endif %}
           <div class="pd-ov-item"><div class="pd-ov-lbl">Location</div><div class="pd-ov-val">{{ property.locality }}, {{ property.city }}</div></div>
+          <div class="pd-ov-item">
+            <div class="pd-ov-lbl">RERA</div>
+            <div class="pd-ov-val">
+              {% if property.rera_approved %}
+              <span style="color:#2E7D32;font-weight:600;">&#10003; Approved</span>
+              {% if property.rera_number %}&nbsp;&middot;&nbsp;<span style="font-size:12px;color:var(--warm-grey);">{{ property.rera_number }}</span>{% endif %}
+              {% else %}
+              <span style="color:var(--warm-grey);">Not Registered</span>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
 
     </div>
 
     {# AMENITIES #}
-    <div class="pd-card">
-      <div class="pd-card-header">
-        <div class="pd-card-title">Amenities & Features</div>
-        {% if features %}<span class="pd-badge pd-badge-blue">{{ features|length }}</span>{% endif %}
+    <div class="pd-card pd-amen-card">
+      <div class="pd-amen-header">
+        <div class="pd-amen-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Amenities & Features
+          {% if features %}<span class="pd-amen-count">{{ features|length }}</span>{% endif %}
+        </div>
       </div>
+      <div class="pd-amen-sub">All the essentials and extras for a comfortable lifestyle</div>
+      <div class="pd-amen-divider"></div>
       {% if features %}
-      <div class="pd-amenities-grid">
+      <div class="pd-amenities-grid{% if features|length > 12 %} pd-collapsed{% endif %}" id="pdAmenitiesGrid">
         {% for f in features %}
         <div class="pd-amenity">
           <span class="pd-amenity-icon">
-            {% if f.icon %}{{ f.icon }}{% else %}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+            {% if f.icon_image %}
+            <img src="{{ f.icon_image.url }}" alt="{{ f.name }}" width="22" height="22" style="object-fit:contain;" loading="lazy">
+            {% elif f.icon %}{{ f.icon }}{% else %}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="20 6 9 17 4 12"/></svg>
             {% endif %}
           </span>
-          {{ f.name }}
+          <span class="pd-amenity-name">{{ f.name }}</span>
         </div>
         {% endfor %}
       </div>
+      {% if features|length > 12 %}
+      <button class="pd-amenities-toggle" id="pdAmenitiesTogle" onclick="pdToggleAmenities()">
+        <span id="pdAmenTogTxt">Show All {{ features|length }} Amenities</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      {% endif %}
       {% else %}
       <div style="padding:32px 28px;text-align:center;color:var(--warm-grey);font-size:13px;">No amenities listed for this property.</div>
       {% endif %}
     </div>
 
     {# FLOOR PLAN #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">Floor Plan</div></div>
+  <div class="pd-card pd-fp-card" style="overflow:hidden;">
+    <div class="pd-fp-header">
+      <div class="pd-fp-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Floor Plans
+        {% with fps_count=property.floor_plans.count %}
+        {% if fps_count > 1 %}<span class="pd-fp-count">{{ fps_count }}</span>{% elif fps_count == 1 %}<span class="pd-fp-count">1</span>{% endif %}
+        {% endwith %}
+      </div>
+      {% with fps_count=property.floor_plans.count %}
+      {% if fps_count > 1 %}
+      <div class="pd-plan-counter" id="fpwPlanCounter">
+        <button class="pd-plan-counter-arr" onclick="fpwNav(-1)" aria-label="Previous plan">&#8249;</button>
+        <span class="pd-plan-counter-txt" id="fpwPlanCounterTxt">1 / {{ fps_count }}</span>
+        <button class="pd-plan-counter-arr" onclick="fpwNav(1)" aria-label="Next plan">&#8250;</button>
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+    <div class="pd-fp-sub">Explore available 2D & 3D floor plans for this property</div>
+    <div class="pd-fp-divider"></div>
+
+      {% with fps=property.floor_plans.all %}
+      {% if fps %}
+
+      <div class="fpw" id="fpwWrap">
+
+        {# ── Config tabs (BHK type) — JS-rendered ── #}
+        <div class="fpw-config-wrap" id="fpwConfigWrap" style="display:none;">
+          <button class="fpw-config-arr" onclick="fpwConfigScroll(-1)">&#8249;</button>
+          <div class="fpw-config-tabs" id="fpwConfigTabs"></div>
+          <button class="fpw-config-arr" onclick="fpwConfigScroll(1)">&#8250;</button>
+        </div>
+
+        {# ── Size sub-tabs — JS-rendered ── #}
+        <div class="fpw-size-wrap" id="fpwSizeWrap" style="display:none;">
+          <button class="fpw-size-arr" id="fpwSizeArrL" onclick="fpwSizeScroll(-1)" style="display:none;">&#8249;</button>
+          <div class="fpw-size-tabs" id="fpwSizeTabs"></div>
+          <button class="fpw-size-arr" id="fpwSizeArrR" onclick="fpwSizeScroll(1)" style="display:none;">&#8250;</button>
+        </div>
+
+        {# ── Price bar — JS-rendered ── #}
+        <div class="fpw-price-bar" id="fpwPriceBar" style="display:none;"></div>
+
+        {# ── Image stage ── #}
+        <div class="fpw-stage" id="fpwStage">
+
+          {% for fp in fps %}
+          <div class="fpw-slide{% if forloop.first %} active{% endif %}" id="fpwSlide{{ forloop.counter0 }}">
+            <img src="{{ fp.image.url }}"
+                 alt="{{ fp.caption|default:'Floor Plan' }}"
+                 class="fpw-img"
+                 draggable="false"
+                 onclick="fpwOpenFullscreen()">
+          </div>
+          {% endfor %}
+
+          {# 2D/3D toggle — floating top-right, shown by JS only when 3D image exists #}
+          <div class="fpw-2d3d" id="fpw2d3dToggle" style="display:none;">
+            <button class="fpw-view-btn" id="fpwBtn3D" onclick="fpwSetView('3d')">3D</button>
+            <button class="fpw-view-btn active" id="fpwBtn2D" onclick="fpwSetView('2d')">2D</button>
+          </div>
+
+          {# Zoom controls — right center #}
+          <div class="fpw-overlay">
+            <button class="fpw-oc-btn" onclick="fpwZoom(0.3)" title="Zoom In">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="fpw-oc-sep"></div>
+            <button class="fpw-oc-btn" onclick="fpwZoom(-0.3)" title="Zoom Out">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+
+          {# Fullscreen button — bottom right #}
+          <button class="fpw-fs-btn" onclick="fpwOpenFullscreen()" title="Full Screen">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+
+          <button class="fpw-arrow fpw-arrow-prev" id="fpwPrev" onclick="fpwNav(-1)" aria-label="Previous plan" style="display:none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="fpw-arrow fpw-arrow-next" id="fpwNext" onclick="fpwNav(1)" aria-label="Next plan" style="display:none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <div class="fpw-zoom-badge" id="fpwZoomBadge">100%</div>
+        </div>{# /fpw-stage #}
+
+        {# ── Explore caption ── #}
+        <div class="fpw-explore-caption" id="fpwExploreCaption" style="display:none;">Explore 3D Interactive Floor Plan</div>
+
+        {# ── Room dimensions strip — JS-rendered ── #}
+        <div class="fpw-dims-wrap" id="fpwDimsWrap" style="display:none;">
+          <button class="fpw-dims-arr fpw-dims-arr-l" onclick="fpwDimsScroll(-1)">&#8249;</button>
+          <div class="fpw-dims" id="fpwDims"></div>
+          <button class="fpw-dims-arr fpw-dims-arr-r" onclick="fpwDimsScroll(1)">&#8250;</button>
+        </div>
+
+        {# ── Property quick stats ── #}
+        <div class="fpw-stats">
+          {% if property.area_sqft %}
+          <div class="fpw-stat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span id="fpwStatArea">{{ property.area_sqft|floatformat:0 }} sq.ft</span>
+          </div>
+          {% endif %}
+          {% if property.bedrooms %}
+          <div class="fpw-stat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            {% if property.bhk %}{{ property.get_bhk_display }}{% else %}{{ property.bedrooms }} Bed{% endif %}
+          </div>
+          {% endif %}
+          {% if property.bathrooms %}
+          <div class="fpw-stat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16M4 12a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M4 12V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/></svg>
+            {{ property.bathrooms }} Bath
+          </div>
+          {% endif %}
+          {% if property.carpet_area %}
+          <div class="fpw-stat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="3 3 21 3 21 21 3 21"/><polyline points="9 3 9 9 3 9"/></svg>
+            {{ property.carpet_area|floatformat:0 }} Carpet
+          </div>
+          {% endif %}
+          <div class="fpw-stat fpw-stat-right">
+            <a id="fpwDlLink" href="{{ fps.0.image.url }}" download class="fpw-dl-btn" target="_blank" rel="noopener">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+
+        {# ── CTA ── #}
+        <div class="fpw-cta">
+          <button class="fpw-cta-btn" onclick="pdEnquireNow()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Request Detailed Floor Plan
+          </button>
+          <span class="fpw-cta-note">Get full brochure with room dimensions in your inbox</span>
+        </div>
+
+      </div>{# /fpw #}
+
+      <script>
+      (function() {
+        // ── HTML-escape helper ──
+        function esc(s) {
+          return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ── Plan data from Django ──
+        var fpwAllPlans = [
+          {% for fp in fps %}
+          {
+            idx:   {{ forloop.counter0 }},
+            url:   "{{ fp.image.url }}",
+            url3d: "{% if fp.image_3d %}{{ fp.image_3d.url }}{% endif %}",
+            bhk:   "{% if fp.bhk_type %}{{ fp.bhk_type|escapejs }}{% elif fp.caption %}{{ fp.caption|escapejs }}{% else %}Plan {{ forloop.counter }}{% endif %}",
+            cap:   "{{ fp.caption|escapejs }}",
+            size:  {{ fp.size_sqft|default:"null" }},
+            price: "{{ fp.price_display|escapejs }}",
+            dims:  {% if fp.room_data %}{{ fp.room_data|safe }}{% else %}null{% endif %}
+          }{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ];
+        var fpwView = '2d';  // current view mode
+
+        var fpwCur = 0;   // current plan flat-index
+        var fpwZl  = 1;   // zoom level
+        var actCfg = '';  // active config key
+
+        // ── Group plans by bhk label ──
+        var configs = {};
+        fpwAllPlans.forEach(function(p) {
+          var key = p.bhk || 'Floor Plans';
+          p._key = key;
+          if (!configs[key]) configs[key] = [];
+          configs[key].push(p);
+        });
+        var cfgKeys  = Object.keys(configs);
+        actCfg = cfgKeys[0];
+
+        var hasSizes = fpwAllPlans.some(function(p) { return p.size; });
+        var multiCfg = cfgKeys.length > 1;
+
+        // ── Price range label for a config ──
+        function cfgPriceRange(key) {
+          var ps = configs[key].map(function(p) { return p.price; }).filter(Boolean);
+          var u  = ps.filter(function(v, i, a) { return a.indexOf(v) === i; });
+          if (!u.length) return '';
+          return u.length === 1 ? u[0] : u[0] + ' \u2013 ' + u[u.length - 1];
+        }
+
+        // ── Sort plans within a config by size_sqft ──
+        function sortedPlans(key) {
+          return configs[key].slice().sort(function(a, b) { return (a.size || 0) - (b.size || 0); });
+        }
+
+        // ── Build a stable sorted order of all plans (by config, then size) ──
+        var fpwSortedAll = [];
+        cfgKeys.forEach(function(key) { fpwSortedAll = fpwSortedAll.concat(sortedPlans(key)); });
+
+        function fpwSortedPos() {
+          for (var i = 0; i < fpwSortedAll.length; i++) {
+            if (fpwSortedAll[i].idx === fpwCur) return i;
+          }
+          return 0;
+        }
+
+        // ── Render config tabs ──
+        function renderCfgTabs() {
+          var el = document.getElementById('fpwConfigTabs');
+          var wrap = document.getElementById('fpwConfigWrap');
+          if (!el || !wrap) return;
+          if (!multiCfg) { wrap.style.display = 'none'; return; }
+          wrap.style.display = '';
+          el.innerHTML = cfgKeys.map(function(key, i) {
+            return '<button class="fpw-config-tab' + (key === actCfg ? ' active' : '') + '" onclick="fpwSetCfg(' + i + ')">'
+              + '<div class="fpw-config-name">' + esc(key) + '</div>'
+              + '</button>';
+          }).join('');
+          updateConfigTabWidth();
+        }
+
+        // ── Dynamic tab width: show N tabs based on container width ──
+        function updateConfigTabWidth() {
+          var el = document.getElementById('fpwConfigTabs');
+          if (!el) return;
+          var tabs = el.querySelectorAll('.fpw-config-tab');
+          if (!tabs.length) return;
+          // clientWidth is the usable inner width (no padding since we removed horizontal padding)
+          var w = el.clientWidth;
+          if (w <= 0) { requestAnimationFrame(updateConfigTabWidth); return; }
+          // Visible tab count by screen width
+          var maxVis = w >= 700 ? Math.min(tabs.length, 5)
+                     : w >= 480 ? Math.min(tabs.length, 3)
+                     : Math.min(tabs.length, 2);
+          if (tabs.length <= maxVis) {
+            // All tabs fit — clear any JS overrides and let CSS natural sizing apply
+            for (var i = 0; i < tabs.length; i++) {
+              tabs[i].style.flex = '';
+              tabs[i].style.width = '';
+            }
+          } else {
+            // More tabs than visible — force equal widths for a consistent carousel scroll
+            var tw = Math.max(60, Math.floor(w / maxVis));
+            for (var i = 0; i < tabs.length; i++) {
+              tabs[i].style.flex = '0 0 ' + tw + 'px';
+              tabs[i].style.width = tw + 'px';
+            }
+          }
+        }
+
+        // ── Render size sub-tabs ──
+        function renderSizeTabs() {
+          var wrap   = document.getElementById('fpwSizeWrap');
+          var tabsEl = document.getElementById('fpwSizeTabs');
+          if (!wrap || !tabsEl) return;
+          var ps       = sortedPlans(actCfg);
+          var showSize = ps.length > 1 && hasSizes;
+          wrap.style.display = showSize ? '' : 'none';
+          if (!showSize) return;
+          var cur = fpwAllPlans[fpwCur];
+          tabsEl.innerHTML = ps.map(function(p) {
+            var lbl = p.size ? p.size + ' SQ.FT' : esc(p.cap || 'Plan');
+            return '<button class="fpw-size-tab' + (p === cur ? ' active' : '') + '" onclick="fpwShowIdx(' + p.idx + ')">' + lbl + '</button>';
+          }).join('');
+          // Show arrows only when tabs overflow
+          requestAnimationFrame(function() {
+            var arrL = document.getElementById('fpwSizeArrL');
+            var arrR = document.getElementById('fpwSizeArrR');
+            var overflows = tabsEl.scrollWidth > tabsEl.clientWidth + 2;
+            if (arrL) arrL.style.display = overflows ? '' : 'none';
+            if (arrR) arrR.style.display = overflows ? '' : 'none';
+          });
+        }
+
+        // ── Render price bar ──
+        function renderPriceBar() {
+          var el = document.getElementById('fpwPriceBar');
+          if (!el) return;
+          var plan = fpwAllPlans[fpwCur];
+          if (plan && plan.price) {
+            el.style.display = '';
+            el.innerHTML = '<span class="fpw-price-val">' + esc(plan.price) + '</span>'
+              + '<span class="fpw-price-info" title="Indicative price for this size variant">&#9432;</span>';
+          } else {
+            el.style.display = 'none';
+          }
+        }
+
+        // ── Render room dimensions ──
+        function renderDims() {
+          var wrap = document.getElementById('fpwDimsWrap');
+          var el   = document.getElementById('fpwDims');
+          if (!wrap || !el) return;
+          var plan = fpwAllPlans[fpwCur];
+          var dims = plan && plan.dims;
+          if (!dims || !dims.length) { wrap.style.display = 'none'; return; }
+          wrap.style.display = '';
+          el.innerHTML = dims.map(function(d) {
+            return '<div class="fpw-dim-card"><div class="fpw-dim-title">'
+              + esc(d.title) + '</div><div class="fpw-dim-val">' + esc(d.val) + '</div></div>';
+          }).join('');
+        }
+
+        // ── Show/hide nav arrows based on current config ──
+        function updateNavArrows() {
+          var show = sortedPlans(actCfg).length > 1;
+          var prev = document.getElementById('fpwPrev');
+          var next = document.getElementById('fpwNext');
+          if (prev) prev.style.display = show ? '' : 'none';
+          if (next) next.style.display = show ? '' : 'none';
+        }
+
+        // ── Zoom helpers ──
+        function fpwActiveImg() {
+          var s = document.getElementById('fpwSlide' + fpwCur);
+          return s ? s.querySelector('.fpw-img') : null;
+        }
+        function fpwUpdateZoom() {
+          var img = fpwActiveImg();
+          if (img) img.style.transform = 'scale(' + fpwZl + ')';
+          var b = document.getElementById('fpwZoomBadge');
+          if (b) { b.textContent = Math.round(fpwZl * 100) + '%'; b.style.opacity = fpwZl !== 1 ? '1' : '0'; }
+        }
+
+        // ── Show a specific plan by flat-array index ──
+        window.fpwShowIdx = function(idx) {
+          fpwCur = idx; fpwZl = 1;
+          var plan = fpwAllPlans[idx];
+          actCfg = plan._key;
+          document.querySelectorAll('#fpwStage .fpw-slide').forEach(function(s, i) {
+            s.classList.toggle('active', i === idx);
+          });
+          var dl = document.getElementById('fpwDlLink');
+          if (dl) dl.href = plan.url;
+          var areaEl = document.getElementById('fpwStatArea');
+          if (areaEl && plan.size) areaEl.textContent = plan.size + ' sq.ft';
+          fpwUpdateZoom();
+          fpwApplyView();
+          renderCfgTabs();
+          renderSizeTabs();
+          renderPriceBar();
+          renderDims();
+          updateNavArrows();
+          var stabs = document.querySelectorAll('#fpwSizeTabs .fpw-size-tab');
+          var si = sortedPlans(actCfg).indexOf(plan);
+          if (stabs[si]) stabs[si].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          // Update plan counter badge
+          var ctrEl = document.getElementById('fpwPlanCounterTxt');
+          if (ctrEl) ctrEl.textContent = (fpwSortedPos() + 1) + ' / ' + fpwSortedAll.length;
+        };
+
+        // ── Switch config (BHK type) by cfgKeys index ──
+        window.fpwSetCfg = function(cfgIdx) {
+          actCfg = cfgKeys[cfgIdx];
+          window.fpwShowIdx(sortedPlans(actCfg)[0].idx);
+        };
+
+        // ── Navigate prev/next linearly across all plans (sorted order, continuous loop) ──
+        window.fpwNav = function(dir) {
+          var pos = fpwSortedPos();
+          var next = (pos + dir + fpwSortedAll.length) % fpwSortedAll.length;
+          window.fpwShowIdx(fpwSortedAll[next].idx);
+        };
+
+        window.fpwZoom  = function(d) { fpwZl = Math.max(0.5, Math.min(4, fpwZl + d)); fpwUpdateZoom(); };
+        window.fpwReset = function()  { fpwZl = 1; fpwUpdateZoom(); };
+
+        // ── Fullscreen (reuse page lightbox) ──
+        window.fpwOpenFullscreen = function() {
+          var plan  = fpwAllPlans[fpwCur];
+          var src   = (fpwView === '3d' && plan.url3d) ? plan.url3d : plan.url;
+          var lb    = document.getElementById('pdLightbox');
+          var stage = document.getElementById('pdLbStage');
+          if (!lb || !stage) { window.open(src, '_blank'); return; }
+          stage.innerHTML = '<div class="pd-lb-slide active"><img src="' + src + '" alt="Floor Plan" style="max-width:100%;max-height:80vh;object-fit:contain;display:block;"></div>';
+          document.getElementById('pdLbCounterTxt').textContent = (fpwCur + 1) + ' / ' + fpwAllPlans.length;
+          lb.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        };
+
+        // ── 2D/3D toggle ──
+        function fpwApplyView() {
+          var plan   = fpwAllPlans[fpwCur];
+          var toggle = document.getElementById('fpw2d3dToggle');
+          var caption = document.getElementById('fpwExploreCaption');
+          var has3d  = !!plan.url3d;
+          if (toggle) toggle.style.display = has3d ? '' : 'none';
+          if (caption) caption.style.display = has3d ? '' : 'none';
+          if (!has3d) fpwView = '2d';
+          var btn2 = document.getElementById('fpwBtn2D');
+          var btn3 = document.getElementById('fpwBtn3D');
+          if (btn2) btn2.classList.toggle('active', fpwView === '2d');
+          if (btn3) btn3.classList.toggle('active', fpwView === '3d');
+          // swap the visible image src
+          var img = fpwActiveImg();
+          if (img) img.src = (fpwView === '3d' && has3d) ? plan.url3d : plan.url;
+          // keep download link pointing at currently shown image
+          var dl = document.getElementById('fpwDlLink');
+          if (dl) dl.href = (fpwView === '3d' && has3d) ? plan.url3d : plan.url;
+          // update explore caption text
+          if (caption) caption.textContent = fpwView === '3d' ? 'Explore 3D Interactive Floor Plan' : 'Explore 2D Floor Plan';
+        }
+        window.fpwSetView = function(mode) {
+          fpwView = mode;
+          fpwApplyView();
+        };
+
+        // ── Scroll helpers ──
+        window.fpwConfigScroll = function(d) {
+          var el = document.getElementById('fpwConfigTabs');
+          if (el) el.scrollBy({ left: d * 150, behavior: 'smooth' });
+        };
+        window.fpwSizeScroll = function(d) {
+          var el = document.getElementById('fpwSizeTabs');
+          if (el) el.scrollBy({ left: d * 120, behavior: 'smooth' });
+        };
+        window.fpwDimsScroll = function(d) {
+          var el = document.getElementById('fpwDims');
+          if (el) el.scrollBy({ left: d * 140, behavior: 'smooth' });
+        };
+
+        // ── Pinch-to-zoom + swipe-to-navigate ──
+        var _fpwStage = document.getElementById('fpwStage');
+        if (_fpwStage) {
+          var _sd = 0, _sz = 1, _swX = 0, _swY = 0;
+          _fpwStage.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+              _sd = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+              _sz = fpwZl; e.preventDefault();
+            } else if (e.touches.length === 1) {
+              _swX = e.touches[0].clientX;
+              _swY = e.touches[0].clientY;
+            }
+          }, { passive: false });
+          _fpwStage.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+              var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+              fpwZl = Math.max(0.5, Math.min(4, _sz * (d / _sd)));
+              fpwUpdateZoom(); e.preventDefault();
+            }
+          }, { passive: false });
+          _fpwStage.addEventListener('touchend', function(e) {
+            if (e.changedTouches.length === 1 && fpwZl === 1) {
+              var dx = e.changedTouches[0].clientX - _swX;
+              var dy = e.changedTouches[0].clientY - _swY;
+              if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                fpwNav(dx < 0 ? 1 : -1);
+              }
+            }
+          }, { passive: true });
+        }
+
+        // ── Init ──
+        renderCfgTabs();
+        renderSizeTabs();
+        renderPriceBar();
+        renderDims();
+        updateNavArrows();
+        fpwApplyView();
+
+        // recompute tab widths on window resize
+        if (typeof ResizeObserver !== 'undefined') {
+          var _fpwRO = new ResizeObserver(function() { updateConfigTabWidth(); });
+          var _fpwTabsEl = document.getElementById('fpwConfigTabs');
+          if (_fpwTabsEl) _fpwRO.observe(_fpwTabsEl);
+        } else {
+          window.addEventListener('resize', updateConfigTabWidth);
+        }
+      })();
+      </script>
+
+      {% else %}
       <div class="pd-fp-preview">
         <div class="pd-fp-ph">
           <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -543,51 +1936,182 @@
           <p class="pd-fp-sub">{% if property.area_sqft %}{{ property.area_sqft|floatformat:0 }} sq.ft.{% endif %} {% if property.bedrooms %}· {{ property.bedrooms }} Bed{% endif %} {% if property.bathrooms %}· {{ property.bathrooms }} Bath{% endif %}</p>
         </div>
       </div>
+      {% endif %}
+      {% endwith %}
     </div>
 
     {# LOCATION #}
-    <div class="pd-card">
-      <div class="pd-card-header"><div class="pd-card-title">Location</div></div>
-      {% if property.latitude and property.longitude %}
-      <div class="pd-map-wrapper">
-        <iframe id="pdMap" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU3KrE&q={{ property.latitude }},{{ property.longitude }}&zoom=15"></iframe>
-        <div class="pd-map-pin">
-          <div class="pd-map-pin-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg></div>
-          <div><div class="pd-map-pin-title">{{ property.title }}</div><div class="pd-map-pin-sub">{{ property.locality }}, {{ property.city }}</div></div>
+    <div class="pd-card pd-loc-card">
+      <div class="pd-loc-header">
+        <div class="pd-loc-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Location
         </div>
+      </div>
+      <div class="pd-loc-sub">See where the property is located and what's nearby</div>
+      <div class="pd-loc-divider"></div>
+      <style>
+        /* ── Location (Modernized, Refined) ── */
+        .pd-card.pd-loc-card {
+          background: #ffffff;
+          box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
+          border: 1.5px solid #e3eaf3;
+          border-radius: 18px;
+          margin-bottom: 0;
+          overflow: hidden;
+        }
+        .pd-loc-header {
+          display: flex; align-items: center; justify-content: flex-start;
+          padding: 14px 22px 0 22px;
+          gap: 10px;
+        }
+        .pd-loc-title {
+          font-size: 17px; font-weight: 700; color: var(--navy);
+          letter-spacing: 0.1px; display: flex; align-items: center; gap: 7px;
+        }
+        .pd-loc-title svg { width: 18px; height: 18px; }
+        .pd-loc-sub {
+          font-size: 12px; color: var(--warm-grey); margin: 2px 0 0 22px;
+          font-weight: 500;
+        }
+        .pd-loc-divider {
+          height: 1.5px; background: linear-gradient(90deg, #e3eaf3 60%, #cbe0f7 100%);
+          margin: 12px 0 10px 0;
+          border: none;
+        }
+        .pd-loc-footer {
+          background: #fafdff;
+          border-top: 1px solid #e3eaf3;
+          padding: 12px 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+          border-radius: 0 0 18px 18px;
+          margin-top: 0;
+        }
+      </style>
+      <div class="pd-map-wrapper">
+        {% if property.latitude and property.longitude %}
+        <iframe id="pdMap" loading="lazy"
+          src="https://maps.google.com/maps?q={{ property.latitude }},{{ property.longitude }}&z=15&t=m&output=embed"
+          title="{{ property.title }} location"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        {% else %}
+        <iframe id="pdMap" loading="lazy"
+          src="https://maps.google.com/maps?q={{ property.address|urlencode }},+{{ property.city|urlencode }}&z=14&t=m&output=embed"
+          title="{{ property.title }} location"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        {% endif %}
+        {# Overlay: prevents accidental scroll capture; click once to fully interact with map #}
+        <div id="pdMapOverlay" onclick="document.getElementById('pdMapOverlay').style.display='none'" title="Click to interact with map"></div>
         <div class="pd-map-ctrl">
-          <button class="pd-map-ctrl-btn active" id="btnRoad" onclick="pdSetMap('roadmap')">Street</button>
+          <button class="pd-map-ctrl-btn active" id="btnRoad" onclick="pdSetMap('street')">Street</button>
           <button class="pd-map-ctrl-btn" id="btnSat" onclick="pdSetMap('satellite')">Satellite</button>
         </div>
       </div>
-      {% else %}
-      <div class="pd-map-wrapper" style="background:var(--ivory);display:flex;align-items:center;justify-content:center;">
-        <a href="https://www.google.com/maps/search/?api=1&query={{ property.address|urlencode }}" target="_blank" rel="noopener" class="pd-btn pd-btn-outline" style="display:inline-flex;">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Open Location in Google Maps
-        </a>
-      </div>
-      {% endif %}
-      <div style="padding:14px 28px;">
+      <div class="pd-loc-footer">
         <div style="font-size:12px;color:var(--warm-grey);display:flex;align-items:center;gap:6px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           {{ property.address }}{% if property.pincode %} — {{ property.pincode }}{% endif %}
         </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          {% if property.latitude and property.longitude %}
+          <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.latitude }},{{ property.longitude }}" target="_blank" rel="noopener"
+             style="font-size:12px;color:var(--sky);text-decoration:none;display:flex;align-items:center;gap:5px;font-weight:500;">
+          {% else %}
+          <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.address|urlencode }},+{{ property.city|urlencode }}" target="_blank" rel="noopener"
+             style="font-size:12px;color:var(--sky);text-decoration:none;display:flex;align-items:center;gap:5px;font-weight:500;">
+          {% endif %}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Get Directions
+          </a>
+          {% if property.latitude and property.longitude %}
+          <a href="https://maps.google.com/?q={{ property.latitude }},{{ property.longitude }}" target="_blank" rel="noopener"
+             style="font-size:12px;color:var(--warm-grey);text-decoration:none;display:flex;align-items:center;gap:5px;font-weight:500;">
+          {% else %}
+          <a href="https://maps.google.com/?q={{ property.address|urlencode }},+{{ property.city|urlencode }}" target="_blank" rel="noopener"
+             style="font-size:12px;color:var(--warm-grey);text-decoration:none;display:flex;align-items:center;gap:5px;font-weight:500;">
+          {% endif %}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open in Google Maps
+          </a>
+        </div>
       </div>
     </div>
 
+    {# CONNECTIVITY #}
+    {% if connectivity %}
+    <div class="pd-card pd-conn-card" id="pdConnCard">
+      <div class="pd-conn-header">
+        <div class="pd-conn-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>
+          Connectivity
+          <span class="pd-conn-count">{{ connectivity|length }}</span>
+        </div>
+      </div>
+      <div class="pd-conn-sub">Explore key places around this property</div>
+      <div class="pd-conn-divider"></div>
+      <div class="pd-conn-cats" id="pdConnCats"></div>
+      <div class="pd-conn-list" id="pdConnList"></div>
+    </div>
+    <script>
+    (function(){
+      var items = [
+        {% for c in connectivity %}
+        { cat: "{{ c.get_category_display|escapejs }}", name: "{{ c.name|escapejs }}", dist: "{{ c.distance|escapejs }}" }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+      var icons = {
+        'Transit': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><circle cx="8" cy="22" r="1"/><circle cx="16" cy="22" r="1"/><path d="M7 19l-1 3"/><path d="M17 19l1 3"/></svg>',
+        'Education': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+        'Healthcare': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M2 12h20"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+        'Shopping': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>',
+        'Lifestyle': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+        'Other': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>'
+      };
+      var cats = [];
+      items.forEach(function(it){ if (cats.indexOf(it.cat)===-1) cats.push(it.cat); });
+      var catsEl = document.getElementById('pdConnCats');
+      var listEl = document.getElementById('pdConnList');
+      function showCat(c){
+        catsEl.querySelectorAll('.pd-conn-cat-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.cat===c); });
+        var html = '';
+        items.forEach(function(it){
+          if (it.cat!==c) return;
+          var ic = icons[it.cat] || icons['Other'];
+          html += '<div class="pd-conn-item"><span class="pd-conn-icon">' + ic + '</span><span class="pd-conn-name">' + it.name + '</span><span class="pd-conn-dist">' + it.dist + '</span></div>';
+        });
+        listEl.innerHTML = html;
+      }
+      if (cats.length > 1) {
+        catsEl.innerHTML = cats.map(function(c){
+          var ic = icons[c] || icons['Other'];
+          return '<button class="pd-conn-cat-btn" data-cat="'+c+'" onclick="this.parentNode._show(\''+c.replace(/'/g,"\\'")+'\')">' + ic + ' ' + c + '</button>';
+        }).join('');
+        catsEl._show = showCat;
+      } else {
+        catsEl.style.display = 'none';
+      }
+      showCat(cats[0]);
+    })();
+    </script>
+    {% endif %}
+
     {# SIMILAR PROPERTIES #}
     {% if similar %}
-    <div class="pd-card">
-      <div class="pd-card-header">
-        <div class="pd-card-title">Similar Properties</div>
-        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-card-link">View All ›</a>
+    <div class="pd-card pd-sim-card">
+      <div class="pd-sim-header">
+        <div class="pd-sim-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Similar Properties
+        </div>
+        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-sim-link">View All ›</a>
       </div>
+      <div class="pd-sim-sub">Other listings you might like in {{ property.city }}</div>
+      <div class="pd-sim-divider"></div>
       {% for sim in similar %}
       <a href="{{ sim.get_absolute_url }}" class="pd-sim-item">
         <div class="pd-sim-thumb">
-          {% if sim.primary_image %}<img src="{{ sim.primary_image.image.url }}" alt="{{ sim.title }}">{% endif %}
+          {% if sim.primary_image %}<img src="{{ sim.primary_image.image.url }}" alt="{{ sim.title }}" loading="lazy">{% endif %}
         </div>
         <div style="min-width:0;flex:1;">
           <div class="pd-sim-price">{{ sim.display_price }}</div>
@@ -613,27 +2137,27 @@
       {# CONTACT / ENQUIRY CARD #}
       <div class="pd-card" style="margin-bottom:0;">
         <div class="pd-contact">
-          {% if property.agent %}
+          {% if property.developer %}
           <div class="pd-agent-row">
-            <div class="pd-agent-av">
-              {% if property.agent.photo %}<img src="{{ property.agent.photo.url }}" alt="{{ property.agent.full_name }}">
-              {% else %}{{ property.agent.full_name|first|upper }}{% endif %}
+            <div class="pd-agent-av" style="background:#eaf3fa;border-radius:8px;border:1px solid #dbeaf7;">
+              {% if property.developer.logo %}<img src="{{ property.developer.logo.url }}" alt="{{ property.developer.name }}" style="object-fit:contain;padding:5px;border-radius:8px;">
+              {% else %}<span style="color:var(--sky);">{{ property.developer.name|first|upper }}</span>{% endif %}
             </div>
             <div>
-              <div class="pd-agent-name">{{ property.agent.full_name }}</div>
-              <div class="pd-agent-role">{% if property.agent.specialization %}{{ property.agent.specialization }}{% else %}HOMEXO Agent{% endif %}</div>
-              {% if property.agent.is_verified %}
+              <div class="pd-agent-name">{{ property.developer.name }}</div>
               <div class="pd-agent-verified">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                Verified{% if property.agent.rera_number %} · RERA{% endif %}{% if property.agent.experience_years %} · {{ property.agent.experience_years }} yrs{% endif %}
+                Verified Partner
               </div>
-              {% endif %}
             </div>
           </div>
           {% endif %}
-          <form action="{% url 'enquiries:create' %}" method="POST" class="pd-form">
+          
+<form action="{% url 'enquiries:create' %}" method="POST" class="pd-form" id="pd-contact-form">
             {% csrf_token %}
             <input type="hidden" name="property" value="{{ property.id }}">
+            <input type="hidden" name="enquiry_type" value="{% if property.listing_type == 'rent' %}rent{% else %}buy{% endif %}">
+            <input type="hidden" name="source" value="property">
             <input type="text"  name="name"     class="pd-input" placeholder="Your Full Name" required>
             <input type="tel"   name="phone"    class="pd-input" placeholder="Phone Number"   required>
             <input type="email" name="email"    class="pd-input" placeholder="Email Address">
@@ -642,13 +2166,6 @@
               Send Message
             </button>
           </form>
-          {% if property.agent and property.agent.phone %}
-          <div class="pd-divider" style="margin-top:12px;">or</div>
-          <button class="pd-phone-btn" style="margin-top:10px;" onclick="this.innerHTML='<a href=\'tel:{{ property.agent.phone }}\'>{{ property.agent.phone }}</a>'">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 9.8 19.79 19.79 0 011 1.18 2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.36 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.1a16 16 0 006 6l.53-.54a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            Click to Reveal Number
-          </button>
-          {% endif %}
           <p style="font-size:11px;color:var(--warm-grey);margin-top:10px;line-height:1.6;">By submitting, you agree to receive calls and messages regarding this property.</p>
         </div>
       </div>
@@ -662,8 +2179,8 @@
             <input type="range" class="pd-emi-slider" id="pdLoan" min="100" max="2000" value="750" oninput="pdCalcEMI()">
           </div>
           <div class="pd-emi-field">
-            <div class="pd-emi-lbl">Interest Rate <span id="pdRateVal">8.5%</span></div>
-            <input type="range" class="pd-emi-slider" id="pdRate" min="6" max="15" step="0.1" value="8.5" oninput="pdCalcEMI()">
+            <div class="pd-emi-lbl">Interest Rate <span id="pdRateVal">9%</span></div>
+            <input type="range" class="pd-emi-slider" id="pdRate" min="6" max="15" step="0.1" value="9" oninput="pdCalcEMI()">
           </div>
           <div class="pd-emi-field">
             <div class="pd-emi-lbl">Tenure <span id="pdTenureVal">20 Years</span></div>
@@ -676,6 +2193,9 @@
             </div>
             <div class="pd-emi-res-val" id="pdEMIAmt">—</div>
           </div>
+          <a href="{% url 'pages:home_loan' %}" class="pd-btn pd-btn-primary" style="margin-top:14px;width:100%;justify-content:center;font-size:13px;padding:12px;">
+            Check Loan Eligibility
+          </a>
         </div>
       </div>
 
@@ -686,6 +2206,9 @@
   </div>
 
 </div>{# end pd-layout #}
+
+{# SHARE TOAST #}
+<div id="pdShareToast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--charcoal);color:#fff;padding:10px 22px;font-size:13px;font-weight:500;border-radius:2px;opacity:0;pointer-events:none;transition:all .35s;z-index:9999;white-space:nowrap;">🔗 Link copied to clipboard</div>
 
 {# ─── LIGHTBOX ─── #}
 <div class="pd-lightbox" id="pdLightbox" onclick="pdHandleBackdrop(event)">
@@ -709,10 +2232,156 @@
   </div>
 </div>
 
+<!-- Mobile sticky bottom bar -->
+<div class="pd-mobile-bar">
+  <button class="pd-mobile-bar-btn pd-mobile-bar-primary" onclick="pdOpenSheet()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 9.8 19.79 19.79 0 011 1.18 2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.36 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.1a16 16 0 006 6l.53-.54a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    Enquire Now
+  </button>
+  <a href="https://wa.me/?text={{ property.title|urlencode }}%20-%20{{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="pd-mobile-bar-btn pd-mobile-bar-wa">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    WhatsApp
+  </a>
+</div>
+
+<!-- Bottom sheet (mobile enquiry modal) -->
+<div class="pd-sheet-backdrop" id="pdSheetBackdrop" onclick="pdCloseSheet()"></div>
+<div class="pd-sheet" id="pdSheet">
+  <div class="pd-sheet-handle"></div>
+  <div class="pd-sheet-title">Enquire About This Property</div>
+  
+<form action="{% url 'enquiries:create' %}" method="POST" class="pd-form">
+    {% csrf_token %}
+    <input type="hidden" name="property" value="{{ property.id }}">
+    <input type="hidden" name="enquiry_type" value="{% if property.listing_type == 'rent' %}rent{% else %}buy{% endif %}">
+    <input type="hidden" name="source" value="property">
+    <input type="text"  name="name"  class="pd-input" placeholder="Your Full Name" required>
+    <input type="tel"   name="phone" class="pd-input" placeholder="Phone Number" required>
+    <input type="email" name="email" class="pd-input" placeholder="Email Address">
+    <textarea name="message" class="pd-input pd-textarea" placeholder="I'm interested in this property. Please contact me."></textarea>
+    <button type="submit" class="pd-btn pd-btn-primary" style="width:100%;justify-content:center;font-size:13px;padding:14px;margin-top:4px;">Send Message</button>
+  </form>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// ── Enquire Now: desktop scrolls to sidebar form, mobile opens bottom sheet ──
+function pdEnquireNow() {
+  if (window.innerWidth <= 768) {
+    pdOpenSheet();
+  } else {
+    var form = document.getElementById('pd-contact-form');
+    if (form) {
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function() { 
+        form.classList.add('pd-shake');
+        form.querySelector('input[name="name"]').focus(); 
+        setTimeout(function() { form.classList.remove('pd-shake'); }, 500);
+      }, 500);
+    }
+  }
+}
+function pdOpenSheet() {
+  document.getElementById('pdSheet').classList.add('open');
+  document.getElementById('pdSheetBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() { document.querySelector('#pdSheet input[name="name"]').focus(); }, 350);
+}
+function pdCloseSheet() {
+  document.getElementById('pdSheet').classList.remove('open');
+  document.getElementById('pdSheetBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') pdCloseSheet();
+});
+
+// ── Share ──
+function handleSave(btn) {
+  var loginUrl = btn.dataset.loginUrl;
+  var toggleUrl = btn.dataset.toggleUrl;
+  var csrf = btn.dataset.csrf;
+  if (!csrf) {
+    window.location.href = loginUrl;
+    return;
+  }
+  btn.disabled = true;
+  fetch(toggleUrl, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrf,
+      'X-Requested-With': 'XMLHttpRequest',
+    }
+  })
+  .then(function(r) {
+    if (r.redirected || !r.ok) {
+      window.location.href = loginUrl;
+      return null;
+    }
+    return r.json();
+  })
+  .then(function(data) {
+    btn.disabled = false;
+    if (!data) return;
+    var svg = btn.querySelector('svg');
+    if (data.saved) {
+      btn.classList.replace('pd-btn-outline', 'pd-btn-primary');
+      if (svg) svg.setAttribute('fill', 'currentColor');
+      btn.lastChild.textContent = 'Saved';
+    } else {
+      btn.classList.replace('pd-btn-primary', 'pd-btn-outline');
+      if (svg) svg.setAttribute('fill', 'none');
+      btn.lastChild.textContent = 'Save';
+    }
+  })
+  .catch(function() { btn.disabled = false; });
+}
+
+function pdShare(btn) {
+  const url = location.href;
+  const title = '{{ property.title|escapejs }}';
+  const text = 'Check out this property: {% if property.bhk %}{{ property.get_bhk_display|escapejs }} in {% endif %}{{ property.locality|escapejs }} for {{ property.display_price|escapejs }}.';
+  if (navigator.share) {
+    navigator.share({ title, text, url }).catch(() => {});
+    return;
+  }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => pdShowToast());
+  } else {
+    // Fallback for old browsers
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    ta.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    pdShowToast();
+  }
+}
+function pdShowToast() {
+  const t = document.getElementById('pdShareToast');
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2500);
+}
+
+// ── Amenities toggle ──
+function pdToggleAmenities() {
+  var grid = document.getElementById('pdAmenitiesGrid');
+  var btn = document.getElementById('pdAmenitiesTogle');
+  var txt = document.getElementById('pdAmenTogTxt');
+  if (!grid || !btn) return;
+  var collapsed = grid.classList.toggle('pd-collapsed');
+  btn.classList.toggle('pd-expanded', !collapsed);
+  txt.textContent = collapsed ? 'Show All ' + grid.children.length + ' Amenities' : 'Show Less';
+}
+
 // ── Description toggle ──
 function pdToggleDesc() {
   const s = document.getElementById('pdDescShort');
@@ -734,8 +2403,17 @@ function pdToggleDesc() {
 // ── EMI Calculator ──
 const PD_PRICE_RAW = {{ property.price|default:0 }};
 (function() {
-  const loanLakhs = PD_PRICE_RAW >= 100000 ? Math.round(PD_PRICE_RAW * 0.75 / 100000) : 750;
-  document.getElementById('pdLoan').value = Math.min(Math.max(loanLakhs, 100), 2000);
+  const loanLakhs = PD_PRICE_RAW > 0 ? Math.round(PD_PRICE_RAW / 100000) : 750;
+  const loanInput = document.getElementById('pdLoan');
+  if (loanInput) {
+    if (loanLakhs < parseInt(loanInput.min) && loanLakhs > 0) {
+      loanInput.min = Math.max(1, Math.floor(loanLakhs * 0.2));
+    }
+    if (loanLakhs > parseInt(loanInput.max)) {
+      loanInput.max = Math.ceil(loanLakhs * 1.5);
+    }
+    loanInput.value = loanLakhs;
+  }
   pdCalcEMI();
 })();
 
@@ -748,11 +2426,11 @@ function pdCalcEMI() {
   const n = tenure * 12;
   const emi = P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
   const totalInt = (emi * n) - P;
-  document.getElementById('pdLoanVal').textContent = loanLakhs >= 100 ? '₹'+(loanLakhs/100).toFixed(1)+' Cr' : '₹'+loanLakhs+' L';
+  document.getElementById('pdLoanVal').innerHTML = loanLakhs >= 100 ? '<span class="rupee">₹</span>'+(loanLakhs/100).toFixed(1)+' Cr' : '<span class="rupee">₹</span>'+loanLakhs+' L';
   document.getElementById('pdRateVal').textContent = rate.toFixed(1)+'%';
   document.getElementById('pdTenureVal').textContent = tenure+' Year'+(tenure>1?'s':'');
-  document.getElementById('pdEMIAmt').textContent = pdFmtAmt(emi);
-  document.getElementById('pdTotalInt').textContent = pdFmtAmt(totalInt);
+  document.getElementById('pdEMIAmt').innerHTML = pdFmtAmt(emi);
+  document.getElementById('pdTotalInt').innerHTML = pdFmtAmt(totalInt);
   ['pdLoan','pdRate','pdTenure'].forEach(id => {
     const el = document.getElementById(id);
     const pct = (el.value - el.min) / (el.max - el.min) * 100;
@@ -760,97 +2438,218 @@ function pdCalcEMI() {
   });
 }
 function pdFmtAmt(v) {
-  if (v >= 10000000) return '₹'+(v/10000000).toFixed(2)+' Cr';
-  if (v >= 100000)   return '₹'+(v/100000).toFixed(2)+' L';
-  return '₹'+Math.round(v).toLocaleString('en-IN');
+  if (v >= 10000000) return '<span class="rupee">₹</span>'+(v/10000000).toFixed(2)+' Cr';
+  if (v >= 100000)   return '<span class="rupee">₹</span>'+(v/100000).toFixed(2)+' L';
+  return '<span class="rupee">₹</span>'+Math.round(v).toLocaleString('en-IN');
 }
 
-// ── Map type toggle ──
-function pdSetMap(type) {
-  const fr = document.getElementById('pdMap');
-  if (!fr) return;
-  const base = fr.src.replace(/&maptype=\w+/,'');
-  fr.src = base + (type==='satellite' ? '&maptype=satellite' : '');
-  document.getElementById('btnRoad').classList.toggle('active', type==='roadmap');
-  document.getElementById('btnSat').classList.toggle('active', type==='satellite');
-}
+// ── Map Street / Satellite toggle ──
+(function() {
+  var iframe    = document.getElementById('pdMap');
+  var propLat   = {{ property.latitude|default:'null' }};
+  var propLng   = {{ property.longitude|default:'null' }};
+  var propAddr  = '{{ property.address|escapejs }}, {{ property.city|escapejs }}';
+  var hasCoords = propLat !== null && propLng !== null;
+  var gQuery = hasCoords ? (propLat + ',' + propLng) : propAddr;
+  var gZoom  = hasCoords ? 15 : 14;
+
+  // Street / Satellite toggle (t=m roadmap, t=k satellite)
+  window.pdSetMap = function(type) {
+    var t = type === 'satellite' ? 'k' : 'm';
+    var base = 'https://maps.google.com/maps?output=embed&z=' + gZoom + '&t=' + t;
+    iframe.src = hasCoords
+      ? base + '&q=' + propLat + ',' + propLng
+      : base + '&q=' + encodeURIComponent(propAddr);
+    document.getElementById('btnRoad').classList.toggle('active', type === 'street');
+    document.getElementById('btnSat').classList.toggle('active', type === 'satellite');
+  };
+})();
 
 // ── Lightbox ──
-const pdImages = [
+var pdImages = [
   {% for img in images %}
   { src: "{{ img.image.url }}", caption: "{{ img.caption|default:property.title|escapejs }}" }{% if not forloop.last %},{% endif %}
   {% endfor %}
 ];
-const pdTotal = pdImages.length;
-let pdCurrent = 0, pdLbIsOpen = false;
+var pdTotal = pdImages.length;
+var pdCurrent = 0, pdLbIsOpen = false;
 
-const pdStage    = document.getElementById('pdLbStage');
-const pdDotsCont = document.getElementById('pdLbDots');
-const pdThumbsCont = document.getElementById('pdLbThumbs');
+(function() {
+  var pdStage      = document.getElementById('pdLbStage');
+  var pdDotsCont   = document.getElementById('pdLbDots');
+  var pdThumbsCont = document.getElementById('pdLbThumbs');
+  var pdLightbox   = document.getElementById('pdLightbox');
+  if (!pdStage || !pdLightbox) return;
 
-// Build slides, dots, thumbs
-pdImages.forEach((img, i) => {
-  const slide = document.createElement('div');
-  slide.className = 'pd-lb-slide' + (i===0?' active':'');
-  slide.innerHTML = `<img src="${img.src}" alt="${img.caption}" class="pd-lb-slide-img" loading="lazy">`;
-  pdStage.appendChild(slide);
+  // Build slides, dots, thumbs
+  pdImages.forEach(function(img, i) {
+    var slide = document.createElement('div');
+    slide.className = 'pd-lb-slide' + (i===0?' active':'');
+    var si = document.createElement('img');
+    si.src = img.src; si.alt = img.caption; si.className = 'pd-lb-slide-img'; si.loading = 'lazy';
+    slide.appendChild(si);
+    pdStage.appendChild(slide);
 
-  const dot = document.createElement('div');
-  dot.className = 'pd-lb-dot' + (i===0?' active':'');
-  dot.onclick = () => pdLbGoTo(i);
-  pdDotsCont.appendChild(dot);
+    if (pdDotsCont) {
+      var dot = document.createElement('div');
+      dot.className = 'pd-lb-dot' + (i===0?' active':'');
+      dot.onclick = function() { window.pdLbGoTo(i); };
+      pdDotsCont.appendChild(dot);
+    }
 
-  const thumb = document.createElement('div');
-  thumb.className = 'pd-lb-thumb' + (i===0?' active':'');
-  thumb.innerHTML = `<div class="pd-lb-thumb-inner"><img src="${img.src}" alt="${img.caption}" loading="lazy"></div>`;
-  thumb.onclick = () => pdLbGoTo(i);
-  pdThumbsCont.appendChild(thumb);
-});
+    if (pdThumbsCont) {
+      var thumb = document.createElement('div');
+      thumb.className = 'pd-lb-thumb' + (i===0?' active':'');
+      var ti = document.createElement('img');
+      ti.src = img.src; ti.alt = img.caption; ti.loading = 'lazy';
+      var tw = document.createElement('div');
+      tw.className = 'pd-lb-thumb-inner'; tw.appendChild(ti);
+      thumb.appendChild(tw);
+      thumb.onclick = function() { window.pdLbGoTo(i); };
+      pdThumbsCont.appendChild(thumb);
+    }
+  });
 
-function pdLbGoTo(index) {
-  const slides = pdStage.querySelectorAll('.pd-lb-slide');
-  const dots   = pdDotsCont.querySelectorAll('.pd-lb-dot');
-  const thumbs = pdThumbsCont.querySelectorAll('.pd-lb-thumb');
-  slides[pdCurrent].classList.remove('active');
-  dots[pdCurrent].classList.remove('active');
-  thumbs[pdCurrent].classList.remove('active');
-  pdCurrent = (index + pdTotal) % pdTotal;
-  slides[pdCurrent].classList.add('active');
-  dots[pdCurrent].classList.add('active');
-  thumbs[pdCurrent].classList.add('active');
-  document.getElementById('pdLbCounterTxt').textContent = (pdCurrent+1)+' / '+pdTotal;
-  document.getElementById('pdLbCaption').textContent = pdImages[pdCurrent].caption;
-  thumbs[pdCurrent].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
-}
-function pdLbShift(dir) { pdLbGoTo(pdCurrent + dir); }
-function pdOpenLightbox(index) {
-  if (pdTotal === 0) return;
-  pdLbIsOpen = true;
-  pdLbGoTo(index);
-  document.getElementById('pdLightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function pdCloseLightbox() {
-  pdLbIsOpen = false;
-  document.getElementById('pdLightbox').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function pdHandleBackdrop(e) {
-  if (e.target === document.getElementById('pdLightbox') || e.target.classList.contains('pd-lb-inner')) pdCloseLightbox();
-}
-document.addEventListener('keydown', e => {
-  if (!pdLbIsOpen) return;
-  if (e.key==='ArrowRight'||e.key==='ArrowDown') pdLbShift(1);
-  if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   pdLbShift(-1);
-  if (e.key==='Escape') pdCloseLightbox();
-});
-let pdTouchX = null;
-document.getElementById('pdLightbox').addEventListener('touchstart', e=>{ pdTouchX=e.touches[0].clientX; },{passive:true});
-document.getElementById('pdLightbox').addEventListener('touchend', e=>{
-  if(pdTouchX===null) return;
-  const dx = e.changedTouches[0].clientX - pdTouchX;
-  if(Math.abs(dx)>40) pdLbShift(dx<0?1:-1);
-  pdTouchX = null;
-});
+  window.pdLbGoTo = function(index) {
+    var slides = pdStage.querySelectorAll('.pd-lb-slide');
+    var dots   = pdDotsCont ? pdDotsCont.querySelectorAll('.pd-lb-dot') : [];
+    var thumbs = pdThumbsCont ? pdThumbsCont.querySelectorAll('.pd-lb-thumb') : [];
+    if (slides[pdCurrent]) slides[pdCurrent].classList.remove('active');
+    if (dots[pdCurrent])   dots[pdCurrent].classList.remove('active');
+    if (thumbs[pdCurrent]) thumbs[pdCurrent].classList.remove('active');
+    pdCurrent = (index + pdTotal) % pdTotal;
+    if (slides[pdCurrent]) slides[pdCurrent].classList.add('active');
+    if (dots[pdCurrent])   dots[pdCurrent].classList.add('active');
+    if (thumbs[pdCurrent]) thumbs[pdCurrent].classList.add('active');
+    var ctrTxt = document.getElementById('pdLbCounterTxt');
+    var capEl  = document.getElementById('pdLbCaption');
+    if (ctrTxt) ctrTxt.textContent = (pdCurrent+1)+' / '+pdTotal;
+    if (capEl)  capEl.textContent = pdImages[pdCurrent] ? pdImages[pdCurrent].caption : '';
+    if (thumbs[pdCurrent]) thumbs[pdCurrent].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+  };
+
+  window.pdLbShift = function(dir) { window.pdLbGoTo(pdCurrent + dir); };
+
+  window.pdOpenLightbox = function(index) {
+    if (pdTotal === 0) return;
+    pdLbIsOpen = true;
+    window.pdLbGoTo(index);
+    pdLightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.pdCloseLightbox = function() {
+    pdLbIsOpen = false;
+    pdLightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.pdHandleBackdrop = function(e) {
+    if (e.target === pdLightbox || e.target.classList.contains('pd-lb-inner')) window.pdCloseLightbox();
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (!pdLbIsOpen) return;
+    if (e.key==='ArrowRight'||e.key==='ArrowDown') window.pdLbShift(1);
+    if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   window.pdLbShift(-1);
+    if (e.key==='Escape') window.pdCloseLightbox();
+  });
+
+  var pdTouchX = null;
+  pdLightbox.addEventListener('touchstart', function(e){ pdTouchX=e.touches[0].clientX; },{passive:true});
+  pdLightbox.addEventListener('touchend', function(e){
+    if(pdTouchX===null) return;
+    var dx = e.changedTouches[0].clientX - pdTouchX;
+    if(Math.abs(dx)>40) window.pdLbShift(dx<0?1:-1);
+    pdTouchX = null;
+  });
+})();
+
+// ── Property image slideshow ──
+(function(){
+  var box = document.getElementById('propImgBox');
+  if (!box) return;
+  var slides = Array.from(box.getElementsByClassName('prop-img-slide'));
+  var total = slides.length;
+  var cur = 0;
+  var counter = document.getElementById('propImgCounter');
+  var btnPrev = document.getElementById('propImgPrev');
+  var btnNext = document.getElementById('propImgNext');
+  var dots = document.querySelectorAll('#propImgDots .pd-slide-dot');
+  function piUpdate() {
+    if (counter) counter.textContent = (cur+1) + ' / ' + total;
+    if (btnPrev) btnPrev.style.display = cur > 0        ? 'flex' : 'none';
+    if (btnNext) btnNext.style.display = cur < total-1  ? 'flex' : 'none';
+    // Update dot indicators
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === cur); });
+  }
+  window.propImgSlide = function(dir) {
+    if (cur+dir < 0 || cur+dir >= total) return;
+    slides[cur].classList.remove('pi-active');
+    cur += dir;
+    slides[cur].classList.add('pi-active');
+    piUpdate();
+  };
+  window.propImgGoTo = function(idx) {
+    if (idx < 0 || idx >= total || idx === cur) return;
+    slides[cur].classList.remove('pi-active');
+    cur = idx;
+    slides[cur].classList.add('pi-active');
+    piUpdate();
+  };
+  // ── Touch swipe on main image slideshow ──
+  var _swStartX = 0, _swStartY = 0;
+  box.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      _swStartX = e.touches[0].clientX;
+      _swStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  box.addEventListener('touchend', function(e) {
+    if (e.changedTouches.length !== 1) return;
+    var dx = e.changedTouches[0].clientX - _swStartX;
+    var dy = e.changedTouches[0].clientY - _swStartY;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      e.preventDefault();
+      propImgSlide(dx < 0 ? 1 : -1);
+    }
+  });
+  piUpdate();
+})();
+
+// ── Floor plan slideshow ──
+(function(){
+  var box = document.getElementById('fpBox');
+  if (!box) return;
+  var slides = Array.from(box.getElementsByClassName('fp-slide'));
+  var total = slides.length;
+  var cur = 0;
+  var counter = document.getElementById('fpCounter');
+  var btnPrev = document.getElementById('fpPrev');
+  var btnNext = document.getElementById('fpNext');
+  function fpUpdate() {
+    if (counter) counter.textContent = (cur+1) + ' / ' + total;
+    if (btnPrev) btnPrev.style.display = cur > 0        ? 'flex' : 'none';
+    if (btnNext) btnNext.style.display = cur < total-1  ? 'flex' : 'none';
+  }
+  window.fpSlide = function(dir) {
+    if (cur+dir < 0 || cur+dir >= total) return;
+    slides[cur].classList.remove('fp-active');
+    cur += dir;
+    slides[cur].classList.add('fp-active');
+    fpUpdate();
+  };
+  window.pdFpZoom = function(img) {
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(7,25,41,.92);display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+    var zi = document.createElement('img');
+    zi.src = img.src;
+    zi.style.cssText = 'max-width:92vw;max-height:92vh;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.6);';
+    ov.appendChild(zi);
+    ov.onclick = function(){ document.body.removeChild(ov); };
+    document.body.appendChild(ov);
+  };
+  fpUpdate();
+})();
 </script>
 {% endblock %}

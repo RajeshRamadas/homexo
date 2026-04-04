@@ -1,0 +1,608 @@
+{# Shared form body — included by create.html and update.html #}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <!-- Section: Basic Info -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Basic Information</div>
+    <div class="form-group">
+      <label>Property Title *</label>
+      <input type="text" name="title" value="{{ form.title.value|default:'' }}" required placeholder="e.g. The Meridian Penthouse">
+      {% if form.title.errors %}<div class="form-error">{{ form.title.errors.0 }}</div>{% endif %}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="form-group">
+        <label>Listing Type *</label>
+        <select name="listing_type">
+          {% for val, label in form.fields.listing_type.choices %}
+          <option value="{{ val }}" {% if form.listing_type.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.listing_type.errors %}<div class="form-error">{{ form.listing_type.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Property Type *</label>
+        <select name="property_type">
+          {% for val, label in form.fields.property_type.choices %}
+          <option value="{{ val }}" {% if form.property_type.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.property_type.errors %}<div class="form-error">{{ form.property_type.errors.0 }}</div>{% endif %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="5" placeholder="Describe the property — location highlights, features, surroundings...">{{ form.description.value|default:'' }}</textarea>
+    </div>
+  </div>
+
+  <!-- Section: Pricing -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Pricing</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+      <div class="form-group" style="grid-column:span 2;">
+        <label>Price (<span class="rupee">₹</span>) *</label>
+        <input type="number" name="price" value="{{ form.price.value|default:'' }}" required placeholder="e.g. 5000000">
+        {% if form.price.errors %}<div class="form-error">{{ form.price.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Price Label</label>
+        <input type="text" name="price_label" value="{{ form.price_label.value|default:'' }}" placeholder="e.g. / Month">
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <input type="checkbox" name="price_on_req" id="priceOnReq" {% if form.price_on_req.value %}checked{% endif %} style="width:auto;">
+      <label for="priceOnReq" style="font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;">Price on Request (hide price from listing)</label>
+    </div>
+  </div>
+
+  <!-- Section: Location -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Location</div>
+    <div class="form-group">
+      <label>Full Address *</label>
+      <textarea name="address" rows="2" required placeholder="Street address, landmark...">{{ form.address.value|default:'' }}</textarea>
+      {% if form.address.errors %}<div class="form-error">{{ form.address.errors.0 }}</div>{% endif %}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+      <div class="form-group">
+        <label>Locality *</label>
+        <input type="text" name="locality" value="{{ form.locality.value|default:'' }}" required placeholder="e.g. Whitefield">
+        {% if form.locality.errors %}<div class="form-error">{{ form.locality.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>City *</label>
+        <input type="text" name="city" value="{{ form.city.value|default:'Bengaluru' }}" required>
+      </div>
+      <div class="form-group">
+        <label>State</label>
+        <input type="text" name="state" value="{{ form.state.value|default:'Karnataka' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pincode</label>
+      <input type="text" name="pincode" value="{{ form.pincode.value|default:'' }}" placeholder="560001" style="max-width:160px;">
+    </div>
+    <!-- Map location picker -->
+    <div style="margin-top:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:600;color:var(--charcoal);">Pin on Map <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional — click the map or use Detect)</span></div>
+        <button type="button" id="pdLocateBtn" onclick="pdLocateAddress()"
+                style="padding:7px 16px;background:var(--sky);color:#fff;border:none;font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:500;cursor:pointer;">
+          Detect from Address
+        </button>
+      </div>
+      <div id="pdLocationMap" style="height:320px;border:1px solid var(--border);"></div>
+      <p style="font-size:11px;color:var(--warm-grey);margin-top:6px;">Click on the map to drop a pin, or fill the address fields above then click "Detect from Address".</p>
+    </div>
+    <input type="hidden" name="latitude" id="id_latitude" value="{{ form.latitude.value|default:'' }}">
+    <input type="hidden" name="longitude" id="id_longitude" value="{{ form.longitude.value|default:'' }}">
+  </div>
+
+  <!-- Section: Property Details -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Property Details</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+      <div class="form-group">
+        <label>BHK</label>
+        <select name="bhk">
+          {% for val, label in form.fields.bhk.choices %}
+          <option value="{{ val }}" {% if form.bhk.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Bedrooms</label>
+        <input type="number" name="bedrooms" value="{{ form.bedrooms.value|default:'0' }}" min="0" max="20">
+      </div>
+      <div class="form-group">
+        <label>Bathrooms</label>
+        <input type="number" name="bathrooms" value="{{ form.bathrooms.value|default:'0' }}" min="0" max="20">
+      </div>
+      <div class="form-group">
+        <label>Parking Slots</label>
+        <input type="number" name="parking_slots" value="{{ form.parking_slots.value|default:'0' }}" min="0" max="10">
+        <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:13px;cursor:pointer;">
+            <input type="checkbox" name="two_wheeler_parking" value="True"
+                   {% if form.two_wheeler_parking.value %}checked{% endif %} style="width:auto;margin:0;">
+            2-Wheeler
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:13px;cursor:pointer;">
+            <input type="checkbox" name="four_wheeler_parking" value="True"
+                   {% if form.four_wheeler_parking.value %}checked{% endif %} style="width:auto;margin:0;">
+            4-Wheeler
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Area (sq.ft)</label>
+        <input type="number" name="area_sqft" value="{{ form.area_sqft.value|default:'' }}" placeholder="e.g. 1850">
+      </div>
+      <div class="form-group">
+        <label>Carpet Area (sq.ft)</label>
+        <input type="number" name="carpet_area" value="{{ form.carpet_area.value|default:'' }}" placeholder="e.g. 1600">
+      </div>
+      <div class="form-group">
+        <label>Floor No.</label>
+        <input type="number" name="floor_no" value="{{ form.floor_no.value|default:'' }}" min="0">
+      </div>
+      <div class="form-group">
+        <label>Total Floors</label>
+        <input type="number" name="total_floors" value="{{ form.total_floors.value|default:'' }}" min="1">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:4px;">
+      <div class="form-group">
+        <label>Furnishing</label>
+        <select name="furnishing">
+          <option value="">Select...</option>
+          {% for val, label in form.fields.furnishing.choices %}
+          <option value="{{ val }}" {% if form.furnishing.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Facing</label>
+        <input type="text" name="facing" value="{{ form.facing.value|default:'' }}" placeholder="e.g. East, North-East">
+      </div>
+      <div class="form-group">
+        <label>Property Age (yrs)</label>
+        <input type="number" name="age_years" value="{{ form.age_years.value|default:'' }}" min="0">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:4px;">
+      <div class="form-group">
+        <label>Construction Status</label>
+        <select name="construction_status">
+          <option value="">Select...</option>
+          {% for val, label in form.fields.construction_status.choices %}
+          <option value="{{ val }}" {% if form.construction_status.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Possession Date</label>
+        <input type="date" name="possession_date" value="{{ form.possession_date.value|default:'' }}" style="max-width:200px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Ownership & Legal -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Ownership &amp; Legal</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="form-group">
+        <label>Ownership Type</label>
+        <select name="ownership_type">
+          <option value="">Select...</option>
+          {% for val, label in form.fields.ownership_type.choices %}
+          {% if val %}<option value="{{ val }}" {% if form.ownership_type.value == val %}selected{% endif %}>{{ label }}</option>{% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>RERA Approved <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional)</span></label>
+        <label style="display:flex;align-items:center;gap:10px;height:44px;font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;cursor:pointer;">
+          <input type="checkbox" name="rera_approved" id="reraApproved" value="True"
+                 {% if form.rera_approved.value %}checked{% endif %}
+                 style="width:auto;margin:0;" onchange="pdToggleRera(this.checked)">
+          Yes, this property is RERA registered
+        </label>
+      </div>
+    </div>
+    <div class="form-group" id="reraNumberRow"
+         style="margin-top:4px;{% if not form.rera_approved.value %}display:none;{% endif %}">
+      <label>RERA Registration Number</label>
+      <input type="text" name="rera_number" id="id_rera_number"
+             value="{{ form.rera_number.value|default:'' }}"
+             placeholder="e.g. P52100012345"
+             style="max-width:320px;">
+    </div>
+  </div>
+
+  <!-- Section: Property Images -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:8px;">Property Images</div>
+    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Upload up to 10 photos. The first uploaded image becomes the cover photo.</p>
+
+    {% if existing_images %}
+    <div style="font-size:11px;font-weight:600;color:var(--charcoal);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Current Photos</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+      {% for img in existing_images %}
+      <div style="position:relative;width:120px;flex-shrink:0;">
+        <img src="{{ img.image.url }}" alt="" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+        {% if img.is_primary %}
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;">Cover</div>
+        {% endif %}
+        <label style="position:absolute;top:4px;right:4px;background:rgba(190,0,0,.85);color:#fff;font-size:10px;padding:3px 7px;cursor:pointer;display:flex;align-items:center;gap:4px;backdrop-filter:blur(3px);">
+          <input type="checkbox" name="delete_image" value="{{ img.id }}" style="width:auto;margin:0;"> Remove
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px;border:2px dashed var(--border);cursor:pointer;background:var(--ivory);transition:border-color .2s;"
+           onmouseover="this.style.borderColor='var(--sky)'" onmouseout="this.style.borderColor='var(--border)'">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span style="font-size:13px;font-weight:500;color:var(--soft-brown);">Click to select photos</span>
+      <span style="font-size:11px;color:var(--warm-grey);">JPG, PNG, WEBP · Max 5 MB each</span>
+      <input type="file" name="prop_images" multiple accept="image/*" style="display:none;" onchange="pdPreviewImages(this)">
+    </label>
+
+    <!-- New image previews (JS-populated) -->
+    <div id="pdNewImgPreviews" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>
+  </div>
+
+  <!-- Section: Floor Plan -->
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:8px;">Floor Plans</div>
+    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Upload one or more floor plan / layout images (JPG, PNG, WEBP). Max 10 MB each.</p>
+
+    {% if existing_floor_plans %}
+    <div style="font-size:11px;font-weight:600;color:var(--charcoal);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Current Floor Plans</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+      {% for fp in existing_floor_plans %}
+      <div style="position:relative;width:120px;flex-shrink:0;">
+        <img src="{{ fp.image.url }}" alt="Floor Plan" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+        {% if fp.caption %}
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ fp.caption }}</div>
+        {% endif %}
+        <label style="position:absolute;top:4px;right:4px;background:rgba(190,0,0,.85);color:#fff;font-size:10px;padding:3px 7px;cursor:pointer;display:flex;align-items:center;gap:4px;backdrop-filter:blur(3px);">
+          <input type="checkbox" name="delete_floor_plan" value="{{ fp.pk }}" style="width:auto;margin:0;"> Remove
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <label id="pdFpDropzone"
+         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px;border:2px dashed var(--border);cursor:pointer;background:var(--ivory);transition:border-color .2s;"
+         onmouseover="this.style.borderColor='var(--sky)'" onmouseout="this.style.borderColor='var(--border)'">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.5">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <span style="font-size:13px;font-weight:500;color:var(--soft-brown);">Click to upload floor plans</span>
+      <span style="font-size:11px;color:var(--warm-grey);">JPG, PNG, WEBP · Max 10 MB each · Multiple allowed</span>
+      <input type="file" id="id_floor_plan_input" name="floor_plans" accept="image/*"
+             multiple style="display:none;" onchange="pdPreviewFloorPlans(this)">
+    </label>
+    <div id="pdFpPreviews" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>
+  </div>
+
+  <!-- Section: Amenities & Features -->
+  {{ feature_formset.management_form }}
+  <div style="background:var(--white);padding:36px;border:1px solid var(--border);margin-bottom:3px;">
+    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:8px;">Amenities & Features</div>
+    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">List features like Swimming Pool, Gymnasium, 24/7 Security, Clubhouse, etc.</p>
+    <div id="pdAmenityGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      {% for f_form in feature_formset %}
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        {{ f_form.id }}
+        <input type="text" name="{{ f_form.name.html_name }}" value="{{ f_form.name.value|default:'' }}"
+               placeholder="e.g. Swimming Pool"
+               style="flex:1;min-width:120px;padding:9px 13px;border:1px solid var(--border);font-family:'Source Sans 3',sans-serif;font-size:13px;color:var(--charcoal);background:var(--ivory);outline:none;transition:border-color .2s;"
+               onfocus="this.style.borderColor='var(--navy)';this.style.background='var(--white)'"
+               onblur="this.style.borderColor='var(--border)';this.style.background='var(--ivory)'">
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;flex-shrink:0;" title="Upload icon image">
+          {% if f_form.instance.icon_image %}
+          <img src="{{ f_form.instance.icon_image.url }}" alt="" style="width:28px;height:28px;object-fit:contain;border:1px solid var(--border);border-radius:4px;">
+          {% endif %}
+          <input type="file" name="{{ f_form.icon_image.html_name }}" accept="image/*"
+                 style="width:0;height:0;overflow:hidden;position:absolute;opacity:0;"
+                 onchange="pdPreviewAmenityIcon(this)">
+          <span style="padding:5px 10px;border:1px solid var(--border);font-size:11px;color:var(--warm-grey);background:var(--ivory);white-space:nowrap;cursor:pointer;transition:border-color .2s;"
+                onmouseover="this.style.borderColor='var(--sky)';this.style.color='var(--sky)'"
+                onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--warm-grey)'">
+            {% if f_form.instance.icon_image %}Change{% else %}+ Icon{% endif %}
+          </span>
+        </label>
+        {% if f_form.instance.pk %}
+        <label title="Remove this amenity" style="cursor:pointer;color:#c62828;font-size:11px;display:flex;align-items:center;gap:3px;flex-shrink:0;">
+          {{ f_form.DELETE }}✕
+        </label>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div style="margin-top:14px;">
+      <button type="button" onclick="pdAddAmenity()"
+              style="padding:9px 20px;border:1px dashed var(--sky);background:transparent;color:var(--sky);font-family:'Source Sans 3',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;"
+              onmouseover="this.style.background='var(--sky)';this.style.color='#fff'"
+              onmouseout="this.style.background='transparent';this.style.color='var(--sky)'">
+        + Add Amenity
+      </button>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div style="background:var(--white);padding:28px;border:1px solid var(--border);display:flex;gap:16px;justify-content:flex-end;align-items:center;">
+    {% if property %}
+    <a href="{{ property.get_absolute_url }}" class="btn-outline">Cancel</a>
+    <button type="submit" class="btn-primary">Save Changes</button>
+    {% else %}
+    <a href="{% url 'properties:list' %}" class="btn-outline">Cancel</a>
+    <button type="submit" class="btn-primary">Submit for Review</button>
+    {% endif %}
+  </div>
+</form>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// Accumulated file list so multiple picker-opens stack up
+var _pdImageFiles = new DataTransfer();
+
+function pdPreviewImages(input) {
+  // Merge newly picked files into the accumulated list (skip duplicates by name+size)
+  Array.from(input.files).forEach(file => {
+    const isDupe = Array.from(_pdImageFiles.files).some(
+      f => f.name === file.name && f.size === file.size
+    );
+    if (!isDupe) _pdImageFiles.items.add(file);
+  });
+  // Write merged list back to the input so it submits all files
+  input.files = _pdImageFiles.files;
+
+  // Re-render all previews
+  const preview = document.getElementById('pdNewImgPreviews');
+  preview.innerHTML = '';
+  Array.from(_pdImageFiles.files).forEach((file, idx) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const div = document.createElement('div');
+      div.style.cssText = 'position:relative;width:120px;flex-shrink:0;';
+      div.innerHTML = `
+        <img src="${e.target.result}" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${file.name}</div>
+        <button type="button" onclick="pdRemoveImage(${idx})" style="position:absolute;top:3px;right:3px;background:rgba(190,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>`;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Update counter badge
+  const count = _pdImageFiles.files.length;
+  const label = input.closest('label');
+  if (label) {
+    let badge = label.querySelector('.pd-img-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'pd-img-count';
+      badge.style.cssText = 'font-size:12px;color:var(--sky);font-weight:600;';
+      label.appendChild(badge);
+    }
+    badge.textContent = count + ' photo' + (count !== 1 ? 's' : '') + ' selected';
+  }
+}
+
+function pdRemoveImage(removeIdx) {
+  const newDt = new DataTransfer();
+  Array.from(_pdImageFiles.files).forEach((f, i) => {
+    if (i !== removeIdx) newDt.items.add(f);
+  });
+  _pdImageFiles = newDt;
+  // Sync back to the file input
+  const input = document.querySelector('input[name="prop_images"]');
+  if (input) {
+    input.files = _pdImageFiles.files;
+    pdPreviewImages({ files: new DataTransfer().files, closest: () => null }); // re-render without adding
+    // Re-render directly
+    const preview = document.getElementById('pdNewImgPreviews');
+    preview.innerHTML = '';
+    Array.from(_pdImageFiles.files).forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.createElement('div');
+        div.style.cssText = 'position:relative;width:120px;flex-shrink:0;';
+        div.innerHTML = `
+          <img src="${e.target.result}" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${file.name}</div>
+          <button type="button" onclick="pdRemoveImage(${idx})" style="position:absolute;top:3px;right:3px;background:rgba(190,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>`;
+        preview.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+    // Update badge
+    const label = input.closest('label');
+    if (label) {
+      const badge = label.querySelector('.pd-img-count');
+      const count = _pdImageFiles.files.length;
+      if (badge) badge.textContent = count ? count + ' photo' + (count !== 1 ? 's' : '') + ' selected' : '';
+    }
+  }
+}
+
+function pdToggleRera(show) {
+  var row = document.getElementById('reraNumberRow');
+  if (row) row.style.display = show ? '' : 'none';
+  if (!show) {
+    var inp = document.getElementById('id_rera_number');
+    if (inp) inp.value = '';
+  }
+}
+
+// Accumulated floor plan file list so multiple picker-opens stack up
+var _pdFpFiles = new DataTransfer();
+
+function pdPreviewFloorPlans(input) {
+  // Merge newly picked files into accumulated list (skip duplicates by name+size)
+  Array.from(input.files).forEach(function(file) {
+    var isDupe = Array.from(_pdFpFiles.files).some(function(f) {
+      return f.name === file.name && f.size === file.size;
+    });
+    if (!isDupe) _pdFpFiles.items.add(file);
+  });
+  // Write merged list back so the form submits all files
+  input.files = _pdFpFiles.files;
+  pdRenderFpPreviews();
+
+  // Counter badge
+  var count = _pdFpFiles.files.length;
+  var label = input.closest('label');
+  if (label) {
+    var badge = label.querySelector('.pd-fp-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'pd-fp-count';
+      badge.style.cssText = 'font-size:12px;color:var(--sky);font-weight:600;';
+      label.appendChild(badge);
+    }
+    badge.textContent = count + ' floor plan' + (count !== 1 ? 's' : '') + ' selected';
+  }
+}
+
+function pdRenderFpPreviews() {
+  var preview = document.getElementById('pdFpPreviews');
+  preview.innerHTML = '';
+  Array.from(_pdFpFiles.files).forEach(function(file, idx) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var div = document.createElement('div');
+      div.style.cssText = 'position:relative;width:120px;flex-shrink:0;';
+      div.innerHTML =
+        '<img src="' + e.target.result + '" style="width:120px;height:90px;object-fit:cover;display:block;border:1px solid var(--border);">' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,43,78,.75);color:#fff;font-size:10px;padding:3px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + file.name + '</div>' +
+        '<button type="button" onclick="pdRemoveFloorPlan(' + idx + ')" style="position:absolute;top:3px;right:3px;background:rgba(190,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>';
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function pdRemoveFloorPlan(removeIdx) {
+  var newDt = new DataTransfer();
+  Array.from(_pdFpFiles.files).forEach(function(f, i) {
+    if (i !== removeIdx) newDt.items.add(f);
+  });
+  _pdFpFiles = newDt;
+  var input = document.querySelector('input[name="floor_plans"]');
+  if (input) {
+    input.files = _pdFpFiles.files;
+    // Update badge
+    var label = input.closest('label');
+    if (label) {
+      var badge = label.querySelector('.pd-fp-count');
+      var count = _pdFpFiles.files.length;
+      if (badge) badge.textContent = count ? count + ' floor plan' + (count !== 1 ? 's' : '') + ' selected' : '';
+    }
+  }
+  pdRenderFpPreviews();
+}
+
+function pdAddAmenity() {
+  var total = document.getElementById('id_features-TOTAL_FORMS');
+  var idx = parseInt(total.value);
+  var grid = document.getElementById('pdAmenityGrid');
+  var div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
+  div.innerHTML =
+    '<input type="hidden" name="features-' + idx + '-id" value="">' +
+    '<input type="text" name="features-' + idx + '-name"' +
+    ' placeholder="e.g. Swimming Pool"' +
+    ' style="flex:1;min-width:120px;padding:9px 13px;border:1px solid var(--border);font-family:\'DM Sans\',sans-serif;font-size:13px;color:var(--charcoal);background:var(--ivory);outline:none;transition:border-color .2s;"' +
+    ' onfocus="this.style.borderColor=\'var(--navy)\';this.style.background=\'var(--white)\'"' +
+    ' onblur="this.style.borderColor=\'var(--border)\';this.style.background=\'var(--ivory)\'">' +
+    '<label style="display:flex;align-items:center;gap:4px;cursor:pointer;flex-shrink:0;" title="Upload icon image">' +
+    '<input type="file" name="features-' + idx + '-icon_image" accept="image/*"' +
+    ' style="width:0;height:0;overflow:hidden;position:absolute;opacity:0;"' +
+    ' onchange="pdPreviewAmenityIcon(this)">' +
+    '<span style="padding:5px 10px;border:1px solid var(--border);font-size:11px;color:var(--warm-grey);background:var(--ivory);white-space:nowrap;cursor:pointer;"' +
+    ' onmouseover="this.style.borderColor=\'var(--sky)\';this.style.color=\'var(--sky)\'"' +
+    ' onmouseout="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--warm-grey)\'">+ Icon</span>' +
+    '</label>' +
+    '<button type="button" title="Remove" onclick="this.closest(\'div\').remove()"' +
+    ' style="background:none;border:none;color:#c62828;font-size:20px;cursor:pointer;line-height:1;padding:0 4px;flex-shrink:0;">×</button>';
+  grid.appendChild(div);
+  total.value = idx + 1;
+}
+
+function pdPreviewAmenityIcon(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var label = input.closest('label');
+  // Remove any existing preview img in this label
+  var oldImg = label.querySelector('img');
+  if (oldImg) oldImg.remove();
+  // Create preview
+  var img = document.createElement('img');
+  img.style.cssText = 'width:28px;height:28px;object-fit:contain;border:1px solid var(--border);border-radius:4px;';
+  var reader = new FileReader();
+  reader.onload = function(e) { img.src = e.target.result; };
+  reader.readAsDataURL(file);
+  label.insertBefore(img, input);
+  // Update button text
+  var span = label.querySelector('span');
+  if (span) span.textContent = 'Change';
+}
+
+(function initPropertyMap() {
+  var mapEl = document.getElementById('pdLocationMap');
+  if (!mapEl || typeof L === 'undefined') return;
+  var latIn = document.getElementById('id_latitude');
+  var lngIn = document.getElementById('id_longitude');
+  var hasPin = !!(latIn.value && lngIn.value);
+  var initLat = hasPin ? parseFloat(latIn.value) : 12.9716;
+  var initLng = hasPin ? parseFloat(lngIn.value) : 77.5946;
+  var map = L.map('pdLocationMap').setView([initLat, initLng], hasPin ? 15 : 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  }).addTo(map);
+  var marker = hasPin ? L.marker([initLat, initLng]).addTo(map) : null;
+  map.on('click', function(e) {
+    latIn.value = e.latlng.lat.toFixed(7);
+    lngIn.value = e.latlng.lng.toFixed(7);
+    if (marker) marker.setLatLng(e.latlng);
+    else marker = L.marker(e.latlng).addTo(map);
+  });
+  window.pdLocateAddress = function() {
+    var q = [
+      (document.querySelector('[name=address]') || {}).value,
+      (document.querySelector('[name=locality]') || {}).value,
+      (document.querySelector('[name=city]') || {}).value,
+      (document.querySelector('[name=state]') || {}).value,
+      (document.querySelector('[name=pincode]') || {}).value,
+      'India'
+    ].filter(Boolean).join(', ');
+    if (!q.trim()) { alert('Please fill in at least the address or city first.'); return; }
+    var btn = document.getElementById('pdLocateBtn');
+    btn.textContent = 'Searching\u2026'; btn.disabled = true;
+    fetch('https://nominatim.openstreetmap.org/search?' + new URLSearchParams({q: q, format: 'json', limit: '1'}), {
+      headers: {'Accept-Language': 'en'}
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      btn.textContent = 'Detect from Address'; btn.disabled = false;
+      if (!data.length) { alert('Location not found. Try a more specific address.'); return; }
+      var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+      latIn.value = lat.toFixed(7); lngIn.value = lng.toFixed(7);
+      map.setView([lat, lng], 16);
+      if (marker) marker.setLatLng([lat, lng]);
+      else marker = L.marker([lat, lng]).addTo(map);
+    })
+    .catch(function() { btn.textContent = 'Detect from Address'; btn.disabled = false; });
+  };
+})();
+</script>

@@ -5,14 +5,15 @@ Django Settings
 
 from pathlib import Path
 import os
+import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-homexo-change-this-in-production-use-env-variable'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-homexo-change-this-in-production-use-env-variable')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # ─── APPLICATIONS ────────────────────────────────────────────────────────────
 DJANGO_APPS = [
@@ -23,24 +24,25 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
 ]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'social_django',
 ]
 
 LOCAL_APPS = [
     'accounts',
     'properties',
-    'agents',
     'enquiries',
     'blog',
     'testimonials',
     'wishlist',
     'pages',
-    'campaigns',
+    'legal_services',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -59,6 +61,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'homexo.urls'
 
+# ─── AUTHENTICATION BACKENDS ─────────────────────────────────────────────────
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # ─── TEMPLATES ────────────────────────────────────────────────────────────────
 TEMPLATES = [
     {
@@ -72,6 +81,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'pages.context_processors.global_context',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -80,24 +91,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'homexo.wsgi.application'
 
 # ─── DATABASE ─────────────────────────────────────────────────────────────────
+# Reads from environment: uses PostgreSQL if DB_ENGINE is set, otherwise SQLite.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3'),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
-
-# For production, switch to PostgreSQL:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME', 'homexo_db'),
-#         'USER': os.environ.get('DB_USER', 'postgres'),
-#         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-#         'HOST': os.environ.get('DB_HOST', 'localhost'),
-#         'PORT': os.environ.get('DB_PORT', '5432'),
-#     }
-# }
 
 # ─── AUTH ─────────────────────────────────────────────────────────────────────
 AUTH_USER_MODEL = 'accounts.User'
@@ -112,6 +116,38 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# ─── SOCIAL AUTH (Google & Facebook OAuth) ───────────────────────────────────
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_OAUTH2_KEY', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OAUTH2_SECRET', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE  = ['openid', 'email', 'profile']
+
+SOCIAL_AUTH_FACEBOOK_KEY    = os.environ.get('FACEBOOK_APP_ID', '')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET', '')
+SOCIAL_AUTH_FACEBOOK_SCOPE  = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,email,first_name,last_name',
+}
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL      = '/accounts/profile/'
+SOCIAL_AUTH_LOGIN_ERROR_URL         = '/accounts/login/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL   = '/accounts/profile/'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/accounts/profile/'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'accounts.pipeline.get_or_create_user',          # custom: email-based lookup
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'accounts.pipeline.save_profile_data',           # custom: sync name fields
+)
+
+# Raise an error if GOOGLE/FB keys are missing in production (fail fast on misconfiguration)
+SOCIAL_AUTH_RAISE_EXCEPTIONS = not DEBUG
 
 # ─── INTERNATIONALISATION ─────────────────────────────────────────────────────
 LANGUAGE_CODE = 'en-us'
@@ -154,17 +190,23 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # ─── EMAIL ────────────────────────────────────────────────────────────────────
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# For production:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# Set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend in .env for real mail.
+# Leave as console backend in development to print emails to terminal.
+EMAIL_BACKEND         = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST            = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT            = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS         = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER       = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD   = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL    = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@homexo.in')
+ENQUIRY_NOTIFICATION_EMAIL = os.environ.get('ENQUIRY_NOTIFICATION_EMAIL', 'enquiries@homexo.in')
 
-DEFAULT_FROM_EMAIL = 'noreply@homexo.in'
-ENQUIRY_NOTIFICATION_EMAIL = 'enquiries@homexo.in'
+# ─── TWILIO (Phone OTP) ───────────────────────────────────────────────────────
+# Sign up at https://www.twilio.com and get a trial phone number.
+TWILIO_ACCOUNT_SID  = os.environ.get('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN   = os.environ.get('TWILIO_AUTH_TOKEN', '')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')  # e.g. +12015551234
+# Leave blank in dev — OTPs will print to the terminal console instead.
 
 # ─── CACHE ────────────────────────────────────────────────────────────────────
 CACHES = {
@@ -173,3 +215,52 @@ CACHES = {
         'LOCATION': 'homexo-cache',
     }
 }
+
+# ─── LOGGING ──────────────────────────────────────────────────────────────────
+# Suppress noisy Chrome DevTools auto-probe from the dev server log.
+class _IgnoreChromeDevTools(logging.Filter):
+    def filter(self, record):
+        return '/.well-known/appspecific/com.chrome.devtools' not in record.getMessage()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'ignore_chrome_devtools': {
+            '()': _IgnoreChromeDevTools,
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['ignore_chrome_devtools'],
+        },
+    },
+    'loggers': {
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# ─── PRODUCTION SECURITY ──────────────────────────────────────────────────────
+# These only activate when DEBUG=False (i.e., on the live server).
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    # Trust the HTTPS origins declared in ALLOWED_HOSTS for CSRF
+    CSRF_TRUSTED_ORIGINS = [
+        f'https://{host}' for host in ALLOWED_HOSTS if host not in ('', '*')
+    ]
+
+    # Reuse DB connections across requests (seconds)
+    DATABASES['default']['CONN_MAX_AGE'] = 60

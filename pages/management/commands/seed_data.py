@@ -5,7 +5,6 @@ Run with: python manage.py seed_data
 
 Creates:
   - 1 superuser
-  - 3 agents
   - 10 property listings (mix of featured, signature, buy/rent)
   - 3 testimonials
   - 3 blog posts
@@ -14,7 +13,6 @@ Creates:
 
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from decimal import Decimal
 
 User = get_user_model()
 
@@ -45,35 +43,8 @@ class Command(BaseCommand):
             tags[name] = tag
         self.stdout.write(self.style.SUCCESS(f'  ✓ {len(tags)} tags created'))
 
-        # ── Agents ────────────────────────────────────────────────────────────
-        from agents.models import Agent
-        agent_data = [
-            {'email': 'priya@homexo.in', 'first_name': 'Priya', 'last_name': 'Sharma',
-             'spec': 'Luxury Villas & Penthouses', 'exp': 8, 'rating': '4.9', 'rera': 'KA-REA-12345'},
-            {'email': 'rahul@homexo.in', 'first_name': 'Rahul', 'last_name': 'Mehta',
-             'spec': 'Commercial & Investment Properties', 'exp': 12, 'rating': '4.7', 'rera': 'KA-REA-67890'},
-            {'email': 'ananya@homexo.in', 'first_name': 'Ananya', 'last_name': 'Reddy',
-             'spec': 'New Projects & Plots', 'exp': 5, 'rating': '4.8', 'rera': 'KA-REA-11223'},
-        ]
-        agents = []
-        for ad in agent_data:
-            if not User.objects.filter(email=ad['email']).exists():
-                user = User.objects.create_user(
-                    email=ad['email'], password='agent123',
-                    first_name=ad['first_name'], last_name=ad['last_name'], role='agent'
-                )
-                agent = Agent.objects.create(
-                    user=user, specialization=ad['spec'],
-                    experience_years=ad['exp'], rating=Decimal(ad['rating']),
-                    rera_number=ad['rera'], is_verified=True,
-                    phone='+91 98765 00' + str(agent_data.index(ad) + 1).zfill(3),
-                )
-                agents.append(agent)
-        self.stdout.write(self.style.SUCCESS(f'  ✓ {len(agents)} agents created'))
-
         # ── Properties ────────────────────────────────────────────────────────
         from properties.models import Property
-        all_agents = list(Agent.objects.all())
         props_data = [
             {'title': 'The Celestia Sky Estate', 'type': 'buy', 'ptype': 'villa',
              'price': 22_00_00_000, 'locality': 'Sadashivanagar', 'beds': 6, 'baths': 5, 'sqft': 9200,
@@ -121,10 +92,8 @@ class Command(BaseCommand):
         created = 0
         for i, pd in enumerate(props_data):
             if not Property.objects.filter(title=pd['title']).exists():
-                agent = all_agents[i % len(all_agents)] if all_agents else None
                 prop = Property.objects.create(
                     owner=User.objects.filter(role='admin').first(),
-                    agent=agent,
                     title=pd['title'],
                     listing_type=pd['type'],
                     property_type=pd['ptype'],
@@ -189,5 +158,5 @@ class Command(BaseCommand):
                 )
         self.stdout.write(self.style.SUCCESS(f'  ✓ {len(posts)} blog posts created'))
 
-        self.stdout.write('\n' + self.style.SUCCESS('✅ Seed complete! Visit http://127.0.0.1:8000'))
+        self.stdout.write('\n' + self.style.SUCCESS('✅ Seed complete! Visit https://homexo.in'))
         self.stdout.write(self.style.WARNING('   Admin: admin@homexo.in / admin123'))

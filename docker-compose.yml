@@ -1,0 +1,46 @@
+# docker-compose.yml — Local development
+# Usage: docker compose up --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-homexo_db}
+      POSTGRES_USER: ${DB_USER:-homexo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-homexo_dev_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-homexo}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app                       # live-reload in dev
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_HOST: db
+      DB_PORT: "5432"
+      DEBUG: "True"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  media_data:

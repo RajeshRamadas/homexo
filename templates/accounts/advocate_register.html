@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Advocate Registration — HOMEXO{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block content %}
+<section class="section" style="background:var(--ivory); min-height:80vh; display:flex; align-items:center;">
+  <div style="max-width:540px; margin:0 auto; width:100%; background:var(--white); padding:40px; border-radius:12px; border:1px solid var(--border); box-shadow:0 12px 32px rgba(13,27,42,0.04);">
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:rgba(74,144,196,0.1); border-radius:50%; margin-bottom:16px;">
+        <span style="font-size:24px;">⚖️</span>
+      </div>
+      <h1 class="section-title" style="font-size:28px; margin-bottom:8px;">Join as an Advocate</h1>
+      <p style="color:var(--warm-grey); font-size:14px; line-height:1.6;">Partner with HOMEXO to provide premium legal verification services. Your application and documents will be reviewed by our team.</p>
+    </div>
+
+    <form method="POST" action="{% url 'advocate_signup' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      {% if form.errors %}
+      <div class="message-alert error" style="margin-bottom:24px;">
+        <span style="font-size:13px;">Please correct the errors below.</span>
+      </div>
+      {% endif %}
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>First Name</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}
+            <div class="form-error">{{ form.first_name.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>Last Name</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}
+            <div class="form-error">{{ form.last_name.errors.0 }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>Email Address</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <div class="form-error">{{ form.email.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>Phone Number</label>
+        {{ form.phone }}
+        {% if form.phone.errors %}
+          <div class="form-error">{{ form.phone.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>Full Address</label>
+        {{ form.address }}
+        {% if form.address.errors %}
+          <div class="form-error">{{ form.address.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group" style="margin-bottom:24px;">
+        <label>Bar Registration Number</label>
+        {{ form.bar_number }}
+        {% if form.bar_number.errors %}
+          <div class="form-error">{{ form.bar_number.errors.0 }}</div>
+        {% endif %}
+      </div>
+      
+      <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-bottom: 24px;">
+        <h3 style="font-size: 16px; margin-bottom: 20px; color: var(--navy);">Required Documents (Images only)</h3>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label>Bar Council Certificate</label>
+            {{ form.bar_council_certificate }}
+            {% if form.bar_council_certificate.errors %}
+              <div class="form-error">{{ form.bar_council_certificate.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label>Aadhaar Card (Front & Back)</label>
+            {{ form.aadhaar_image }}
+            {% if form.aadhaar_image.errors %}
+              <div class="form-error">{{ form.aadhaar_image.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:16px;">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label>Address Proof (Utility Bill / Passport)</label>
+            {{ form.address_proof_image }}
+            {% if form.address_proof_image.errors %}
+              <div class="form-error">{{ form.address_proof_image.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--warm-grey); margin-top:6px;">All documents will be verified by our legal board before your account is activated.</div>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%; border-radius:6px; padding:18px;">Submit Application</button>
+      
+      <div style="text-align:center; margin-top:24px; font-size:13px; color:var(--warm-grey);">
+        Already have an account? <a href="{% url 'accounts:login' %}" style="color:var(--navy); font-weight:500;">Sign in here</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .form-group input { border-radius: 6px; }
+  .form-group input:focus { border-color: var(--sky); box-shadow: 0 0 0 3px rgba(74,144,196,0.1); }
+</style>
+{% endblock %}

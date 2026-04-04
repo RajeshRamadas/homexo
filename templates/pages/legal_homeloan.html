@@ -2,11 +2,12 @@
 {% load static %}
 
 {% block title %}Property Legal & Home Loan Services — HOMEXO{% endblock %}
+{% block meta_description %}Complete property legal and home loan services from HOMEXO. Title verification, documentation, best loan rates from 25+ banks, and end-to-end support.{% endblock %}
 
 {% block extra_head %}
 <style>
   /* ── Base ──────────────────────────────────────────────────── */
-  .ll-page { font-family: 'DM Sans', sans-serif; }
+  .ll-page { font-family: 'Source Sans 3', sans-serif; }
   .section-eyebrow {
     display: inline-flex; align-items: center; gap: 14px;
     font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
@@ -14,7 +15,7 @@
   }
   .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
   .section-heading {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: clamp(32px, 4vw, 50px); font-weight: 300;
     line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
   }
@@ -39,7 +40,7 @@
   }
   .ll-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
   .ll-hero h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
     color: #fff; margin-bottom: 20px; max-width: 700px;
   }
@@ -52,7 +53,7 @@
   .ll-hero-tabs { display: flex; gap: 4px; margin-bottom: 40px; flex-wrap: wrap; }
   .ll-hero-tab {
     padding: 12px 28px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif; cursor: pointer; border: none;
+    font-family: 'Source Sans 3', sans-serif; cursor: pointer; border: none;
     transition: all .3s; text-decoration: none; display: inline-block;
   }
   .ll-hero-tab.legal { background: var(--sky); color: #fff; }
@@ -66,7 +67,7 @@
     padding: 24px 20px; transition: background .3s;
   }
   .ll-hero-card:hover { background: rgba(74,144,196,.12); }
-  .ll-hero-card-val { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .ll-hero-card-val { font-family: 'Source Sans 3', sans-serif; font-size: 32px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
   .ll-hero-card-val span { font-size: .6em; color: var(--sky); }
   .ll-hero-card-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
 
@@ -78,7 +79,7 @@
   .ll-tabs-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: flex; gap: 0; }
   .ll-tab-btn {
     padding: 18px 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; background: none;
+    font-family: 'Source Sans 3', sans-serif; cursor: pointer; border: none; background: none;
     color: var(--warm-grey); border-bottom: 2px solid transparent; margin-bottom: -1px;
     transition: all .3s;
   }
@@ -104,7 +105,7 @@
   .ll-svc-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.1); transform: translateY(-3px); }
   .ll-svc-card:hover::before { transform: scaleY(1); }
   .ll-svc-icon { color: var(--sky); margin-bottom: 18px; }
-  .ll-svc-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--charcoal); margin-bottom: 10px; font-weight: 500; }
+  .ll-svc-name { font-family: 'Source Sans 3', sans-serif; font-size: 19px; color: var(--charcoal); margin-bottom: 10px; font-weight: 500; }
   .ll-svc-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
   .ll-svc-tag { display: inline-block; margin-top: 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 10px; }
 
@@ -125,23 +126,23 @@
   .ll-proc-num {
     width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(74,144,196,.3);
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
+    font-family: 'Source Sans 3', sans-serif; font-size: 20px; font-weight: 300;
     color: var(--sky); background: var(--charcoal); margin-bottom: 20px;
   }
-  .ll-proc-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
+  .ll-proc-title { font-family: 'Source Sans 3', sans-serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
   .ll-proc-desc { font-size: 11px; line-height: 1.65; color: rgba(255,255,255,.4); font-weight: 300; }
 
   /* ── Loan Sidebar Card ─────────────────────────────────────── */
   .ll-sidebar { display: flex; flex-direction: column; gap: 20px; }
   .ll-sidebar-card { background: var(--navy); padding: 28px; }
-  .ll-sidebar-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #fff; margin-bottom: 16px; }
+  .ll-sidebar-title { font-family: 'Source Sans 3', sans-serif; font-size: 18px; color: #fff; margin-bottom: 16px; }
   .ll-sidebar-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(74,144,196,.12); }
   .ll-sidebar-item:last-child { border-bottom: none; }
   .ll-sidebar-item-icon { color: var(--sky); flex-shrink: 0; }
   .ll-sidebar-item-text { font-size: 12px; color: rgba(255,255,255,.7); }
   .ll-enquire-btn {
     display: block; padding: 14px 24px; background: var(--sky); color: #fff;
-    text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif;
+    text-align: center; text-decoration: none; font-family: 'Source Sans 3', sans-serif;
     font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;
     transition: background .3s;
   }
@@ -155,8 +156,8 @@
   }
   .ll-loan-card:hover { box-shadow: 0 12px 36px rgba(13,43,78,.09); transform: translateY(-3px); }
   .ll-loan-card-icon { color: var(--sky); margin-bottom: 18px; }
-  .ll-loan-card-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--charcoal); margin-bottom: 8px; font-weight: 500; }
-  .ll-loan-rate { font-size: 22px; font-weight: 300; color: var(--sky); margin-bottom: 5px; font-family: 'Cormorant Garamond', serif; }
+  .ll-loan-card-name { font-family: 'Source Sans 3', sans-serif; font-size: 20px; color: var(--charcoal); margin-bottom: 8px; font-weight: 500; }
+  .ll-loan-rate { font-size: 22px; font-weight: 300; color: var(--sky); margin-bottom: 5px; font-family: 'Source Sans 3', sans-serif; }
   .ll-loan-rate span { font-size: 12px; color: var(--warm-grey); font-weight: 300; }
   .ll-loan-desc { font-size: 12px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; margin-top: 12px; }
 
@@ -164,7 +165,7 @@
   .ll-banks { padding: 60px 40px; background: var(--ivory); }
   .ll-banks-inner { max-width: 1100px; margin: 0 auto; }
   .ll-banks-header { display: flex; align-items: center; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
-  .ll-banks-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--charcoal); }
+  .ll-banks-header h3 { font-family: 'Source Sans 3', sans-serif; font-size: 26px; font-weight: 300; color: var(--charcoal); }
   .ll-banks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
   .ll-bank-pill {
     background: #fff; border: 1px solid var(--border); padding: 18px 14px;
@@ -178,31 +179,31 @@
   .ll-eligibility { padding: 80px 40px; background: #fff; }
   .ll-elig-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
   .ll-elig-form { background: var(--ivory); border: 1px solid var(--border); padding: 36px; }
-  .ll-elig-form-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
+  .ll-elig-form-title { font-family: 'Source Sans 3', sans-serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
   .ll-elig-form-sub { font-size: 12px; color: var(--warm-grey); margin-bottom: 24px; }
   .ll-elig-input {
     width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
-    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    border: 1px solid var(--border); font-family: 'Source Sans 3', sans-serif;
     font-size: 13px; color: var(--charcoal); background: #fff; outline: none;
     transition: border-color .3s;
   }
   .ll-elig-input:focus { border-color: var(--sky); }
   .ll-elig-select {
     width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
-    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
+    border: 1px solid var(--border); font-family: 'Source Sans 3', sans-serif;
     font-size: 13px; color: var(--charcoal); background: #fff; outline: none;
     appearance: none; cursor: pointer; transition: border-color .3s;
   }
   .ll-elig-select:focus { border-color: var(--sky); }
   .ll-elig-btn {
     width: 100%; padding: 14px; background: var(--navy); color: #fff; border: none;
-    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 11px; letter-spacing: 2px;
     text-transform: uppercase; cursor: pointer; transition: background .3s;
   }
   .ll-elig-btn:hover { background: var(--sky); }
   .ll-elig-result { display: none; background: var(--navy); padding: 24px; margin-top: 20px; text-align: center; }
   .ll-elig-result.show { display: block; }
-  .ll-elig-result-val { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: #fff; }
+  .ll-elig-result-val { font-family: 'Source Sans 3', sans-serif; font-size: 40px; font-weight: 300; color: #fff; }
   .ll-elig-result-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 6px; }
   /* Info side */
   .ll-elig-info { display: flex; flex-direction: column; gap: 28px; padding-top: 8px; }
@@ -222,19 +223,19 @@
   /* ── CTA ───────────────────────────────────────────────────── */
   .ll-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); }
   .ll-cta-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start; }
-  .ll-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
+  .ll-cta h2 { font-family: 'Source Sans 3', sans-serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
   .ll-cta h2 em { font-style: italic; color: var(--sky); }
   .ll-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
   .ll-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
   .ll-checklist li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.75); }
   .ll-checklist li svg { color: var(--sky); flex-shrink: 0; }
   .ll-cta-form { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2); padding: 32px; }
-  .ll-cta-form-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
+  .ll-cta-form-title { font-family: 'Source Sans 3', sans-serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
   .ll-cta-form-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 22px; }
   .ll-cta-input {
     width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
     background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
-    color: rgba(255,255,255,.9); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+    color: rgba(255,255,255,.9); font-family: 'Source Sans 3', sans-serif; font-size: 13px; outline: none;
     transition: border-color .3s;
   }
   .ll-cta-input::placeholder { color: rgba(255,255,255,.35); }
@@ -242,13 +243,13 @@
   .ll-cta-select {
     width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
     background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
-    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: rgba(255,255,255,.8); font-family: 'Source Sans 3', sans-serif; font-size: 13px;
     outline: none; appearance: none; cursor: pointer;
   }
   .ll-cta-select option { background: #0D2B4E; color: #fff; }
   .ll-cta-submit {
     width: 100%; padding: 14px; background: var(--sky); color: #fff; border: none;
-    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 11px; letter-spacing: 2px;
     text-transform: uppercase; cursor: pointer; transition: background .3s;
   }
   .ll-cta-submit:hover { background: #3a7ab0; }
@@ -304,7 +305,7 @@
           <div class="ll-hero-card-lbl">Legal Cases</div>
         </div>
         <div class="ll-hero-card">
-          <div class="ll-hero-card-val">₹4,200<span>Cr</span></div>
+          <div class="ll-hero-card-val"><span class="rupee">₹</span>4,200<span>Cr</span></div>
           <div class="ll-hero-card-lbl">Loans Processed</div>
         </div>
         <div class="ll-hero-card">
@@ -419,11 +420,11 @@
               </div>
               <div class="ll-sidebar-item" style="justify-content:space-between;">
                 <span style="font-size:12px;color:rgba(255,255,255,.5)">Up to 1 Cr</span>
-                <span style="font-size:13px;font-weight:500;color:#fff">₹5,000</span>
+                <span style="font-size:13px;font-weight:500;color:#fff"><span class="rupee">₹</span>5,000</span>
               </div>
               <div class="ll-sidebar-item" style="justify-content:space-between;">
                 <span style="font-size:12px;color:rgba(255,255,255,.5)">1 Cr – 5 Cr</span>
-                <span style="font-size:13px;font-weight:500;color:#fff">₹10,000</span>
+                <span style="font-size:13px;font-weight:500;color:#fff"><span class="rupee">₹</span>10,000</span>
               </div>
               <div class="ll-sidebar-item" style="justify-content:space-between;">
                 <span style="font-size:12px;color:rgba(255,255,255,.5)">Above 5 Cr</span>
@@ -490,7 +491,7 @@
           <div class="ll-loan-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
           <div class="ll-loan-card-name">Home Renovation Loan</div>
           <div class="ll-loan-rate">9.00% <span>p.a. onwards</span></div>
-          <p class="ll-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to ₹50L for existing home renovations without additional collateral.</p>
+          <p class="ll-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to <span class="rupee">₹</span>50L for existing home renovations without additional collateral.</p>
         </div>
 
         <div class="ll-loan-card">
@@ -607,9 +608,12 @@
         </ul>
       </div>
       <div>
-        <form class="ll-cta-form" method="post" action="{% url 'enquiries:create' %}">
+        
+<form class="ll-cta-form" method="post" action="{% url 'enquiries:create' %}">
           {% csrf_token %}
-          <input type="hidden" name="service" value="legal_homeloan">
+          <input type="hidden" name="enquiry_type" value="home_loan">
+          <input type="hidden" name="source" value="legal_homeloan">
+          <input type="hidden" name="service_detail" value="legal_homeloan">
           <div class="ll-cta-form-title">Get Expert Assistance</div>
           <p class="ll-cta-form-sub">Tell us what you need — legal help, a loan, or both.</p>
           <input class="ll-cta-input" type="text" name="name" placeholder="Your Full Name" required>
@@ -658,7 +662,7 @@ document.getElementById('eligCalcBtn').addEventListener('click', function () {
   // FOIR (Fixed Obligation to Income Ratio) — most banks allow up to 50–55%
   const availableEMI = salary * 0.55 - obligations;
   if (availableEMI <= 0) {
-    document.getElementById('eligAmount').textContent = '₹0';
+    document.getElementById('eligAmount').textContent = '<span class="rupee">₹</span>0';
     document.getElementById('eligResult').classList.add('show');
     return;
   }
@@ -671,8 +675,8 @@ document.getElementById('eligCalcBtn').addEventListener('click', function () {
   const crore = principal / 10000000;
   const lakh  = principal / 100000;
   const display = crore >= 1
-    ? '₹' + crore.toFixed(2) + ' Cr'
-    : '₹' + lakh.toFixed(1) + ' L';
+    ? '<span class="rupee">₹</span>' + crore.toFixed(2) + ' Cr'
+    : '<span class="rupee">₹</span>' + lakh.toFixed(1) + ' L';
 
   document.getElementById('eligAmount').textContent = display;
   document.getElementById('eligResult').classList.add('show');

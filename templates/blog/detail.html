@@ -1,6 +1,47 @@
 {% extends 'base.html' %}
 {% block title %}{{ post.title }} — HOMEXO Insights{% endblock %}
 {% block meta_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block og_image %}{% if post.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ post.title|escapejs }}",
+  "description": "{{ post.excerpt|default:post.title|escapejs }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if post.cover_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}",{% endif %}
+  {% if post.published_at %}"datePublished": "{{ post.published_at|date:'c' }}",{% endif %}
+  "dateModified": "{{ post.updated_at|date:'c' }}",
+  {% if post.author %}"author": {
+    "@type": "Person",
+    "name": "{{ post.author.get_full_name|escapejs }}"
+  },{% endif %}
+  "publisher": {
+    "@type": "Organization",
+    "name": "HOMEXO"
+  },
+  "mainEntityOfPage": "{{ request.build_absolute_uri }}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ post.title|truncatewords:6 }}"}
+  ]
+}
+</script>
+{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -82,7 +123,7 @@
   .article-read-time::before { content: ''; display: block; width: 16px; height: 1px; background: var(--border); }
 
   .article-hero-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: clamp(36px, 3.8vw, 56px);
     font-weight: 300; line-height: 1.1;
     color: var(--charcoal); margin-bottom: 24px; max-width: 780px;
@@ -108,7 +149,7 @@
   }
   .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .author-avatar-initials {
-    font-family: 'Cormorant Garamond', serif; font-size: 16px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 16px;
     color: var(--gold-light); font-weight: 400;
   }
   .author-name { font-size: 13px; font-weight: 500; color: var(--charcoal); margin-bottom: 2px; }
@@ -131,7 +172,7 @@
 
   /* Pull quote intro */
   .article-intro-quote {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: clamp(22px, 2.2vw, 30px); font-weight: 300; font-style: italic;
     line-height: 1.55; color: var(--navy);
     padding: 0 0 40px; margin-bottom: 40px;
@@ -141,20 +182,20 @@
   .article-intro-quote::before {
     content: '\201C'; font-size: 120px; line-height: 0.6;
     color: var(--sky); opacity: 0.15; position: absolute;
-    top: -10px; left: -16px; font-family: 'Cormorant Garamond', serif;
+    top: -10px; left: -16px; font-family: 'Source Sans 3', sans-serif;
     pointer-events: none;
   }
 
   /* Body prose */
   .article-prose { max-width: 700px; }
   .article-prose h2 {
-    font-family: 'Cormorant Garamond', serif; font-size: 32px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 32px;
     font-weight: 400; color: var(--charcoal); line-height: 1.15;
     margin: 52px 0 20px; padding-top: 52px; border-top: 1px solid var(--border);
   }
   .article-prose h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
   .article-prose h3 {
-    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 22px;
     font-weight: 400; color: var(--charcoal); line-height: 1.2; margin: 36px 0 14px;
   }
   .article-prose p { font-size: 16px; line-height: 1.9; color: #2C3E50; font-weight: 300; margin-bottom: 24px; }
@@ -165,7 +206,7 @@
   .article-prose blockquote {
     margin: 48px 0; padding: 36px 40px;
     border-left: 3px solid var(--sky); background: var(--ivory);
-    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 22px;
     font-style: italic; font-weight: 400; color: var(--navy); line-height: 1.55;
   }
   .article-prose img { width: 100%; display: block; margin: 32px 0; }
@@ -176,7 +217,7 @@
     border-left: 3px solid var(--sky); background: var(--ivory);
   }
   .article-prose .pull-quote p {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: 22px; font-style: italic; font-weight: 400;
     color: var(--navy); line-height: 1.55; margin-bottom: 14px;
   }
@@ -205,7 +246,7 @@
   .article-prose .stat-callout-item:nth-child(2) { background: var(--soft-brown); }
   .article-prose .stat-callout-item:nth-child(3) { background: var(--sky); }
   .article-prose .stat-num {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: 44px; font-weight: 300; color: var(--white); line-height: 1;
   }
   .article-prose .stat-lbl {
@@ -268,11 +309,11 @@
   }
   .author-bio-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .author-bio-avatar-initials {
-    font-family: 'Cormorant Garamond', serif; font-size: 24px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 24px;
     color: var(--gold-light); font-weight: 400;
   }
   .author-bio-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 8px; }
-  .author-bio-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--charcoal); margin-bottom: 8px; }
+  .author-bio-name { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 400; color: var(--charcoal); margin-bottom: 8px; }
   .author-bio-text { font-size: 13px; line-height: 1.8; color: var(--warm-grey); font-weight: 300; }
 
   /* ── SIDEBAR ── */
@@ -294,7 +335,7 @@
     text-decoration: none; transition: all 0.3s;
   }
   .toc-item:last-child a { border-bottom: none; }
-  .toc-num { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--sky); opacity: 0.4; flex-shrink: 0; line-height: 1.4; }
+  .toc-num { font-family: 'Source Sans 3', sans-serif; font-size: 16px; color: var(--sky); opacity: 0.4; flex-shrink: 0; line-height: 1.4; }
   .toc-text { font-size: 12px; color: var(--warm-grey); line-height: 1.5; transition: color 0.3s; font-weight: 300; }
   .toc-item a:hover .toc-text { color: var(--navy); }
   .toc-item a:hover .toc-num { opacity: 0.8; }
@@ -309,18 +350,18 @@
   .related-thumb-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--navy), #1A4A7A); }
   .related-item:hover .related-thumb img { transform: scale(1.08); }
   .related-cat { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); margin-bottom: 4px; }
-  .related-title { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 400; color: var(--charcoal); line-height: 1.35; transition: color 0.3s; }
+  .related-title { font-family: 'Source Sans 3', sans-serif; font-size: 14px; font-weight: 400; color: var(--charcoal); line-height: 1.35; transition: color 0.3s; }
   .related-item:hover .related-title { color: var(--navy); }
 
   /* Sidebar CTA card */
   .sidebar-report { background: var(--navy); padding: 26px 22px; position: relative; overflow: hidden; }
   .sidebar-report::before {
-    content: 'HOMEXO'; position: absolute; font-family: 'Cormorant Garamond', serif;
+    content: 'HOMEXO'; position: absolute; font-family: 'Source Sans 3', sans-serif;
     font-size: 60px; font-weight: 300; color: rgba(74,144,196,0.07);
     bottom: -10px; right: -6px; line-height: 1; pointer-events: none;
   }
   .sidebar-report-eyebrow { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 10px; }
-  .sidebar-report-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 10px; }
+  .sidebar-report-title { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 10px; }
   .sidebar-report-desc { font-size: 11px; color: rgba(200,216,236,0.45); line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
   .sidebar-report-btn {
     display: inline-block; background: var(--sky); color: var(--white);
@@ -350,7 +391,7 @@
   }
   .article-nav-dir svg { color: var(--sky); }
   .article-nav-title {
-    font-family: 'Cormorant Garamond', serif; font-size: 20px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 20px;
     font-weight: 400; color: var(--charcoal); line-height: 1.25; transition: color 0.3s;
   }
   .article-nav-item:hover .article-nav-title { color: var(--navy); }
@@ -363,15 +404,15 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
     align-items: center; position: relative; overflow: hidden;
   }
-  .article-cta-bg { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond', serif; font-size: 180px; font-weight: 300; color: rgba(74,144,196,0.05); pointer-events: none; letter-spacing: 10px; white-space: nowrap; line-height: 1; }
-  .article-cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 4.5vw, 64px); font-weight: 300; color: var(--ivory); line-height: 1.05; }
+  .article-cta-bg { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: 'Source Sans 3', sans-serif; font-size: 180px; font-weight: 300; color: rgba(74,144,196,0.05); pointer-events: none; letter-spacing: 10px; white-space: nowrap; line-height: 1; }
+  .article-cta-title { font-family: 'Source Sans 3', sans-serif; font-size: clamp(42px, 4.5vw, 64px); font-weight: 300; color: var(--ivory); line-height: 1.05; }
   .article-cta-title em { font-style: italic; color: var(--sky); }
   .article-cta-body { font-size: 15px; line-height: 1.8; color: rgba(200,216,236,0.5); font-weight: 300; margin-top: 20px; margin-bottom: 32px; }
   .article-cta-btn {
     display: inline-block; background: var(--sky); color: var(--white);
     padding: 16px 36px; font-size: 11px; letter-spacing: 2.5px;
     text-transform: uppercase; text-decoration: none; transition: background 0.3s;
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    font-family: 'Source Sans 3', sans-serif; font-weight: 500;
   }
   .article-cta-btn:hover { background: #3A7FB5; }
 
@@ -453,20 +494,38 @@
   </a>
 </div>
 
+{% if user.is_staff %}
+<div style="background:var(--navy);padding:10px 60px;display:flex;align-items:center;justify-content:flex-end;gap:16px;">
+  <span style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,216,236,.5);">
+    {% if post.status == 'draft' %}Draft{% else %}Published{% endif %}
+  </span>
+  <a href="{% url 'blog:edit' post.slug %}"
+     style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--white);
+            text-decoration:none;border:1px solid rgba(74,144,196,.4);padding:7px 18px;
+            transition:all .2s;display:inline-flex;align-items:center;gap:8px;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    Edit Post
+  </a>
+</div>
+{% endif %}
+
 <!-- ARTICLE HERO -->
 <header class="article-hero">
   <div class="article-breadcrumb">
     <a href="{% url 'blog:list' %}">Insights</a>
-    {% if post.category %}
+    {% for cat in post.categories.all %}
     <span class="breadcrumb-sep">—</span>
-    <a href="{% url 'blog:list' %}?category={{ post.category.slug }}">{{ post.category.name }}</a>
-    {% endif %}
+    <a href="{% url 'blog:list' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+    {% endfor %}
   </div>
 
   <div class="article-cat-badge">
-    {% if post.category %}
-    <span class="article-cat-pill" style="background:{{ post.category.color|default:'var(--navy)' }};">{{ post.category.name }}</span>
-    {% endif %}
+    {% for cat in post.categories.all %}
+    <span class="article-cat-pill" style="background:{{ cat.color|default:'var(--navy)' }};">{{ cat.name }}</span>
+    {% endfor %}
     <span class="article-read-time">{{ post.reading_time }} min read</span>
     <span class="article-views">{{ post.views_count }} views</span>
   </div>
@@ -537,9 +596,9 @@
 
     <!-- Tags -->
     <div class="article-tags">
-      {% if post.category %}
-      <a href="{% url 'blog:list' %}?category={{ post.category.slug }}" class="article-tag">{{ post.category.name }}</a>
-      {% endif %}
+      {% for cat in post.categories.all %}
+      <a href="{% url 'blog:list' %}?category={{ cat.slug }}" class="article-tag">{{ cat.name }}</a>
+      {% endfor %}
       <a href="{% url 'blog:list' %}" class="article-tag">All Insights</a>
     </div>
 
@@ -582,15 +641,15 @@
         <a href="{{ rpost.get_absolute_url }}" class="related-item">
           <div class="related-thumb">
             {% if rpost.cover_image %}
-            <img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}">
+            <img src="{{ rpost.cover_image.url }}" alt="{{ rpost.title }}" loading="lazy">
             {% else %}
             <div class="related-thumb-placeholder"></div>
             {% endif %}
           </div>
           <div>
-            {% if rpost.category %}
-            <div class="related-cat">{{ rpost.category.name }}</div>
-            {% endif %}
+            {% with cat=rpost.categories.all.0 %}
+            {% if cat %}<div class="related-cat">{{ cat.name }}</div>{% endif %}
+            {% endwith %}
             <div class="related-title">{{ rpost.title|truncatewords:10 }}</div>
           </div>
         </a>

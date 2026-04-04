@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('agents', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -54,7 +53,6 @@ class Migration(migrations.Migration):
                 ('views_count', models.PositiveIntegerField(default=0, editable=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('agent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='listings', to='agents.agent')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='owned_properties', to=settings.AUTH_USER_MODEL)),
             ],
             options={

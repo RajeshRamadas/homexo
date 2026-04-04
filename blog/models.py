@@ -34,8 +34,7 @@ class Post(models.Model):
 
     author      = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                     null=True, related_name='blog_posts')
-    category    = models.ForeignKey(Category, on_delete=models.SET_NULL,
-                                    null=True, blank=True, related_name='posts')
+    categories  = models.ManyToManyField(Category, blank=True, related_name='posts')
     title       = models.CharField(max_length=220)
     slug        = models.SlugField(max_length=240, unique=True, blank=True)
     excerpt     = models.TextField(max_length=300, blank=True)

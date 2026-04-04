@@ -1,590 +1,1141 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home Loan Services — Best Rates & Fast Approvals | HOMEXO{% endblock %}
+{% block title %}HOMEXO Finance — Premium Home Loan Comparison{% endblock %}
+{% block meta_description %}Compare home loan offers from leading banks, estimate EMI, and check loan eligibility with HOMEXO Finance.{% endblock %}
 
 {% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ── Base ──────────────────────────────────────────────────── */
-  .hl-page { font-family: 'DM Sans', sans-serif; }
-  .section-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: var(--sky); margin-bottom: 18px;
-  }
-  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
-  .section-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(32px, 4vw, 50px); font-weight: 300;
-    line-height: 1.15; color: var(--charcoal); margin-bottom: 16px;
-  }
-  .section-heading em { font-style: italic; color: var(--sky); }
-  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
+.hl-premium,.hl-premium *,.hl-premium *::before,.hl-premium *::after{margin:0;padding:0;box-sizing:border-box}
+.hl-premium{
+  --ink:#08111E;--ink2:#0C1A2E;
+  --surface:#F5F3EE;--surface2:#ECEAE4;--white:#FFFFFF;
+  --gold:#B8996A;--gold2:#D4B896;--gold3:#E8D5B7;--gold-line:rgba(184,153,106,0.25);
+  --navy:#0B2244;--navy2:#163566;--sky:#2D7DD2;
+  --mist:rgba(184,153,106,0.07);--mist2:rgba(184,153,106,0.13);
+  --text:#1A2B3C;--text2:#4A6070;--text3:#7A8F9E;
+  --green:#1B6B3A;--green-bg:#E8F2EC;
+  --border:rgba(184,153,106,0.18);--border2:rgba(184,153,106,0.3);
+  --shadow:0 4px 32px rgba(8,17,30,0.12);
+  --shadow2:0 16px 64px rgba(8,17,30,0.2);
+  font-family:'Jost',sans-serif;background:var(--surface);color:var(--text);overflow-x:hidden;
+}
+html{scroll-behavior:smooth}
 
-  /* ── Hero ──────────────────────────────────────────────────── */
-  .hl-hero {
-    background: linear-gradient(145deg, #061522 0%, #0D2B4E 55%, #0a2244 100%);
-    padding: 90px 40px 80px; position: relative; overflow: hidden;
-  }
-  .hl-hero::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 65% 80% at 80% 50%, rgba(74,144,196,.12) 0%, transparent 65%);
-    pointer-events: none;
-  }
-  .hl-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
-  .hl-hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: var(--sky); margin-bottom: 28px;
-  }
-  .hl-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
-  .hl-hero h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
-    color: #fff; margin-bottom: 20px; max-width: 700px;
-  }
-  .hl-hero h1 em { font-style: italic; color: var(--sky); }
-  .hl-hero-desc {
-    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
-    max-width: 560px; font-weight: 300; margin-bottom: 40px;
-  }
-  .hl-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-  .hl-hero-cta {
-    padding: 14px 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none;
-    transition: all .3s; display: inline-block;
-  }
-  .hl-hero-cta.primary { background: var(--sky); color: #fff; }
-  .hl-hero-cta.primary:hover { background: #3a7ab0; }
-  .hl-hero-cta.outline { background: transparent; color: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.3); }
-  .hl-hero-cta.outline:hover { background: rgba(255,255,255,.1); }
-  /* Hero stat cards */
-  .hl-hero-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 64px; }
-  .hl-hero-card {
-    background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.15);
-    padding: 24px 20px; transition: background .3s;
-  }
-  .hl-hero-card:hover { background: rgba(74,144,196,.12); }
-  .hl-hero-card-val { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
-  .hl-hero-card-val span { font-size: .6em; color: var(--sky); }
-  .hl-hero-card-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); }
+/* ─── HERO ────────────────────────────────────── */
+.hero{margin-top:0;background:var(--ink);padding:84px 60px 0;display:grid;grid-template-columns:1fr 520px;gap:60px;align-items:end;position:relative;overflow:hidden;min-height:calc(100vh - 72px)}
+.hero-texture{position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%, rgba(184,153,106,0.04) 0%, transparent 60%),radial-gradient(circle at 80% 20%, rgba(45,125,210,0.04) 0%, transparent 50%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(184,153,106,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,153,106,0.04) 1px,transparent 1px);background-size:72px 72px;pointer-events:none}
+.hero-glow{position:absolute;top:30%;right:15%;width:500px;height:500px;background:radial-gradient(circle, rgba(45,125,210,0.07) 0%, transparent 70%);pointer-events:none;animation:pulse 8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.hero-left{position:relative;z-index:1;padding-bottom:84px}
+.eyebrow{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;gap:16px;font-weight:400}
+.eyebrow-line{width:36px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(38px,4.5vw,66px);font-weight:300;color:var(--white);line-height:1.05;margin-bottom:22px;letter-spacing:-.5px}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-title strong{font-weight:400;display:block}
+.hero-sub{font-size:14px;line-height:1.9;color:rgba(232,213,183,0.5);font-weight:300;max-width:480px;margin-bottom:44px;letter-spacing:.2px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:44px}
+.hero-pill{display:flex;align-items:center;gap:12px;background:rgba(184,153,106,0.1);border:1px solid rgba(184,153,106,0.35);padding:12px 18px;transition:border-color .3s,background .3s}
+.hero-pill:hover{background:rgba(184,153,106,0.18);border-color:rgba(184,153,106,0.55)}
+.pill-icon{color:var(--gold2);flex-shrink:0}
+.pill-val{font-size:13px;font-weight:600;color:var(--white);line-height:1;letter-spacing:.3px}
+.pill-lbl{font-size:9px;color:rgba(232,213,183,0.55);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.hero-partners{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hero-partners-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(232,213,183,0.45);flex-shrink:0}
+.pchip{background:rgba(255,255,255,0.07);border:1px solid rgba(184,153,106,0.3);padding:5px 13px;font-size:10px;font-weight:500;color:rgba(232,213,183,0.7);letter-spacing:1px;transition:border-color .3s}
+.hero-detail-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:26px;max-width:650px}
+.hero-detail{background:rgba(255,255,255,0.04);border:1px solid rgba(184,153,106,0.18);padding:14px 14px 13px;position:relative;overflow:hidden}
+.hero-detail::before{content:'';position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.hero-detail-k{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,213,183,0.42);margin-bottom:8px}
+.hero-detail-v{font-size:12px;font-weight:500;color:var(--white);line-height:1.55}
+.hero-float-card{position:absolute;right:608px;top:110px;width:252px;padding:20px 20px 18px;background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03));border:1px solid rgba(184,153,106,0.18);backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,0.22);z-index:1;overflow:hidden}
+.hero-float-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,153,106,0.12),transparent 48%);pointer-events:none}
+.hero-float-k{position:relative;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,213,183,0.55);margin-bottom:12px}
+.hero-float-rate{position:relative;font-family:'Jost',sans-serif;font-size:34px;font-weight:400;letter-spacing:-.04em;line-height:1;color:var(--white);margin-bottom:16px}
+.hero-float-rate span{display:block;margin-top:6px;font-size:13px;color:var(--gold2);font-family:'Jost',sans-serif;letter-spacing:.4px}
+.hero-float-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.hero-float-stat{padding-top:11px;border-top:1px solid rgba(184,153,106,0.14)}
+.hero-float-l{font-size:8px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(232,213,183,0.42);margin-bottom:5px}
+.hero-float-v{font-size:13px;font-weight:600;color:var(--white)}
 
-  /* ── Rates Banner ──────────────────────────────────────────── */
-  .hl-rates-banner { background: var(--sky); padding: 20px 40px; }
-  .hl-rates-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-  .hl-rates-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.8); }
-  .hl-rates-row { display: flex; gap: 32px; flex-wrap: wrap; }
-  .hl-rate-item { display: flex; flex-direction: column; align-items: center; }
-  .hl-rate-val { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: #fff; line-height: 1; }
-  .hl-rate-bank { font-size: 10px; color: rgba(255,255,255,.7); margin-top: 3px; }
-  .hl-rates-cta {
-    padding: 10px 24px; background: #fff; color: var(--sky); text-decoration: none;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-family: 'DM Sans', sans-serif;
-    transition: all .3s; white-space: nowrap;
-  }
-  .hl-rates-cta:hover { background: var(--navy); color: #fff; }
+/* PROMO BANNER */
+.promo-banner{background:var(--surface2);border-bottom:1px solid var(--border);padding:10px 60px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.promo-banner-text{font-size:12px;color:var(--text2);font-weight:400;letter-spacing:.2px}
+.promo-banner-text strong{color:var(--ink);font-weight:600}
+.promo-banner-text s{color:var(--text3)}
+.promo-tag{background:var(--gold);color:var(--white);font-size:9px;font-weight:700;padding:3px 10px;letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0}
+.promo-cta{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.5px;border-bottom:1px solid var(--gold-line);padding-bottom:1px;text-decoration:none;transition:color .2s}
+.promo-cta:hover{color:var(--ink)}
 
-  /* ── Loan Types ────────────────────────────────────────────── */
-  .hl-section { padding: 80px 40px; }
-  .hl-section-inner { max-width: 1200px; margin: 0 auto; }
-  .hl-loan-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
-  .hl-loan-card {
-    background: var(--ivory); border: 1px solid var(--border); padding: 32px 28px;
-    transition: all .35s cubic-bezier(.23,1,.32,1); position: relative; overflow: hidden;
-  }
-  .hl-loan-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(180deg, var(--sky), var(--navy));
-    transform: scaleY(0); transform-origin: top; transition: transform .35s cubic-bezier(.23,1,.32,1);
-  }
-  .hl-loan-card:hover { box-shadow: 0 12px 36px rgba(13,43,78,.09); transform: translateY(-3px); }
-  .hl-loan-card:hover::before { transform: scaleY(1); }
-  .hl-loan-card-icon { color: var(--sky); margin-bottom: 18px; }
-  .hl-loan-card-name { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--charcoal); margin-bottom: 8px; font-weight: 500; }
-  .hl-loan-rate { font-size: 24px; font-weight: 300; color: var(--sky); margin-bottom: 5px; font-family: 'Cormorant Garamond', serif; }
-  .hl-loan-rate span { font-size: 12px; color: var(--warm-grey); font-weight: 300; }
-  .hl-loan-desc { font-size: 12px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; margin-top: 12px; }
-  .hl-loan-tag { display: inline-block; margin-top: 16px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 10px; }
+/* LOAN TYPE TABS */
+.loan-type-tabs{display:flex;gap:0;margin-bottom:20px;border:1px solid rgba(184,153,106,0.2)}
+.ltab{flex:1;padding:10px 6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;color:var(--text3);font-family:'Jost',sans-serif;font-weight:400;transition:all .25s;text-align:center;border-right:1px solid rgba(184,153,106,0.2)}
+.ltab:last-child{border-right:none}
+.ltab.on{background:var(--ink);color:var(--gold);font-weight:600}
+.ltab:hover:not(.on){background:var(--surface);color:var(--text)}
 
-  /* ── Process ───────────────────────────────────────────────── */
-  .hl-process { padding: 80px 40px; background: var(--charcoal); }
-  .hl-process-inner { max-width: 1100px; margin: 0 auto; }
-  .hl-process-header { text-align: center; margin-bottom: 56px; }
-  .hl-process-header .section-heading { color: #fff; }
-  .hl-process-header .section-heading em { color: var(--sky); }
-  .hl-process-header .section-sub { color: rgba(255,255,255,.5); margin: 0 auto; }
-  .hl-process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
-  .hl-process-grid::before {
-    content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(74,144,196,.4), transparent);
-  }
-  .hl-proc-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 10px; position: relative; z-index: 1; }
-  .hl-proc-num {
-    width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(74,144,196,.3);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
-    color: var(--sky); background: var(--charcoal); margin-bottom: 20px;
-  }
-  .hl-proc-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
-  .hl-proc-desc { font-size: 11px; line-height: 1.65; color: rgba(255,255,255,.4); font-weight: 300; }
+/* PROPERTY TOGGLE */
+.prop-toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.prop-lbl-txt{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);font-weight:500}
+.prop-opts{display:flex;gap:6px;margin-left:auto}
+.popt{padding:7px 16px;border:1px solid rgba(184,153,106,0.2);background:var(--surface);font-size:11px;font-weight:500;color:var(--text3);transition:all .25s;font-family:'Jost',sans-serif}
+.popt.on{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.popt:hover:not(.on){border-color:var(--gold);color:var(--text)}
 
-  /* ── Banks ─────────────────────────────────────────────────── */
-  .hl-banks { padding: 60px 40px; background: var(--ivory); }
-  .hl-banks-inner { max-width: 1100px; margin: 0 auto; }
-  .hl-banks-header { display: flex; align-items: center; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
-  .hl-banks-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--charcoal); }
-  .hl-banks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
-  .hl-bank-pill {
-    background: #fff; border: 1px solid var(--border); padding: 18px 14px;
-    text-align: center; font-size: 12px; font-weight: 500; color: var(--charcoal); transition: all .3s;
-  }
-  .hl-bank-pill:hover { border-color: var(--sky); color: var(--sky); }
-  .hl-bank-pill small { display: block; font-size: 10px; color: var(--warm-grey); font-weight: 300; margin-top: 3px; }
+/* HERO FORM CARD */
+.elig-card{background:var(--white);border-top:2px solid var(--gold);padding:38px 34px;box-shadow:0 32px 80px rgba(0,0,0,0.3);position:relative;z-index:2}
+.card-badge{position:absolute;top:-1px;right:32px;background:var(--gold);color:var(--white);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;font-weight:600}
+.elig-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--ink);margin-bottom:5px;letter-spacing:.3px}
+.elig-sub{font-size:11px;color:var(--text3);margin-bottom:24px;display:flex;align-items:center;gap:8px}
+.free-tag{background:var(--green-bg);color:var(--green);font-size:9px;font-weight:600;padding:3px 9px;letter-spacing:1.5px;text-transform:uppercase}
+label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;font-weight:500}
+.fi,.fs{display:block;width:100%;height:48px;padding:12px 15px;border:1px solid rgba(184,153,106,0.2);background:var(--surface);font-family:'Jost',sans-serif;font-size:13px;line-height:1.2;color:var(--ink);outline:none;appearance:none;border-radius:0;transition:border-color .3s,background .3s}
+.fi:focus,.fs:focus{border-color:var(--gold);background:var(--white)}
+.fi::placeholder{color:var(--text3);opacity:1}
+.fs{padding-right:42px;background-image:linear-gradient(45deg,transparent 50%,var(--text3) 50%),linear-gradient(135deg,var(--text3) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px);background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+.frow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px;margin-bottom:14px}
+.frow>div{display:flex;flex-direction:column;min-width:0}
+.ffield{margin-bottom:14px}
+.radio-row{display:flex;gap:8px;margin-bottom:16px}
+.ropt{flex:1;padding:11px 6px;border:1px solid rgba(184,153,106,0.2);background:var(--surface);font-size:11px;font-weight:500;color:var(--text3);transition:all .3s;text-align:center;font-family:'Jost',sans-serif;letter-spacing:.5px}
+.ropt.on{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.ropt:hover:not(.on){border-color:var(--gold);color:var(--text)}
+.submit-btn{width:100%;padding:15px;background:var(--ink);color:var(--white);border:none;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;font-family:'Jost',sans-serif;transition:background .3s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;position:relative;overflow:hidden}
+.submit-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,153,106,0.15),transparent);transform:translateX(-100%);transition:transform .6s}
+.submit-btn:hover::before{transform:translateX(100%)}
+.submit-btn:hover{background:var(--navy)}
+.form-note{font-size:9px;color:var(--text3);text-align:center;margin-top:13px;line-height:1.7;letter-spacing:.3px}
+.form-note span{color:var(--gold)}
+.form-proof-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+.form-proof{padding:10px 8px;background:var(--surface);border:1px solid rgba(184,153,106,0.16);text-align:center}
+.form-proof strong{display:block;font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.2px}
+.form-proof span{display:block;margin-top:4px;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
 
-  /* ── Why Choose Us ─────────────────────────────────────────── */
-  .hl-why { padding: 80px 40px; background: #fff; }
-  .hl-why-inner { max-width: 1100px; margin: 0 auto; }
-  .hl-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
-  .hl-why-item { display: flex; flex-direction: column; gap: 14px; }
-  .hl-why-icon { width: 48px; height: 48px; border: 1px solid rgba(74,144,196,.25); display: flex; align-items: center; justify-content: center; color: var(--sky); }
-  .hl-why-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal); font-weight: 500; }
-  .hl-why-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
+/* ─── SECTIONS ────────────────────────────────── */
+.sec{padding:88px 60px}
+.sec-white{background:var(--white)}
+.sec-surface{background:var(--surface)}
+.sec-surface2{background:var(--surface2)}
+.sec-dark{background:var(--ink)}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(30px,3.5vw,52px);font-weight:300;line-height:1.08;color:var(--ink);margin-bottom:16px;letter-spacing:-.3px}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-title.wht{color:var(--white)}
+.sec-sub{font-size:14px;color:var(--text2);font-weight:300;line-height:1.85;max-width:560px;letter-spacing:.2px}
+.sec-sub.wht{color:rgba(232,213,183,0.6)}
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:60px}
 
-  /* ── Eligibility Calculator ────────────────────────────────── */
-  .hl-eligibility { padding: 80px 40px; background: var(--ivory); }
-  .hl-elig-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-  .hl-elig-info { display: flex; flex-direction: column; gap: 28px; }
-  .hl-elig-info-item { display: flex; gap: 20px; align-items: flex-start; }
-  .hl-elig-info-icon { color: var(--sky); flex-shrink: 0; margin-top: 2px; }
-  .hl-elig-info-title { font-size: 14px; font-weight: 500; color: var(--charcoal); margin-bottom: 5px; }
-  .hl-elig-info-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
-  .hl-emi-link {
-    display: inline-flex; align-items: center; gap: 12px;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--sky); text-decoration: none; margin-top: 24px;
-    border: 1px solid rgba(74,144,196,.3); padding: 12px 24px; transition: all .3s;
-  }
-  .hl-emi-link:hover { background: var(--sky); color: #fff; border-color: var(--sky); }
-  .hl-elig-form { background: #fff; border: 1px solid var(--border); padding: 36px; }
-  .hl-elig-form-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
-  .hl-elig-form-sub { font-size: 12px; color: var(--warm-grey); margin-bottom: 24px; }
-  .hl-elig-input {
-    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
-    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
-    font-size: 13px; color: var(--charcoal); background: var(--ivory); outline: none; transition: border-color .3s;
-  }
-  .hl-elig-input:focus { border-color: var(--sky); }
-  .hl-elig-select {
-    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 14px;
-    border: 1px solid var(--border); font-family: 'DM Sans', sans-serif;
-    font-size: 13px; color: var(--charcoal); background: var(--ivory);
-    outline: none; appearance: none; cursor: pointer; transition: border-color .3s;
-  }
-  .hl-elig-select:focus { border-color: var(--sky); }
-  .hl-elig-btn {
-    width: 100%; padding: 14px; background: var(--navy); color: #fff; border: none;
-    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; cursor: pointer; transition: background .3s;
-  }
-  .hl-elig-btn:hover { background: var(--sky); }
-  .hl-elig-result { display: none; background: var(--navy); padding: 24px; margin-top: 20px; text-align: center; }
-  .hl-elig-result.show { display: block; }
-  .hl-elig-result-val { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: #fff; }
-  .hl-elig-result-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 6px; }
+/* ─── STEPS ───────────────────────────────────── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.step{background:var(--white);padding:52px 40px;position:relative;overflow:hidden;opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.23,1,.32,1)}
+.step.vis{opacity:1;transform:translateY(0)}
+.step:nth-child(2){transition-delay:.1s}.step:nth-child(3){transition-delay:.2s}
+.step:hover{box-shadow:inset 0 0 0 1px var(--gold-line)}
+.step-ghost{position:absolute;bottom:-20px;right:-10px;font-family:'Jost',sans-serif;font-size:160px;font-weight:300;color:var(--ink);opacity:.025;line-height:1;pointer-events:none;letter-spacing:-8px}
+.step-num{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;font-weight:500;display:flex;align-items:center;gap:12px}
+.step-num-line{width:20px;height:1px;background:var(--gold);opacity:.5}
+.step-icon{width:52px;height:52px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:24px;transition:border-color .3s}
+.step:hover .step-icon{border-color:var(--gold2)}
+.step-icon svg{color:var(--gold)}
+.step-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--ink);margin-bottom:14px;letter-spacing:.2px}
+.step-desc{font-size:13px;color:var(--text2);line-height:1.85;font-weight:300}
+.step-tag{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);padding:6px 14px;font-size:9px;font-weight:600;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-top:24px}
 
-  /* ── CTA + Form ────────────────────────────────────────────── */
-  .hl-cta { padding: 80px 40px; background: linear-gradient(135deg, #0D2B4E 0%, #1a4468 100%); }
-  .hl-cta-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start; }
-  .hl-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 300; color: #fff; margin-bottom: 16px; }
-  .hl-cta h2 em { font-style: italic; color: var(--sky); }
-  .hl-cta p { font-size: 15px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
-  .hl-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
-  .hl-checklist li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.75); }
-  .hl-checklist li svg { color: var(--sky); flex-shrink: 0; }
-  .hl-cta-form { background: rgba(255,255,255,.06); border: 1px solid rgba(74,144,196,.2); padding: 32px; }
-  .hl-cta-form-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; margin-bottom: 6px; }
-  .hl-cta-form-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 22px; }
-  .hl-cta-input {
-    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
-    color: rgba(255,255,255,.9); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
-    transition: border-color .3s;
-  }
-  .hl-cta-input::placeholder { color: rgba(255,255,255,.35); }
-  .hl-cta-input:focus { border-color: var(--sky); }
-  .hl-cta-select {
-    width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 12px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(74,144,196,.25);
-    color: rgba(255,255,255,.8); font-family: 'DM Sans', sans-serif; font-size: 13px;
-    outline: none; appearance: none; cursor: pointer;
-  }
-  .hl-cta-select option { background: #0D2B4E; color: #fff; }
-  .hl-cta-submit {
-    width: 100%; padding: 14px; background: var(--sky); color: #fff; border: none;
-    font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; cursor: pointer; transition: background .3s;
-  }
-  .hl-cta-submit:hover { background: #3a7ab0; }
+/* ─── BANK COMPARISON ─────────────────────────── */
+.bank-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:44px}
+.btab{padding:14px 30px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;background:none;border:none;color:var(--text3);font-family:'Jost',sans-serif;font-weight:400;transition:all .3s;position:relative;white-space:nowrap}
+.btab.on{color:var(--ink);font-weight:600}
+.btab.on::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:var(--gold)}
+.btab:hover:not(.on){color:var(--text)}
+.banks-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border)}
+.bcard{background:var(--white);padding:28px 22px;display:flex;flex-direction:column;gap:12px;opacity:0;transform:translateY(14px);transition:all .5s cubic-bezier(.23,1,.32,1)}
+.bcard.vis{opacity:1;transform:translateY(0)}
+.bcard:hover{box-shadow:0 0 0 1px var(--gold),inset 0 0 0 0.5px var(--gold);z-index:1;background:var(--surface)}
+.bcard-abbr{font-family:'Playfair Display',serif;font-size:28px;font-weight:300;color:var(--ink);line-height:1}
+.bcard-name{font-size:11px;font-weight:600;color:var(--text);line-height:1.4;letter-spacing:.3px}
+.bcard-rate{font-size:16px;font-weight:600;color:var(--green);letter-spacing:-.3px}
+.bcard-emi{font-size:13px;font-weight:600;color:var(--navy)}
+.bcard-detail{font-size:10px;color:var(--text3);letter-spacing:.3px}
+.bcard-fee{font-size:10px;color:var(--text3)}
+.bcard-badge{display:inline-block;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;align-self:flex-start}
+.bcard-badge.green{background:var(--green-bg);color:var(--green)}
+.bcard-badge.gold{background:rgba(184,153,106,0.1);color:var(--gold);border:1px solid var(--gold-line)}
+.banks-more-card{background:var(--surface);border:none;padding:28px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:background .3s;opacity:0;transform:translateY(14px)}
+.banks-more-card.vis{opacity:1;transform:translateY(0)}
+.banks-more-num{font-family:'Jost',sans-serif;font-size:48px;font-weight:300;color:var(--gold);opacity:.5;line-height:1}
+.banks-more-lbl{font-size:10px;color:var(--text3);text-align:center;line-height:1.6;letter-spacing:.5px}
+.compare-intel{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:1px;background:var(--border);margin-bottom:32px}
+.compare-card{background:var(--surface);padding:26px 28px}
+.compare-card.dark{background:var(--ink);color:var(--white)}
+.compare-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-weight:600}
+.compare-card.dark .compare-lbl{color:rgba(232,213,183,0.55)}
+.compare-val{font-family:'Jost',sans-serif;font-size:36px;font-weight:400;letter-spacing:-.04em;line-height:1;color:var(--ink);margin-bottom:12px}
+.compare-card.dark .compare-val{color:var(--white)}
+.compare-desc{font-size:12px;line-height:1.75;color:var(--text2);font-weight:300}
+.compare-card.dark .compare-desc{color:rgba(232,213,183,0.72)}
+.compare-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.compare-chip{padding:5px 10px;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;background:var(--white);border:1px solid var(--border);color:var(--text2);font-weight:600}
+.compare-card.dark .compare-chip{background:rgba(255,255,255,0.06);border-color:rgba(184,153,106,0.18);color:var(--gold2)}
 
-  /* ── Responsive ─────────────────────────────────────────────── */
-  @media (max-width: 1100px) {
-    .hl-loan-types { grid-template-columns: repeat(2, 1fr); }
-    .hl-why-grid { grid-template-columns: repeat(2, 1fr); }
-    .hl-process-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; }
-    .hl-process-grid::before { display: none; }
-    .hl-cta-inner { grid-template-columns: 1fr; gap: 40px; }
-    .hl-elig-inner { grid-template-columns: 1fr; }
-    .hl-banks-grid { grid-template-columns: repeat(3, 1fr); }
-    .hl-hero-cards { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 768px) {
-    .hl-hero { padding: 60px 24px; }
-    .hl-section, .hl-process, .hl-banks, .hl-eligibility, .hl-cta, .hl-why { padding: 56px 24px; }
-    .hl-loan-types { grid-template-columns: 1fr; }
-    .hl-banks-grid { grid-template-columns: repeat(2, 1fr); }
-    .hl-rates-inner { flex-direction: column; align-items: flex-start; }
-    .hl-rates-banner { padding: 20px 24px; }
-  }
-  @media (max-width: 480px) {
-    .hl-process-grid { grid-template-columns: 1fr 1fr; }
-    .hl-why-grid { grid-template-columns: 1fr; }
-  }
+/* ─── BANK SLIDERS ────────────────────────────── */
+.compare-sliders{background:var(--surface);border:1px solid var(--border);padding:26px 30px;margin-bottom:32px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+@media(max-width:768px){.compare-sliders{grid-template-columns:1fr;gap:24px;padding:20px;}}
+
+/* ─── CALCULATORS ─────────────────────────────── */
+.calc-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px}
+.calc-meta-card{background:var(--white);padding:18px 20px}
+.calc-meta-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600}
+.calc-meta-text{font-size:12px;color:var(--text2);line-height:1.7;font-weight:300}
+.calc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:52px}
+.ctab{padding:15px 38px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;background:none;border:none;color:var(--text3);font-family:'Jost',sans-serif;font-weight:400;transition:all .3s;position:relative}
+.ctab.on{color:var(--ink);font-weight:600}
+.ctab.on::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:var(--ink)}
+.ctab:hover:not(.on){color:var(--text)}
+.cpanel{display:none}
+.cpanel.on{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.cleft{display:flex;flex-direction:column;gap:32px}
+.cfield label{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:14px;font-weight:500}
+.cfield .cval{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:0;text-transform:none;font-family:'Jost',sans-serif}
+.cslider{-webkit-appearance:none;appearance:none;width:100%;height:2px;outline:none;background:linear-gradient(to right,var(--gold) 60%,rgba(184,153,106,0.15) 60%)}
+.cslider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink);border:2px solid var(--gold);box-shadow:0 2px 8px rgba(8,17,30,0.2);transition:transform .15s}
+.cslider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.cslider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--ink);border:2px solid var(--gold);cursor:none}
+.calc-bank-row{background:var(--surface);border:1px solid var(--border);padding:18px 22px}
+.calc-bank-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;font-weight:500}
+.calc-bank-chips{display:flex;gap:8px;flex-wrap:wrap}
+.cright{background:var(--ink);padding:44px 38px;position:relative;overflow:hidden}
+.cright-decor{position:absolute;bottom:-30px;right:-20px;width:200px;height:200px;border:1px solid rgba(184,153,106,0.1);border-radius:50%}
+.cright-decor2{position:absolute;bottom:-60px;right:-60px;width:300px;height:300px;border:1px solid rgba(184,153,106,0.06);border-radius:50%}
+.cr-main{text-align:center;padding-bottom:32px;margin-bottom:32px;border-bottom:1px solid rgba(184,153,106,0.2)}
+.cr-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:12px;font-weight:500}
+.cr-val{font-family:'Jost',sans-serif;font-size:58px;font-weight:300;letter-spacing:-.04em;color:var(--white);line-height:1}
+.cr-val span{font-family:'Jost',sans-serif;font-size:20px;color:var(--gold2)}
+.cr-note{font-size:11px;color:rgba(232,213,183,0.7);margin-top:10px;letter-spacing:.5px}
+.cr-rows{display:flex;flex-direction:column;gap:16px;margin-bottom:32px}
+.cr-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(184,153,106,0.15);padding-bottom:16px}
+.cr-row:last-child{border-bottom:none;padding-bottom:0}
+.cr-row-l{font-size:11px;color:rgba(255,255,255,0.85);font-weight:400;letter-spacing:.3px}
+.cr-row-v{font-size:14px;font-weight:600;color:var(--white);font-family:'Jost',sans-serif}
+.cr-bar-wrap{padding-top:24px;border-top:1px solid rgba(184,153,106,0.15)}
+.cr-bar-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:12px;font-weight:500}
+.cr-bar{height:4px;background:rgba(255,255,255,0.12);overflow:hidden}
+.cr-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .6s ease}
+.cr-legend{display:flex;justify-content:space-between;margin-top:10px}
+.cr-legend span{font-size:9px;color:rgba(232,213,183,0.7);display:flex;align-items:center;gap:6px;letter-spacing:.5px}
+.cr-legend span::before{content:'';width:8px;height:2px;display:inline-block;background:var(--gold2)}
+.cr-legend span:last-child::before{background:rgba(255,255,255,0.3)}
+.ccta{margin-top:28px;width:100%;padding:15px;background:transparent;color:var(--gold2);border:1px solid rgba(184,153,106,0.4);font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;font-family:'Jost',sans-serif;transition:all .3s}
+.ccta:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+
+/* ─── WHY FEATURES ────────────────────────────── */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(184,153,106,0.1)}
+.feat{padding:48px 38px;background:rgba(255,255,255,0.02);opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(.23,1,.32,1)}
+.feat.vis{opacity:1;transform:translateY(0)}
+.feat:nth-child(2){transition-delay:.08s}.feat:nth-child(3){transition-delay:.16s}.feat:nth-child(4){transition-delay:.24s}.feat:nth-child(5){transition-delay:.32s}.feat:nth-child(6){transition-delay:.40s}
+.feat:hover{background:rgba(255,255,255,0.05)}
+.feat-icon{width:48px;height:48px;background:rgba(184,153,106,0.1);border:1px solid rgba(184,153,106,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:22px}
+.feat-icon svg{color:var(--gold2)}
+.feat-icon-rupee-mark{display:inline-block;font-family:'Segoe UI Symbol','Arial Unicode MS','Noto Sans','Jost',sans-serif;font-size:25px;font-weight:500;line-height:1;color:var(--gold2);letter-spacing:-.04em;transform:translateY(-1px)}
+.feat-num{font-size:9px;letter-spacing:3px;color:rgba(184,153,106,0.6);text-transform:uppercase;margin-bottom:12px;font-weight:500}
+.feat-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--white);margin-bottom:12px;letter-spacing:.2px}
+.feat-desc{font-size:12px;color:rgba(232,213,183,0.6);line-height:1.85;font-weight:300}
+
+/* ─── ELIGIBILITY CRITERIA ────────────────────── */
+.elig-crit{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.elig-col{background:var(--white);padding:44px 40px}
+.ec-head{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-weight:500}
+.ec-head-line{width:20px;height:1px;background:var(--gold)}
+.ec-row{display:flex;align-items:flex-start;gap:18px;padding:16px 0;border-bottom:1px solid var(--border)}
+.ec-row:last-child{border-bottom:none}
+.ec-ico{width:34px;height:34px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .3s}
+.ec-row:hover .ec-ico{border-color:var(--gold2)}
+.ec-ico svg{color:var(--gold)}
+.ec-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;letter-spacing:.2px}
+.ec-desc{font-size:12px;color:var(--text2);line-height:1.65;font-weight:300}
+
+/* ─── TESTIMONIALS ────────────────────────────── */
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.testi{background:var(--white);padding:44px 36px;opacity:0;transform:translateY(20px);transition:all .65s cubic-bezier(.23,1,.32,1)}
+.testi.vis{opacity:1;transform:translateY(0)}
+.testi:nth-child(2){transition-delay:.1s}.testi:nth-child(3){transition-delay:.2s}
+.testi:hover{box-shadow:inset 0 0 0 1px var(--gold-line)}
+.testi-q{font-family:'Jost',sans-serif;font-size:68px;font-weight:300;color:var(--gold);opacity:.12;line-height:.5;margin-bottom:22px}
+.testi-stars{color:var(--gold);font-size:11px;margin-bottom:16px;letter-spacing:3px}
+.testi-text{font-family:'Jost',sans-serif;font-size:15px;font-style:normal;line-height:1.85;color:var(--ink);margin-bottom:28px;font-weight:400}
+.voices-title{font-family:'Jost',sans-serif;font-style:normal;font-weight:400;letter-spacing:-.2px}
+.testi-author{display:flex;align-items:center;gap:15px}
+.testi-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--ink),var(--navy2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold2);flex-shrink:0;border:1px solid var(--gold-line)}
+.testi-name{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.3px}
+.testi-role{font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.5px}
+.testi-loan{font-size:10px;color:var(--gold);letter-spacing:.8px;margin-top:3px;font-weight:500}
+
+/* ─── TRUST STRIP ─────────────────────────────── */
+.trust-strip{background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr)}
+.trust-item{padding:28px 26px;border-right:1px solid var(--border);display:flex;align-items:center;gap:16px;transition:background .3s}
+.trust-item:last-child{border-right:none}
+.trust-item:hover{background:var(--white)}
+.trust-ico{width:38px;height:38px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trust-ico svg{color:var(--gold)}
+.trust-ico-rupee{font-family:'Jost',sans-serif;font-size:18px;font-weight:600;color:var(--gold);line-height:1}
+.trust-title{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:.3px}
+.trust-sub{font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:.5px}
+
+/* ─── FAQ ─────────────────────────────────────── */
+.faq-wrap{max-width:820px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;text-align:left;padding:22px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;background:none;border:none;font-family:'Jost',sans-serif;font-size:15px;font-weight:400;color:var(--text);transition:color .3s;letter-spacing:.2px}
+.faq-q:hover,.faq-q.open{color:var(--ink)}
+.faq-ico{width:28px;height:28px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
+.faq-q.open .faq-ico{background:var(--gold);border-color:var(--gold)}
+.faq-q.open .faq-ico svg{stroke:var(--white);transform:rotate(45deg)}
+.faq-ico svg{color:var(--text3);transition:all .3s}
+.faq-ans{display:none;padding:0 0 22px;font-size:13px;color:var(--text2);line-height:1.9;font-weight:300}
+.faq-ans.open{display:block}
+
+/* ─── CTA STRIP ───────────────────────────────── */
+.cta{background:var(--ink2);padding:88px 60px;display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:center;position:relative;overflow:hidden;border-top:1px solid rgba(184,153,106,0.1)}
+.cta-decor{position:absolute;right:-100px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:280px;font-weight:300;color:rgba(184,153,106,0.03);line-height:1;pointer-events:none;white-space:nowrap;letter-spacing:-20px}
+.cta-gold-line{width:48px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:24px}
+.cta-copy{position:relative;z-index:2}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,58px);font-weight:300;color:var(--white);line-height:1.08;letter-spacing:-.5px}
+.cta-title em{font-style:italic;color:var(--gold2)}
+.cta-sub{font-size:13px;color:rgba(232,213,183,0.55);margin-top:20px;line-height:1.8;font-weight:300;max-width:340px}
+.cta-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:30px;max-width:580px}
+.cta-point{display:flex;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(184,153,106,0.16)}
+.cta-point svg{color:var(--gold2);flex-shrink:0;margin-top:2px}
+.cta-point-text{font-size:12px;line-height:1.65;color:rgba(232,213,183,0.78);font-weight:300}
+.cta-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cta-chip{padding:7px 12px;border:1px solid rgba(184,153,106,0.2);background:rgba(255,255,255,0.04);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);font-weight:600}
+.cta-form{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(184,153,106,0.18);padding:26px 26px 22px;box-shadow:0 24px 70px rgba(0,0,0,0.16)}
+.cta-form-head{margin-bottom:4px}
+.cta-form-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;color:var(--white);line-height:1.15}
+.cta-form-sub{font-size:12px;color:rgba(232,213,183,0.58);line-height:1.75;margin-top:8px}
+.cta-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ci,.cs{width:100%;padding:15px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(184,153,106,0.3);color:var(--white);font-family:'Jost',sans-serif;font-size:13px;outline:none;transition:border-color .3s;appearance:none}
+.ci::placeholder{color:rgba(232,213,183,0.35)}
+.cs{color:rgba(232,213,183,0.45);padding-right:44px;background-image:linear-gradient(45deg,transparent 50%,rgba(232,213,183,0.55) 50%),linear-gradient(135deg,rgba(232,213,183,0.55) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px);background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+.ci:focus,.cs:focus{border-color:var(--gold2)}
+.cta-btn{background:var(--gold);color:var(--ink);border:none;padding:16px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:'Jost',sans-serif;font-weight:700;transition:background .3s,transform .2s}
+.cta-btn:hover{background:var(--gold2)}
+.cta-form-foot{font-size:10px;color:rgba(232,213,183,0.45);text-align:center;line-height:1.6}
+.page-cond-note{padding:18px 60px 26px;background:var(--ink2);border-top:1px solid rgba(184,153,106,0.08);font-size:10px;line-height:1.7;color:rgba(232,213,183,0.48);text-align:left;letter-spacing:.2px}
+
+/* ─── RESPONSIVE ──────────────────────────────── */
+@media(max-width:1100px){
+  .promo-banner{padding:10px 28px}
+  .hero{padding:64px 28px 0;gap:36px}
+  .hero-float-card{display:none}
+  .hero-detail-strip{grid-template-columns:1fr 1fr;max-width:none}
+  .sec{padding:68px 28px}
+  .steps{grid-template-columns:1fr;gap:1px}
+  .banks-grid{grid-template-columns:repeat(3,1fr)}
+  .compare-intel{grid-template-columns:1fr}
+  .cpanel.on{grid-template-columns:1fr;gap:36px}
+  .calc-meta{grid-template-columns:1fr}
+  .feats{grid-template-columns:repeat(2,1fr)}
+  .elig-crit{grid-template-columns:1fr;gap:1px}
+  .testis{grid-template-columns:1fr 1fr;gap:1px}
+  .cta{padding:64px 28px;gap:48px}
+  .page-cond-note{padding:16px 28px 22px}
+  .trust-strip{grid-template-columns:repeat(2,1fr)}
+  .trust-item:nth-child(2){border-right:none}.trust-item:nth-child(3){border-top:1px solid var(--border)}
+}
+@media(max-width:768px){
+  .hl-premium,.hl-premium *,.hl-premium *::before,.hl-premium *::after{box-sizing:border-box!important}
+  .hl-premium{width:100%;overflow-x:hidden}
+  .hl-premium .cursor,.hl-premium .cursor-ring{display:none!important}.hl-premium{cursor:auto}.hl-premium button{cursor:pointer}
+  .promo-banner{padding:10px 16px;font-size:11px}
+  .hero{margin-top:0;grid-template-columns:1fr;padding:40px 16px 0;gap:32px;min-height:auto}
+  .hero-left{padding-bottom:0}.hero-title{font-size:clamp(32px,9vw,48px)}.hero-sub{font-size:13px;margin-bottom:28px}
+  .eyebrow{flex-wrap:wrap;gap:10px;font-size:9px;letter-spacing:3px}
+  .eyebrow-line{width:24px}
+  .hero-pills{gap:8px}.hero-pill{padding:10px 14px}
+  .hero-partners{gap:8px}
+  .hero-partners-lbl{width:100%;margin-bottom:2px}
+  .pchip{padding:5px 10px;font-size:9px}
+  .hero-detail-strip{grid-template-columns:1fr}
+  .elig-card{padding:26px 20px}
+  .frow{grid-template-columns:1fr;gap:0}
+  .sec{padding:48px 16px}
+  .sec-hd{flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:36px}
+  .steps{gap:1px}.step{padding:32px 22px}.step:hover{box-shadow:none}
+  .bank-tabs{overflow-x:auto;scrollbar-width:none}.bank-tabs::-webkit-scrollbar{display:none}
+  .btab{padding:12px 18px;font-size:9px;flex-shrink:0;cursor:pointer}
+  .compare-card{padding:20px 18px}
+  .banks-grid{grid-template-columns:1fr 1fr;gap:1px}.bcard{padding:18px 16px}
+  .calc-meta-card{padding:16px 18px}
+  .calc-tabs{overflow-x:auto;scrollbar-width:none}.calc-tabs::-webkit-scrollbar{display:none}
+  .ctab{padding:13px 22px;font-size:9px;flex-shrink:0;cursor:pointer}
+  .cpanel.on{grid-template-columns:1fr;gap:28px}
+  .cright{padding:30px 22px}.cr-val{font-size:44px}
+  .feats{grid-template-columns:1fr;gap:1px}.feat{padding:32px 22px}
+  .elig-crit{grid-template-columns:1fr;gap:1px}.elig-col{padding:32px 22px}
+  .testis{grid-template-columns:1fr;gap:1px}.testi{padding:32px 22px}
+  .faq-q{font-size:14px;padding:18px 0;cursor:pointer}
+  .cta{display:flex;flex-direction:column;padding:44px 16px 40px;gap:32px}
+  .cta-title{font-size:clamp(30px,9vw,48px)}.cta-decor{display:none}
+  .cta-points{grid-template-columns:1fr}
+  .cta-form{padding:22px 20px}
+  .cta-form-title{font-size:24px}
+  .cta-row{grid-template-columns:1fr;gap:10px}
+  .page-cond-note{padding:14px 16px 20px;font-size:9px}
+  .ci,.cs,.cta-btn{cursor:pointer}.ci,.cs{font-size:16px}
+  .hl-premium input,.hl-premium select,.hl-premium .fi,.hl-premium .fs{font-size:16px!important}
+  .ropt{cursor:pointer}
+  .trust-strip{grid-template-columns:1fr 1fr}
+  .trust-item:nth-child(2){border-right:none}.trust-item:nth-child(3){border-top:1px solid var(--border)}.trust-item:nth-child(4){border-top:1px solid var(--border);border-right:none}
+  .trust-item{padding:20px 16px}
+}
+@media(max-width:390px){
+  .hero{padding:28px 12px 0}.sec{padding:40px 12px}
+  .form-proof-strip{grid-template-columns:1fr}
+  .banks-grid{grid-template-columns:1fr}
+}
+@media(hover:none) and (pointer:coarse){
+  .hl-premium .cursor,.hl-premium .cursor-ring{display:none!important}.hl-premium{cursor:auto}.hl-premium button{cursor:pointer}
+  .ropt,.ctab,.btab,.submit-btn,.cta-btn,.ccta{min-height:44px}
+  .hl-premium input,.hl-premium select{font-size:16px!important}
+}
+  .fab-wrap:has(.fab-emi) { display: none !important; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="hl-page">
-
-  <!-- ══════════════════ HERO ══════════════════════════════════ -->
-  <section class="hl-hero">
-    <div class="hl-hero-inner">
-      <div class="hl-hero-eyebrow">HOMEXO Financial Services</div>
-      <h1>Get the Best <em>Home Loan</em><br>for Your Dream Home</h1>
-      <p class="hl-hero-desc">Compare rates from 25+ banks and NBFCs. Our loan advisors ensure you get the lowest interest rate, minimal documentation, and the fastest possible approval.</p>
-      <div class="hl-hero-actions">
-        <a href="#apply" class="hl-hero-cta primary">Apply Now →</a>
-        <a href="#eligibility" class="hl-hero-cta outline">Check Eligibility</a>
-      </div>
-      <div class="hl-hero-cards">
-        <div class="hl-hero-card">
-          <div class="hl-hero-card-val">8.40<span>%</span></div>
-          <div class="hl-hero-card-lbl">Rates from p.a.</div>
-        </div>
-        <div class="hl-hero-card">
-          <div class="hl-hero-card-val">25<span>+</span></div>
-          <div class="hl-hero-card-lbl">Bank &amp; NBFC Partners</div>
-        </div>
-        <div class="hl-hero-card">
-          <div class="hl-hero-card-val">48<span>hr</span></div>
-          <div class="hl-hero-card-lbl">In-Principle Approval</div>
-        </div>
-        <div class="hl-hero-card">
-          <div class="hl-hero-card-val">₹4200<span>Cr</span></div>
-          <div class="hl-hero-card-lbl">Loans Facilitated</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ LIVE RATES BANNER ═════════════════════ -->
-  <div class="hl-rates-banner">
-    <div class="hl-rates-inner">
-      <div class="hl-rates-label">Today's Best Rates</div>
-      <div class="hl-rates-row">
-        <div class="hl-rate-item"><div class="hl-rate-val">8.40%</div><div class="hl-rate-bank">HDFC / ICICI</div></div>
-        <div class="hl-rate-item"><div class="hl-rate-val">8.50%</div><div class="hl-rate-bank">SBI / LIC HFL</div></div>
-        <div class="hl-rate-item"><div class="hl-rate-val">8.65%</div><div class="hl-rate-bank">Kotak / Axis</div></div>
-        <div class="hl-rate-item"><div class="hl-rate-val">8.35%</div><div class="hl-rate-bank">Balance Transfer</div></div>
-      </div>
-      <a href="#apply" class="hl-rates-cta">Get My Rate →</a>
+<div class="hl-premium">
+<section class="hero">
+  <div class="hero-texture"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-float-card">
+    <div class="hero-float-k">Today's Lending Pulse</div>
+    <div class="hero-float-rate">8.40%<span>starting rate for strong profiles</span></div>
+    <div class="hero-float-grid">
+      <div class="hero-float-stat"><div class="hero-float-l">Top Funding</div><div class="hero-float-v">Up to 80%</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Sanction Pace</div><div class="hero-float-v">7 Days</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Partner Banks</div><div class="hero-float-v">15+</div></div>
+      <div class="hero-float-stat"><div class="hero-float-l">Advisory Fee</div><div class="hero-float-v">Zero</div></div>
     </div>
   </div>
 
-  <!-- ══════════════════ LOAN TYPES ════════════════════════════ -->
-  <section class="hl-section" style="background:#fff;">
-    <div class="hl-section-inner">
-      <div class="section-eyebrow">Loan Products</div>
-      <h2 class="section-heading">Find the Right <em>Loan</em> for Your Need</h2>
-      <p class="section-sub">From new purchase to renovation — we offer end-to-end assistance for all types of home loans across India.</p>
-      <div class="hl-loan-types">
-
-        <div class="hl-loan-card">
-          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-          <div class="hl-loan-card-name">Home Purchase Loan</div>
-          <div class="hl-loan-rate">8.40% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Financing for buying a new or resale apartment, villa, or independent house. Up to 90% funding of property value, tenure up to 30 years.</p>
-          <span class="hl-loan-tag">Most Popular</span>
-        </div>
-
-        <div class="hl-loan-card">
-          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
-          <div class="hl-loan-card-name">Under Construction</div>
-          <div class="hl-loan-rate">8.50% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Disbursement-linked loans for under-construction projects. Pay interest only during construction; full EMI begins at possession.</p>
-          <span class="hl-loan-tag">Pre-EMI Option</span>
-        </div>
-
-        <div class="hl-loan-card">
-          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <div class="hl-loan-card-name">Balance Transfer</div>
-          <div class="hl-loan-rate">8.35% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Transfer your existing high-interest home loan to a lower-rate lender and reduce your monthly EMI burden significantly.</p>
-          <span class="hl-loan-tag">Lowest Rate</span>
-        </div>
-
-        <div class="hl-loan-card">
-          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
-          <div class="hl-loan-card-name">Home Renovation Loan</div>
-          <div class="hl-loan-rate">9.00% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Funding for interior fit-outs, structural upgrades, and renovation. Up to ₹50L for existing home renovations without additional collateral.</p>
-          <span class="hl-loan-tag">No Collateral</span>
-        </div>
-
-        <div class="hl-loan-card">
-          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg></div>
-          <div class="hl-loan-card-name">Loan Against Property</div>
-          <div class="hl-loan-rate">9.50% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Unlock the equity in your existing property for business or personal needs. Up to 70% of current market value as a loan.</p>
-          <span class="hl-loan-tag">Up to 70% LTV</span>
-        </div>
-
-        <div class="hl-loan-card">
-          <div class="hl-loan-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.9-5.7a8.5 8.5 0 113.8 3.8z"/></svg></div>
-          <div class="hl-loan-card-name">NRI Home Loan</div>
-          <div class="hl-loan-rate">8.60% <span>p.a. onwards</span></div>
-          <p class="hl-loan-desc">Specially structured loans for Non-Resident Indians purchasing property in India. Compliant with FEMA and RBI regulations.</p>
-          <span class="hl-loan-tag">FEMA Compliant</span>
-        </div>
-
+  <div class="hero-left">
+    <div class="eyebrow"><span class="eyebrow-line"></span>HOMEXO Finance — Pre-Negotiated Rates</div>
+    <h1 class="hero-title">
+      <strong>Get Your Best</strong>
+      Home Loan Offer<br><em>in Minutes</em>
+    </h1>
+    <p class="hero-sub">Compare pre-negotiated rates from 15+ banks side-by-side. No fees, no paperwork confusion — your dedicated loan expert handles everything from eligibility to disbursal.</p>
+    <div class="hero-pills">
+      <div class="hero-pill">
+        <span class="pill-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        <div><div class="pill-val">Zero Fees</div><div class="pill-lbl">No hidden charges</div></div>
+      </div>
+      <div class="hero-pill">
+        <span class="pill-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        <div><div class="pill-val">7-Day Sanction</div><div class="pill-lbl">Industry fastest</div></div>
+      </div>
+      <div class="hero-pill">
+        <span class="pill-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
+        <div><div class="pill-val">Rates from 8.40%</div><div class="pill-lbl">Pre-negotiated</div></div>
       </div>
     </div>
-  </section>
-
-  <!-- ══════════════════ PROCESS ═══════════════════════════════ -->
-  <section class="hl-process">
-    <div class="hl-process-inner">
-      <div class="hl-process-header">
-        <div class="section-eyebrow">Loan Journey</div>
-        <h2 class="section-heading" style="color:#fff;">How the <em>Loan Process</em> Works</h2>
-        <p class="section-sub" style="color:rgba(255,255,255,.5);margin:0 auto;">From enquiry to disbursement — our advisors handle everything so you can focus on your home.</p>
+    <div class="hero-partners">
+      <span class="hero-partners-lbl">15+ Banks:</span>
+      <span class="pchip">SBI</span><span class="pchip">HDFC</span><span class="pchip">ICICI</span>
+      <span class="pchip">Axis</span><span class="pchip">Kotak</span><span class="pchip">+10 more</span>
+    </div>
+    <div class="hero-detail-strip">
+      <div class="hero-detail">
+        <div class="hero-detail-k">Profile Review</div>
+        <div class="hero-detail-v">Same-day shortlist of the lenders most likely to approve you.</div>
       </div>
-      <div class="hl-process-grid">
-        <div class="hl-proc-step">
-          <div class="hl-proc-num">01</div>
-          <div class="hl-proc-title">Eligibility Check</div>
-          <p class="hl-proc-desc">Share income details and property information for an instant pre-qualification.</p>
-        </div>
-        <div class="hl-proc-step">
-          <div class="hl-proc-num">02</div>
-          <div class="hl-proc-title">Bank Comparison</div>
-          <p class="hl-proc-desc">We compare offers from 25+ lenders to find your best rate and terms.</p>
-        </div>
-        <div class="hl-proc-step">
-          <div class="hl-proc-num">03</div>
-          <div class="hl-proc-title">Documentation</div>
-          <p class="hl-proc-desc">Our team provides a precise document checklist and assists in collecting and verifying all papers.</p>
-        </div>
-        <div class="hl-proc-step">
-          <div class="hl-proc-num">04</div>
-          <div class="hl-proc-title">Sanction Letter</div>
-          <p class="hl-proc-desc">In-principle approval and sanction letter issued — typically within 48 hours for pre-approved profiles.</p>
-        </div>
-        <div class="hl-proc-step">
-          <div class="hl-proc-num">05</div>
-          <div class="hl-proc-title">Disbursement</div>
-          <p class="hl-proc-desc">Final verification completed and funds disbursed directly to seller or builder as per disbursement schedule.</p>
-        </div>
+      <div class="hero-detail">
+        <div class="hero-detail-k">Negotiation Edge</div>
+        <div class="hero-detail-v">We compare slabs, fee waivers, and funding brackets before you commit.</div>
+      </div>
+      <div class="hero-detail">
+        <div class="hero-detail-k">Execution Support</div>
+        <div class="hero-detail-v">One expert manages docs, bank follow-up, and disbursal from start to finish.</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ══════════════════ BANKS ═════════════════════════════════ -->
-  <section class="hl-banks" id="banks">
-    <div class="hl-banks-inner">
-      <div class="hl-banks-header">
-        <div>
-          <div class="section-eyebrow">Lending Partners</div>
-          <h3 class="section-heading" style="margin-bottom:0;">25+ Bank & <em>NBFC Partners</em></h3>
-        </div>
-      </div>
-      <div class="hl-banks-grid">
-        <div class="hl-bank-pill">HDFC Bank<small>From 8.40%</small></div>
-        <div class="hl-bank-pill">SBI<small>From 8.50%</small></div>
-        <div class="hl-bank-pill">ICICI Bank<small>From 8.40%</small></div>
-        <div class="hl-bank-pill">Axis Bank<small>From 8.75%</small></div>
-        <div class="hl-bank-pill">Kotak Mahindra<small>From 8.65%</small></div>
-        <div class="hl-bank-pill">LIC Housing<small>From 8.50%</small></div>
-        <div class="hl-bank-pill">PNB Housing<small>From 8.75%</small></div>
-        <div class="hl-bank-pill">Bank of Baroda<small>From 8.40%</small></div>
-        <div class="hl-bank-pill">Bajaj Finance<small>From 8.60%</small></div>
-        <div class="hl-bank-pill">Tata Capital<small>From 8.75%</small></div>
-        <div class="hl-bank-pill">Indiabulls<small>From 9.00%</small></div>
-        <div class="hl-bank-pill">+14 more<small>All verified</small></div>
-      </div>
+  <!-- ELIGIBILITY FORM -->
+  <div class="elig-card">
+    <div class="card-badge">Instant &amp; Free</div>
+    <div class="elig-title">Check Your Eligibility</div>
+    <form id="hero-form" method="POST" action="{% url 'enquiries:create' %}">
+      {% csrf_token %}
+      <input type="hidden" name="enquiry_type" value="home_loan">
+      <input type="hidden" name="source" value="home_loan">
+      <input type="hidden" name="next" value="{% url 'pages:home_loan' %}#compare">
+      <input type="hidden" name="message" id="hiddenMessage" value="">
+    <div class="elig-sub">Personalised result in seconds <span class="free-tag">Free</span></div>
+    <!-- LOAN TYPE TABS -->
+    <div class="loan-type-tabs">
+      <button class="ltab on" onclick="pickLoanType(this)">Home Loan</button>
+      <button class="ltab" onclick="pickLoanType(this)">Balance Transfer</button>
+      <button class="ltab" onclick="pickLoanType(this)">Top-Up Loan</button>
     </div>
-  </section>
-
-  <!-- ══════════════════ WHY US ════════════════════════════════ -->
-  <section class="hl-why">
-    <div class="hl-why-inner">
-      <div class="section-eyebrow">Why HOMEXO Loans</div>
-      <h2 class="section-heading">Advantages You <em>Won't Find</em> Elsewhere</h2>
-      <div class="hl-why-grid">
-        <div class="hl-why-item">
-          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <div class="hl-why-title">Zero Processing Fee</div>
-          <p class="hl-why-desc">We have zero-fee partnerships with select banks. Clients save ₹5,000–₹30,000 on processing charges alone.</p>
-        </div>
-        <div class="hl-why-item">
-          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <div class="hl-why-title">Rate Negotiation</div>
-          <p class="hl-why-desc">Our volume relationships with banks often yield rates 0.10–0.25% lower than walk-in rates, saving lakhs over the loan tenure.</p>
-        </div>
-        <div class="hl-why-item">
-          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-          <div class="hl-why-title">48-Hour Approvals</div>
-          <p class="hl-why-desc">Pre-approved limits from partner banks mean many clients receive an in-principle sanction letter within 48 hours of applying.</p>
-        </div>
-        <div class="hl-why-item">
-          <div class="hl-why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <div class="hl-why-title">Dedicated Advisor</div>
-          <p class="hl-why-desc">A single point of contact from eligibility check to disbursement. No handoffs, no confusion, no delays.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ ELIGIBILITY CALCULATOR ════════════════ -->
-  <section class="hl-eligibility" id="eligibility">
-    <div class="hl-elig-inner">
+    <div class="frow">
       <div>
-        <div class="section-eyebrow">Loan Eligibility</div>
-        <h2 class="section-heading">Check Your <em>Loan Eligibility</em></h2>
-        <p class="section-sub">Get an instant estimate of how much home loan you are eligible for based on your income, existing obligations, and tenure preference.</p>
-        <div class="hl-elig-info">
-          <div class="hl-elig-info-item">
-            <div class="hl-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-            <div>
-              <div class="hl-elig-info-title">Income Multiplier</div>
-              <p class="hl-elig-info-desc">Most banks offer 55–60× of your net monthly salary as the maximum loan. Adding a co-applicant (spouse/parent) can increase eligibility significantly.</p>
-            </div>
-          </div>
-          <div class="hl-elig-info-item">
-            <div class="hl-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-            <div>
-              <div class="hl-elig-info-title">CIBIL Score Matters</div>
-              <p class="hl-elig-info-desc">A CIBIL score above 750 qualifies you for the best rates. Our advisors help you understand and improve your score before applying.</p>
-            </div>
-          </div>
-          <div class="hl-elig-info-item">
-            <div class="hl-elig-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-            <div>
-              <div class="hl-elig-info-title">Fast-Track Approvals</div>
-              <p class="hl-elig-info-desc">With pre-approved limits from our bank partners, many applicants receive in-principle sanction within 48 hours of document submission.</p>
-            </div>
-          </div>
-        </div>
-        <a href="{% url 'pages:emi_calculator' %}" class="hl-emi-link">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="13" rx="2"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-          Try the Full EMI Calculator →
-        </a>
+        <label class="lbl">Full Name</label>
+        <input class="fi" type="text" name="name" placeholder="Your Name" required>
       </div>
-      <div class="hl-elig-form">
-        <div class="hl-elig-form-title">Instant Eligibility Check</div>
-        <p class="hl-elig-form-sub">Takes 30 seconds — no credit check required.</p>
-        <input class="hl-elig-input" type="number" id="eligSalary" placeholder="Net Monthly Salary (₹)" min="0">
-        <input class="hl-elig-input" type="number" id="eligObligation" placeholder="Existing Monthly EMIs (₹)" min="0">
-        <select class="hl-elig-select" id="eligTenure">
-          <option value="" disabled selected>Preferred Loan Tenure</option>
-          <option value="120">10 Years</option>
-          <option value="180">15 Years</option>
-          <option value="240">20 Years</option>
-          <option value="300">25 Years</option>
-          <option value="360">30 Years</option>
+      <div>
+        <label class="lbl">Mobile Number</label>
+        <input class="fi" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required>
+      </div>
+    </div>
+    <div class="frow">
+      <div>
+        <label class="lbl">Monthly Income</label>
+        <input class="fi" type="text" placeholder="₹ Net salary">
+      </div>
+      <div>
+        <label class="lbl">Loan Required</label>
+        <input class="fi" type="text" name="budget" placeholder="₹ Amount needed" required>
+      </div>
+    </div>
+    <div class="frow">
+      <div>
+        <label class="lbl">Property Value</label>
+        <input class="fi" type="text" placeholder="₹ Market value">
+      </div>
+      <div>
+        <label class="lbl">City</label>
+        <select class="fs">
+          <option value="">Select City</option>
+          <option>Bengaluru</option><option>Mumbai</option><option>Pune</option>
+          <option>Hyderabad</option><option>Chennai</option><option>Delhi NCR</option>
+          <option>Ahmedabad</option><option>Kolkata</option><option>Jaipur</option><option>Noida</option>
         </select>
-        <button class="hl-elig-btn" id="eligCalcBtn">Check Eligibility →</button>
-        <div class="hl-elig-result" id="eligResult">
-          <div class="hl-elig-result-val" id="eligAmount">—</div>
-          <div class="hl-elig-result-lbl">Estimated Loan Eligibility</div>
-        </div>
       </div>
     </div>
-  </section>
-
-  <!-- ══════════════════ CTA + FORM ════════════════════════════ -->
-  <section class="hl-cta" id="apply">
-    <div class="hl-cta-inner">
-      <div>
-        <h2>Apply for Your <em>Home Loan</em> Today</h2>
-        <p>Our loan advisors will call you back within 2 business hours with the best rate options for your profile.</p>
-        <ul class="hl-checklist">
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Zero processing fee on select partner banks</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Rates from 8.40% p.a. — lowest available</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>In-principle approval within 48 hours</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dedicated advisor from start to disbursement</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>NRI and resident clients across all cities</li>
-        </ul>
-      </div>
-      <div>
-        <form class="hl-cta-form" method="post" action="{% url 'enquiries:create' %}">
-          {% csrf_token %}
-          <input type="hidden" name="service" value="home_loan">
-          <div class="hl-cta-form-title">Get a Free Callback</div>
-          <p class="hl-cta-form-sub">Tell us about your requirement and we'll match you with the best offer.</p>
-          <input class="hl-cta-input" type="text" name="name" placeholder="Your Full Name" required>
-          <input class="hl-cta-input" type="tel" name="phone" placeholder="Phone Number" required>
-          <input class="hl-cta-input" type="email" name="email" placeholder="Email Address">
-          <select class="hl-cta-select" name="loan_type">
-            <option value="" disabled selected>Loan Type</option>
-            <option>Home Purchase Loan</option>
-            <option>Under Construction Loan</option>
-            <option>Balance Transfer</option>
-            <option>Home Renovation Loan</option>
-            <option>Loan Against Property</option>
-            <option>NRI Home Loan</option>
-          </select>
-          <input class="hl-cta-input" type="text" name="property_location" placeholder="Property City / Location">
-          <button type="submit" class="hl-cta-submit">Request Callback →</button>
-        </form>
+    <!-- PROPERTY FINALIZED -->
+    <div class="prop-toggle-row">
+      <span class="prop-lbl-txt">Property Finalised?</span>
+      <div class="prop-opts">
+        <button class="popt on" onclick="pickProp(this)">Yes</button>
+        <button class="popt" onclick="pickProp(this)">No</button>
       </div>
     </div>
-  </section>
+    <label class="lbl">Employment Type</label>
+    <div class="radio-row">
+      <button class="ropt on" onclick="pickR(this)">Salaried</button>
+      <button class="ropt" onclick="pickR(this)">Self-Employed</button>
+      <button class="ropt" onclick="pickR(this)">NRI</button>
+    </div>
+    <button class="submit-btn" id="heroSubmit">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <span id="heroSubmitText">Get Best Offers Now</span>
+    </button>
+    </form>
+    <div class="form-note">No credit score impact. Data encrypted. <span>100% free service.</span></div>
+    <div class="form-proof-strip">
+      <div class="form-proof"><strong>30 Sec</strong><span>to get started</span></div>
+      <div class="form-proof"><strong>Same Day</strong><span>profile review</span></div>
+      <div class="form-proof"><strong>1 Expert</strong><span>till disbursal</span></div>
+    </div>
+  </div>
+</section>
 
+<!-- ── HOW IT WORKS ── -->
+<section class="sec sec-surface">
+  <div class="sec-hd">
+    <div>
+      <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Simple Process</div>
+      <h2 class="sec-title" style="margin-top:10px">Your Best Loan in<br><em>3 Clear Steps</em></h2>
+      <p class="sec-sub">No bank visits. No paperwork confusion. Your dedicated loan manager handles everything at your doorstep — at zero cost to you.</p>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-ghost">01</div>
+      <div class="step-num"><span class="step-num-line"></span>Step One</div>
+      <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="step-title">Fill Your Details</div>
+      <div class="step-desc">Share your loan requirement, monthly income, and property info. We instantly compare live offers across 15+ banks and surface the best rate for your exact profile — in seconds.</div>
+      <div class="step-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Takes 2 minutes</div>
+    </div>
+    <div class="step">
+      <div class="step-ghost">02</div>
+      <div class="step-num"><span class="step-num-line"></span>Step Two</div>
+      <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <div class="step-title">Compare All Offers</div>
+      <div class="step-desc">View side-by-side interest rates, EMIs, tenure, and processing fees from every bank — in one clean view. Filter by lowest rate, max tenure, or maximum funding percentage.</div>
+      <div class="step-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 15+ banks compared</div>
+    </div>
+    <div class="step">
+      <div class="step-ghost">03</div>
+      <div class="step-num"><span class="step-num-line"></span>Step Three</div>
+      <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <div class="step-title">Get Approved Fast</div>
+      <div class="step-desc">Apply to your chosen bank with one click. Your HOMEXO loan manager handles all documentation and bank liaison at your doorstep — sanction in as little as 7 working days.</div>
+      <div class="step-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Zero cost guarantee</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BANK COMPARISON ── -->
+<section class="sec sec-white" id="compare">
+  <div class="sec-hd">
+    <div>
+      <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Our Banking Partners</div>
+      <h2 class="sec-title" style="margin-top:10px">Compare Rates from<br><em>15+ Leading Banks</em></h2>
+      <p class="sec-sub">Pre-negotiated exclusive rates. Adjust the sliders below to calculate live EMIs tailored to your requirement.</p>
+    </div>
+  </div>
+  <div class="compare-intel">
+    <div class="compare-card dark">
+      <div class="compare-lbl">Why This View Matters</div>
+      <div class="compare-val">One screen,<br>better decisions.</div>
+      <div class="compare-desc">Walk-in rates rarely show the full picture. We compare interest slabs, funding limits, tenure flexibility, and processing costs together so you can choose on outcome, not just headline rate.</div>
+      <div class="compare-chips">
+        <span class="compare-chip">Rate negotiation</span>
+        <span class="compare-chip">Funding fit</span>
+        <span class="compare-chip">Fee clarity</span>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-lbl">Typical Walk-In Range</div>
+      <div class="compare-val">8.75%+</div>
+      <div class="compare-desc">Often shared as a generic rate before your salary band, CIBIL tier, and property type are fully assessed.</div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-lbl">HOMEXO Negotiated Zone</div>
+      <div class="compare-val">8.40% to 8.55%</div>
+      <div class="compare-desc">Indicative range our strongest matches unlock after lender comparison, fee screening, and profile packaging.</div>
+    </div>
+  </div>
+  <div class="compare-sliders">
+    <div class="cfield" style="margin-bottom:0;">
+      <label>Loan Amount <span class="cval" id="cbAmt">₹ 50,00,000</span></label>
+      <input type="range" class="cslider" id="slCbAmt" min="500000" max="50000000" step="100000" value="5000000" oninput="updateCompareBanks()">
+    </div>
+    <div class="cfield" style="margin-bottom:0;">
+      <label>Loan Tenure <span class="cval" id="cbTenure">20 Years</span></label>
+      <input type="range" class="cslider" id="slCbTenure" min="1" max="30" step="1" value="20" oninput="updateCompareBanks()">
+    </div>
+  </div>
+  <div class="bank-tabs">
+    <button class="btab on" onclick="switchBank(this,'lowest')">Lowest Interest</button>
+    <button class="btab" onclick="switchBank(this,'tenure')">Max Tenure</button>
+    <button class="btab" onclick="switchBank(this,'funding')">Max Funding</button>
+    <button class="btab" onclick="switchBank(this,'bt')">Balance Transfer</button>
+  </div>
+  <div class="banks-grid" id="banksGrid"></div>
+</section>
+
+<!-- ── CALCULATORS ── -->
+<section class="sec sec-surface">
+  <div class="sec-hd">
+    <div>
+      <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Financial Tools</div>
+      <h2 class="sec-title" style="margin-top:10px">Plan Your <em>Home Loan</em></h2>
+      <p class="sec-sub">Use our live calculators to estimate your monthly EMI or find how much loan you qualify for before you apply.</p>
+    </div>
+  </div>
+  <div class="calc-meta">
+    <div class="calc-meta-card">
+      <div class="calc-meta-label">Live Assumptions</div>
+      <div class="calc-meta-text">Figures update instantly as you move the sliders, making it easier to test budget comfort before you speak to a lender.</div>
+    </div>
+    <div class="calc-meta-card">
+      <div class="calc-meta-label">Practical Planning</div>
+      <div class="calc-meta-text">Use EMI mode to compare affordability, then switch to eligibility mode to see how income and existing EMIs change your sanction range.</div>
+    </div>
+    <div class="calc-meta-card">
+      <div class="calc-meta-label">Advisor Review</div>
+      <div class="calc-meta-text">Once you find a comfortable number, our team can translate it into the most suitable bank shortlist and documentation path.</div>
+    </div>
+  </div>
+  <div class="calc-tabs">
+    <button class="ctab on" onclick="switchCalc(this,'elig')">Eligibility Calculator</button>
+  </div>
+
+  <!-- ELIGIBILITY PANEL -->
+  <div class="cpanel on" id="calc-elig">
+    <div class="cleft">
+      <div class="cfield"><label>Monthly Income <span class="cval" id="elIncome">₹ 1,00,000</span></label><input type="range" class="cslider" id="slElIncome" min="15000" max="500000" step="5000" value="100000" oninput="runElig()"></div>
+      <div class="cfield"><label>Existing EMIs <span class="cval" id="elExist">₹ 0</span></label><input type="range" class="cslider" id="slElExist" min="0" max="100000" step="1000" value="0" oninput="runElig()"></div>
+      <div class="cfield"><label>Interest Rate p.a. <span class="cval" id="elRate">8.50 %</span></label><input type="range" class="cslider" id="slElRate" min="6" max="15" step="0.1" value="8.5" oninput="runElig()"></div>
+      <div class="cfield"><label>Loan Tenure <span class="cval" id="elTenure">20 Years</span></label><input type="range" class="cslider" id="slElTenure" min="1" max="30" value="20" oninput="runElig()"></div>
+    </div>
+    <div class="cright">
+      <div class="cright-decor"></div>
+      <div class="cright-decor2"></div>
+      <div class="cr-main">
+        <div class="cr-lbl">Eligible Loan Amount</div>
+        <div class="cr-val"><span>₹ </span><span id="rElig">57.80 L</span></div>
+        <div class="cr-note">estimated maximum eligibility</div>
+      </div>
+      <div class="cr-rows">
+        <div class="cr-row"><span class="cr-row-l">Monthly Income</span><span class="cr-row-v" id="rElIncome">₹ 1,00,000</span></div>
+        <div class="cr-row"><span class="cr-row-l">Available for EMI (50%)</span><span class="cr-row-v" id="rElAvail">₹ 50,000</span></div>
+        <div class="cr-row"><span class="cr-row-l">Estimated Monthly EMI</span><span class="cr-row-v" id="rElEmi">₹ 43,391</span></div>
+      </div>
+      <div class="cr-bar-wrap">
+        <div class="cr-bar-lbl">Income Utilisation</div>
+        <div class="cr-bar"><div class="cr-bar-fill" id="barElig" style="width:50%"></div></div>
+        <div class="cr-legend"><span>EMI</span><span style="flex-direction:row-reverse">Remaining</span></div>
+      </div>
+      <button class="ccta" onclick="document.querySelector('.elig-card').scrollIntoView({behavior:'smooth'})">Apply Now — Free →</button>
+    </div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  <div class="trust-item">
+    <div class="trust-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16"/><path d="M7 4h10v6H7z"/><path d="M6 11h12v9H6z"/></svg></div>
+    <div><div class="trust-title">Doorstep Document Support</div><div class="trust-sub">Collection, checklist, and bank-ready packaging handled for you.</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-ico trust-ico-rupee">₹</div>
+    <div><div class="trust-title">No Advisory Fee</div><div class="trust-sub">Comparison, negotiation, and handholding stay free for the borrower.</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <div><div class="trust-title">Secure Data Handling</div><div class="trust-sub">Sensitive profile and income details are reviewed in an encrypted workflow.</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div>
+    <div><div class="trust-title">Single Point of Contact</div><div class="trust-sub">One expert stays with you through eligibility, sanction, and final disbursal.</div></div>
+  </div>
 </div>
+
+<!-- ── WHY HOMEXO ── -->
+<section class="sec sec-dark">
+  <div class="sec-hd">
+    <div>
+      <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Why Choose Us</div>
+      <h2 class="sec-title wht" style="margin-top:10px">Why HOMEXO <em>Finance?</em></h2>
+      <p class="sec-sub wht">We don't just submit your application — we negotiate, manage, and fight for the best possible outcome on your behalf.</p>
+    </div>
+  </div>
+  <div class="feats">
+    <div class="feat">
+      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="5" height="11" rx="1.2"/><rect x="15" y="7" width="5" height="11" rx="1.2"/><path d="M6.5 7V5"/><path d="M17.5 7V5"/><path d="M12 8.5v7"/><path d="M10.5 10l1.5-1.5 1.5 1.5"/><path d="M10.5 14l1.5 1.5 1.5-1.5"/></svg></div>
+      <div class="feat-num">01</div>
+      <div class="feat-title">Compare 15+ Banks</div>
+      <div class="feat-desc">See live offers from every major lender in India — side-by-side. No more calling banks individually or guessing which rate is best for your profile.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon"><span class="feat-icon-rupee-mark" aria-hidden="true">₹</span></div>
+      <div class="feat-num">02</div>
+      <div class="feat-title">Lowest Rate Guaranteed</div>
+      <div class="feat-desc">Our pre-negotiated exclusive rates start at 8.40% p.a. — consistently better than walk-in bank rates. We leverage volume to get you better terms.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="feat-num">03</div>
+      <div class="feat-title">Sanctioned in 7 Days</div>
+      <div class="feat-desc">Our streamlined process and direct banking relationships deliver loan sanctions in as few as 7 working days — the fastest turnaround in the market.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="feat-num">04</div>
+      <div class="feat-title">Zero Cost to You</div>
+      <div class="feat-desc">Our entire home loan advisory is free. We are compensated by our banking partners — you never pay a rupee in fees, commissions, or processing charges.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div class="feat-num">05</div>
+      <div class="feat-title">Dedicated Loan Expert</div>
+      <div class="feat-desc">One expert manages your entire journey — eligibility, documents, bank submission, and disbursal. No being passed between departments or call centres.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <div class="feat-num">06</div>
+      <div class="feat-title">No Hidden Charges</div>
+      <div class="feat-desc">Complete transparency on every fee, every step. What you see in our comparison is exactly what you pay — no surprises at signing.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ELIGIBILITY CRITERIA ── -->
+<section class="sec sec-white">
+  <div class="sec-hd">
+    <div>
+      <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Who Can Apply</div>
+      <h2 class="sec-title" style="margin-top:10px">Loan <em>Eligibility</em> Criteria</h2>
+      <p class="sec-sub">Most salaried and self-employed individuals above 21 years qualify. Here's what banks typically assess.</p>
+    </div>
+  </div>
+  <div class="elig-crit">
+    <div class="elig-col">
+      <div class="ec-head"><span class="ec-head-line"></span>Salaried Applicants</div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="ec-title">Age: 21 – 65 Years</div><div class="ec-desc">Loan tenure must not extend beyond your retirement age, typically 60–65 years.</div></div></div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12M6 8h12M15 21L6 8"/><path d="M6 11h3a4 4 0 000-8"/></svg></div><div><div class="ec-title">Minimum Income: ₹25,000/month</div><div class="ec-desc">Net take-home salary after all deductions. Co-applicant income can be clubbed.</div></div></div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div><div class="ec-title">Work Experience: 2+ Years</div><div class="ec-desc">Minimum 2 years total employment, with at least 6 months at current company.</div></div></div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="ec-title">CIBIL Score: 700+</div><div class="ec-desc">A score above 750 fetches better rates. We can advise on improving your score.</div></div></div>
+    </div>
+    <div class="elig-col">
+      <div class="ec-head"><span class="ec-head-line"></span>Self-Employed Applicants</div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="ec-title">Age: 21 – 70 Years</div><div class="ec-desc">Self-employed professionals enjoy a wider age bracket than salaried individuals.</div></div></div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="ec-title">Business Vintage: 3+ Years</div><div class="ec-desc">Business must be operational for at least 3 years with consistent ITR filings.</div></div></div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="ec-title">ITR for 2 Consecutive Years</div><div class="ec-desc">Income Tax Returns for the last 2 years showing consistent or growing income.</div></div></div>
+      <div class="ec-row"><div class="ec-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="ec-title">CIBIL Score: 700+</div><div class="ec-desc">A clean repayment history significantly improves approval chances and rate offered.</div></div></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ── TESTIMONIALS ── -->
+<section class="sec sec-surface2">
+  <div class="sec-hd">
+    <div>
+      <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Customer Stories</div>
+      <h2 class="sec-title voices-title" style="margin-top:10px">Voices of <em>Trust</em></h2>
+    </div>
+  </div>
+  <div class="testis">
+    <div class="testi">
+      <div class="testi-q">"</div>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">HOMEXO saved me ₹4,200/month on my EMI compared to the rate my own bank was offering. The manager handled everything — I barely had to visit the bank once.</div>
+      <div class="testi-author"><div class="testi-av">AV</div><div><div class="testi-name">Arjun Verma</div><div class="testi-role">Software Engineer, Bengaluru</div><div class="testi-loan">₹75L · SBI · 8.40% p.a.</div></div></div>
+    </div>
+    <div class="testi">
+      <div class="testi-q">"</div>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">As an NRI I needed to compare Indian banks without flying back. HOMEXO showed me all offers online and their team managed everything remotely — I signed digitally and got keys in 3 weeks.</div>
+      <div class="testi-author"><div class="testi-av">PM</div><div><div class="testi-name">Priya Menon</div><div class="testi-role">NRI Client — Singapore</div><div class="testi-loan">₹1.2Cr · HDFC · 8.55% p.a.</div></div></div>
+    </div>
+    <div class="testi">
+      <div class="testi-q">"</div>
+      <div class="testi-stars">★★★★☆</div>
+      <div class="testi-text">The EMI calculator helped me realise I could afford a bigger loan than I thought. HOMEXO's manager then found 80% funding from Axis — something I'd given up on after two bank rejections.</div>
+      <div class="testi-author"><div class="testi-av">RK</div><div><div class="testi-name">Rohit Kapoor</div><div class="testi-role">Business Owner, Pune</div><div class="testi-loan">₹95L · Axis · 8.75% p.a.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="sec sec-white" id="faq">
+  <div class="sec-hd" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;margin-bottom:52px;">
+    <div class="eyebrow" style="color:var(--gold);justify-content:center"><span class="eyebrow-line"></span>Common Questions<span class="eyebrow-line" style="transform:scaleX(-1)"></span></div>
+    <h2 class="sec-title" style="margin-top:10px">Home Loan <em>FAQs</em></h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <button class="faq-q" onclick="tFaq(this)">How much home loan can I get?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
+      <div class="faq-ans">Banks typically allow 50–60% of your net monthly income as the maximum EMI. Most lenders offer up to 80% of the property's market or guidance value, whichever is lower. Your CIBIL score, existing liabilities, and employer profile also influence the final amount. Use our Eligibility Calculator above for a personalised estimate.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="tFaq(this)">Which bank gives the lowest home loan rate?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
+      <div class="faq-ans">As of 2026, SBI and Bank of Baroda offer rates starting at 8.40% p.a., making them among the most competitive. HDFC and LIC Housing Finance follow at 8.50%. However, your specific rate depends on your CIBIL score, income, and loan amount. Our managers compare live rates across all 15+ partners to find the best fit for your profile.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="tFaq(this)">What documents are required for a home loan?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
+      <div class="faq-ans">Standard documents include: Identity and address proof (Aadhaar, PAN), income proof (3 months salary slips or 2 years ITR for self-employed), 6 months bank statements, Form 16, employer letter, and property documents (sale agreement, title deed, approved plan, NOC). Your HOMEXO loan manager will provide a precise checklist tailored to your bank and profile.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="tFaq(this)">Can I apply for a home loan as an NRI?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
+      <div class="faq-ans">Yes. NRIs can take home loans in India to purchase residential properties. The process requires a valid Indian passport, NRE/NRO bank account, income proof from the country of employment, and optionally a registered Power of Attorney. HOMEXO has extensive NRI loan experience and manages the entire process digitally.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="tFaq(this)">Fixed vs Floating rate — which should I choose?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
+      <div class="faq-ans">Fixed rates stay constant, giving predictable EMIs. Floating rates are linked to RBI Repo Rate / MCLR and change with the market. Currently, floating rates are lower than fixed for most banks. In a declining rate environment, floating benefits you — in a rising one, fixed offers protection. Our managers will advise based on current market outlook and your risk preference.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="tFaq(this)">What are the tax benefits on a home loan?<div class="faq-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button>
+      <div class="faq-ans">Section 24(b): deduction up to ₹2 lakh/year on interest paid. Section 80C: up to ₹1.5 lakh/year on principal repayment. Section 80EE: additional ₹50,000 for first-time buyers with loans under ₹35 lakh and property value under ₹50 lakh. Our team can connect you with a tax advisor for a full assessment.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<div class="cta">
+  <div class="cta-decor">LOAN</div>
+  <div class="cta-copy">
+    <div class="cta-gold-line"></div>
+    <h2 class="cta-title">Your Dream Home<br>Deserves the <em>Best</em><br>Loan Deal.</h2>
+    <p class="cta-sub">Let our experts compare every bank, negotiate your rate, and close your loan — all without a single rupee in fees.</p>
+    <div class="cta-points">
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">We shortlist banks by profile fit, not brand name, so you start with the strongest approval path.</div>
+      </div>
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">Your advisor compares rate slabs, processing fees, and tenure flexibility before any application is submitted.</div>
+      </div>
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">We coordinate document pickup, lender follow-ups, and sanction progress so you do not chase multiple teams.</div>
+      </div>
+      <div class="cta-point">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <div class="cta-point-text">Ideal for purchase loans, balance transfers, top-up needs, and NRI-led residential financing.</div>
+      </div>
+    </div>
+    <div class="cta-meta">
+      <span class="cta-chip">30-minute callback</span>
+      <span class="cta-chip">No spam follow-ups</span>
+      <span class="cta-chip">Free advisory</span>
+    </div>
+  </div>
+  <div class="cta-form">
+    <div class="cta-form-head">
+      <div class="cta-form-title">Start Your Comparison</div>
+      <div class="cta-form-sub">Share four quick details. We will map your likely eligibility and the best bank shortlist for your profile.</div>
+    </div>
+    <form id="cta-form" method="POST" action="{% url 'enquiries:create' %}">
+      {% csrf_token %}
+      <input type="hidden" name="enquiry_type" value="home_loan">
+      <input type="hidden" name="source" value="home_loan">
+      <input type="hidden" name="next" value="{% url 'pages:home_loan' %}#compare">
+      <input type="hidden" name="message" id="ctaHiddenMessage" value="">
+    <div class="cta-row">
+      <input class="ci" type="text" name="name" placeholder="Your Full Name" required>
+      <input class="ci" type="tel" name="phone" placeholder="Phone Number" required>
+    </div>
+    <div class="cta-row">
+      <input class="ci" type="text" placeholder="Monthly Income (₹)">
+      <select class="cs"><option>Loan Amount Needed</option><option>Under ₹30L</option><option>₹30L – ₹50L</option><option>₹50L – ₹1Cr</option><option>₹1Cr – ₹2Cr</option><option>Above ₹2Cr</option></select>
+    </div>
+    <button class="cta-btn" type="submit" id="ctaSubmit">Compare Offers — Free →</button>
+    </form>
+    <div class="cta-form-foot">No credit impact. No advisory cost. One dedicated expert until your loan closes.</div>
+  </div>
+</div>
+<div class="page-cond-note">Conditions apply: interest rate, funding percentage and eligible loan amount vary by bank, property, applicant income, credit profile and supporting documents.</div>
+</div>
+
 {% endblock %}
 
 {% block pre_footer %}{% endblock pre_footer %}
 
 {% block extra_js %}
 <script>
-document.getElementById('eligCalcBtn').addEventListener('click', function () {
-  const salary      = parseFloat(document.getElementById('eligSalary').value) || 0;
-  const obligations = parseFloat(document.getElementById('eligObligation').value) || 0;
-  const tenureSelect = document.getElementById('eligTenure');
-  const tenure      = parseInt(tenureSelect.value) || 240;
+// ── SCROLL REVEAL ────────────────────────────────
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.07});
+document.querySelectorAll('.stat,.step,.feat,.testi').forEach(el=>obs.observe(el));
 
-  if (!salary) { alert('Please enter your monthly salary.'); return; }
+// ── RADIO BUTTONS ────────────────────────────────
+function pickR(b){document.querySelectorAll('.ropt').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
+function pickLoanType(b){document.querySelectorAll('.ltab').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
+function pickProp(b){document.querySelectorAll('.popt').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
 
-  const availableEMI = salary * 0.55 - obligations;
-  if (availableEMI <= 0) {
-    alert('Your existing obligations exceed the FOIR limit. Consider reducing existing EMIs or adding a co-applicant.');
-    return;
-  }
+// ── HERO FORM ────────────────────────────────────
+document.getElementById('hero-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Compose message
+  const ltype = document.querySelector('.ltab.on').textContent;
+  const inc = document.querySelector('input[placeholder="₹ Net salary"]').value;
+  const pVal = document.querySelector('input[placeholder="₹ Market value"]').value;
+  const city = document.querySelector('.fs').value;
+  const pProp = document.querySelector('.popt.on').textContent;
+  const rEmp = document.querySelector('.ropt.on').textContent;
+  
+  const msg = `Loan Type: ${ltype}\nIncome: ${inc}\nProperty Value: ${pVal}\nCity: ${city}\nProperty Finalised: ${pProp}\nEmployment: ${rEmp}`;
+  document.getElementById('hiddenMessage').value = msg;
 
-  // Reverse EMI formula: P = EMI × [(1+r)^n - 1] / [r × (1+r)^n]
-  const annualRate = 0.0875; // conservative 8.75%
-  const r = annualRate / 12;
-  const n = tenure;
-  const eligibleLoan = availableEMI * (Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n));
-
-  const resultEl = document.getElementById('eligResult');
-  const amountEl = document.getElementById('eligAmount');
-  if (eligibleLoan >= 10000000) {
-    amountEl.textContent = '₹' + (eligibleLoan / 10000000).toFixed(2) + ' Cr';
-  } else {
-    amountEl.textContent = '₹' + (eligibleLoan / 100000).toFixed(1) + ' L';
-  }
-  resultEl.classList.add('show');
+  const btn = document.getElementById('heroSubmit');
+  const t = document.getElementById('heroSubmitText');
+  btn.style.background='var(--navy)';
+  t.textContent='Comparing Offers…';
+  
+  let d=0; const iv=setInterval(()=>{d=(d+1)%4;t.textContent='Comparing Offers'+'.'.repeat(d);},350);
+  
+  setTimeout(()=>{
+    clearInterval(iv);
+    btn.style.background='var(--green)';
+    t.textContent='✓ Offers Ready — Redirecting...';
+    this.submit();
+  }, 2000);
 });
+
+// ── BANK DATA ────────────────────────────────────
+function calcEMI(p,r,t){const mo=r/12/100,n=t*12;if(mo===0)return p/n;return p*mo*Math.pow(1+mo,n)/(Math.pow(1+mo,n)-1);}
+function fmtEMI(n){return Math.round(n).toLocaleString('en-IN');}
+
+const banks={
+  lowest:[
+    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Up to 80% · 30 yrs',badge:'Lowest Rate',bt:'green'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
+    {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'0.35%',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Up to 80% · 30 yrs',badge:'Most Popular',bt:'gold'},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
+    {abbr:'IDBI',name:'IDBI Bank',rate:8.60,fee:'0.50%',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
+    {abbr:'ICICI',name:'ICICI Bank',rate:8.65,fee:'0.50%',detail:'Up to 85% · 30 yrs',badge:'',bt:''},
+    {abbr:'AXIS',name:'Axis Bank',rate:8.75,fee:'1%+GST',detail:'Up to 80% · 30 yrs',badge:'',bt:''},
+    {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.85,fee:'0.25%',detail:'Up to 80% · 25 yrs',badge:'',bt:''},
+  ],
+  tenure:[
+    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Max 30 years tenure',badge:'30 Yrs Max',bt:'green'},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Max 30 years tenure',badge:'30 Yrs Max',bt:'gold'},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Max 30 years tenure',badge:'30 Yrs Max',bt:'gold'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Max 30 years tenure',badge:'',bt:''},
+    {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'0.35%',detail:'Max 30 years tenure',badge:'',bt:''},
+    {abbr:'ICICI',name:'ICICI Bank',rate:8.65,fee:'0.50%',detail:'Max 30 years tenure',badge:'',bt:''},
+    {abbr:'AXIS',name:'Axis Bank',rate:8.75,fee:'1%+GST',detail:'Max 30 years tenure',badge:'',bt:''},
+    {abbr:'IDBI',name:'IDBI Bank',rate:8.60,fee:'0.50%',detail:'Max 30 years tenure',badge:'',bt:''},
+    {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.85,fee:'0.25%',detail:'Max 25 years tenure',badge:'25 Yrs Max',bt:''},
+  ],
+  funding:[
+    {abbr:'SBI',name:'State Bank of India',rate:8.40,fee:'0.40%',detail:'Up to 80% of value',badge:'80% Funding',bt:'green'},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.55,fee:'₹3,000',detail:'Up to 80% of value',badge:'80% Funding',bt:'gold'},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Up to 80% of value',badge:'80% Funding',bt:'gold'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'₹8,500',detail:'Up to 80% of value',badge:'',bt:''},
+    {abbr:'ICICI',name:'ICICI Bank',rate:8.65,fee:'0.50%',detail:'Up to 85% of value',badge:'85% Funding',bt:''},
+    {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'0.35%',detail:'Up to 80% of value',badge:'',bt:''},
+    {abbr:'AXIS',name:'Axis Bank',rate:8.75,fee:'1%+GST',detail:'Up to 80% of value',badge:'',bt:''},
+    {abbr:'IDBI',name:'IDBI Bank',rate:8.60,fee:'0.50%',detail:'Up to 80% of value',badge:'',bt:''},
+    {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.85,fee:'0.25%',detail:'Up to 80% of value',badge:'',bt:''},
+  ],
+  bt:[
+    {abbr:'SBI',name:'State Bank of India',rate:8.35,fee:'NIL',detail:'Transfer + Top-Up up to 80%',badge:'No Fee',bt:'green'},
+    {abbr:'HDFC',name:'HDFC Bank',rate:8.50,fee:'₹3,000',detail:'Transfer + Top-Up up to 80%',badge:'Most Popular',bt:'gold'},
+    {abbr:'BOB',name:'Bank of Baroda',rate:8.40,fee:'NIL',detail:'Transfer + Top-Up up to 80%',badge:'No Fee',bt:'green'},
+    {abbr:'ICICI',name:'ICICI Bank',rate:8.60,fee:'0.50%',detail:'Transfer up to 85%',badge:'',bt:''},
+    {abbr:'AXIS',name:'Axis Bank',rate:8.70,fee:'0.50%',detail:'Transfer up to 80%',badge:'',bt:''},
+    {abbr:'PNB',name:'Punjab National',rate:8.45,fee:'NIL',detail:'Transfer up to 80%',badge:'',bt:''},
+    {abbr:'LIC',name:'LIC Housing Finance',rate:8.55,fee:'0.25%',detail:'Transfer up to 80%',badge:'',bt:''},
+    {abbr:'KOTAK',name:'Kotak Mahindra',rate:8.80,fee:'0.25%',detail:'Transfer up to 80%',badge:'',bt:''},
+    {abbr:'IDBI',name:'IDBI Bank',rate:8.60,fee:'0.50%',detail:'Transfer up to 80%',badge:'',bt:''},
+  ]
+};
+
+function renderBanks(key){
+  const g=document.getElementById('banksGrid');
+  const LOAN=document.getElementById('slCbAmt') ? parseInt(document.getElementById('slCbAmt').value) : 5000000;
+  const TENURE=document.getElementById('slCbTenure') ? parseInt(document.getElementById('slCbTenure').value) : 20;
+  g.innerHTML=banks[key].map((b,i)=>`
+    <div class="bcard" style="transition-delay:${i*.04}s">
+      <div class="bcard-abbr">${b.abbr}</div>
+      <div class="bcard-name">${b.name}</div>
+      <div>
+        <div class="bcard-rate">${b.rate}% p.a.</div>
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.5px;margin-top:2px">Interest Rate</div>
+      </div>
+      <div>
+        <div class="bcard-emi">₹ ${fmtEMI(calcEMI(LOAN,b.rate,TENURE))}</div>
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.5px;margin-top:2px">EMI / month</div>
+      </div>
+      <div class="bcard-detail">${b.detail}</div>
+      <div class="bcard-fee">Processing: ${b.fee}</div>
+      ${b.badge?`<div class="bcard-badge ${b.bt}">${b.badge}</div>`:''}
+    </div>
+  `).join('')+`<div class="banks-more-card"><div class="banks-more-num">+6</div><div class="banks-more-lbl" style="font-size:10px;color:var(--text3)">More Banking Partners</div></div>`;
+  g.querySelectorAll('.bcard,.banks-more-card').forEach(el=>{el.classList.remove('vis');setTimeout(()=>obs.observe(el),10);});
+}
+
+function switchBank(btn,key){
+  document.querySelectorAll('.btab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderBanks(key);
+}
+renderBanks('lowest');
+
+function updateCompareBanks() {
+  const amtInput = document.getElementById('slCbAmt');
+  const tenInput = document.getElementById('slCbTenure');
+  if(!amtInput || !tenInput) return;
+  const LOAN = parseInt(amtInput.value);
+  const TENURE = parseInt(tenInput.value);
+  
+  document.getElementById('cbAmt').textContent = '₹ ' + f(LOAN);
+  document.getElementById('cbTenure').textContent = TENURE + ' Year' + (TENURE===1?'':'s');
+  slFill(amtInput);
+  slFill(tenInput);
+
+  const activeTab = document.querySelector('.btab.on');
+  let currentKey = 'lowest';
+  if(activeTab) {
+    const txt = activeTab.textContent;
+    if(txt.includes('Tenure')) currentKey='tenure';
+    else if(txt.includes('Funding')) currentKey='funding';
+    else if(txt.includes('Transfer')) currentKey='bt';
+  }
+  
+  // Re-render but avoid animation re-trigger manually if we want, or just let it animate
+  renderBanks(currentKey);
+}
+
+// ── CALC HELPERS ─────────────────────────────────
+function fmt(n){if(n>=10000000)return(n/10000000).toFixed(2)+' Cr';if(n>=100000)return(n/100000).toFixed(2)+' L';return Math.round(n).toLocaleString('en-IN');}
+function f(n){return Math.round(n).toLocaleString('en-IN');}
+function slFill(el){const p=(el.value-el.min)/(el.max-el.min)*100;el.style.background=`linear-gradient(to right,var(--gold) ${p}%,rgba(184,153,106,0.15) ${p}%)`;}
+
+// ── EMI CALC ─────────────────────────────────────
+function runEmi(){
+  const slEAmtNode = document.getElementById('slEAmt');
+  if(!slEAmtNode) return;
+  const P=parseInt(slEAmtNode.value)*100000;
+  const r=parseFloat(document.getElementById('slERate').value)/12/100;
+  const n=parseInt(document.getElementById('slETenure').value)*12;
+  const t=parseInt(document.getElementById('slETenure').value);
+  const emi=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  const ti=(emi*n)-P,ta=emi*n;
+  document.getElementById('eAmt').textContent='₹ '+fmt(P);
+  document.getElementById('eRate').textContent=parseFloat(document.getElementById('slERate').value).toFixed(2)+' %';
+  document.getElementById('eTenure').textContent=t+' Year'+(t===1?'':'s');
+  document.getElementById('rEmi').textContent=f(Math.round(emi));
+  document.getElementById('rTenure').textContent=t;
+  document.getElementById('rPrin').textContent='₹ '+f(P);
+  document.getElementById('rInt').textContent='₹ '+f(Math.round(ti));
+  document.getElementById('rTotal').textContent='₹ '+f(Math.round(ta));
+  document.getElementById('barEmi').style.width=Math.round(P/ta*100)+'%';
+  document.querySelectorAll('#calc-emi .cslider').forEach(slFill);
+}
+
+// ── ELIGIBILITY CALC ──────────────────────────────
+function runElig(){
+  const inc=parseInt(document.getElementById('slElIncome').value);
+  const ex=parseInt(document.getElementById('slElExist').value);
+  const r=parseFloat(document.getElementById('slElRate').value)/12/100;
+  const n=parseInt(document.getElementById('slElTenure').value)*12;
+  const t=parseInt(document.getElementById('slElTenure').value);
+  const avail=Math.max(0,inc*0.5-ex);
+  const loan=avail>0?avail*(Math.pow(1+r,n)-1)/(r*Math.pow(1+r,n)):0;
+  const emiL=loan>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):0;
+  document.getElementById('elIncome').textContent='₹ '+f(inc);
+  document.getElementById('elExist').textContent='₹ '+f(ex);
+  document.getElementById('elRate').textContent=parseFloat(document.getElementById('slElRate').value).toFixed(2)+' %';
+  document.getElementById('elTenure').textContent=t+' Year'+(t===1?'':'s');
+  document.getElementById('rElig').textContent=fmt(loan);
+  document.getElementById('rElIncome').textContent='₹ '+f(inc);
+  document.getElementById('rElAvail').textContent='₹ '+f(avail);
+  document.getElementById('rElEmi').textContent='₹ '+f(Math.round(emiL));
+  document.getElementById('barElig').style.width=Math.min(100,Math.round(avail/inc*100))+'%';
+  document.querySelectorAll('#calc-elig .cslider').forEach(slFill);
+}
+
+function switchCalc(btn,id){
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.cpanel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('calc-'+id).classList.add('on');
+}
+
+// ── CTA FORM ─────────────────────────────────────
+document.getElementById('cta-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const inc = document.querySelector('input[placeholder="Monthly Income (₹)"]').value;
+  const amt = document.querySelector('select.cs').value;
+  document.getElementById('ctaHiddenMessage').value = `Income: ${inc}\nAmount Needed: ${amt}`;
+  
+  const btn = document.getElementById('ctaSubmit');
+  btn.style.background='var(--green)';
+  btn.style.color='white';
+  btn.textContent='✓ Request Received — Redirecting...';
+  setTimeout(()=>{
+    this.submit();
+  }, 1000);
+});
+
+// ── FAQ ──────────────────────────────────────────
+function tFaq(btn){
+  const a=btn.nextElementSibling,o=btn.classList.contains('open');
+  document.querySelectorAll('.faq-q').forEach(q=>{q.classList.remove('open');q.nextElementSibling.classList.remove('open');});
+  if(!o){btn.classList.add('open');a.classList.add('open');}
+}
+
+// ── INIT ─────────────────────────────────────────
+if(document.getElementById('slCbAmt')){ slFill(document.getElementById('slCbAmt')); slFill(document.getElementById('slCbTenure')); } runEmi();runElig();
 </script>
 {% endblock %}

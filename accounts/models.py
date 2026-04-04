@@ -6,6 +6,7 @@ Custom User model extending AbstractBaseUser.
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+import datetime
 
 
 class UserManager(BaseUserManager):
@@ -32,21 +33,41 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
 
     class Role(models.TextChoices):
-        BUYER  = 'buyer',  'Buyer'
-        SELLER = 'seller', 'Seller'
-        AGENT  = 'agent',  'Agent'
-        ADMIN  = 'admin',  'Admin'
+        BUYER            = 'buyer',            'Buyer'
+        SELLER           = 'seller',           'Seller'
+        AGENT            = 'agent',            'Agent'
+        ADMIN            = 'admin',            'Admin'
+        LEGAL_ADMIN      = 'legal_admin',      'Legal Admin'
+        ADVOCATE         = 'advocate',         'Advocate'
+        CUSTOMER_SUPPORT = 'customer_support', 'Customer Support'
 
     email        = models.EmailField(unique=True, db_index=True)
     first_name   = models.CharField(max_length=80)
     last_name    = models.CharField(max_length=80)
-    phone        = models.CharField(max_length=20, blank=True)
-    role         = models.CharField(max_length=10, choices=Role.choices, default=Role.BUYER)
+    phone        = models.CharField(max_length=20, blank=True, null=True, unique=True, db_index=True)
+    role         = models.CharField(max_length=20, choices=Role.choices, default=Role.BUYER)
     avatar       = models.ImageField(upload_to='avatars/', blank=True, null=True)
     is_verified  = models.BooleanField(default=False)
     is_active    = models.BooleanField(default=True)
     is_staff     = models.BooleanField(default=False)
     date_joined  = models.DateTimeField(default=timezone.now)
+
+    # Profile-completion tracking (False for new social-auth users)
+    profile_complete = models.BooleanField(default=True)
+
+    # Property preferences
+    preferred_city          = models.CharField(max_length=100, blank=True)
+    preferred_listing_type  = models.CharField(max_length=20, blank=True)
+    preferred_property_type = models.CharField(max_length=20, blank=True)
+    preferred_bhk           = models.CharField(max_length=10, blank=True)
+    
+    # Advocate specific
+    address                 = models.TextField(blank=True, null=True)
+    bar_number              = models.CharField(max_length=50, blank=True)
+    bar_council_certificate = models.ImageField(upload_to='advocate_docs/bar/', blank=True, null=True)
+    aadhaar_image           = models.ImageField(upload_to='advocate_docs/aadhaar/', blank=True, null=True)
+    address_proof_image     = models.ImageField(upload_to='advocate_docs/address/', blank=True, null=True)
+    is_approved_advocate    = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -74,3 +95,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_seller(self):
         return self.role in (self.Role.SELLER, self.Role.AGENT)
+
+
+class PhoneOTP(models.Model):
+    """One-time password for phone-based login. Valid for 10 minutes, single use."""
+    phone      = models.CharField(max_length=20, db_index=True)
+    otp        = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used    = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'OTP for {self.phone}'
+
+    @property
+    def is_valid(self):
+        return (
+            not self.is_used and
+            timezone.now() < self.created_at + datetime.timedelta(minutes=10)
+        )

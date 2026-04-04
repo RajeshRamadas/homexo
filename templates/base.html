@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +6,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}HOMEXO — Luxury Real Estate{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}Find your perfect luxury property with HOMEXO.{% endblock %}">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+<meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+<meta name="theme-color" content="#0D2B4E">
+<link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+<link rel="alternate icon" href="{% static 'favicon.ico' %}">
+
+<!-- Open Graph -->
+<meta property="og:type" content="{% block og_type %}website{% endblock %}">
+<meta property="og:title" content="{% block og_title %}HOMEXO — Luxury Real Estate{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Find your perfect luxury property with HOMEXO — India's premium real estate advisory.{% endblock %}">
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}{% endblock %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:site_name" content="HOMEXO">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}HOMEXO — Luxury Real Estate{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}Find luxury properties with HOMEXO{% endblock %}">
+
+<!-- Preconnect for faster font loading -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/homexo.css' %}">
+
+<!-- JSON-LD Structured Data -->
+{% block json_ld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "HOMEXO",
+  "url": "{{ request.scheme }}://{{ request.get_host }}/",
+  "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+  "description": "India's premium real estate advisory connecting exceptional people with extraordinary homes.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91-8105568225",
+    "contactType": "customer service",
+    "areaServed": "IN"
+  },
+  "sameAs": [
+    "https://www.facebook.com/homexo.in",
+    "https://www.instagram.com/homexo.in",
+    "https://www.linkedin.com/company/homexo",
+    "https://twitter.com/homexo_in",
+    "https://www.youtube.com/@homexo"
+  ]
+}
+</script>
+{% endblock %}
+
 {% block extra_head %}{% endblock %}
-<style>
-  :root {
+<style>:root {
     --cream: #F0F4F8; --ivory: #F7F9FC; --charcoal: #0D1B2A;
     --warm-grey: #7A8A99; --gold: #0A2E5C; --gold-light: #C8D8EC;
     --deep-brown: #071929; --soft-brown: #3A5F85; --accent: #1565C0;
@@ -19,7 +69,7 @@
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
 
   /* ── NAV ── */
   nav {
@@ -30,7 +80,7 @@
   }
   .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
   .nav-logo-svg { height: 40px; width: auto; }
-  .nav-logo-text { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500; letter-spacing: 5px; color: var(--navy); }
+  .nav-logo-text { font-family: 'Source Sans 3', sans-serif; font-size: 18px; font-weight: 500; letter-spacing: 5px; color: var(--navy); }
   .nav-links { display: flex; gap: 36px; align-items: center; }
   .nav-links a { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--soft-brown); text-decoration: none; transition: color .3s; }
   .nav-links a:hover { color: var(--navy); }
@@ -38,14 +88,55 @@
   .nav-cta:hover { background: var(--sky) !important; }
   .nav-wishlist { position: relative; display: flex; align-items: center; }
   .nav-wishlist-count { position: absolute; top: -6px; right: -8px; background: var(--sky); color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; }
-  .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; cursor: pointer; z-index: 1200; }
   .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--navy); border-radius: 2px; transition: all .3s; }
   .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .nav-hamburger.open span:nth-child(2) { opacity: 0; }
   .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-  .nav-mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(247,249,252,0.98); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; z-index: 1050; }
+  .nav-mobile-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(247,249,252,0.98); backdrop-filter: blur(20px);
+    flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 90px 24px 40px; gap: 0; z-index: 1050; overflow-y: auto;
+  }
   .nav-mobile-overlay.open { display: flex; }
-  .nav-mobile-overlay a { font-size: 16px; letter-spacing: 3px; text-transform: uppercase; color: var(--navy); text-decoration: none; }
+  .nav-mobile-overlay > a {
+    width: 100%; max-width: 340px; text-align: center;
+    font-size: 15px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--navy); text-decoration: none;
+    padding: 16px 0; border-bottom: 1px solid rgba(13,43,78,0.07);
+  }
+  .nav-mobile-overlay > a:last-child { border-bottom: none; }
+  .nav-mobile-overlay > a:hover { color: var(--sky); }
+  .mobile-dropdown { display: flex; flex-direction: column; align-items: center; gap: 0; width: 100%; max-width: 340px; }
+  .mobile-dropdown-btn {
+    background: none; border: none; border-bottom: 1px solid rgba(13,43,78,0.07);
+    width: 100%; text-align: center; padding: 16px 0;
+    font-size: 15px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--navy); cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 6px; font-family: inherit;
+  }
+  .mobile-dropdown.open .mobile-dropdown-btn { color: var(--sky); border-bottom-color: transparent; }
+  .mobile-dropdown-menu {
+    display: none; flex-direction: column; align-items: center; gap: 0;
+    width: 100%; background: rgba(13,43,78,0.03); border-radius: 8px;
+    margin-bottom: 4px; padding: 4px 0;
+  }
+  .mobile-dropdown.open .mobile-dropdown-menu { display: flex; }
+  .mobile-dropdown-menu a {
+    width: 100%; text-align: center; padding: 13px 0;
+    font-size: 13px; color: var(--soft-brown); letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid rgba(13,43,78,0.05);
+    text-decoration: none;
+  }
+  .mobile-dropdown-menu a:last-child { border-bottom: none; }
+  .mobile-dropdown-menu a:hover { color: var(--navy); }
+  
+  .nav-dropdown { position: relative; height: 100%; display: flex; align-items: center; }
+  .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 5px); left: 0; background: rgba(247,249,252,0.98); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 10px 30px rgba(13,43,78,.1); padding: 12px 0; z-index: 1200; min-width: 180px; }
+  .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; }
+  .nav-dropdown-menu a { padding: 10px 24px; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; color: var(--soft-brown); display: block; }
+  .nav-dropdown-menu a:hover { background: rgba(13,43,78,.04); color: var(--navy); }
 
   /* ── SCROLL PROGRESS ── */
   .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--sky); z-index: 9998; width: 0%; transition: width .1s linear; }
@@ -59,6 +150,7 @@
   .fab:hover { transform:scale(1.1) translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.28); }
   .fab-emi { background:var(--navy); color:var(--white); }
   .fab-wa { background:#25D366; color:var(--white); }
+  @media (min-width: 1025px) { .fab-wrap:has(.fab-wa) { display: none; } }
   .fab-label { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--white); background:var(--charcoal); padding:5px 12px; border-radius:4px; opacity:0; transform:translateX(8px); transition:all .25s; pointer-events:none; white-space:nowrap; }
   .fab-wrap { display:flex; align-items:center; gap:10px; }
   .fab-wrap:hover .fab-label { opacity:1; transform:translateX(0); }
@@ -78,22 +170,23 @@
   .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 50px; }
   .footer-brand p { font-size: 14px; line-height: 1.8; color: rgba(245,240,232,0.4); max-width: 280px; margin: 20px 0 28px; }
   .footer-social { display: flex; gap: 12px; }
-  .footer-social-btn { width: 40px; height: 40px; border: 1px solid rgba(10,46,92,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .3s; }
+  .footer-social-btn { width: 40px; height: 40px; border: 1px solid rgba(10,46,92,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .3s; text-decoration: none; }
   .footer-social-btn:hover { border-color: var(--sky); background: var(--navy); }
   .footer-col h5 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 24px; }
   .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
   .footer-col ul li a { font-size: 14px; color: rgba(245,240,232,0.45); text-decoration: none; transition: color .3s; }
   .footer-col ul li a:hover { color: rgba(245,240,232,0.85); }
-  .footer-bottom { padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
-  .footer-bottom p { font-size: 12px; color: rgba(245,240,232,0.25); }
-  .footer-bottom a { color: rgba(74,144,196,0.6); text-decoration: none; }
+  .footer-bottom { padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+  .footer-bottom p { font-size: 12px; color: rgba(245,240,232,0.4); }
+  .footer-bottom a { color: rgba(74,144,196,0.7); text-decoration: none; }
 
   /* ── PROPERTY CARD ── */
-  .property-card { background: var(--white); overflow: hidden; transition: all .4s; }
-  .property-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.12); transform: translateY(-4px); }
-  .property-card-img { position: relative; height: 260px; overflow: hidden; }
-  .property-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
-  .property-card:hover .property-card-img img { transform: scale(1.06); }
+  .property-card { background: var(--white); border-radius: 18px; border: 1px solid var(--border); overflow: hidden; transition: all .5s cubic-bezier(.23,1,.32,1); }
+  .property-card:hover { box-shadow: 0 16px 40px rgba(13,43,78,.12); transform: translateY(-6px); border-color: transparent; }
+  .property-card-img { position: relative; height: 260px; overflow: hidden; background: var(--white); border-bottom: 1px solid rgba(0,0,0,0.04); }
+  .property-card-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(13,27,42,0.03) 100%); pointer-events: none; }
+  .property-card-img img, .property-card-img > div:not(.property-tag):not(.card-cta) { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.23,1,.32,1); }
+  .property-card:hover .property-card-img img, .property-card:hover .property-card-img > div:not(.property-tag):not(.card-cta) { transform: scale(1.08); }
   .property-tag { position: absolute; top: 16px; left: 16px; padding: 5px 12px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
   .property-tag.featured  { background: var(--navy); color: var(--white); }
   .property-tag.new       { background: var(--sky); color: var(--white); }
@@ -104,8 +197,8 @@
   .property-fav:hover { background: var(--navy); }
   .property-fav:hover svg { stroke: white; }
   .property-body { padding: 20px; }
-  .property-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
-  .property-price span { font-size: 13px; color: var(--warm-grey); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  .property-price { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+  .property-price span { font-size: 13px; color: var(--warm-grey); font-family: 'Source Sans 3', sans-serif; font-weight: 300; }
   .property-name { font-size: 15px; font-weight: 500; color: var(--charcoal); margin-bottom: 8px; }
   .property-location { font-size: 12px; color: var(--warm-grey); display: flex; align-items: center; gap: 5px; margin-bottom: 16px; }
   .property-location svg { width: 12px; height: 12px; fill: var(--sky); }
@@ -117,7 +210,7 @@
   .section { padding: 60px; }
   .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--sky); margin-bottom: 16px; display: flex; align-items: center; gap: 14px; }
   .section-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px,4vw,52px); font-weight: 300; line-height: 1.1; color: var(--charcoal); }
+  .section-title { font-family: 'Source Sans 3', sans-serif; font-size: clamp(36px,4vw,52px); font-weight: 300; line-height: 1.1; color: var(--charcoal); }
   .section-title em { font-style: italic; color: var(--sky); }
   .section-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
   .view-all { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--soft-brown); text-decoration: none; display: flex; align-items: center; gap: 10px; transition: color .3s; }
@@ -126,15 +219,15 @@
   .view-all:hover span { width: 44px; }
 
   /* ── BUTTONS ── */
-  .btn-primary { background: var(--navy); color: var(--white); padding: 16px 40px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; display: inline-block; transition: all .3s; font-family: 'DM Sans', sans-serif; }
+  .btn-primary { background: var(--navy); color: var(--white); padding: 16px 40px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; display: inline-block; transition: all .3s; font-family: 'Source Sans 3', sans-serif; }
   .btn-primary:hover { background: var(--sky); }
-  .btn-outline { background: transparent; color: var(--navy); padding: 14px 36px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: 1px solid var(--navy); cursor: pointer; display: inline-block; transition: all .3s; font-family: 'DM Sans', sans-serif; }
+  .btn-outline { background: transparent; color: var(--navy); padding: 14px 36px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border: 1px solid var(--navy); cursor: pointer; display: inline-block; transition: all .3s; font-family: 'Source Sans 3', sans-serif; }
   .btn-outline:hover { background: var(--navy); color: var(--white); }
 
   /* ── FORMS ── */
   .form-group { margin-bottom: 18px; }
   .form-group label { display: block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--soft-brown); margin-bottom: 8px; }
-  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--border); background: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; transition: border-color .3s; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--border); background: var(--white); font-family: 'Source Sans 3', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; transition: border-color .3s; }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--sky); }
   .form-error { font-size: 12px; color: #e53935; margin-top: 4px; }
 
@@ -164,20 +257,21 @@
 
   /* ── CTA BANNER ── */
   .cta-banner { background:var(--deep-brown);padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;overflow:hidden; }
-  .cta-bg-text { position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-size:200px;font-weight:300;color:rgba(10,46,92,.04);line-height:1;pointer-events:none;white-space:nowrap; }
-  .cta-title { font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4vw,60px);font-weight:300;color:var(--ivory);line-height:1.1; }
+  .cta-bg-text { position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'Source Sans 3',sans-serif;font-size:200px;font-weight:300;color:rgba(10,46,92,.04);line-height:1;pointer-events:none;white-space:nowrap; }
+  .cta-title { font-family:'Source Sans 3',sans-serif;font-size:clamp(40px,4vw,60px);font-weight:300;color:var(--ivory);line-height:1.1; }
   .cta-title em { font-style:italic;color:var(--sky); }
   .cta-form-row { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px; }
-  .cta-form input,.cta-form select { width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .3s; }
+  .cta-form input,.cta-form select { width:100%;padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(10,46,92,.15);color:var(--cream);font-family:'Source Sans 3',sans-serif;font-size:14px;outline:none;transition:border-color .3s; }
   .cta-form input::placeholder { color:rgba(245,240,232,.3); }
   .cta-form input:focus,.cta-form select:focus { border-color:var(--sky); }
   .cta-form select option { background:var(--deep-brown); }
-  .cta-submit { width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:500;margin-top:16px;transition:all .3s; }
+  .cta-submit { width:100%;background:var(--navy);color:var(--white);padding:18px;border:none;cursor:pointer;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-family:'Source Sans 3',sans-serif;font-weight:500;margin-top:16px;transition:all .3s; }
   .cta-submit:hover { background:var(--sky); }
   @media(max-width:1024px){ .cta-banner{padding:60px 28px;gap:40px;} }
   @media(max-width:768px){ .cta-banner{display:flex!important;flex-direction:column;padding:40px 16px;gap:28px;} .cta-title{font-size:clamp(30px,8.5vw,48px);} .cta-bg-text{display:none;} .cta-form-row{grid-template-columns:1fr!important;gap:10px;margin-bottom:10px;} }
   @media(max-width:480px){ .cta-banner{padding:32px 12px;} }
 </style>
+{% block extra_css %}{% endblock %}
 </head>
 <body data-auth="{{ user.is_authenticated|yesno:'true,false' }}" data-login="{% url 'accounts:login' %}" data-wishlist-ids="{% for id in wishlist_ids %}{{ id }}{% if not forloop.last %},{% endif %}{% endfor %}">
 
@@ -185,16 +279,30 @@
 
 <!-- Mobile nav overlay -->
 <div class="nav-mobile-overlay" id="navMobileOverlay">
-  <a href="{% url 'properties:list' %}?type=buy">Buy</a>
-  <a href="{% url 'properties:list' %}?type=rent">Rent</a>
-  <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
-  <a href="{% url 'agents:list' %}">Agents</a>
+  <div class="mobile-dropdown" id="mobileNavDropdown">
+    <button class="mobile-dropdown-btn">Services ▾</button>
+    <div class="mobile-dropdown-menu">
+      <a href="{% url 'properties:list' %}?type=new_project">Builder Projects</a>
+      <a href="{% url 'pages:legal' %}">Sale Agreement</a>
+      <a href="{% url 'pages:home_loan' %}">Home Loan</a>
+      <a href="{% url 'pages:legal' %}">Property Legal Services</a>
+      <a href="{% url 'pages:security' %}">Security & Surveillance</a>
+      <a href="{% url 'pages:nri_service' %}">NRI Services</a>
+    </div>
+  </div>
+  <a href="{% url 'properties:list' %}">Properties</a>
+  <a href="{% url 'pages:developers' %}">Developers</a>
   <a href="{% url 'blog:list' %}">Blog</a>
   {% if user.is_authenticated %}
-    <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:12px 36px;">List Property</a>
-    <a href="{% url 'accounts:logout' %}" style="font-size:12px;opacity:.6;">Logout</a>
+    <a href="{% url 'wishlist:list' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Wishlist{% if wishlist_count > 0 %} ({{ wishlist_count }}){% endif %}
+    </a>
+    <a href="{% url 'accounts:profile' %}">{{ user.first_name }}</a>
+    <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:14px 40px;border-bottom:none;margin-top:8px;">List Property</a>
   {% else %}
-    <a href="{% url 'accounts:register' %}" style="background:var(--navy);color:white;padding:12px 36px;">Get Started</a>
+    <a href="{% url 'accounts:login' %}">Login</a>
+    <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:14px 40px;border-bottom:none;margin-top:8px;">List Property</a>
   {% endif %}
 </div>
 
@@ -204,24 +312,34 @@
       <polyline points="8,54 40,10 72,54" stroke="#0D2B4E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       <line x1="25" y1="64" x2="55" y2="64" stroke="#0D2B4E" stroke-width="4" stroke-linecap="round"/>
     </svg>
-    <span class="nav-logo-text">HOMEXO</span>
+    <span class="nav-logo-text">HOME<span style="background-color: #0D2B4E; color: #FFFFFF; padding: 1px 4px; border-radius: 2px; margin-left: 0; letter-spacing: 0;">XO</span></span>
   </a>
   <div class="nav-links">
-    <a href="{% url 'properties:list' %}?type=buy">Buy</a>
-    <a href="{% url 'properties:list' %}?type=rent">Rent</a>
-    <a href="{% url 'properties:list' %}?type=new_project">New Projects</a>
-    <a href="{% url 'properties:list' %}?type=commercial">Commercial</a>
-    <a href="{% url 'agents:list' %}">Agents</a>
+    <div class="nav-dropdown">
+      <a style="cursor: pointer; display: flex; align-items: center; gap: 4px;">Services ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="{% url 'properties:list' %}?type=new_project">Builder Projects</a>
+        <a href="{% url 'pages:legal' %}">Sale Agreement</a>
+        <a href="{% url 'pages:home_loan' %}">Home Loan</a>
+        <a href="{% url 'pages:legal' %}">Property Legal Services</a>
+        <a href="{% url 'pages:security' %}">Security & Surveillance</a>
+        <a href="{% url 'pages:nri_service' %}">NRI Services</a>
+      </div>
+    </div>
+    <a href="{% url 'properties:list' %}">Properties</a>
     <a href="{% url 'pages:developers' %}">Developers</a>
     <a href="{% url 'blog:list' %}">Blog</a>
     {% if user.is_authenticated %}
       <a href="{% url 'wishlist:list' %}" class="nav-wishlist">
-        ♡
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         {% if wishlist_count > 0 %}
           <span class="nav-wishlist-count">{{ wishlist_count }}</span>
         {% endif %}
       </a>
       <a href="{% url 'accounts:profile' %}">{{ user.first_name }}</a>
+      {% if user.role == 'advocate' %}
+      <a href="{% url 'legal_services:advocate_dashboard' %}" class="nav-cta" style="background:var(--teal)!important;">My Cases</a>
+      {% endif %}
       <a href="{% url 'properties:create' %}" class="nav-cta">List Property</a>
     {% else %}
       <a href="{% url 'accounts:login' %}">Login</a>
@@ -248,6 +366,153 @@
 <main class="page-body">
   {% block content %}{% endblock %}
 </main>
+
+{% if user.is_authenticated and not user.profile_complete %}
+<!-- ── Profile-Completion Modal ── -->
+<div class="pc-overlay" id="pcOverlay">
+  <div class="pc-modal">
+    <div class="pc-header">
+      <h2 class="pc-title">Complete Your Profile</h2>
+      <p class="pc-subtitle">Help us personalise your experience</p>
+    </div>
+    <form id="pcForm" method="POST" action="{% url 'accounts:profile_complete' %}">
+      {% csrf_token %}
+      <div class="pc-body">
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_first_name">First Name</label>
+            <input type="text" id="pc_first_name" name="first_name"
+                   value="{{ user.first_name }}" placeholder="First Name" required>
+          </div>
+          <div class="form-group">
+            <label for="pc_last_name">Last Name</label>
+            <input type="text" id="pc_last_name" name="last_name"
+                   value="{{ user.last_name }}" placeholder="Last Name" required>
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_phone">Phone</label>
+            <input type="tel" id="pc_phone" name="phone"
+                   value="{{ user.phone|default_if_none:'' }}" placeholder="+91 98765 43210">
+          </div>
+          <div class="form-group">
+            <label for="pc_city">Preferred City</label>
+            <input type="text" id="pc_city" name="preferred_city"
+                   value="{{ user.preferred_city }}" placeholder="e.g. Bangalore">
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_listing">Looking To</label>
+            <select id="pc_listing" name="preferred_listing_type">
+              <option value="">Select&hellip;</option>
+              <option value="buy"{% if user.preferred_listing_type == 'buy' %} selected{% endif %}>Buy</option>
+              <option value="rent"{% if user.preferred_listing_type == 'rent' %} selected{% endif %}>Rent</option>
+              <option value="new_project"{% if user.preferred_listing_type == 'new_project' %} selected{% endif %}>New Project</option>
+              <option value="commercial"{% if user.preferred_listing_type == 'commercial' %} selected{% endif %}>Commercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pc_ptype">Property Type</label>
+            <select id="pc_ptype" name="preferred_property_type">
+              <option value="">Select&hellip;</option>
+              <option value="apartment"{% if user.preferred_property_type == 'apartment' %} selected{% endif %}>Apartment</option>
+              <option value="villa"{% if user.preferred_property_type == 'villa' %} selected{% endif %}>Villa</option>
+              <option value="penthouse"{% if user.preferred_property_type == 'penthouse' %} selected{% endif %}>Penthouse</option>
+              <option value="plot"{% if user.preferred_property_type == 'plot' %} selected{% endif %}>Plot / Land</option>
+              <option value="office"{% if user.preferred_property_type == 'office' %} selected{% endif %}>Office Space</option>
+              <option value="shop"{% if user.preferred_property_type == 'shop' %} selected{% endif %}>Shop / Retail</option>
+              <option value="warehouse"{% if user.preferred_property_type == 'warehouse' %} selected{% endif %}>Warehouse</option>
+            </select>
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="form-group">
+            <label for="pc_bhk">BHK Preference</label>
+            <select id="pc_bhk" name="preferred_bhk">
+              <option value="">Select&hellip;</option>
+              <option value="studio"{% if user.preferred_bhk == 'studio' %} selected{% endif %}>Studio</option>
+              <option value="1bhk"{% if user.preferred_bhk == '1bhk' %} selected{% endif %}>1 BHK</option>
+              <option value="2bhk"{% if user.preferred_bhk == '2bhk' %} selected{% endif %}>2 BHK</option>
+              <option value="3bhk"{% if user.preferred_bhk == '3bhk' %} selected{% endif %}>3 BHK</option>
+              <option value="4bhk"{% if user.preferred_bhk == '4bhk' %} selected{% endif %}>4 BHK</option>
+              <option value="5bhk"{% if user.preferred_bhk == '5bhk' %} selected{% endif %}>5 BHK</option>
+              <option value="6+bhk"{% if user.preferred_bhk == '6+bhk' %} selected{% endif %}>6+ BHK</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+          </div>
+        </div>
+        <div id="pcErrors" style="display:none;margin-bottom:12px;color:#e53935;font-size:13px;"></div>
+      </div>
+      <div class="pc-footer">
+        <button type="button" class="btn-outline pc-skip" id="pcSkip">Skip for Now</button>
+        <button type="submit" class="btn-primary pc-save">Save &amp; Continue</button>
+      </div>
+    </form>
+  </div>
+</div>
+<style>
+  .pc-overlay{position:fixed;inset:0;z-index:9999;background:rgba(13,27,42,.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;animation:pcFadeIn .3s ease;}
+  @keyframes pcFadeIn{from{opacity:0}to{opacity:1}}
+  .pc-modal{background:var(--white);width:94%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(13,43,78,.22);animation:pcSlideUp .35s ease;}
+  @keyframes pcSlideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .pc-header{padding:32px 32px 0;text-align:center;}
+  .pc-title{font-family:'Source Sans 3',sans-serif;font-size:28px;font-weight:400;color:var(--navy);margin-bottom:6px;}
+  .pc-subtitle{font-size:13px;color:var(--warm-grey);letter-spacing:.5px;}
+  .pc-body{padding:24px 32px 0;}
+  .pc-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:4px;}
+  .pc-footer{display:flex;justify-content:flex-end;gap:12px;padding:20px 32px 28px;}
+  .pc-skip{padding:12px 28px;font-size:12px;}
+  .pc-save{padding:12px 32px;font-size:12px;}
+  @media(max-width:560px){.pc-row{grid-template-columns:1fr;gap:8px;}.pc-modal{max-width:100%;margin:0 8px;}.pc-header,.pc-body,.pc-footer{padding-left:20px;padding-right:20px;}}
+</style>
+<script>
+(function(){
+  var overlay = document.getElementById('pcOverlay');
+  var form    = document.getElementById('pcForm');
+  var errBox  = document.getElementById('pcErrors');
+  var skipBtn = document.getElementById('pcSkip');
+
+  function close(){
+    overlay.style.opacity='0';
+    setTimeout(function(){ overlay.remove(); }, 250);
+  }
+
+  /* Skip — mark complete without saving extra data */
+  skipBtn.addEventListener('click', function(){
+    var csrf = form.querySelector('[name=csrfmiddlewaretoken]').value;
+    var body = new FormData();
+    body.append('csrfmiddlewaretoken', csrf);
+    body.append('first_name', form.querySelector('[name=first_name]').value || '{{ user.first_name|escapejs }}');
+    body.append('last_name', form.querySelector('[name=last_name]').value || '{{ user.last_name|escapejs }}');
+    fetch(form.action, {method:'POST', body:body, headers:{'X-Requested-With':'XMLHttpRequest'}});
+    close();
+  });
+
+  /* Submit via AJAX */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errBox.style.display='none';
+    var data = new FormData(form);
+    fetch(form.action, {
+      method:'POST', body:data, headers:{'X-Requested-With':'XMLHttpRequest'}
+    })
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, data:j}; }); })
+    .then(function(res){
+      if(res.data.ok){ close(); return; }
+      var msgs=[];
+      for(var f in res.data.errors){
+        res.data.errors[f].forEach(function(e){ msgs.push(e.message); });
+      }
+      errBox.textContent = msgs.join(' ');
+      errBox.style.display='block';
+    });
+  });
+})();
+</script>
+{% endif %}
 
 <div class="floating-actions" aria-label="Quick Actions">
   <div class="fab-wrap">
@@ -280,8 +545,10 @@
     <h2 class="cta-title">Ready To Find<br>Your <em>Dream</em><br>Property?</h2>
     <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Let our expert team guide you to the perfect property. Reach out today.</p>
   </div>
-  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
+  
+<form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
     {% csrf_token %}
+    <input type="hidden" name="source" value="footer">
     <div class="cta-form-row">
       <input type="text" name="name" placeholder="Your Full Name" required>
       <input type="tel" name="phone" placeholder="Phone Number" required>
@@ -293,7 +560,7 @@
         <option value="buy">Buy a Property</option>
         <option value="rent">Rent a Property</option>
         <option value="sell">Sell My Property</option>
-        <option value="invest">Real Estate Investment</option>
+        <option value="general">Real Estate Investment</option>
       </select>
     </div>
     <button type="submit" class="cta-submit">Request Consultation &rarr;</button>
@@ -306,13 +573,14 @@
     <div class="footer-brand">
       <a href="{% url 'pages:home' %}" class="nav-logo" style="margin-bottom:16px;display:inline-flex;">
         <svg viewBox="0 0 80 70" fill="none" style="height:40px;"><polyline points="8,54 40,10 72,54" stroke="#4A90C4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="25" y1="64" x2="55" y2="64" stroke="#4A90C4" stroke-width="4" stroke-linecap="round"/></svg>
-        <span style="font-family:'DM Sans',sans-serif;font-size:18px;font-weight:500;letter-spacing:5px;color:#C8D8EC;">HOMEXO</span>
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:500;letter-spacing:5px;color:#C8D8EC;">HOME<span style="background-color: #0D2B4E; color: #FFFFFF; padding: 1px 4px; border-radius: 2px; margin-left: 0; letter-spacing: 0;">XO</span></span>
       </a>
       <p>Connecting exceptional people with extraordinary homes. Luxury is not just a price point — it's a way of being.</p>
       <div class="footer-social">
-        <div class="footer-social-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div>
-        <div class="footer-social-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#C8D8EC"/></svg></div>
-        <div class="footer-social-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+        <a href="https://www.facebook.com/profile.php?id=61574700420547" class="footer-social-btn" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="https://www.instagram.com/homexoproperties/" class="footer-social-btn" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#C8D8EC"/></svg></a>
+        <a href="https://www.youtube.com/@homexoIndia" class="footer-social-btn" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="4"/><polygon points="10,9 16,12 10,15" fill="#C8D8EC" stroke="none"/></svg></a>
+        <a href="https://x.com/homexoindia" class="footer-social-btn" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="#C8D8EC"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.873L2.25 2.25h6.844l4.264 5.637L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a>
       </div>
     </div>
     <div class="footer-col">
@@ -329,31 +597,28 @@
       <h5>Company</h5>
       <ul>
         <li><a href="{% url 'pages:about' %}">About HOMEXO</a></li>
-        <li><a href="{% url 'agents:list' %}">Our Agents</a></li>
         <li><a href="{% url 'pages:developers' %}">Developers</a></li>
         <li><a href="{% url 'blog:list' %}">Blog &amp; News</a></li>
-        <li><a href="{% url 'pages:area_guides' %}">Area Guides</a></li>
         <li><a href="{% url 'pages:contact' %}">Contact</a></li>
+        <li><a href="{% url 'pages:terms_and_conditions' %}">Terms &amp; Conditions</a></li>
+        <li><a href="{% url 'pages:privacy_policy' %}">Privacy Policy</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h5>Resources</h5>
       <ul>
-        <li><a href="{% url 'pages:market_reports' %}">Market Reports</a></li>
         <li><a href="{% url 'pages:emi_calculator' %}">EMI Calculator</a></li>
         <li><a href="{% url 'pages:legal_homeloan' %}">Home Loan &amp; Legal</a></li>
         <li><a href="{% url 'pages:security' %}">Security Services</a></li>
         <li><a href="{% url 'pages:home_service' %}">Home Services</a></li>
         <li><a href="{% url 'pages:faq' %}">FAQs</a></li>
-        {% if not user.is_authenticated %}
-        <li><a href="{% url 'accounts:register' %}">Register</a></li>
-        {% endif %}
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <p>© {% now "Y" %} HOMEXO Luxury Real Estate. All rights reserved.</p>
-    <p><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a></p>
+    <p>Made with ❤️ &nbsp;·&nbsp; Powered by <a href="https://marketingadda.com/" target="_blank" rel="noopener">Marketingadda</a></p>
+    <p><a href="{% url 'pages:privacy_policy' %}">Privacy Policy</a> &nbsp;·&nbsp; <a href="{% url 'pages:terms_and_conditions' %}">Terms &amp; Conditions</a></p>
   </div>
 </footer>
 
@@ -376,6 +641,15 @@ if (hamburger && overlay) {
     hamburger.classList.toggle('open', open);
     document.body.style.overflow = open ? 'hidden' : '';
   });
+  
+  const mDropdownBtn = document.querySelector('.mobile-dropdown-btn');
+  if (mDropdownBtn) {
+    mDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('mobileNavDropdown').classList.toggle('open');
+    });
+  }
+
   overlay.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     overlay.classList.remove('open');
     hamburger.classList.remove('open');

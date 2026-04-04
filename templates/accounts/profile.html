@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}My Profile — HOMEXO{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
 
 {% block content %}
 <div style="background:var(--charcoal);padding:60px;">
@@ -12,22 +13,31 @@
   <div style="display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:start;">
     <!-- Sidebar nav -->
     <div style="background:var(--white);border:1px solid var(--border);">
-      {% for label, url, icon in profile_nav %}
-      <a href="{{ url }}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">
-        <span>{{ icon }}</span> {{ label }}
-      </a>
-      {% empty %}
-      <a href="{% url 'accounts:profile_update' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">✏️ Edit Profile</a>
-      <a href="{% url 'wishlist:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">♡ Saved Properties</a>
-      <a href="{% url 'properties:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">🏠 Browse Properties</a>
+      <a href="{% url 'accounts:profile_update' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">✏️ Edit Profile</a>
+      <a href="{% url 'accounts:password_change' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">🔒 Change Password</a>
+      <a href="{% url 'wishlist:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">♡ Saved Properties</a>
+      <a href="{% url 'properties:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">🏠 Browse Properties</a>
+      <a href="{% url 'legal_services:dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">⚖️ Legal Orders</a>
+      {% if user.role == 'advocate' %}
+      <a href="{% url 'legal_services:advocate_dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">👨‍⚖️ My Cases</a>
+      <a href="{% url 'legal_services:advocate_pool' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">🏊 Case Pool (Unassigned)</a>
+      {% elif user.is_superuser or user.role == 'admin' or user.role == 'legal_admin' %}
+      <a href="{% url 'legal_services:admin_dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">⚖️ Legal Admin Portal</a>
+      {% endif %}
+      {% if user.is_superuser or user.role == 'admin' or user.role == 'customer_support' %}
+      {% if user.role == 'customer_support' %}
+      <a href="{% url 'enquiries:dashboard' %}?mine=1" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);background:var(--navy);transition:all .2s;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--navy)'">📋 My Tickets</a>
+      {% else %}
+      <a href="{% url 'enquiries:dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);background:var(--navy);transition:all .2s;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--navy)'">📋 Enquiry Dashboard</a>
+      {% endif %}
+      {% endif %}
       {% if user.is_seller %}
-      <a href="{% url 'properties:create' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);">+ List Property</a>
+      <a href="{% url 'properties:create' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">+ List Property</a>
       {% endif %}
       <form action="{% url 'accounts:logout' %}" method="POST" style="padding:0;">
         {% csrf_token %}
-        <button type="submit" style="width:100%;padding:16px 20px;text-align:left;background:none;border:none;cursor:pointer;color:var(--warm-grey);font-size:13px;font-family:'DM Sans',sans-serif;">🚪 Sign Out</button>
+        <button type="submit" style="width:100%;padding:16px 20px;text-align:left;background:none;border:none;cursor:pointer;color:var(--warm-grey);font-size:13px;font-family:'Source Sans 3',sans-serif;">🚪 Sign Out</button>
       </form>
-      {% endfor %}
     </div>
 
     <!-- Profile summary -->
@@ -48,15 +58,15 @@
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
           <div style="text-align:center;padding:16px;background:var(--ivory);border:1px solid var(--border);">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);">{{ user.wishlist.count }}</div>
+            <div style="font-family:'Source Sans 3',sans-serif;font-size:28px;color:var(--navy);">{{ user.wishlist.count }}</div>
             <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Saved</div>
           </div>
           <div style="text-align:center;padding:16px;background:var(--ivory);border:1px solid var(--border);">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);">{{ user.enquiries.count }}</div>
+            <div style="font-family:'Source Sans 3',sans-serif;font-size:28px;color:var(--navy);">{{ user.enquiries.count }}</div>
             <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Enquiries</div>
           </div>
           <div style="text-align:center;padding:16px;background:var(--ivory);border:1px solid var(--border);">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);">{{ user.owned_properties.count }}</div>
+            <div style="font-family:'Source Sans 3',sans-serif;font-size:28px;color:var(--navy);">{{ user.owned_properties.count }}</div>
             <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);">Listings</div>
           </div>
         </div>
@@ -78,7 +88,7 @@
               <div style="font-size:13px;font-weight:500;color:var(--charcoal);">{{ item.property.title }}</div>
               <div style="font-size:12px;color:var(--warm-grey);">{{ item.property.locality }}, {{ item.property.city }}</div>
             </div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--navy);flex-shrink:0;">{{ item.property.display_price }}</div>
+            <div style="font-family:'Source Sans 3',sans-serif;font-size:16px;color:var(--navy);flex-shrink:0;">{{ item.property.display_price }}</div>
           </a>
           {% endfor %}
         </div>

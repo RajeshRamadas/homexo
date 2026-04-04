@@ -1,0 +1,1060 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if post %}Edit: {{ post.title }}{% else %}New Post{% endif %} — HOMEXO Editor{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Reset page padding pushed by base nav ── */
+  .page-body { padding-top: 0; }
+
+  /* ── Editor shell ── */
+  .ed-shell {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 77px);   /* 100vh minus fixed nav */
+    margin-top: 77px;
+    overflow: hidden;
+    background: #E8EDF3;
+  }
+
+  /* ── Top bar ── */
+  .ed-topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    height: 58px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+    z-index: 200;
+  }
+  .ed-back {
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--warm-grey); text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0; transition: color .2s; white-space: nowrap;
+  }
+  .ed-back:hover { color: var(--navy); }
+  .ed-divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+  .ed-title-inp {
+    flex: 1; border: none; outline: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 20px; font-weight: 400; color: var(--charcoal);
+    background: transparent; min-width: 0;
+  }
+  .ed-title-inp::placeholder { color: var(--warm-grey); }
+  .ed-status-pill {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 12px; border: 1px solid var(--border);
+    color: var(--warm-grey); background: var(--ivory); flex-shrink: 0;
+  }
+  .ed-status-pill.is-published { border-color: #4CAF50; color: #2e7d32; background: #e8f5e9; }
+  .ed-topbar-btns { display: flex; gap: 8px; flex-shrink: 0; }
+  .ed-btn {
+    padding: 9px 20px; font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; border: none; cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif; transition: all .2s;
+  }
+  .ed-btn-draft  { background: var(--ivory); border: 1px solid var(--border); color: var(--soft-brown); }
+  .ed-btn-draft:hover { background: var(--border); }
+  .ed-btn-pub    { background: var(--navy); color: var(--white); border: 1px solid var(--navy); }
+  .ed-btn-pub:hover { background: var(--sky); border-color: var(--sky); }
+  .ed-shortcut-hint {
+    font-size: 10px; color: var(--warm-grey); letter-spacing: .5px; flex-shrink: 0;
+  }
+
+  /* ── Main two-column layout ── */
+  .ed-main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    overflow: hidden;
+  }
+
+  /* ── Block canvas (left) ── */
+  .ed-canvas {
+    overflow-y: auto;
+    padding: 28px 32px 60px;
+  }
+
+  /* Form errors */
+  .ed-errors {
+    background: #fdecea; border: 1px solid #f44336;
+    padding: 12px 16px; margin-bottom: 20px;
+    font-size: 13px; color: #c62828;
+  }
+  .ed-errors ul { margin: 6px 0 0 16px; }
+
+  /* ── Block cards ── */
+  .block-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    transition: box-shadow .2s;
+  }
+  .block-card:hover { box-shadow: 0 2px 14px rgba(13,43,78,.09); }
+
+  .block-card-hd {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--ivory);
+    user-select: none;
+  }
+  .block-badge {
+    width: 28px; height: 28px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--white);
+    flex-shrink: 0; font-family: 'Source Sans 3', sans-serif;
+  }
+  .block-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--warm-grey); flex: 1;
+  }
+  .block-actions { display: flex; gap: 3px; }
+  .blk-btn {
+    width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+    font-size: 13px; color: var(--warm-grey); border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .18s;
+  }
+  .blk-btn:hover           { background: rgba(13,43,78,.08); color: var(--navy); }
+  .blk-btn.del:hover       { background: #fdecea; color: #c62828; }
+
+  .block-body { padding: 14px 16px; }
+
+  /* ── Shared input styles inside blocks ── */
+  .block-body input[type="text"],
+  .block-body textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border); background: var(--ivory);
+    font-family: 'Source Sans 3', sans-serif; font-size: 14px; color: var(--charcoal);
+    outline: none; resize: vertical; transition: border-color .2s;
+  }
+  .block-body input[type="text"]:focus,
+  .block-body textarea:focus { border-color: var(--sky); background: var(--white); }
+  .block-body .inp-hint {
+    display: block; font-size: 11px; color: var(--warm-grey);
+    margin-bottom: 7px; letter-spacing: .3px;
+  }
+  .block-body .inp-stack { display: flex; flex-direction: column; gap: 7px; }
+
+  /* Paragraph contenteditable */
+  .prose-bar {
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 10px; border: 1px solid var(--border);
+    background: var(--ivory); margin-bottom: 7px; flex-wrap: wrap;
+  }
+  .prose-bar-btn {
+    width: 28px; height: 26px; border: 1px solid var(--border);
+    background: var(--white); cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .18s; color: var(--charcoal); border-radius: 2px;
+  }
+  .prose-bar-btn:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .prose-bar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 3px; }
+  .prose-bar-hint { font-size: 10px; color: var(--warm-grey); letter-spacing: .4px; margin-left: 4px; }
+  .inp-prose {
+    min-height: 80px; padding: 12px;
+    border: 1px solid var(--border); background: var(--ivory);
+    font-family: 'Source Sans 3', sans-serif; font-size: 14px;
+    line-height: 1.75; color: var(--charcoal);
+    outline: none; transition: border-color .2s;
+  }
+  .inp-prose:focus { border-color: var(--sky); background: var(--white); }
+  .inp-prose:empty::before { content: attr(data-ph); color: var(--warm-grey); }
+
+  /* List item rows */
+  .list-rows { margin-bottom: 8px; }
+  .list-row {
+    display: flex; align-items: flex-start; gap: 7px; margin-bottom: 5px;
+  }
+  .list-bullet {
+    padding: 10px 4px 10px 0; font-size: 13px; color: var(--sky);
+    font-weight: 700; flex-shrink: 0; min-width: 20px; text-align: right;
+  }
+  .list-item-inp {
+    flex: 1; padding: 9px 12px;
+    border: 1px solid var(--border); background: var(--ivory);
+    font-family: 'Source Sans 3', sans-serif; font-size: 14px; color: var(--charcoal);
+    outline: none; min-height: 38px; line-height: 1.55; transition: border-color .2s;
+  }
+  .list-item-inp:focus { border-color: var(--sky); background: var(--white); }
+  .list-item-inp:empty::before { content: attr(data-ph); color: var(--warm-grey); }
+  .list-del-btn {
+    width: 28px; height: 38px; border: 1px solid var(--border);
+    background: none; cursor: pointer; color: var(--warm-grey);
+    font-size: 13px; transition: all .18s; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .list-del-btn:hover { background: #fdecea; color: #c62828; border-color: #f44336; }
+  .add-item-btn {
+    width: 100%; padding: 8px 12px;
+    border: 1px dashed var(--border); background: none;
+    font-size: 12px; letter-spacing: 1px; color: var(--sky);
+    cursor: pointer; transition: all .2s; text-align: left;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  .add-item-btn:hover { border-color: var(--sky); background: rgba(74,144,196,.04); }
+
+  /* Pull quote editor */
+  .pq-editor { display: flex; flex-direction: column; gap: 8px; }
+
+  /* Stat callout editor */
+  .stat-cols { display: flex; gap: 8px; }
+  .stat-col {
+    flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 6px;
+    border-radius: 2px;
+  }
+  .stat-col:nth-child(1) { background: rgba(13,43,78,.05); }
+  .stat-col:nth-child(2) { background: rgba(58,95,133,.05); }
+  .stat-col:nth-child(3) { background: rgba(74,144,196,.07); }
+  .stat-col-lbl {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--soft-brown); margin-bottom: 2px;
+  }
+  .stat-col input {
+    padding: 8px 10px; border: 1px solid var(--border); background: var(--white);
+    font-family: 'Source Sans 3', sans-serif; font-size: 13px; width: 100%;
+    outline: none; transition: border-color .2s;
+  }
+  .stat-col input:focus { border-color: var(--sky); }
+
+  /* Image block editor */
+  .img-preview-box {
+    width: 100%; max-height: 200px; object-fit: cover;
+    display: block; margin-top: 8px; border: 1px solid var(--border);
+  }
+
+  /* Key takeaways editor — reuses list-row styles with ✓ bullet */
+  .kt-col { flex-shrink: 0; color: var(--sky); font-size: 14px; padding: 10px 4px 10px 0; }
+
+  /* Add block bar */
+  .add-block-bar {
+    padding: 24px 0 0;
+    display: flex; justify-content: center;
+  }
+  .add-block-btn-main {
+    padding: 12px 36px; border: 1px dashed var(--sky);
+    background: none; font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--sky); cursor: pointer;
+    transition: all .2s; font-family: 'Source Sans 3', sans-serif;
+  }
+  .add-block-btn-main:hover { background: var(--sky); color: var(--white); border-style: solid; }
+
+  /* Empty state */
+  .blocks-empty {
+    padding: 60px 20px; text-align: center;
+    color: var(--warm-grey); font-size: 14px;
+    border: 1px dashed var(--border); background: var(--white);
+    line-height: 1.8;
+  }
+
+  /* ── Block picker modal ── */
+  .picker-overlay {
+    position: fixed; inset: 0; background: rgba(13,27,42,.45);
+    z-index: 800; display: flex; align-items: center; justify-content: center;
+  }
+  .picker-overlay.hidden { display: none; }
+  .picker-modal {
+    background: var(--white); padding: 32px;
+    width: 580px; max-width: 92vw; max-height: 80vh;
+    overflow-y: auto; border: 1px solid var(--border);
+  }
+  .picker-hd {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--charcoal); margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .picker-close {
+    width: 28px; height: 28px; border: none; background: none;
+    cursor: pointer; font-size: 18px; color: var(--warm-grey);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .picker-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .ptype-btn {
+    padding: 16px 12px; border: 1px solid var(--border);
+    background: var(--ivory); cursor: pointer; text-align: left;
+    transition: all .2s; font-family: 'Source Sans 3', sans-serif;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .ptype-btn:hover { background: var(--navy); border-color: var(--navy); }
+  .ptype-btn:hover .ptype-label { color: var(--white); }
+  .ptype-btn:hover .ptype-desc  { color: rgba(255,255,255,.45); }
+  .ptype-icon {
+    width: 32px; height: 32px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: var(--white);
+  }
+  .ptype-label { font-size: 13px; font-weight: 500; color: var(--charcoal); }
+  .ptype-desc  { font-size: 11px; color: var(--warm-grey); line-height: 1.45; }
+
+  /* ── Metadata sidebar (right) ── */
+  .ed-sidebar {
+    overflow-y: auto;
+    border-left: 1px solid var(--border);
+    background: var(--white);
+    padding: 20px;
+  }
+  .meta-section {
+    margin-bottom: 22px; padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .meta-section:last-child { border-bottom: none; margin-bottom: 0; }
+  .meta-lbl {
+    display: block; font-size: 10px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--soft-brown); margin-bottom: 8px;
+  }
+  .meta-sublbl {
+    font-size: 11px; color: var(--warm-grey); margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .meta-section input[type="text"],
+  .meta-section input[type="datetime-local"],
+  .meta-section input[type="file"],
+  .meta-section select,
+  .meta-section textarea {
+    width: 100%; padding: 9px 12px;
+    border: 1px solid var(--border); background: var(--ivory);
+    font-family: 'Source Sans 3', sans-serif; font-size: 13px; color: var(--charcoal);
+    outline: none; resize: vertical; transition: border-color .2s;
+  }
+  .meta-section input:focus,
+  .meta-section select:focus,
+  .meta-section textarea:focus { border-color: var(--sky); background: var(--white); }
+  .meta-section input[type="file"] { padding: 7px 10px; cursor: pointer; }
+  .cover-preview {
+    width: 100%; height: 110px; object-fit: cover;
+    display: block; margin-top: 8px; border: 1px solid var(--border);
+  }
+  .meta-checkbox { display: flex; align-items: center; gap: 9px; }
+  .meta-checkbox input[type="checkbox"] {
+    width: 16px; height: 16px; cursor: pointer; accent-color: var(--navy);
+    flex-shrink: 0;
+  }
+  .meta-checkbox label { font-size: 13px; color: var(--charcoal); cursor: pointer; margin: 0; }
+  .view-post-link {
+    font-size: 12px; color: var(--sky); text-decoration: none;
+    letter-spacing: .8px; display: inline-flex; align-items: center; gap: 6px;
+    transition: color .2s;
+  }
+  .view-post-link:hover { color: var(--navy); }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .ed-shell { height: auto; overflow: visible; }
+    .ed-main  { grid-template-columns: 1fr; overflow: visible; }
+    .ed-canvas { overflow: visible; }
+    .ed-sidebar { border-left: none; border-top: 1px solid var(--border); }
+    .stat-cols  { flex-direction: column; }
+    .picker-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .ed-topbar { padding: 0 12px; gap: 8px; }
+    .ed-shortcut-hint { display: none; }
+    .picker-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ed-shell">
+  <form id="editor-form" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {# hidden body field — populated by JS before submit #}
+    {{ form.body }}
+    {# hidden status field — set by JS save/publish buttons #}
+    <div style="display:none;">{{ form.status }}</div>
+
+    <!-- ── TOP BAR ── -->
+    <div class="ed-topbar">
+      <a href="{% url 'blog:list' %}" class="ed-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Insights
+      </a>
+      <div class="ed-divider"></div>
+
+      <input type="text" id="id_title" name="title" class="ed-title-inp"
+             placeholder="Post title…"
+             value="{{ form.title.value|default:'' }}">
+
+      <div class="ed-divider"></div>
+      <span class="ed-status-pill {% if post and post.status == 'published' %}is-published{% endif %}" id="status-pill">
+        {{ post.get_status_display|default:'Draft' }}
+      </span>
+
+      <span class="ed-shortcut-hint">Ctrl+S = Save</span>
+
+      <div class="ed-topbar-btns">
+        <button type="button" class="ed-btn ed-btn-draft" onclick="editorSaveDraft()">Save Draft</button>
+        <button type="button" class="ed-btn ed-btn-pub"   onclick="editorPublish()">Publish</button>
+      </div>
+    </div>
+
+    <!-- ── MAIN AREA ── -->
+    <div class="ed-main">
+
+      <!-- ── BLOCK CANVAS ── -->
+      <div class="ed-canvas">
+
+        {% if post and post.status == 'draft' and not form.errors %}
+        <div style="background:#e8f5e9;border:1px solid #4caf50;padding:11px 16px;
+                    margin-bottom:16px;font-size:13px;color:#2e7d32;
+                    display:flex;align-items:center;gap:10px;">
+          &#10003; Draft saved. Fill in the content and click <strong>Publish</strong> when ready.
+        </div>
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="ed-errors">
+          <strong>Please fix the following errors:</strong>
+          <ul>
+            {% for field in form %}
+              {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- blocks rendered by JS -->
+        <div id="blocks-container"></div>
+
+        <div class="add-block-bar">
+          <button type="button" class="add-block-btn-main" onclick="openPicker()">
+            + Add Block
+          </button>
+        </div>
+      </div>
+
+      <!-- ── METADATA SIDEBAR ── -->
+      <aside class="ed-sidebar">
+
+        <!-- Cover image -->
+        <div class="meta-section">
+          <label class="meta-lbl">Cover Image</label>
+          {{ form.cover_image }}
+          {% if post and post.cover_image %}
+          <img src="{{ post.cover_image.url }}" class="cover-preview" id="cover-prev" alt="Cover">
+          {% else %}
+          <img src="" class="cover-preview" id="cover-prev" style="display:none;" alt="Cover">
+          {% endif %}
+        </div>
+
+        <!-- Excerpt -->
+        <div class="meta-section">
+          <label class="meta-lbl">Excerpt</label>
+          <p class="meta-sublbl">Shown in the article list and as the intro quote on the detail page.</p>
+          {{ form.excerpt }}
+        </div>
+
+        <!-- Categories -->
+        <div class="meta-section">
+          <label class="meta-lbl">Categories</label>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px;">
+            {% for checkbox in form.categories %}
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--charcoal);cursor:pointer;">
+              {{ checkbox.tag }}
+              {{ checkbox.choice_label }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Key Takeaways (top-of-article box) -->
+        <div class="meta-section">
+          <label class="meta-lbl">Key Takeaways</label>
+          <p class="meta-sublbl">Shown as a bullet box at the top of the article. One takeaway per line. Use the <em>Key Takeaways</em> block in the canvas for an inline box inside the body.</p>
+          {{ form.key_takeaways }}
+        </div>
+
+        <!-- Featured -->
+        <div class="meta-section">
+          <div class="meta-checkbox">
+            {{ form.is_featured }}
+            <label for="{{ form.is_featured.id_for_label }}" class="meta-lbl" style="margin:0;">Featured Post</label>
+          </div>
+        </div>
+
+        <!-- Published At -->
+        <div class="meta-section">
+          <label class="meta-lbl">Publish Date</label>
+          {{ form.published_at }}
+        </div>
+
+        {% if post %}
+        <div class="meta-section">
+          <a href="{{ post.get_absolute_url }}" target="_blank" class="view-post-link">
+            View Post
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+        {% endif %}
+
+      </aside>
+    </div><!-- .ed-main -->
+  </form>
+</div><!-- .ed-shell -->
+
+<!-- ── BLOCK PICKER MODAL ── -->
+<div class="picker-overlay hidden" id="picker-overlay" onclick="closePicker(event)">
+  <div class="picker-modal">
+    <div class="picker-hd">
+      Choose a Block
+      <button type="button" class="picker-close" onclick="closePicker()">&#10005;</button>
+    </div>
+    <div class="picker-grid" id="picker-grid">
+      <!-- populated once by JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   HOMEXO Blog Block Editor — Vanilla JS
+   ===================================================================== */
+
+let blocks  = [];
+let _nextId = 1;
+function uid() { return _nextId++; }
+
+/* ── Block type registry ───────────────────────────────────────────── */
+const BTYPES = [
+  { t: 'heading2',      label: 'Heading 2',       desc: 'Section heading (gets anchor ID)',  color: '#0D2B4E', icon: 'H2'  },
+  { t: 'heading3',      label: 'Heading 3',       desc: 'Sub-heading',                       color: '#1A4A7A', icon: 'H3'  },
+  { t: 'paragraph',     label: 'Paragraph',       desc: 'Body text with bold / italic',      color: '#4A90C4', icon: 'P'   },
+  { t: 'ul',            label: 'Bullet List',     desc: 'Unordered list items',              color: '#3A5F85', icon: 'UL'  },
+  { t: 'ol',            label: 'Numbered List',   desc: 'Ordered / step-by-step list',       color: '#3A5F85', icon: 'OL'  },
+  { t: 'pull-quote',    label: 'Pull Quote',      desc: 'Highlighted quote with attribution',color: '#7A8A99', icon: '\u201C\u201D' },
+  { t: 'stat-callout',  label: 'Stat Callout',    desc: '3-column statistics banner',        color: '#0A2E5C', icon: '#'   },
+  { t: 'image',         label: 'Image Block',     desc: 'Full-width image with caption',     color: '#4A90C4', icon: '&#9728;' },
+  { t: 'key-takeaways', label: 'Key Takeaways',   desc: 'Inline takeaway box inside body',   color: '#1A4A7A', icon: '&#10003;' },
+];
+
+function btInfo(t) { return BTYPES.find(b => b.t === t) || { t, label: t, color: '#444', icon: '?' }; }
+
+/* ── Default data per block type ───────────────────────────────────── */
+function defaultData(t) {
+  switch (t) {
+    case 'heading2':     return { text: '' };
+    case 'heading3':     return { text: '' };
+    case 'paragraph':    return { html: '' };
+    case 'ul':           return { items: ['', ''] };
+    case 'ol':           return { items: ['', ''] };
+    case 'pull-quote':   return { quote: '', cite: '' };
+    case 'stat-callout': return { stats: [{num:'',lbl:''},{num:'',lbl:''},{num:'',lbl:''}] };
+    case 'image':        return { src: '', alt: '', caption: '' };
+    case 'key-takeaways':return { items: ['', ''] };
+    default:             return {};
+  }
+}
+
+/* ── HTML-escape (for attribute/text values, NOT innerHTML) ─────────── */
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Sync current DOM editing state into blocks[] ──────────────────── */
+function syncDOM() {
+  blocks.forEach(b => {
+    const card = document.querySelector('[data-bid="'+b.id+'"]');
+    if (!card) return;
+    switch (b.t) {
+      case 'heading2':
+      case 'heading3':
+        b.data.text = (card.querySelector('.inp-text')||{value:''}).value;
+        break;
+      case 'paragraph':
+        b.data.html = (card.querySelector('.inp-prose')||{innerHTML:''}).innerHTML;
+        break;
+      case 'ul':
+      case 'ol':
+        b.data.items = Array.from(card.querySelectorAll('.list-item-inp')).map(el=>el.innerHTML);
+        break;
+      case 'pull-quote':
+        b.data.quote = (card.querySelector('.inp-pq-quote')||{value:''}).value;
+        b.data.cite  = (card.querySelector('.inp-pq-cite') ||{value:''}).value;
+        break;
+      case 'stat-callout':
+        b.data.stats = Array.from(card.querySelectorAll('.stat-col')).map(col=>({
+          num: (col.querySelector('.inp-stat-num')||{value:''}).value,
+          lbl: (col.querySelector('.inp-stat-lbl')||{value:''}).value,
+        }));
+        break;
+      case 'image':
+        b.data.src     = (card.querySelector('.inp-img-src')||{value:''}).value;
+        b.data.alt     = (card.querySelector('.inp-img-alt')||{value:''}).value;
+        b.data.caption = (card.querySelector('.inp-img-cap')||{value:''}).value;
+        break;
+      case 'key-takeaways':
+        b.data.items = Array.from(card.querySelectorAll('.kt-inp')).map(el=>el.innerHTML);
+        break;
+    }
+  });
+}
+
+/* ── Render all blocks ──────────────────────────────────────────────── */
+function render() {
+  const c = document.getElementById('blocks-container');
+  if (!blocks.length) {
+    c.innerHTML = '<div class="blocks-empty">Click <strong>"+ Add Block"</strong> below to start building your article.<br>Use the block picker to insert headings, paragraphs, lists, quotes, stats, images, and more.</div>';
+    return;
+  }
+  c.innerHTML = blocks.map(renderCard).join('');
+}
+
+function renderCard(b) {
+  const info = btInfo(b.t);
+  return [
+    '<div class="block-card" data-bid="'+b.id+'">',
+    '  <div class="block-card-hd">',
+    '    <div class="block-badge" style="background:'+info.color+'">'+info.icon+'</div>',
+    '    <span class="block-label">'+info.label+'</span>',
+    '    <div class="block-actions">',
+    '      <button type="button" class="blk-btn" onclick="bMoveUp('+b.id+')"   title="Move up">&#8593;</button>',
+    '      <button type="button" class="blk-btn" onclick="bMoveDown('+b.id+')" title="Move down">&#8595;</button>',
+    '      <button type="button" class="blk-btn del" onclick="bDelete('+b.id+')" title="Delete">&#10005;</button>',
+    '    </div>',
+    '  </div>',
+    '  <div class="block-body">',
+    renderEditor(b),
+    '  </div>',
+    '</div>',
+  ].join('\n');
+}
+
+function renderEditor(b) {
+  const d = b.data, id = b.id;
+  switch (b.t) {
+
+    case 'heading2':
+      return '<input type="text" class="inp-text" value="'+esc(d.text)+'" placeholder="Section heading…">';
+
+    case 'heading3':
+      return '<input type="text" class="inp-text" value="'+esc(d.text)+'" placeholder="Sub-heading…">';
+
+    case 'paragraph':
+      return [
+        '<div class="prose-bar">',
+        '  <button type="button" class="prose-bar-btn" onclick="pFmt('+id+',\'bold\')"   title="Bold"><b>B</b></button>',
+        '  <button type="button" class="prose-bar-btn" onclick="pFmt('+id+',\'italic\')" title="Italic"><i>I</i></button>',
+        '  <div class="prose-bar-sep"></div>',
+        '  <button type="button" class="prose-bar-btn" onclick="pLink('+id+')"           title="Insert link">&#128279;</button>',
+        '  <span class="prose-bar-hint">Ctrl+B / Ctrl+I also work</span>',
+        '</div>',
+        '<div class="inp-prose" contenteditable="true" data-preid="'+id+'" data-ph="Start typing your paragraph…">'+d.html+'</div>',
+      ].join('\n');
+
+    case 'ul':
+    case 'ol': {
+      const bul = b.t === 'ol';
+      const rows = (d.items.length ? d.items : ['']).map((item, i) =>
+        '<div class="list-row">' +
+        '  <span class="list-bullet">'+(bul ? (i+1)+'.' : '&bull;')+'</span>' +
+        '  <div class="list-item-inp" contenteditable="true" data-ltid="'+id+'" data-ph="List item…">'+item+'</div>' +
+        '  <button type="button" class="list-del-btn" onclick="listDelRow(this)" title="Remove">&#10005;</button>' +
+        '</div>'
+      ).join('');
+      return [
+        '<label class="inp-hint">Bold: <kbd>Ctrl+B</kbd> &nbsp; Italic: <kbd>Ctrl+I</kbd> &nbsp; Press Enter to add next item.</label>',
+        '<div class="list-rows" data-lt="'+b.t+'">'+rows+'</div>',
+        '<button type="button" class="add-item-btn" onclick="listAddRow(this,\''+b.t+'\')">+ Add item</button>',
+      ].join('\n');
+    }
+
+    case 'pull-quote':
+      return [
+        '<div class="pq-editor">',
+        '  <textarea class="inp-pq-quote" rows="3" placeholder="Quote text…">'+esc(d.quote)+'</textarea>',
+        '  <input type="text" class="inp-pq-cite" value="'+esc(d.cite)+'" placeholder="— Author, Source, Year">',
+        '</div>',
+      ].join('\n');
+
+    case 'stat-callout': {
+      const cols = d.stats.map((s, i) =>
+        '<div class="stat-col">' +
+        '  <div class="stat-col-lbl">Stat '+(i+1)+'</div>' +
+        '  <input type="text" class="inp-stat-num" value="'+esc(s.num)+'" placeholder="Number (e.g. 1.18L+)">' +
+        '  <input type="text" class="inp-stat-lbl" value="'+esc(s.lbl)+'" placeholder="Label">' +
+        '</div>'
+      ).join('');
+      return '<div class="stat-cols">'+cols+'</div>';
+    }
+
+    case 'image':
+      return [
+        '<div class="inp-stack">',
+        '  <input type="text" class="inp-img-src" value="'+esc(d.src)+'" placeholder="Image URL (https://…)" oninput="imgPrev(this,'+id+')">',
+        '  <input type="text" class="inp-img-alt" value="'+esc(d.alt)+'" placeholder="Alt text (accessibility)">',
+        '  <input type="text" class="inp-img-cap" value="'+esc(d.caption)+'" placeholder="Caption (optional)">',
+        '</div>',
+        '<img id="iprev-'+id+'" src="'+esc(d.src)+'" class="img-preview-box"'+(d.src ? '' : ' style="display:none;"')+'>',
+      ].join('\n');
+
+    case 'key-takeaways': {
+      const rows = (d.items.length ? d.items : ['']).map(item =>
+        '<div class="list-row">' +
+        '  <span class="list-bullet kt-col">&#10003;</span>' +
+        '  <div class="kt-inp list-item-inp" contenteditable="true" data-ph="Key takeaway…">'+item+'</div>' +
+        '  <button type="button" class="list-del-btn" onclick="listDelRow(this)" title="Remove">&#10005;</button>' +
+        '</div>'
+      ).join('');
+      return [
+        '<div class="list-rows" data-lt="kt">'+rows+'</div>',
+        '<button type="button" class="add-item-btn" onclick="ktAddRow(this)">+ Add takeaway</button>',
+      ].join('\n');
+    }
+
+    default:
+      return '<p style="color:var(--warm-grey)">Unknown block type.</p>';
+  }
+}
+
+/* ── Block CRUD ─────────────────────────────────────────────────────── */
+function bAdd(t) {
+  syncDOM();
+  const b = { id: uid(), t, data: defaultData(t) };
+  blocks.push(b);
+  render();
+  setTimeout(() => {
+    const card = document.querySelector('[data-bid="'+b.id+'"]');
+    if (card) {
+      card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      const inp = card.querySelector('[contenteditable], input[type="text"], textarea');
+      if (inp) inp.focus();
+    }
+  }, 60);
+}
+
+function bDelete(id) {
+  if (!confirm('Delete this block?')) return;
+  syncDOM();
+  blocks = blocks.filter(b => b.id !== id);
+  render();
+}
+
+function bMoveUp(id) {
+  syncDOM();
+  const i = blocks.findIndex(b => b.id === id);
+  if (i > 0) { [blocks[i-1], blocks[i]] = [blocks[i], blocks[i-1]]; }
+  render();
+}
+
+function bMoveDown(id) {
+  syncDOM();
+  const i = blocks.findIndex(b => b.id === id);
+  if (i < blocks.length - 1) { [blocks[i], blocks[i+1]] = [blocks[i+1], blocks[i]]; }
+  render();
+}
+
+/* ── Paragraph formatting ────────────────────────────────────────────── */
+function pFmt(bid, cmd) {
+  const el = document.querySelector('[data-preid="'+bid+'"]');
+  if (el) { el.focus(); document.execCommand(cmd); }
+}
+function pLink(bid) {
+  const url = prompt('Enter URL:');
+  if (!url) return;
+  const el = document.querySelector('[data-preid="'+bid+'"]');
+  if (el) { el.focus(); document.execCommand('createLink', false, url); }
+}
+
+/* ── List helpers ────────────────────────────────────────────────────── */
+function listDelRow(btn) {
+  const row       = btn.closest('.list-row');
+  const container = btn.closest('.list-rows');
+  if (container.querySelectorAll('.list-row').length > 1) row.remove();
+}
+
+function listAddRow(btn, lt) {
+  const container = btn.previousElementSibling;
+  const count     = container.querySelectorAll('.list-row').length;
+  const bul       = lt === 'ol' ? (count+1)+'.' : '&bull;';
+  const row       = document.createElement('div');
+  row.className   = 'list-row';
+  row.innerHTML   =
+    '<span class="list-bullet">'+bul+'</span>' +
+    '<div class="list-item-inp" contenteditable="true" data-ph="List item…"></div>' +
+    '<button type="button" class="list-del-btn" onclick="listDelRow(this)" title="Remove">&#10005;</button>';
+  container.appendChild(row);
+  row.querySelector('.list-item-inp').focus();
+}
+
+function ktAddRow(btn) {
+  const container = btn.previousElementSibling;
+  const row       = document.createElement('div');
+  row.className   = 'list-row';
+  row.innerHTML   =
+    '<span class="list-bullet kt-col">&#10003;</span>' +
+    '<div class="kt-inp list-item-inp" contenteditable="true" data-ph="Key takeaway…"></div>' +
+    '<button type="button" class="list-del-btn" onclick="listDelRow(this)" title="Remove">&#10005;</button>';
+  container.appendChild(row);
+  row.querySelector('.kt-inp').focus();
+}
+
+/* ── Image URL preview ───────────────────────────────────────────────── */
+function imgPrev(inp, bid) {
+  const img = document.getElementById('iprev-'+bid);
+  if (!img) return;
+  const src = inp.value.trim();
+  if (src) { img.src = src; img.style.display = ''; }
+  else      { img.src = ''; img.style.display = 'none'; }
+}
+
+/* ── Keyboard shortcuts inside blocks ────────────────────────────────── */
+document.addEventListener('keydown', function(e) {
+  if (!e.target) return;
+
+  // Enter in a list item → add new item
+  if (e.key === 'Enter' && e.target.classList.contains('list-item-inp') && !e.target.classList.contains('kt-inp')) {
+    e.preventDefault();
+    const lt  = e.target.closest('.list-rows').dataset.lt;
+    const btn = e.target.closest('.list-rows').nextElementSibling;
+    if (btn) listAddRow(btn, lt);
+    return;
+  }
+
+  // Enter in a key-takeaway item → add new takeaway
+  if (e.key === 'Enter' && e.target.classList.contains('kt-inp')) {
+    e.preventDefault();
+    const btn = e.target.closest('.list-rows').nextElementSibling;
+    if (btn) ktAddRow(btn);
+    return;
+  }
+
+  // Enter in paragraph → insert <br> instead of creating a <div>
+  if (e.key === 'Enter' && e.target.classList.contains('inp-prose')) {
+    e.preventDefault();
+    document.execCommand('insertHTML', false, '<br>');
+    return;
+  }
+
+  // Ctrl+S → Save draft
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    editorSaveDraft();
+  }
+});
+
+/* ── Block picker modal ──────────────────────────────────────────────── */
+function openPicker() {
+  const overlay = document.getElementById('picker-overlay');
+  const grid    = document.getElementById('picker-grid');
+  if (!grid.children.length) {
+    grid.innerHTML = BTYPES.map(bt => [
+      '<button type="button" class="ptype-btn" onclick="pickerSelect(\''+bt.t+'\')">',
+      '  <div class="ptype-icon" style="background:'+bt.color+'">'+bt.icon+'</div>',
+      '  <div class="ptype-label">'+bt.label+'</div>',
+      '  <div class="ptype-desc">'+bt.desc+'</div>',
+      '</button>',
+    ].join('\n')).join('');
+  }
+  overlay.classList.remove('hidden');
+}
+
+function closePicker(e) {
+  if (!e || e.target === e.currentTarget) {
+    document.getElementById('picker-overlay').classList.add('hidden');
+  }
+}
+
+function pickerSelect(t) {
+  document.getElementById('picker-overlay').classList.add('hidden');
+  bAdd(t);
+}
+
+/* ── Build final body HTML from blocks ───────────────────────────────── */
+function buildHTML() {
+  syncDOM();
+  let h2n = 0, html = '';
+
+  blocks.forEach(b => {
+    const d = b.data;
+    switch (b.t) {
+
+      case 'heading2':
+        if (d.text && d.text.trim()) { h2n++; html += '\n<h2 id="s'+h2n+'">'+d.text.trim()+'</h2>\n'; }
+        break;
+
+      case 'heading3':
+        if (d.text && d.text.trim()) html += '\n<h3>'+d.text.trim()+'</h3>\n';
+        break;
+
+      case 'paragraph':
+        if (d.html && d.html.replace(/<br\s*\/?>/gi,'').trim()) html += '<p>'+d.html+'</p>\n';
+        break;
+
+      case 'ul': {
+        const items = (d.items||[]).filter(i => i && i.replace(/<br\s*\/?>/gi,'').trim());
+        if (items.length) html += '<ul>\n'+items.map(i=>'  <li>'+i+'</li>').join('\n')+'\n</ul>\n';
+        break;
+      }
+
+      case 'ol': {
+        const items = (d.items||[]).filter(i => i && i.replace(/<br\s*\/?>/gi,'').trim());
+        if (items.length) html += '<ol>\n'+items.map(i=>'  <li>'+i+'</li>').join('\n')+'\n</ol>\n';
+        break;
+      }
+
+      case 'pull-quote':
+        if (d.quote && d.quote.trim()) {
+          html += '<div class="pull-quote">\n  <p>'+esc(d.quote)+'</p>\n';
+          if (d.cite && d.cite.trim()) html += '  <cite>'+esc(d.cite)+'</cite>\n';
+          html += '</div>\n';
+        }
+        break;
+
+      case 'stat-callout': {
+        const stats = (d.stats||[]).filter(s => (s.num&&s.num.trim()) || (s.lbl&&s.lbl.trim()));
+        if (stats.length) {
+          html += '<div class="stat-callout">\n';
+          stats.forEach(s => {
+            html += '  <div class="stat-callout-item">\n';
+            html += '    <div class="stat-num">'+esc(s.num)+'</div>\n';
+            html += '    <div class="stat-lbl">'+esc(s.lbl)+'</div>\n';
+            html += '  </div>\n';
+          });
+          html += '</div>\n';
+        }
+        break;
+      }
+
+      case 'image':
+        if (d.src && d.src.trim()) {
+          html += '<figure class="article-img-block">\n';
+          html += '  <img src="'+esc(d.src)+'" alt="'+esc(d.alt)+'">\n';
+          if (d.caption && d.caption.trim()) html += '  <figcaption>'+esc(d.caption)+'</figcaption>\n';
+          html += '</figure>\n';
+        }
+        break;
+
+      case 'key-takeaways': {
+        const items = (d.items||[]).filter(i => i && i.replace(/<br\s*\/?>/gi,'').trim());
+        if (items.length) {
+          html += '<div class="key-takeaways">\n  <div class="key-takeaways-title">Key Takeaways</div>\n  <ul>\n';
+          items.forEach(i => { html += '    <li>'+i+'</li>\n'; });
+          html += '  </ul>\n</div>\n';
+        }
+        break;
+      }
+    }
+  });
+
+  document.getElementById('id_body').value = html;
+  return html;
+}
+
+/* ── Save / Publish ─────────────────────────────────────────────────── */
+function editorSaveDraft() {
+  document.getElementById('id_status').value = 'draft';
+  editorSubmit(false);
+}
+
+function editorPublish() {
+  document.getElementById('id_status').value = 'published';
+  editorSubmit(true);
+}
+
+function editorSubmit(requireBody) {
+  const title = document.getElementById('id_title').value.trim();
+  if (!title) { alert('Post title is required.'); document.getElementById('id_title').focus(); return; }
+  buildHTML();
+  if (requireBody) {
+    const body = document.getElementById('id_body').value.trim();
+    if (!body) { alert('Add at least one content block before publishing.'); return; }
+  }
+  document.getElementById('editor-form').submit();
+}
+
+/* ── Parse existing HTML → blocks (for edit mode) ─────────────────── */
+function parseHTMLToBlocks(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  blocks = [];
+
+  Array.from(tmp.children).forEach(el => {
+    const tag = el.tagName.toLowerCase();
+    const cls = el.className ? String(el.className) : '';
+
+    if (tag === 'h2') {
+      blocks.push({ id: uid(), t: 'heading2', data: { text: el.textContent.trim() } });
+
+    } else if (tag === 'h3') {
+      blocks.push({ id: uid(), t: 'heading3', data: { text: el.textContent.trim() } });
+
+    } else if (tag === 'p') {
+      blocks.push({ id: uid(), t: 'paragraph', data: { html: el.innerHTML } });
+
+    } else if (tag === 'ul') {
+      const items = Array.from(el.querySelectorAll(':scope > li')).map(li => li.innerHTML);
+      blocks.push({ id: uid(), t: 'ul', data: { items: items.length ? items : [''] } });
+
+    } else if (tag === 'ol') {
+      const items = Array.from(el.querySelectorAll(':scope > li')).map(li => li.innerHTML);
+      blocks.push({ id: uid(), t: 'ol', data: { items: items.length ? items : [''] } });
+
+    } else if (tag === 'div' && cls.includes('pull-quote')) {
+      const p    = el.querySelector('p');
+      const cite = el.querySelector('cite');
+      blocks.push({ id: uid(), t: 'pull-quote', data: {
+        quote: p    ? p.textContent.trim()    : '',
+        cite:  cite ? cite.textContent.trim() : '',
+      }});
+
+    } else if (tag === 'div' && cls.includes('stat-callout') && !cls.includes('stat-callout-item')) {
+      const stats = Array.from(el.querySelectorAll('.stat-callout-item')).map(item => ({
+        num: ((item.querySelector('.stat-num')||{}).textContent||'').trim(),
+        lbl: ((item.querySelector('.stat-lbl')||{}).textContent||'').trim(),
+      }));
+      while (stats.length < 3) stats.push({ num:'', lbl:'' });
+      blocks.push({ id: uid(), t: 'stat-callout', data: { stats } });
+
+    } else if (tag === 'figure' && cls.includes('article-img-block')) {
+      const img = el.querySelector('img');
+      const cap = el.querySelector('figcaption');
+      blocks.push({ id: uid(), t: 'image', data: {
+        src:     img ? (img.getAttribute('src')||'')  : '',
+        alt:     img ? (img.getAttribute('alt')||'')  : '',
+        caption: cap ? cap.textContent.trim()          : '',
+      }});
+
+    } else if (tag === 'div' && cls.includes('key-takeaways')) {
+      const items = Array.from(el.querySelectorAll('li')).map(li => li.innerHTML);
+      blocks.push({ id: uid(), t: 'key-takeaways', data: { items: items.length ? items : [''] } });
+    }
+  });
+}
+
+/* ── Cover image preview ─────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function () {
+  // Cover image upload preview
+  const coverInp = document.getElementById('id_cover_image');
+  if (coverInp) {
+    coverInp.addEventListener('change', function () {
+      const prev = document.getElementById('cover-prev');
+      if (this.files && this.files[0] && prev) {
+        const reader = new FileReader();
+        reader.onload = e => { prev.src = e.target.result; prev.style.display = ''; };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+
+  // Load existing body for edit mode
+  const bodyInp = document.getElementById('id_body');
+  if (bodyInp && bodyInp.value.trim()) {
+    parseHTMLToBlocks(bodyInp.value.trim());
+  }
+
+  render();
+});
+</script>
+{% endblock %}

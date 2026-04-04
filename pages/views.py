@@ -2,9 +2,10 @@
 pages/views.py
 Static + dynamic pages: Home, About, FAQ, EMI Calculator, Area Guides.
 """
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db import models
+from django.db.models import Q, Count
 from django.http import Http404, JsonResponse
-from django.db.models import Count
 
 # ── Developer profile data (static; no DB model required) ──────────────────
 _DEVELOPER_PROFILES = {
@@ -180,8 +181,7 @@ _DEVELOPER_PROFILES = {
     },
 }
 
-from properties.models import Property
-from agents.models import Agent
+from properties.models import Property, Developer
 from blog.models import Post
 from testimonials.models import Testimonial
 from enquiries.forms import EnquiryForm
@@ -199,7 +199,6 @@ def home(request):
     }
 
     total_active = Property.objects.filter(status='active').count()
-    total_agents = Agent.objects.filter(is_active=True, is_verified=True).count()
     total_cities  = Property.objects.filter(status='active').values('city').distinct().count()
 
     context = {
@@ -219,18 +218,13 @@ def home(request):
             status='active', is_featured=True
         ).prefetch_related('images', 'tags').order_by('-created_at')[:6],
 
-        # Agents strip (4 highlighted)
-        'agents': Agent.objects.filter(
-            is_active=True, is_verified=True
-        ).select_related('user').order_by('-rating')[:4],
-
         # Testimonials carousel
         'testimonials': Testimonial.objects.filter(is_active=True).order_by('order')[:6],
 
         # News carousel (5 latest posts)
         'news_posts': Post.objects.filter(
             status='published'
-        ).select_related('category').order_by('-published_at')[:5],
+        ).prefetch_related('categories').order_by('-published_at')[:5],
 
         # Popular cities for search chips (top cities by listing count)
         'popular_cities': (
@@ -243,12 +237,15 @@ def home(request):
         # CTA / contact enquiry form
         'enquiry_form': EnquiryForm(),
 
+        # Featured developers strip (up to 8, show 4 per view — slider)
+        'featured_developers': Developer.objects.filter(is_featured=True)[:8],
+
         # Stats for animated counters
         'stats': {
             'properties':   total_active or 1200,
             'happy_clients': max(total_active * 4, 4800),
             'cities':       total_cities or 12,
-            'agents':       total_agents or 48,
+            'agents':       48,
             'years':        10,
         },
     }
@@ -256,8 +253,7 @@ def home(request):
 
 
 def about(request):
-    agents = Agent.objects.filter(is_active=True, is_verified=True).select_related('user')[:8]
-    return render(request, 'pages/about.html', {'agents': agents})
+    return render(request, 'pages/about.html')
 
 
 def faq(request):
@@ -274,27 +270,48 @@ def area_guides(request):
 
 def market_reports(request):
     reports = Post.objects.filter(
-        status='published', category__slug='market-reports'
-    ).order_by('-published_at')[:12]
+        status='published', categories__slug='market-reports'
+    ).distinct().order_by('-published_at')[:12]
     return render(request, 'pages/market_reports.html', {'reports': reports})
 
 
 def developers(request):
-    """Property Developers directory page."""
-    return render(request, 'pages/developers.html')
+    """Property Developers directory page — now dynamic from DB."""
+    queryset = Developer.objects.all().annotate(
+        active_projects_count=Count('properties', filter=Q(properties__status='active'))
+    )
+
+    # City filter logic if passed
+    current_city = request.GET.get('city')
+    if current_city:
+        queryset = queryset.filter(location__icontains=current_city)
+
+    featured_developer = queryset.filter(is_featured=True).first() or queryset.first()
+
+    context = {
+        'developers': queryset,
+        'featured_developer': featured_developer,
+        'current_city': current_city,
+        'total_verified': queryset.count(),
+        'total_units': Property.objects.filter(status='active').count(),
+    }
+    return render(request, 'pages/developers.html', context)
 
 
 def developer_profile(request, slug):
-    """Single developer profile page."""
-    developer = _DEVELOPER_PROFILES.get(slug)
-    if not developer:
-        raise Http404
-    # Split name for italic-last-word styling in template
-    parts = developer['name'].rsplit(' ', 1)
-    developer = dict(developer)
-    developer['name_first'] = parts[0] if len(parts) > 1 else developer['name']
-    developer['name_last']  = parts[1] if len(parts) > 1 else ''
-    return render(request, 'pages/developer_profile.html', {'developer': developer})
+    """Single developer profile page — now dynamic from DB."""
+    developer = get_object_or_404(Developer, slug=slug)
+
+    # Fetch projects for this developer
+    projects = developer.properties.filter(status='active').prefetch_related('images')
+
+    # Group by property type for filtering in template
+    context = {
+        'developer': developer,
+        'projects': projects,
+        'active_projects_count': projects.count(),
+    }
+    return render(request, 'pages/developer_profile.html', context)
 
 
 def security(request):
@@ -305,6 +322,11 @@ def security(request):
 def home_service(request):
     """Home maintenance and services landing page."""
     return render(request, 'pages/home_service.html')
+
+
+def nri_service(request):
+    """NRI services landing page."""
+    return render(request, 'pages/nri_service.html')
 
 
 def legal(request):
@@ -357,3 +379,11 @@ def emi_calculate_api(request):
         })
     except (ValueError, ZeroDivisionError) as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+
+def terms_and_conditions(request):
+    return render(request, 'pages/terms_and_conditions.html')
+
+
+def privacy_policy(request):
+    return render(request, 'pages/privacy_policy.html')

@@ -19,7 +19,7 @@
   }
   .bl-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
   .bl-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: clamp(32px, 4vw, 56px); font-weight: 300;
     line-height: 1.05; color: var(--charcoal);
   }
@@ -31,14 +31,14 @@
   }
   .bl-search input {
     flex: 1; border: none; outline: none; background: none;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--charcoal);
+    font-family: 'Source Sans 3', sans-serif; font-size: 13px; color: var(--charcoal);
   }
   .bl-search input::placeholder { color: var(--warm-grey); }
   .bl-cat-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .bl-pill {
     padding: 7px 16px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
     border: 1px solid var(--border); background: none; cursor: pointer;
-    color: var(--soft-brown); font-family: 'DM Sans', sans-serif; transition: all .25s;
+    color: var(--soft-brown); font-family: 'Source Sans 3', sans-serif; transition: all .25s;
     text-decoration: none; display: inline-block;
   }
   .bl-pill.active, .bl-pill:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
@@ -86,7 +86,7 @@
   .bl-byline strong { color: var(--soft-brown); font-weight: 500; }
   .bl-byline-sep { display: inline-block; width: 1px; height: 11px; background: var(--border); flex-shrink: 0; }
   .bl-post-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-size: 22px; font-weight: 400; line-height: 1.25;
     color: var(--charcoal); margin-bottom: 12px; transition: color .25s;
   }
@@ -112,7 +112,7 @@
   .bl-pg-btns { display: flex; gap: 6px; flex-wrap: wrap; }
   .bl-pg-btn {
     padding: 9px 16px; font-size: 12px; border: 1px solid var(--border);
-    text-decoration: none; color: var(--navy); transition: all .25s; font-family: 'DM Sans', sans-serif;
+    text-decoration: none; color: var(--navy); transition: all .25s; font-family: 'Source Sans 3', sans-serif;
   }
   .bl-pg-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
   .bl-pg-btn:hover:not(.active) { border-color: var(--navy); background: var(--ivory); }
@@ -137,12 +137,12 @@
   .bl-popular { display: flex; flex-direction: column; gap: 16px; }
   .bl-pop-item { display: flex; gap: 12px; align-items: flex-start; text-decoration: none; color: inherit; }
   .bl-pop-num {
-    font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--sky);
+    font-family: 'Source Sans 3', sans-serif; font-size: 26px; color: var(--sky);
     opacity: .22; line-height: 1; flex-shrink: 0; min-width: 22px;
   }
   .bl-pop-cat { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); margin-bottom: 3px; }
   .bl-pop-title {
-    font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 400;
+    font-family: 'Source Sans 3', sans-serif; font-size: 14px; font-weight: 400;
     color: var(--charcoal); line-height: 1.3; margin-bottom: 4px; transition: color .25s;
   }
   .bl-pop-item:hover .bl-pop-title { color: var(--navy); }
@@ -154,11 +154,11 @@
   }
   .bl-promo::before {
     content: '2026'; position: absolute;
-    font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300;
+    font-family: 'Source Sans 3', sans-serif; font-size: 80px; font-weight: 300;
     color: rgba(74,144,196,.07); bottom: -12px; right: -6px; line-height: 1; pointer-events: none;
   }
   .bl-promo-eye { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 10px; }
-  .bl-promo-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 10px; }
+  .bl-promo-title { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 10px; }
   .bl-promo-desc { font-size: 11px; color: rgba(200,216,236,.42); line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
   .bl-promo-btn {
     display: inline-block; background: var(--sky); color: var(--white);
@@ -207,6 +207,16 @@
     <h1 class="bl-title">Insights &amp; <em>Analysis</em></h1>
   </div>
   <div class="bl-header-right">
+    {% if user.is_staff %}
+    <a href="{% url 'blog:create' %}"
+       style="display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;
+              text-transform:uppercase;background:var(--navy);color:var(--white);
+              padding:10px 20px;text-decoration:none;transition:background .2s;align-self:flex-end;"
+       onmouseover="this.style.background='var(--sky)'"
+       onmouseout="this.style.background='var(--navy)'">
+      + New Post
+    </a>
+    {% endif %}
     <form method="GET" action="{% url 'blog:list' %}" class="bl-search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" name="q" value="{{ query }}" placeholder="Search articles…">
@@ -240,11 +250,13 @@
     <a href="{{ post.get_absolute_url }}" class="bl-row">
       <div class="bl-thumb">
         {% if post.cover_image %}
-        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy">
         {% endif %}
-        {% if post.category %}
-        <span class="bl-cat-badge" style="background:{{ post.category.color }};">{{ post.category.name }}</span>
+        {% with cat=post.categories.all.0 %}
+        {% if cat %}
+        <span class="bl-cat-badge" style="background:{{ cat.color }};">{{ cat.name }}</span>
         {% endif %}
+        {% endwith %}
       </div>
       <div class="bl-body">
         <div class="bl-byline">
@@ -296,7 +308,9 @@
         <a href="{{ p.get_absolute_url }}" class="bl-pop-item">
           <span class="bl-pop-num">0{{ forloop.counter }}</span>
           <div>
-            {% if p.category %}<div class="bl-pop-cat">{{ p.category.name }}</div>{% endif %}
+            {% with cat=p.categories.all.0 %}
+            {% if cat %}<div class="bl-pop-cat">{{ cat.name }}</div>{% endif %}
+            {% endwith %}
             <div class="bl-pop-title">{{ p.title }}</div>
             <div class="bl-pop-date">{% if p.published_at %}{{ p.published_at|date:"M j, Y" }}{% endif %}</div>
           </div>

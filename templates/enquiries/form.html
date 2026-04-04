@@ -34,11 +34,12 @@
       <div style="background:var(--white);padding:32px;border:1px solid var(--border);">
         <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:18px;">Our Services</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          {% for svc in "Buy Property,Rent Property,Sell / List Property,Home Loan Assistance,Property Legal Help,Investment Advice"|split:"," %}
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);">
-            <span style="color:var(--sky);">→</span> {{ svc }}
-          </div>
-          {% endfor %}
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Buy Property</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Rent Property</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Sell / List Property</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Home Loan Assistance</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Property Legal Help</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Investment Advice</div>
         </div>
       </div>
     </div>
@@ -46,7 +47,8 @@
     <!-- Form -->
     <div style="background:var(--white);padding:40px;border:1px solid var(--border);">
       <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:24px;">Send Us a Message</div>
-      <form method="POST" action="{% url 'enquiries:create' %}">
+      
+<form method="POST" action="{% url 'enquiries:create' %}">
         {% csrf_token %}
         {% if request.GET.property %}<input type="hidden" name="property" value="{{ request.GET.property }}">{% endif %}
         {% if request.GET.agent %}<input type="hidden" name="agent" value="{{ request.GET.agent }}">{% endif %}
@@ -57,16 +59,16 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-group">
             <label>Full Name *</label>
-            <input type="text" name="name" required {% if user.is_authenticated %}value="{{ user.get_full_name }}"{% endif %}>
+            <input type="text" name="name" required value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}" {% if user.is_authenticated %}readonly style="background:var(--ivory,#f8f8f8);cursor:default;"{% endif %}>
           </div>
           <div class="form-group">
             <label>Phone *</label>
-            <input type="tel" name="phone" required value="{% if user.is_authenticated %}{{ user.phone }}{% elif request.GET.phone %}{{ request.GET.phone }}{% endif %}">
+            <input type="tel" name="phone" required value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% elif request.GET.phone %}{{ request.GET.phone }}{% endif %}" {% if user.is_authenticated and user.phone %}readonly style="background:var(--ivory,#f8f8f8);cursor:default;"{% endif %}>
           </div>
         </div>
         <div class="form-group">
           <label>Email Address *</label>
-          <input type="email" name="email" required {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
+          <input type="email" name="email" required value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" {% if user.is_authenticated %}readonly style="background:var(--ivory,#f8f8f8);cursor:default;"{% endif %}>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-group">

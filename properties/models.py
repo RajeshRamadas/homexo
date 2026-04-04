@@ -9,6 +9,57 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 
+class Developer(models.Model):
+    """
+    Real estate developer / builder profile.
+    """
+    name             = models.CharField(max_length=200)
+    slug             = models.SlugField(max_length=220, unique=True, blank=True)
+    logo             = models.ImageField(upload_to='developers/logos/', blank=True, null=True)
+    description      = models.TextField(blank=True)
+    tagline          = models.CharField(max_length=300, blank=True)
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    website          = models.URLField(blank=True)
+    location         = models.CharField(max_length=200, blank=True, help_text='e.g. Bengaluru, Pan India')
+    tags             = models.CharField(max_length=255, blank=True, help_text='Comma-separated tags (e.g. Premium, Affordable, Commercial, Luxury, Township, Plotted)')
+    is_featured      = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name        = 'Developer'
+        verbose_name_plural = 'Developers'
+        ordering            = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    @property
+    def initials(self):
+        parts = self.name.split(' ')
+        if len(parts) > 1:
+            return f"{parts[0][0]}{parts[1][0]}".upper()
+        return self.name[:2].upper()
+
+    @property
+    def name_split(self):
+        parts = self.name.rsplit(' ', 1)
+        if len(parts) > 1:
+            return (parts[0], parts[1])
+        return (self.name, '')
+
+    @property
+    def name_first(self):
+        return self.name_split[0]
+
+    @property
+    def name_last(self):
+        return self.name_split[1]
+
+
 class PropertyTag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
@@ -40,16 +91,20 @@ class Property(models.Model):
         COMMERCIAL = 'commercial', 'Commercial'
 
     class PropertyType(models.TextChoices):
-        APARTMENT  = 'apartment',  'Apartment'
-        VILLA      = 'villa',      'Villa'
-        PENTHOUSE  = 'penthouse',  'Penthouse'
-        PLOT       = 'plot',       'Plot / Land'
-        OFFICE     = 'office',     'Office Space'
-        SHOP       = 'shop',       'Shop / Retail'
-        WAREHOUSE  = 'warehouse',  'Warehouse'
+        APARTMENT         = 'apartment',         'Apartment'
+        INDEPENDENT_HOUSE = 'independent_house', 'Independent House/Villa'
+        GATED_VILLA       = 'gated_villa',       'Gated Community Villa'
+        STANDALONE        = 'standalone',        'Standalone Building'
+        VILLA             = 'villa',             'Villa'
+        PENTHOUSE         = 'penthouse',         'Penthouse'
+        PLOT              = 'plot',              'Plot / Land'
+        OFFICE            = 'office',            'Office Space'
+        SHOP              = 'shop',              'Shop / Retail'
+        WAREHOUSE         = 'warehouse',         'Warehouse'
 
     class BHK(models.TextChoices):
         STUDIO  = 'studio', 'Studio'
+        ONE_RK  = '1rk',   '1 RK'
         ONE     = '1bhk',   '1 BHK'
         TWO     = '2bhk',   '2 BHK'
         THREE   = '3bhk',   '3 BHK'
@@ -70,17 +125,28 @@ class Property(models.Model):
         SEMI         = 'semi',          'Semi Furnished'
         UNFURNISHED  = 'unfurnished',   'Unfurnished'
 
+    class ConstructionStatus(models.TextChoices):
+        READY            = 'ready',            'Ready to Move'
+        UNDER_CONST      = 'under_construction','Under Construction'
+        NEW_LAUNCH       = 'new_launch',       'New Launch'
+
+    class OwnershipType(models.TextChoices):
+        FREEHOLD   = 'freehold',   'Freehold'
+        LEASEHOLD  = 'leasehold',  'Leasehold'
+        COOP       = 'coop',       'Co-operative Society'
+        POA        = 'poa',        'Power of Attorney'
+
     # ── Ownership & Classification ────────────────────────────────────────────
     owner          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                        related_name='owned_properties')
-    agent          = models.ForeignKey('agents.Agent', on_delete=models.SET_NULL,
-                                       null=True, blank=True, related_name='listings')
     listing_type   = models.CharField(max_length=20, choices=ListingType.choices, default=ListingType.BUY)
     property_type  = models.CharField(max_length=20, choices=PropertyType.choices, default=PropertyType.APARTMENT)
 
     # ── Core Details ──────────────────────────────────────────────────────────
     title          = models.CharField(max_length=200)
     slug           = models.SlugField(max_length=220, unique=True, blank=True)
+    developer      = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True,
+                                       related_name='properties', verbose_name='Developer / Builder')
     description    = models.TextField(blank=True)
     bhk            = models.CharField(max_length=10, choices=BHK.choices, blank=True)
 
@@ -108,12 +174,20 @@ class Property(models.Model):
     total_floors   = models.PositiveSmallIntegerField(null=True, blank=True)
 
     # ── Additional Info ───────────────────────────────────────────────────────
-    furnishing      = models.CharField(max_length=15, choices=FurnishingStatus.choices, blank=True)
-    facing          = models.CharField(max_length=50, blank=True, help_text='e.g. East, North-East')
-    age_years       = models.PositiveSmallIntegerField(null=True, blank=True,
-                                                       verbose_name='Property Age (years)')
-    parking_slots   = models.PositiveSmallIntegerField(default=0)
-    possession_date = models.DateField(null=True, blank=True)
+    furnishing           = models.CharField(max_length=15, choices=FurnishingStatus.choices, blank=True)
+    construction_status  = models.CharField(max_length=20, choices=ConstructionStatus.choices,
+                                            blank=True, verbose_name='Construction Status')
+    facing               = models.CharField(max_length=50, blank=True, help_text='e.g. East, North-East')
+    age_years            = models.PositiveSmallIntegerField(null=True, blank=True,
+                                                            verbose_name='Property Age (years)')
+    parking_slots        = models.PositiveSmallIntegerField(default=0)
+    two_wheeler_parking  = models.BooleanField(default=False, verbose_name='2-Wheeler Parking')
+    four_wheeler_parking = models.BooleanField(default=False, verbose_name='4-Wheeler Parking')
+    possession_date      = models.DateField(null=True, blank=True)
+    ownership_type       = models.CharField(max_length=15, choices=OwnershipType.choices, blank=True,
+                                            verbose_name='Ownership Type')
+    rera_approved   = models.BooleanField(default=False, verbose_name='RERA Approved')
+    rera_number     = models.CharField(max_length=100, blank=True, verbose_name='RERA Registration No.')
 
     # ── Flags ─────────────────────────────────────────────────────────────────
     is_featured    = models.BooleanField(default=False, db_index=True)
@@ -164,6 +238,8 @@ class Property(models.Model):
         if self.price_on_req:
             return 'Price on Request'
         p = self.price
+        if not p:
+            return '—'
         if p >= 1_00_00_000:
             return f'₹{p / 1_00_00_000:.2f} Cr'
         elif p >= 1_00_000:
@@ -198,11 +274,48 @@ class PropertyImage(models.Model):
         super().save(*args, **kwargs)
 
 
+class PropertyFloorPlan(models.Model):
+    """Multiple floor plan / layout images for a property."""
+    property      = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='floor_plans')
+    image         = models.ImageField(upload_to='properties/floor_plans/')
+    caption       = models.CharField(max_length=200, blank=True)
+    bhk_type      = models.CharField(
+        max_length=100, blank=True,
+        help_text='Config tab label, e.g. "2 BHK Apartment". Plans sharing the same bhk_type are grouped into one tab.'
+    )
+    size_sqft     = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text='Size variant in sq.ft, shown as a sub-tab, e.g. 977 or 1040.'
+    )
+    price_display = models.CharField(
+        max_length=100, blank=True,
+        help_text='Price label for this variant, e.g. "₹ 92.95 L" or "₹ 1.05 Cr".'
+    )
+    room_data     = models.JSONField(
+        null=True, blank=True,
+        help_text='Room dimensions as JSON: [{"title": "Bedroom 1", "val": "11\'0 × 11\'2"}, ...]'
+    )
+    image_3d      = models.ImageField(
+        upload_to='properties/floor_plans/', null=True, blank=True,
+        help_text='Optional 3D render of the same layout. When present, a 2D/3D toggle will appear on the viewer.'
+    )
+    order         = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name        = 'Floor Plan'
+        verbose_name_plural = 'Floor Plans'
+        ordering            = ['order', 'id']
+
+    def __str__(self):
+        return f'Floor Plan for {self.property.title}'
+
+
 class PropertyFeature(models.Model):
     """Amenities & features: Swimming Pool, Gym, Clubhouse, etc."""
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='features')
-    name     = models.CharField(max_length=100)
-    icon     = models.CharField(max_length=100, blank=True, help_text='CSS icon class or SVG name')
+    property   = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='features')
+    name       = models.CharField(max_length=100)
+    icon       = models.CharField(max_length=100, blank=True, help_text='CSS icon class or SVG markup')
+    icon_image = models.ImageField(upload_to='features/', blank=True, help_text='Upload an icon image (PNG/SVG recommended, ~64×64px)')
 
     class Meta:
         verbose_name        = 'Feature'
@@ -210,3 +323,29 @@ class PropertyFeature(models.Model):
 
     def __str__(self):
         return f'{self.name} — {self.property.title}'
+
+
+class ConnectivityItem(models.Model):
+    """Nearby landmarks / connectivity points: schools, hospitals, metro, etc."""
+
+    class Category(models.TextChoices):
+        TRANSIT    = 'transit',    'Transit'
+        EDUCATION  = 'education',  'Education'
+        HEALTHCARE = 'healthcare', 'Healthcare'
+        SHOPPING   = 'shopping',   'Shopping'
+        LIFESTYLE  = 'lifestyle',  'Lifestyle'
+        OTHER      = 'other',      'Other'
+
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='connectivity')
+    category = models.CharField(max_length=20, choices=Category.choices, default=Category.OTHER)
+    name     = models.CharField(max_length=200, help_text='e.g. Whitefield Metro Station')
+    distance = models.CharField(max_length=50, help_text='e.g. 2.5 km, 10 min drive')
+    order    = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name        = 'Connectivity Item'
+        verbose_name_plural = 'Connectivity Items'
+        ordering            = ['category', 'order', 'id']
+
+    def __str__(self):
+        return f'{self.name} ({self.distance}) — {self.property.title}'

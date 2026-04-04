@@ -35,7 +35,10 @@ class PropertyCreateForm(forms.ModelForm):
             'bhk', 'bedrooms', 'bathrooms', 'area_sqft', 'carpet_area',
             'address', 'locality', 'city', 'state', 'pincode',
             'floor_no', 'total_floors', 'furnishing', 'facing',
-            'age_years', 'parking_slots', 'possession_date',
+            'age_years', 'parking_slots', 'two_wheeler_parking', 'four_wheeler_parking',
+            'construction_status', 'possession_date',
+            'ownership_type', 'rera_approved', 'rera_number',
+            'latitude', 'longitude',
             'tags',
         )
         widgets = {
