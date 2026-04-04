@@ -33,7 +33,7 @@ class Enquiry(models.Model):
 
     # Contact details (in case user is not logged in)
     name         = models.CharField(max_length=120)
-    email        = models.EmailField()
+    email        = models.EmailField(blank=True)
     phone        = models.CharField(max_length=20)
 
     # Enquiry details

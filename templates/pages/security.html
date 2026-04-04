@@ -1,3350 +1,710 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Security & Surveillance — HOMEXO{% endblock %}
-{% block meta_description %}HOMEXO Security & Surveillance for property with CCTV, remote monitoring, access control, alarm systems, security audits, and physical property guardian services.{% endblock %}
+{% block title %}Security & Surveillance — Complete Protection | HOMEXO{% endblock %}
+{% block meta_description %}End-to-end security infrastructure for residential and commercial properties — from CCTV installation to 24/7 remote monitoring and smart access control.{% endblock %}
 
 {% block extra_head %}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .lg-page {
+    --ink: #0f0e0c; --cream: #f7f4ee; --warm: #e8e2d6;
+    --gold: #c9a84c; --gold-light: #e8d49a;
+    --rust: #b5470c; --rust-light: #f0d4c4;
+    --teal: #1c3d5a; --teal-light: #dbe4ec;
+    --muted: #7a766e;
+    --border-lg: rgba(15,14,12,0.12);
+    --border-warm: rgba(201,168,76,0.3);
+    font-family: 'DM Sans', sans-serif; color: var(--ink);
+  }
+  .lg-subnav {
+    background: var(--cream); border-bottom: 1px solid var(--border-lg);
+    padding: 0 60px; display: flex; align-items: center; gap: 0;
+    position: sticky; top: 77px; z-index: 900;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .lg-subnav::-webkit-scrollbar { display: none; }
+  .lg-subnav a {
+    padding: 14px 22px; font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; white-space: nowrap;
+    transition: color 0.2s; border-bottom: 2px solid transparent;
+  }
+  .lg-subnav a:hover { color: var(--ink); border-bottom-color: var(--gold); }
+  .lg-hero { display: grid; grid-template-columns: 1fr 1fr; background: var(--cream); min-height: 90vh; }
+  .lg-hero-left { padding: 80px 48px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
+  .lg-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 28px;
+  }
+  .lg-hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+  .lg-hero-headline {
+    font-family: 'Playfair Display', serif; font-size: clamp(38px,4.5vw,60px);
+    font-weight: 700; line-height: 1.1; letter-spacing: -1px; color: var(--ink); margin-bottom: 24px;
+  }
+  .lg-hero-headline em { font-style: italic; color: var(--teal); }
+  .lg-hero-sub { font-size: 16px; font-weight: 300; color: var(--muted); line-height: 1.7; max-width: 440px; margin-bottom: 44px; }
+  .lg-hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 52px; }
+  .lg-btn-primary {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--cream);
+    padding: 14px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none;
+    letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s;
+  }
+  .lg-btn-primary:hover { background: var(--teal); color: var(--cream); transform: translateY(-1px); }
+  .lg-btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--ink);
+    padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 400; text-decoration: none;
+    border: 1px solid var(--border-lg); transition: border-color 0.2s, transform 0.15s;
+  }
+  .lg-btn-secondary:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .lg-trust { padding-top: 32px; border-top: 1px solid var(--border-lg); display: flex; gap: 36px; flex-wrap: wrap; }
+  .lg-trust-item { display: flex; flex-direction: column; }
+  .lg-trust-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; }
+  .lg-trust-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .lg-hero-right { background: var(--ink); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 60px 48px; }
+  .lg-hero-right::before {
+    content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%); border-radius: 50%;
+  }
+  .lg-hero-right::after {
+    content:''; position:absolute; bottom:-80px; left:-80px; width:300px; height:300px;
+    background: radial-gradient(circle, rgba(28,61,90,0.2) 0%, transparent 70%); border-radius: 50%;
+  }
+  .dash-card {
+    background: rgba(247,244,238,0.06); border: 1px solid rgba(247,244,238,0.1);
+    border-radius: 16px; padding: 28px; width: 100%; max-width: 420px;
+    position: relative; z-index: 2; backdrop-filter: blur(4px);
+  }
+  .dash-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .dash-hdr-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); }
+  .dash-hdr-order { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:0.05em; }
+  .dash-prop { background:rgba(247,244,238,0.05); border-radius:10px; padding:16px; margin-bottom:20px; border:1px solid rgba(247,244,238,0.08); }
+  .dash-prop-lbl { font-size:10px; color:rgba(247,244,238,0.4); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.08em; }
+  .dash-prop-name { font-size:13px; color:rgba(247,244,238,0.9); font-weight:500; margin-bottom:2px; }
+  .dash-prop-addr { font-size:11px; color:rgba(247,244,238,0.4); }
+  .dash-steps { display:flex; flex-direction:column; gap:0; }
+  .dash-step { display:flex; align-items:flex-start; gap:12px; padding:10px 0; position:relative; }
+  .dash-step:not(:last-child)::after { content:''; position:absolute; left:14px; top:34px; width:1px; height:calc(100% - 14px); background:rgba(247,244,238,0.1); }
+  .step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:11px; font-weight:500; }
+  .step-done { background:#1c3d5a; color:#d0e9e5; }
+  .step-active { background:var(--gold); color:var(--ink); animation: pulse-dot 2s infinite; }
+  .step-pending { background:rgba(247,244,238,0.06); color:rgba(247,244,238,0.3); border:1px solid rgba(247,244,238,0.1); }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow:0 0 0 0 rgba(201,168,76,0.4); }
+    50% { box-shadow:0 0 0 6px rgba(201,168,76,0); }
+  }
+  .step-info { flex:1; padding-top:3px; }
+  .step-name { font-size:12px; font-weight:500; color:rgba(247,244,238,0.85); margin-bottom:2px; }
+  .step-detail { font-size:10.5px; color:rgba(247,244,238,0.4); line-height:1.4; }
+  .step-detail.active-msg { color:var(--gold-light); }
+  .dash-verdict { margin-top:20px; background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:14px; display:flex; align-items:center; gap:12px; }
+  .vd-dot { width:32px; height:32px; border-radius:50%; background:#1c3d5a; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .vd-text { font-family:'Playfair Display',serif; font-size:13px; color:var(--gold); font-weight:600; margin-bottom:2px; }
+  .vd-sub { font-size:10px; color:rgba(247,244,238,0.4); }
+  .lg-section { padding: 96px 60px; }
+  .lg-section-label { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .lg-s-label { font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); font-weight:500; }
+  .lg-s-line { height:1px; width:40px; background:var(--gold-light); }
+  .lg-heading { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:700; line-height:1.15; letter-spacing:-0.5px; color:var(--ink); margin-bottom:16px; }
+  .lg-heading em { font-style:italic; color:var(--teal); }
+  .lg-sub-text { font-size:15px; color:var(--muted); max-width:520px; line-height:1.7; }
+  .lg-packages { background:var(--ink); padding:96px 60px; }
+  .lg-packages .lg-heading { color:var(--cream); }
+  .lg-packages .lg-sub-text { color:rgba(247,244,238,0.5); }
+  .pkg-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:52px; }
+  .pkg-card { background:rgba(247,244,238,0.04); border:1px solid rgba(247,244,238,0.1); border-radius:16px; padding:32px; position:relative; transition:border-color 0.2s, transform 0.2s; }
+  .pkg-card:hover { border-color:rgba(201,168,76,0.4); transform:translateY(-4px); }
+  .pkg-card.featured { border-color:var(--gold); background:rgba(201,168,76,0.06); }
+  .pkg-badge { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--ink); font-size:10px; font-weight:600; padding:4px 14px; border-radius:99px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+  .pkg-tier { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:10px; }
+  .pkg-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--cream); margin-bottom:6px; }
+  .pkg-price { font-size:36px; font-weight:300; color:var(--cream); letter-spacing:-1px; margin-bottom:4px; }
+  .pkg-price sup { font-size:18px; font-weight:400; vertical-align:super; }
+  .pkg-timeline { font-family:'DM Mono',monospace; font-size:10.5px; color:var(--gold); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(247,244,238,0.08); }
+  .pkg-features { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .pkg-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:rgba(247,244,238,0.7); line-height:1.4; }
+  .feat-yes { color:#4db89a; font-size:12px; margin-top:1px; flex-shrink:0; }
+  .feat-no  { color:rgba(247,244,238,0.2); font-size:12px; margin-top:1px; flex-shrink:0; }
+  .pkg-cta { display:block; width:100%; margin-top:28px; padding:13px; border-radius:8px; font-size:13px; font-weight:500; text-align:center; transition:all 0.2s; text-decoration:none; border:none; cursor:pointer; }
+  .pkg-cta-outline { background:transparent; border:1px solid rgba(247,244,238,0.2); color:var(--cream); }
+  .pkg-cta-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .pkg-cta-gold { background:var(--gold); color:var(--ink); font-weight:600; }
+  .pkg-cta-gold:hover { background:var(--gold-light); transform:translateY(-1px); }
+  .lg-process { background:var(--cream); padding:96px 60px; }
+  .process-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; margin-top:52px; align-items:start; }
+  .proc-steps { display:flex; flex-direction:column; }
+  .proc-step { display:flex; gap:20px; padding:16px; margin:0 -16px; border-radius:8px; transition:background 0.15s; cursor:default; }
+  .proc-step:hover { background:rgba(201,168,76,0.04); }
+  .proc-num { font-family:'Playfair Display',serif; font-size:34px; font-weight:700; color:var(--gold-light); line-height:1; min-width:44px; letter-spacing:-1px; }
+  .proc-state { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--gold); margin-bottom:4px; }
+  .proc-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:5px; }
+  .proc-desc { font-size:13px; color:var(--muted); line-height:1.6; }
+  .wa-msg { margin-top:8px; display:inline-flex; align-items:flex-start; gap:6px; background:#e8f5e2; border-radius:6px; padding:7px 10px; font-size:11.5px; color:#1a5c1a; line-height:1.4; max-width:400px; }
+  .wa-icon { font-size:13px; flex-shrink:0; }
+  .video-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
+  .video-card { background:var(--ink); border-radius:20px; padding:40px; position:relative; overflow:hidden; }
+  @media (max-width: 768px) { .video-card { padding: 28px 20px; } }
+  .proc-visual { position:sticky; top:100px; }
+  .verdict-display { background:var(--ink); border-radius:20px; padding:36px; margin-bottom:20px; }
+  .verdict-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
+  .verdict-stamp { font-size:10px; background:rgba(74,189,158,0.15); color:#4abd9e; padding:3px 10px; border-radius:99px; }
+  .verdict-main { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+  .big-dot { width:52px; height:52px; border-radius:50%; background:#1c3d5a; border:2px solid rgba(74,189,158,0.4); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .verdict-title-big { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:#4abd9e; line-height:1.1; }
+  .verdict-sub-big { font-size:12px; color:rgba(247,244,238,0.4); margin-top:4px; }
+  .verdict-checks { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .v-check { display:flex; align-items:center; gap:7px; font-size:11.5px; color:rgba(247,244,238,0.6); background:rgba(247,244,238,0.04); padding:8px 10px; border-radius:6px; }
+  .v-check-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .dot-g { background:#4abd9e; }
+  .verdict-advocate { margin-top:20px; padding-top:16px; border-top:1px solid rgba(247,244,238,0.08); display:flex; align-items:center; gap:10px; }
+  .adv-avatar { width:36px; height:36px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:var(--teal-light); flex-shrink:0; }
+  .adv-name { font-size:12px; font-weight:500; color:rgba(247,244,238,0.8); }
+  .adv-role { font-size:10.5px; color:rgba(247,244,238,0.35); }
+  .adv-certified { font-family:'DM Mono',monospace; font-size:9.5px; color:var(--gold); letter-spacing:0.06em; }
+  .lg-services { background:var(--warm); padding:96px 60px; }
+  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-lg); border:1px solid var(--border-lg); border-radius:16px; overflow:hidden; margin-top:52px; }
+  .svc-cell { background:var(--warm); padding:32px 28px; transition:background 0.2s; }
+  .svc-cell:hover { background:var(--cream); }
+  .svc-num { font-family:'Playfair Display',serif; font-size:13px; font-style:italic; color:var(--gold); margin-bottom:14px; }
+  .svc-icon { width:40px; height:40px; border-radius:10px; background:var(--cream); border:1px solid var(--border-lg); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:16px; }
+  .svc-name { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:8px; line-height:1.25; }
+  .svc-body { font-size:13px; color:var(--muted); line-height:1.6; }
+  .svc-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:14px; }
+  .svc-tag { font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:0.06em; color:var(--muted); background:var(--cream); border:1px solid var(--border-lg); padding:3px 8px; border-radius:4px; }
+  .lg-why { background:var(--cream); padding:96px 60px; }
+  .why-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; margin-top:52px; align-items:center; }
+  .why-list { display:flex; flex-direction:column; gap:28px; }
+  .why-item { display:flex; gap:18px; align-items:flex-start; }
+  .why-icon { width:40px; height:40px; border-radius:10px; background:var(--teal-light); border:1px solid rgba(28,61,90,0.15); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+  .why-title { font-size:15px; font-weight:500; color:var(--ink); margin-bottom:4px; }
+  .why-desc { font-size:13px; color:var(--muted); line-height:1.6; }
+  .comp-wrap { background:var(--ink); border-radius:20px; padding:32px; overflow:hidden; }
+  .comp-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; }
+  .comp-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .comp-table th { text-align:left; padding:8px 12px; font-size:10px; font-weight:500; color:rgba(247,244,238,0.4); border-bottom:1px solid rgba(247,244,238,0.07); font-family:'DM Mono',monospace; letter-spacing:0.06em; }
+  .comp-table td { padding:9px 12px; font-size:12px; color:rgba(247,244,238,0.65); border-bottom:1px solid rgba(247,244,238,0.05); }
+  .comp-table tr:last-child td { border-bottom:none; }
+  .comp-table tr.hl-row td { color:var(--gold); font-weight:500; background:rgba(201,168,76,0.07); }
+  .cell-yes { color:#4abd9e !important; }
+  .cell-no  { color:rgba(247,244,238,0.2) !important; }
+  .lg-testimonials { background:var(--warm); padding:96px 60px; }
+  .testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:52px; }
+  .testi-card { background:var(--cream); border:1px solid var(--border-lg); border-radius:16px; padding:28px; transition:transform 0.2s; }
+  .testi-card:hover { transform:translateY(-3px); }
+  .testi-quote { font-family:'Playfair Display',serif; font-size:36px; color:var(--gold-light); line-height:1; margin-bottom:12px; }
+  .testi-text { font-size:14px; color:var(--ink); line-height:1.7; margin-bottom:20px; font-style:italic; font-family:'Playfair Display',serif; }
+  .testi-author { display:flex; align-items:center; gap:12px; padding-top:16px; border-top:1px solid var(--border-lg); }
+  .testi-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; }
+  .testi-name { font-size:13px; font-weight:500; color:var(--ink); }
+  .testi-detail { font-size:11px; color:var(--muted); }
+  .verdict-badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:10px; font-weight:500; margin-top:3px; }
+  .badge-green { background:#d0e9e5; color:#1c3d5a; }
+  .badge-yellow { background:#faeeda; color:#854f0b; }
+  .lg-cta { background:var(--teal); padding:96px 60px; text-align:center; position:relative; overflow:hidden; }
+  .lg-cta::before { content:''; position:absolute; top:-120px; left:50%; transform:translateX(-50%); width:600px; height:600px; background:radial-gradient(circle, rgba(247,244,238,0.06) 0%, transparent 70%); border-radius:50%; pointer-events:none; }
+  .lg-cta .lg-heading { color:var(--cream); }
+  .cta-sub { font-size:16px; color:rgba(247,244,238,0.65); max-width:500px; margin:0 auto 40px; line-height:1.7; }
+  .cta-actions { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; }
+  .lg-btn-cream { background:var(--cream); color:var(--teal); padding:15px 32px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+  .lg-btn-cream:hover { background:var(--ink); color:var(--cream); transform:translateY(-2px); }
+  .lg-btn-outline-cream { background:transparent; border:1px solid rgba(247,244,238,0.3); color:var(--cream); padding:15px 28px; border-radius:8px; font-size:14px; text-decoration:none; transition:all 0.2s; }
+  .lg-btn-outline-cream:hover { border-color:rgba(247,244,238,0.7); }
+  .wa-cta-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:20px; font-size:13px; color:rgba(247,244,238,0.5); }
+  .fade-up { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+  .fade-up:nth-child(2) { transition-delay:0.1s; }
+  .fade-up:nth-child(3) { transition-delay:0.2s; }
+  .fade-up:nth-child(4) { transition-delay:0.3s; }
+  .lg-video-call { padding: 96px 60px; }
+  @media (max-width: 1024px) {
+    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta, .lg-video-call { padding:72px 32px; }
+    .lg-hero-left { padding:60px 32px; }
+    .pkg-grid { grid-template-columns:1fr; }
+    .process-grid { grid-template-columns:1fr; }
+    .services-grid { grid-template-columns:1fr 1fr; }
+    .testi-grid { grid-template-columns:1fr 1fr; }
+    .why-grid { grid-template-columns:1fr; }
+    .video-grid { grid-template-columns:1fr; }
+    .lg-subnav { padding:0 32px; }
+  }
+  @media (max-width: 768px) {
+    .lg-hero { grid-template-columns:1fr; }
+    .lg-hero-right { display:none; }
+    .lg-hero-left { padding:48px 20px; }
+    .lg-section, .lg-process, .lg-services, .lg-packages, .lg-why, .lg-testimonials, .lg-cta, .lg-video-call { padding:60px 20px; }
+    .services-grid { grid-template-columns:1fr; }
+    .testi-grid { grid-template-columns:1fr; }
+    .proc-visual { display:none; }
+    .process-grid { grid-template-columns:1fr; gap:0; }
+    .video-grid { grid-template-columns:1fr; }
+    .lg-subnav { padding:0 16px; }
+  }
+  .fab-wrap:has(.fab-emi) { display: none !important; }
+</style>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-  .security-page-exact {
-    --obsidian: #f7f4ee;
-    --void: #f0ede5;
-    --deep: #e8e2d6;
-    --surface: #ffffff;
-    --panel: #f5f2ea;
-    --glass: rgba(15,14,12,0.04);
-    --glass-border: rgba(15,14,12,0.12);
-    --glass-hover: rgba(15,14,12,0.06);
-    --gold: #C9A84C;
-    --gold-bright: #E2C06A;
-    --gold-dim: rgba(201,168,76,0.35);
-    --gold-glow: rgba(201,168,76,0.12);
-    --white: #FFFFFF;
-    --text-primary: #0f0e0c;
-    --text-secondary: rgba(15,14,12,0.6);
-    --text-muted: rgba(15,14,12,0.4);
-    --border: rgba(15,14,12,0.12);
-    --border-gold: rgba(201,168,76,0.25);
-    --sky: #4A90C4;
-    --green: #6FCF97;
-    --amber: #F2994A;
-    --red: #EB5757;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body.security-exact-page {
-    font-family: 'DM Sans', sans-serif;
-    background: #f7f4ee;
-    color: #0f0e0c;
-    overflow-x: hidden;
-  }
-
-
-
-  body.security-exact-page .fab-wrap:has(.fab-emi) {
-    display: none;
-  }
-
-  #scroll-progress {
-    background: var(--sky);
-  }
-
-  .security-page-exact {
-    background: var(--obsidian);
-    color: var(--text-primary);
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero {
-    margin-top: 80px;
-    background: var(--obsidian);
-    padding: 48px 64px 120px;
-    display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 64px;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    min-height: calc(100vh - 80px);
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 60% 60% at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 80% at 80% 20%, rgba(74,144,196,0.05) 0%, transparent 65%),
-      radial-gradient(ellipse 40% 40% at 50% 80%, rgba(201,168,76,0.03) 0%, transparent 65%);
-    pointer-events: none;
-  }
-
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-
-  .hero-left {
-    position: relative;
-    z-index: 1;
-  }
-
-  .eyebrow {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .eyebrow::before {
-    content: '';
-    display: block;
-    width: 36px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold));
-  }
-
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(40px, 5vw, 72px);
-    font-weight: 400;
-    color: var(--text-primary);
-    line-height: 1.05;
-    margin-bottom: 24px;
-    letter-spacing: -0.5px;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--gold);
-    font-weight: 400;
-  }
-
-  .hero-sub {
-    font-size: 15px;
-    line-height: 1.85;
-    color: var(--text-secondary);
-    font-weight: 300;
-    max-width: 500px;
-    margin-bottom: 44px;
-  }
-
-  .hero-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 44px;
-  }
-
-  .hero-pill {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    padding: 12px 18px;
-    backdrop-filter: blur(12px);
-    transition: border-color .3s, background .3s;
-  }
-
-  .hero-pill:hover {
-    background: var(--glass-hover);
-    border-color: var(--border-gold);
-  }
-
-  .hero-pill svg {
-    color: var(--gold);
-    flex-shrink: 0;
-  }
-
-  .pill-val {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1;
-  }
-
-  .pill-lbl {
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    letter-spacing: 0.5px;
-  }
-
-  .hero-partners {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .hero-partners-lbl {
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    flex-shrink: 0;
-  }
-
-  .pchip {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    padding: 5px 13px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    letter-spacing: 0.5px;
-    transition: all .3s;
-  }
-
-  .pchip:hover {
-    border-color: var(--border-gold);
-    color: var(--gold);
-  }
-
-  .hero-panel {
-    position: relative; z-index: 1;
-    background: #ffffff;
-    display: flex; flex-direction: column;
-    box-shadow: -20px 0 60px rgba(0,0,0,0.15);
-    overflow: hidden;
-  }
-
-  .panel-head {
-    background: #0f0e0c;
-    padding: 32px 24px 26px 32px;
-    border-bottom: 2px solid var(--gold);
-    flex-shrink: 0;
-  }
-
-  .panel-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; font-weight: 500; color: #f7f4ee;
-    margin-bottom: 6px; line-height: 1.3;
-  }
-
-  .panel-sub { font-size: 12px; color: rgba(247,244,238,0.5); line-height: 1.65; }
-
-  .panel-body {
-    padding: 22px 24px 26px;
-    flex: 1; display: flex; flex-direction: column; overflow-y: auto;
-  }
-
-  .sec-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 16px; }
-
-  .sec-tab {
-    padding: 11px 8px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
-    text-transform: uppercase; color: rgba(15,14,12,0.45);
-    cursor: pointer; transition: all 0.22s; text-align: center; line-height: 1;
-  }
-
-  .sec-tab.active { background: #0f0e0c; border-color: #0f0e0c; color: #f7f4ee; }
-  .sec-tab:hover:not(.active) { border-color: #0f0e0c; color: #0f0e0c; }
-
-  .field { margin-bottom: 12px; }
-  .field:last-of-type { margin-bottom: 0; }
-
-  .field label {
-    display: block; font-size: 9.5px; font-weight: 600; letter-spacing: 1.6px;
-    text-transform: uppercase; color: rgba(15,14,12,0.45); margin-bottom: 6px;
-  }
-
-  .field input, .field select {
-    border-radius: 8px;
-    width: 100%; padding: 11px 12px; border: 1px solid var(--border);
-    background: var(--panel); font-family: 'DM Sans', sans-serif; font-size: 13px;
-    color: var(--text-primary); outline: none; appearance: none;
-    transition: border-color 0.3s, background 0.25s, box-shadow 0.25s;
-  }
-
-  .field input::placeholder { color: rgba(15,14,12,0.35); opacity: 1; }
-
-  .field input:focus, .field select:focus {
-    border-color: var(--gold); background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-  }
-
-  .phone-wrap {
-    border-radius: 8px; overflow: hidden;
-    display: flex; align-items: stretch;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    transition: border-color 0.3s, box-shadow 0.25s;
-  }
-
-  .phone-wrap:focus-within {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-  }
-
-  .phone-code {
-    width: 130px; min-width: 130px; max-width: 130px;
-    padding: 11px 22px 11px 10px;
-    border: none; border-right: 1px solid var(--border);
-    background: var(--panel); font-family: 'DM Sans', sans-serif; font-size: 11.5px;
-    color: var(--text-primary); outline: none; appearance: none;
-    cursor: pointer; flex-shrink: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A8A99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 6px center;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
-  .phone-num {
-    flex: 1; padding: 11px 10px; border: none;
-    background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px;
-    color: var(--text-primary); outline: none; min-width: 0; width: 0;
-  }
-
-  .phone-num::placeholder { color: rgba(15,14,12,0.35); opacity: 1; }
-
-  .form-submit {
-    border-radius: 8px;
-    width: 100%; padding: 13px; background: #0f0e0c; color: #f7f4ee;
-    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
-    font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
-    transition: background 0.3s, transform 0.2s;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    margin-top: 14px; flex-shrink: 0;
-  }
-
-  .form-submit:hover { background: var(--gold); transform: translateY(-1px); }
-
-  .form-note {
-    font-size: 10.5px; color: rgba(15,14,12,0.4); text-align: center;
-    margin-top: 14px; line-height: 1.7; letter-spacing: 0.2px;
-  }
-
-  .sec {
-    padding: 96px 64px;
-  }
-
-  .sec-dark {
-    background: var(--deep);
-  }
-
-  .sec-surface {
-    background: var(--surface);
-  }
-
-  .sec-void {
-    background: var(--void);
-  }
-
-  .sec-white {
-    background: #ffffff;
-  }
-
-  .sec-cream {
-    background: var(--obsidian);
-  }
-
-  .sec-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(30px, 3.5vw, 52px);
-    font-weight: 400;
-    line-height: 1.1;
-    color: var(--text-primary);
-    margin-bottom: 14px;
-  }
-
-  .sec-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .sec-title.wht {
-    color: var(--text-primary);
-  }
-
-  .sec-sub {
-    font-size: 14px;
-    color: var(--text-secondary);
-    font-weight: 300;
-    line-height: 1.85;
-    max-width: 580px;
-  }
-
-  .sec-sub.wht {
-    color: var(--text-secondary);
-  }
-
-  .sec-hd {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 32px;
-    margin-bottom: 56px;
-  }
-
-  .sec-eyebrow {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .sec-eyebrow::before {
-    content: '';
-    display: block;
-    width: 28px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold));
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
-    background: transparent;
-  }
-
-  .service-tile {
-    background: var(--void);
-    border-radius: 12px;
-    padding: 48px 40px;
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: all .65s cubic-bezier(.23,1,.32,1);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .service-tile.vis {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .service-tile::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 100%, var(--gold-glow) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity .4s;
-  }
-
-  .service-tile:hover::before {
-    opacity: 1;
-  }
-
-  .service-tile:hover {
-    background: var(--deep);
-  }
-
-  .service-tile:hover .tile-icon {
-    border-color: var(--border-gold);
-    background: var(--gold-glow);
-  }
-
-  .service-tile:hover .tile-icon svg {
-    color: var(--gold-bright);
-  }
-
-  .tile-ghost {
-    position: absolute;
-    bottom: -16px;
-    right: -8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 130px;
-    font-weight: 400;
-    color: var(--gold);
-    opacity: .03;
-    line-height: 1;
-    pointer-events: none;
-    transition: opacity .4s;
-  }
-
-  .service-tile:hover .tile-ghost {
-    opacity: .06;
-  }
-
-  .tile-icon {
-    width: 56px;
-    height: 56px;
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 28px;
-    flex-shrink: 0;
-    transition: all .3s;
-  }
-
-  .tile-icon svg {
-    color: var(--gold-dim);
-    transition: color .3s;
-  }
-
-  .tile-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 14px;
-    min-height: 56px;
-    display: flex;
-    align-items: flex-start;
-    line-height: 1.3;
-  }
-
-  .tile-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.85;
-    font-weight: 300;
-    flex: 1;
-  }
-
-  .tile-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(201,168,76,0.07);
-    border: 1px solid var(--border-gold);
-    padding: 5px 12px;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 22px;
-    align-self: flex-start;
-  }
-
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 0;
-    position: relative;
-  }
-
-  .steps::before {
-    content: '';
-    position: absolute;
-    top: 40px;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
-    z-index: 0;
-  }
-
-  .step {
-    padding: 0 24px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all .6s cubic-bezier(.23,1,.32,1);
-  }
-
-  .step.vis {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .step:nth-child(2) { transition-delay: .1s; }
-  .step:nth-child(3) { transition-delay: .2s; }
-  .step:nth-child(4) { transition-delay: .3s; }
-
-  .step-num {
-    width: 80px;
-    height: 80px;
-    border: 1px solid var(--border-gold);
-    background: var(--void);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 28px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 30px;
-    font-weight: 400;
-    color: var(--gold);
-    transition: all .3s;
-    box-shadow: 0 0 40px rgba(201,168,76,0.08);
-  }
-
-  .step:hover .step-num {
-    background: var(--gold);
-    color: var(--obsidian);
-    box-shadow: 0 0 40px rgba(201,168,76,0.3);
-  }
-
-  .step-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 19px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-  }
-
-  .step-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.8;
-    font-weight: 300;
-  }
-
-  .packages {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
-    background: transparent;
-  }
-
-  .pkg {
-    background: var(--void);
-    border: 1px solid rgba(15,14,12,0.12);
-    border-radius: 12px;
-    padding: 52px 40px;
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: all .65s cubic-bezier(.23,1,.32,1);
-  }
-
-  .pkg.vis {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .pkg:nth-child(2) { transition-delay: .1s; }
-  .pkg:nth-child(3) { transition-delay: .2s; }
-
-  .pkg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    top: auto;
-    height: 2px;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
-    opacity: 0;
-    transition: opacity .4s;
-    border-radius: 12px;
-  }
-
-  .pkg:hover::before {
-    opacity: 1;
-  }
-
-  .pkg.featured {
-    background: var(--surface);
-  }
-
-  .pkg.featured::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 65%);
-    pointer-events: none;
-  }
-
-  .pkg-badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    color: var(--obsidian);
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 6px 16px;
-    font-weight: 700;
-  }
-
-  .pkg-icon {
-    width: 52px;
-    height: 52px;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 28px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .pkg-icon svg {
-    color: var(--gold);
-  }
-
-  .pkg.featured .pkg-icon {
-    border-color: var(--border-gold);
-    background: var(--gold-glow);
-  }
-
-  .pkg-name {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .pkg.featured .pkg-name {
-    color: var(--gold);
-  }
-
-  .pkg-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 400;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .pkg-price {
-    font-size: 13px;
-    color: var(--gold);
-    margin-bottom: 28px;
-    font-weight: 500;
-    position: relative;
-    z-index: 1;
-  }
-
-  .pkg-divider {
-    height: 1px;
-    background: var(--border);
-    margin-bottom: 28px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .pkg.featured .pkg-divider {
-    background: var(--border-gold);
-  }
-
-  .pkg-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-bottom: 36px;
-    position: relative;
-    z-index: 1;
-    padding: 0;
-  }
-
-  .pkg-features li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    font-weight: 300;
-  }
-
-  .pkg-features li svg {
-    flex-shrink: 0;
-    margin-top: 2px;
-    color: var(--gold);
-  }
-
-  .pkg-cta {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid var(--border-gold);
-    background: transparent;
-    color: var(--gold);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: all .3s;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-  }
-
-  .pkg-cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    transform: translateY(101%);
-    transition: transform .35s cubic-bezier(.23,1,.32,1);
-  }
-
-  .pkg-cta:hover::before {
-    transform: translateY(0);
-  }
-
-  .pkg-cta:hover {
-    color: var(--obsidian);
-    border-color: var(--gold);
-  }
-
-  .pkg-cta span {
-    position: relative;
-    z-index: 1;
-  }
-
-  .pkg.featured .pkg-cta {
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    color: var(--obsidian);
-    border-color: var(--gold);
-  }
-
-  .pkg.featured .pkg-cta::before {
-    background: linear-gradient(135deg, var(--gold-bright), #F0D88A);
-  }
-
-  .pkg.featured .pkg-cta:hover {
-    box-shadow: 0 8px 28px rgba(201,168,76,0.4);
-  }
-
-  .why-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
-    background: transparent;
-  }
-
-  .why-card {
-    background: var(--void);
-    border-radius: 12px;
-    padding: 36px 32px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all .65s cubic-bezier(.23,1,.32,1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .why-card.vis {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .why-card:nth-child(2) { transition-delay: .08s; }
-  .why-card:nth-child(3) { transition-delay: .16s; }
-  .why-card:nth-child(4) { transition-delay: .24s; }
-  .why-card:nth-child(5) { transition-delay: .32s; }
-  .why-card:nth-child(6) { transition-delay: .4s; }
-
-  .why-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
-    opacity: 0;
-    transition: opacity .3s;
-  }
-
-  .why-card:hover::before {
-    opacity: 1;
-  }
-
-  .why-card:hover {
-    background: var(--deep);
-  }
-
-  .why-icon {
-    width: 44px;
-    height: 44px;
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    transition: all .3s;
-  }
-
-  .why-card:hover .why-icon {
-    border-color: var(--border-gold);
-    background: var(--gold-glow);
-  }
-
-  .why-icon svg {
-    color: var(--gold);
-  }
-
-  .why-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 19px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-  }
-
-  .why-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.8;
-    font-weight: 300;
-  }
-
-  .tech-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 72px;
-    align-items: center;
-  }
-
-  .tech-visual {
-    position: relative;
-  }
-
-  .tech-display {
-    background: var(--surface);
-    border: 1px solid var(--glass-border);
-    padding: 28px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 40px 80px rgba(15,14,12,0.1);
-  }
-
-  .tech-display::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-
-  .tech-screen-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .tech-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
-
-  .tech-dot:nth-child(1) { background: #EB5757; }
-  .tech-dot:nth-child(2) { background: #F2994A; }
-  .tech-dot:nth-child(3) { background: #6FCF97; }
-
-  .tech-screen-label {
-    font-size: 9px;
-    letter-spacing: 2.5px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-left: auto;
-  }
-
-  .cam-feeds {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-
-  .cam-feed {
-    background: var(--panel);
-    border: 1px solid var(--glass-border);
-    aspect-ratio: 16/9;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
-  }
-
-  .cam-feed::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(201,168,76,0.04), transparent);
-  }
-
-  .cam-label {
-    position: absolute;
-    top: 6px;
-    left: 8px;
-    font-size: 8px;
-    letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.9);
-    text-transform: uppercase;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-    z-index: 2;
-    background: rgba(0,0,0,0.45);
-    padding: 2px 6px;
-  }
-
-  .cam-rec {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    z-index: 2;
-    background: rgba(0,0,0,0.45);
-    padding: 2px 6px;
-  }
-
-  .cam-rec-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--red);
-    animation: blink 1.5s infinite;
-  }
-
-  @keyframes blink {
-    0%,100% { opacity: 1; }
-    50% { opacity: .2; }
-  }
-
-  .cam-rec-lbl {
-    font-size: 8px;
-    color: rgba(255,255,255,0.8);
-    letter-spacing: 1px;
-  }
-
-  .alerts-row {
-    display: flex;
-    gap: 8px;
-  }
-
-  .alert-chip {
-    flex: 1;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    padding: 8px 10px;
-  }
-
-  .alert-chip-label {
-    font-size: 8px;
-    color: var(--text-muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .alert-chip-val {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gold);
-  }
-
-  .alert-chip.warn .alert-chip-val {
-    color: var(--amber);
-  }
-
-  .tech-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 40px;
-    padding: 0;
-  }
-
-  .tech-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.75;
-    font-weight: 300;
-  }
-
-  .tech-list li svg {
-    flex-shrink: 0;
-    color: var(--gold);
-    margin-top: 2px;
-  }
-
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
-    background: transparent;
-  }
-
-  .testimonial-card {
-    background: var(--void);
-    border-radius: 12px;
-    padding: 40px 36px;
-    position: relative;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all .65s cubic-bezier(.23,1,.32,1);
-    overflow: hidden;
-  }
-
-  .testimonial-card.vis {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .testimonial-card:nth-child(2) { transition-delay: .1s; }
-  .testimonial-card:nth-child(3) { transition-delay: .2s; }
-
-  .testimonial-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--gold), transparent);
-    opacity: 0.3;
-  }
-
-  .testimonial-card:hover {
-    background: var(--deep);
-  }
-
-  .testimonial-quote {
-    font-family: 'Playfair Display', serif;
-    font-size: 88px;
-    font-weight: 400;
-    color: var(--gold);
-    opacity: .15;
-    line-height: .6;
-    margin-bottom: 16px;
-  }
-
-  .testimonial-stars {
-    color: var(--gold);
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-bottom: 16px;
-  }
-
-  .testimonial-text {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.85;
-    font-weight: 300;
-    margin-bottom: 28px;
-  }
-
-  .testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .testimonial-avatar {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--obsidian);
-    letter-spacing: 1px;
-    flex-shrink: 0;
-  }
-
-  .testimonial-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .testimonial-role {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .faq-item {
-    border-bottom: 1px solid var(--border);
-  }
-
-  .faq-q {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    background: none;
-    border: none;
-    padding: 24px 0;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    color: var(--text-secondary);
-    cursor: pointer;
-    text-align: left;
-    transition: color .3s;
-  }
-
-  .faq-q:hover {
-    color: var(--text-primary);
-  }
-
-  .faq-q.active {
-    color: var(--gold);
-  }
-
-  .faq-icon {
-    width: 30px;
-    height: 30px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all .3s;
-    color: var(--text-muted);
-  }
-
-  .faq-q.active .faq-icon {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--obsidian);
-    transform: rotate(45deg);
-  }
-
-  .faq-a {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.9;
-    font-weight: 300;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .4s cubic-bezier(.23,1,.32,1), padding .3s;
-  }
-
-  .faq-a.open {
-    max-height: 220px;
-    padding-bottom: 24px;
-  }
-
-  .cta-banner {
-    background: var(--surface);
-    padding: 96px 64px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    border-top: 1px solid var(--border-gold);
-    border-bottom: 1px solid var(--border-gold);
-  }
-
-  .cta-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 60% 80% at 0% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 100% 50%, rgba(74,144,196,0.04) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .cta-bg-text {
-    position: absolute;
-    bottom: -50px;
-    left: -20px;
-    font-family: 'Playfair Display', serif;
-    font-size: 240px;
-    font-weight: 400;
-    color: var(--gold);
-    opacity: .025;
-    line-height: 1;
-    pointer-events: none;
-    letter-spacing: -5px;
-  }
-
-  .cta-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(38px, 4vw, 64px);
-    font-weight: 400;
-    color: var(--text-primary);
-    line-height: 1.1;
-    position: relative;
-    z-index: 1;
-  }
-
-  .cta-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .cta-form {
-    position: relative;
-    z-index: 1;
-  }
-
-  .cta-form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .cta-form input,
-  .cta-form select {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--glass);
-    border: 1px solid var(--border);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text-primary);
-    outline: none;
-    transition: border-color .3s;
-    appearance: none;
-  }
-
-  .cta-form input::placeholder {
-    color: var(--text-muted);
-  }
-
-  .cta-form select {
-    color: var(--text-secondary);
-  }
-
-  .cta-form select option {
-    background: var(--surface);
-    color: var(--text-primary);
-  }
-
-  .cta-form input:focus,
-  .cta-form select:focus {
-    border-color: var(--border-gold);
-  }
-
-  .cta-submit {
-    width: 100%;
-    margin-top: 4px;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    color: var(--obsidian);
-    border: none;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    transition: all .3s;
-  }
-
-  .cta-submit:hover {
-    box-shadow: 0 8px 32px rgba(201,168,76,0.4);
-    transform: translateY(-1px);
-  }
-
-  .quiz-section {
-    background: var(--surface);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .quiz-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 20% 100%, rgba(74,144,196,0.04) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  .quiz-section::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 64px;
-    right: 64px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
-  }
-
-  .quiz-wrap {
-    max-width: 720px;
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .quiz-progress {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 40px;
-  }
-
-  .quiz-dot {
-    width: 36px;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--glass-border);
-    transition: background .4s;
-  }
-
-  .quiz-dot.active {
-    background: var(--gold);
-  }
-
-  .quiz-dot.done {
-    background: var(--green);
-  }
-
-  .quiz-q-text {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(24px, 3vw, 38px);
-    font-weight: 400;
-    color: var(--text-primary);
-    line-height: 1.25;
-    margin-bottom: 40px;
-  }
-
-  .quiz-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .quiz-opt {
-    padding: 18px 20px;
-    background: var(--glass);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all .3s;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .quiz-opt:hover {
-    background: var(--gold-glow);
-    border-color: var(--border-gold);
-    color: var(--text-primary);
-  }
-
-  .quiz-opt.selected {
-    background: rgba(201,168,76,0.12);
-    border-color: var(--gold);
-    color: var(--text-primary);
-  }
-
-  .quiz-opt-letter {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    flex-shrink: 0;
-    color: var(--text-muted);
-    transition: all .3s;
-  }
-
-  .quiz-opt.selected .quiz-opt-letter {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--obsidian);
-  }
-
-  .quiz-nav {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .quiz-nav-btn {
-    padding: 14px 40px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: all .3s;
-    border: none;
-  }
-
-  .quiz-nav-btn.primary {
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    color: var(--obsidian);
-  }
-
-  .quiz-nav-btn.primary:hover {
-    box-shadow: 0 6px 24px rgba(201,168,76,0.4);
-    transform: translateY(-1px);
-  }
-
-  .quiz-nav-btn.secondary {
-    background: transparent;
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-  }
-
-  .quiz-nav-btn.secondary:hover {
-    border-color: var(--border-gold);
-    color: var(--text-primary);
-  }
-
-  .quiz-result {
-    display: none;
-    text-align: center;
-  }
-
-  .quiz-result.show {
-    display: block;
-  }
-
-  .quiz-score-ring {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 28px;
-    position: relative;
-  }
-
-  .quiz-score-ring svg {
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-  }
-
-  .quiz-score-ring circle {
-    fill: none;
-    stroke-width: 6;
-  }
-
-  .quiz-score-ring .ring-bg {
-    stroke: var(--glass-border);
-  }
-
-  .quiz-score-ring .ring-fill {
-    stroke: var(--gold);
-    stroke-dasharray: 408;
-    stroke-dashoffset: 408;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1.2s cubic-bezier(.23,1,.32,1);
-  }
-
-  .quiz-score-ring .ring-fill.danger { stroke: var(--red); }
-  .quiz-score-ring .ring-fill.warning { stroke: var(--amber); }
-  .quiz-score-ring .ring-fill.good { stroke: var(--green); }
-
-  .quiz-score-val {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .quiz-score-num {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 44px;
-    font-weight: 400;
-    color: var(--text-primary);
-    line-height: 1;
-  }
-
-  .quiz-score-lbl {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-
-  .quiz-result-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 400;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-  }
-
-  .quiz-result-desc {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.85;
-    font-weight: 300;
-    max-width: 520px;
-    margin: 0 auto 28px;
-  }
-
-  .quiz-result-rec {
-    background: var(--glass);
-    border: 1px solid var(--border-gold);
-    padding: 22px 26px;
-    margin-bottom: 28px;
-    text-align: left;
-  }
-
-  .quiz-rec-label {
-    font-size: 9px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  .quiz-rec-plan {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--text-primary);
-    font-weight: 400;
-  }
-
-  .quiz-rec-reason {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 4px;
-    line-height: 1.75;
-    font-weight: 300;
-  }
-
-  .compare-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-top: 10px;
-  }
-
-  .compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
-  }
-
-  .compare-table thead th {
-    padding: 20px 16px;
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 500;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-
-  .compare-table thead th:first-child {
-    text-align: left;
-    min-width: 220px;
-  }
-
-  .compare-table thead th.th-featured {
-    background: var(--panel);
-    color: var(--gold);
-    position: relative;
-    border-bottom: 2px solid var(--gold);
-  }
-
-  .compare-table thead th.th-featured::after {
-    content: 'POPULAR';
-    position: absolute;
-    top: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--gold);
-    color: var(--obsidian);
-    font-size: 8px;
-    letter-spacing: 2px;
-    padding: 3px 10px;
-    font-weight: 700;
-  }
-
-  .compare-table tbody td {
-    padding: 16px 16px;
-    font-size: 13px;
-    color: var(--text-muted);
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    font-weight: 300;
-    transition: background .2s;
-  }
-
-  .compare-table tbody td:first-child {
-    text-align: left;
-    color: var(--text-secondary);
-    font-weight: 400;
-  }
-
-  .compare-table tbody tr:hover td {
-    background: var(--glass);
-  }
-
-  .compare-table tbody td.td-featured {
-    background: rgba(201,168,76,0.04);
-  }
-
-  .compare-table tbody tr:hover td.td-featured {
-    background: rgba(201,168,76,0.07);
-  }
-
-  .compare-check {
-    color: var(--gold);
-    font-size: 16px;
-  }
-
-  .compare-cross {
-    color: var(--border);
-    font-size: 14px;
-  }
-
-  .compare-table tfoot td {
-    padding: 20px 16px;
-    text-align: center;
-    border-bottom: none;
-    background: var(--surface);
-  }
-
-  .compare-table tfoot .pkg-cta {
-    display: inline-block;
-    padding: 12px 24px;
-    font-size: 11px;
-  }
-
-  .booking-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(8,12,16,0.85);
-    backdrop-filter: blur(16px);
-    z-index: 11000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity .3s;
-  }
-
-  .booking-overlay.show {
-    display: flex;
-    opacity: 1;
-  }
-
-  .booking-card {
-    background: var(--surface);
-    border: 1px solid var(--glass-border);
-    border-top: 2px solid var(--gold);
-    border-radius: 16px;
-    max-width: 520px;
-    width: 90%;
-    padding: 48px 44px;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: bookIn .4s cubic-bezier(.23,1,.32,1);
-    box-shadow: 0 60px 120px rgba(15,14,12,0.18);
-  }
-
-  @keyframes bookIn {
-    from {
-      transform: translateY(30px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .booking-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border);
-    background: var(--glass);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all .3s;
-    color: var(--text-muted);
-  }
-
-  .booking-close:hover {
-    background: var(--gold-glow);
-    border-color: var(--border-gold);
-    color: var(--gold);
-  }
-
-  .booking-close svg {
-    width: 15px;
-    height: 15px;
-    stroke: currentColor;
-  }
-
-  .booking-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-  }
-
-  .booking-sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 28px;
-    font-weight: 300;
-    line-height: 1.75;
-  }
-
-  .booking-dates {
-    display: grid;
-    grid-template-columns: repeat(7,1fr);
-    gap: 4px;
-    margin-bottom: 20px;
-  }
-
-  .booking-dow {
-    font-size: 9px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 8px 0;
-  }
-
-  .booking-day {
-    padding: 10px 4px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all .3s;
-  }
-
-  .booking-day:hover {
-    background: var(--gold-glow);
-    border-color: var(--border-gold);
-    color: var(--text-primary);
-  }
-
-  .booking-day.disabled {
-    color: var(--text-muted);
-    opacity: 0.3;
-    pointer-events: none;
-  }
-
-  .booking-day.selected {
-    background: var(--gold);
-    color: var(--obsidian);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
-
-  .booking-cal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .booking-cal-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--text-primary);
-  }
-
-  .booking-cal-nav {
-    display: flex;
-    gap: 6px;
-  }
-
-  .booking-cal-nav button {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--border);
-    background: var(--glass);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all .3s;
-    color: var(--text-muted);
-  }
-
-  .booking-cal-nav button:hover {
-    background: var(--gold-glow);
-    border-color: var(--border-gold);
-    color: var(--gold);
-  }
-
-  .booking-slots {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .booking-slot {
-    padding: 12px 10px;
-    text-align: center;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-    background: var(--glass);
-    cursor: pointer;
-    transition: all .3s;
-  }
-
-  .booking-slot:hover {
-    border-color: var(--border-gold);
-    color: var(--gold);
-    background: var(--gold-glow);
-  }
-
-  .booking-slot.selected {
-    background: var(--gold);
-    color: var(--obsidian);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
-
-  .booking-slot.unavailable {
-    opacity: 0.3;
-    pointer-events: none;
-    text-decoration: line-through;
-  }
-
-  .booking-confirm-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-    color: var(--obsidian);
-    border: none;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    transition: all .3s;
-  }
-
-  .booking-confirm-btn:hover {
-    box-shadow: 0 6px 28px rgba(201,168,76,0.4);
-    transform: translateY(-1px);
-  }
-
-  .booking-confirm-btn:disabled {
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .booking-lbl {
-    font-size: 9px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-    display: block;
-  }
-
-  .booking-success {
-    display: none;
-    text-align: center;
-    padding: 20px 0;
-  }
-
-  .booking-success.show {
-    display: block;
-  }
-
-  .booking-success svg {
-    width: 64px;
-    height: 64px;
-    color: var(--gold);
-    margin-bottom: 16px;
-  }
-
-  .booking-success h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 400;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-  }
-
-  .booking-success p {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.75;
-    font-weight: 300;
-  }
-
-  .tech-sample-note {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 28px;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 300;
-    letter-spacing: 0.5px;
-    justify-content: center;
-  }
-
-  .tech-sample-note svg {
-    flex-shrink: 0;
-    color: var(--text-muted);
-  }
-
-  .rg-pattern {
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%234A90C4' fill-opacity='0.06'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-
-  .rg-feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 2px;
-    margin-bottom: 60px;
-  }
-
-  .rg-feature-card {
-    background: rgba(15,14,12,0.04);
-    border: 1px solid rgba(15,14,12,0.08);
-    padding: 36px 30px;
-  }
-
-  .rg-feature-card.featured {
-    background: rgba(201,168,76,0.06);
-    border-color: rgba(201,168,76,0.3);
-  }
-
-  .rg-feature-icon {
-    width: 48px;
-    height: 48px;
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.22);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .rg-feature-card.featured .rg-feature-icon {
-    background: rgba(201,168,76,0.12);
-    border-color: rgba(201,168,76,0.35);
-  }
-
-  .rg-feature-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 500;
-    color: #F0EEE8;
-    margin-bottom: 10px;
-  }
-
-  .rg-feature-desc {
-    font-size: 13px;
-    color: rgba(240,238,232,0.65);
-    line-height: 1.8;
-    font-weight: 300;
-  }
-
-  .rg-bottom-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: center;
-  }
-
-  .rg-heading {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 400;
-    color: #F0EEE8;
-    margin-bottom: 28px;
-    line-height: 1.4;
-  }
-
-  .rg-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .rg-list-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-  }
-
-  .rg-list-icon {
-    width: 32px;
-    height: 32px;
-    background: rgba(201,168,76,0.1);
-    border: 1px solid rgba(201,168,76,0.22);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .rg-list-text {
-    font-size: 14px;
-    color: rgba(240,238,232,0.7);
-    line-height: 1.7;
-    font-weight: 300;
-  }
-
-  .rg-list-text strong {
-    color: #F0EEE8;
-    font-weight: 500;
-  }
-
-  .rg-plan-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,168,76,0.2);
-    padding: 40px;
-  }
-
-  .rg-plan-label {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #C9A84C;
-    margin-bottom: 20px;
-  }
-
-  .rg-plan-price {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 38px;
-    font-weight: 300;
-    color: #F0EEE8;
-    line-height: 1;
-  }
-
-  .rg-plan-price span {
-    font-size: 16px;
-    color: rgba(200,216,236,0.4);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-  }
-
-  .rg-plan-note {
-    font-size: 11px;
-    color: rgba(240,238,232,0.45);
-    margin-top: 6px;
-    margin-bottom: 28px;
-  }
-
-  .rg-plan-features {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .rg-plan-feature {
-    font-size: 13px;
-    color: rgba(240,238,232,0.7);
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .rg-plan-cta {
-    width: 100%;
-    background: linear-gradient(135deg,var(--gold),var(--gold-bright));
-    color: #fff;
-    border-color: var(--gold);
-  }
-
-  @media(max-width:1024px) {
-    .services-grid,
-    .packages,
-    .rg-feature-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .steps {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .steps::before {
-      display: none;
-    }
-
-    .step {
-      margin-bottom: 36px;
-    }
-
-    .testimonials-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .tech-grid,
-    .rg-bottom-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media(max-width:768px) {
-    .hero {
-      padding: 48px 20px 0;
-      grid-template-columns: 1fr;
-    }
-
-    .hero-panel {
-      width: 100%;
-      border-top: 2px solid var(--gold);
-      box-shadow: 0 -8px 40px rgba(0,0,0,0.1);
-    }
-
-    .panel-head { padding: 26px 24px 20px; }
-    .panel-body { padding: 22px 24px 28px; }
-
-    .sec {
-      padding: 72px 20px;
-    }
-
-    .services-grid,
-    .packages,
-    .steps,
-    .why-grid,
-    .testimonials-grid,
-    .rg-feature-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .cta-banner {
-      padding: 72px 20px;
-      grid-template-columns: 1fr;
-      gap: 44px;
-    }
-
-    .cta-form-row,
-    .frow,
-    .quiz-options,
-    .rg-bottom-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .booking-card {
-      padding: 36px 24px;
-    }
-
-    .booking-slots {
-      grid-template-columns: repeat(2,1fr);
-    }
-
-  }
-</style>
-{% endblock extra_css %}
-
-{% block pre_footer %}{% endblock pre_footer %}
-
 {% block content %}
-<script>document.body.classList.add('security-exact-page');</script>
-<div class="security-page-exact">
-  <section class="hero">
-    <div class="hero-left">
-      <div class="eyebrow">Security & Surveillance</div>
-      <h1 class="hero-title">Protect Your Property.<br><em>Day & Night,</em><br>Seamlessly.</h1>
-      <p class="hero-sub">End-to-end security infrastructure for residential and commercial properties — from CCTV installation to 24/7 remote monitoring and smart access control. Built for peace of mind.</p>
-      <div class="hero-pills">
-        <div class="hero-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <div>
-            <div class="pill-val">100%</div>
-            <div class="pill-lbl">Satisfaction Guaranteed</div>
-          </div>
-        </div>
-        <div class="hero-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <div>
-            <div class="pill-val">24/7</div>
-            <div class="pill-lbl">Live Monitoring</div>
-          </div>
-        </div>
-        <div class="hero-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-          <div>
-            <div class="pill-val">48 hrs</div>
-            <div class="pill-lbl">Installation Turnaround</div>
-          </div>
-        </div>
-      </div>
-      <div class="hero-partners">
-        <span class="hero-partners-lbl">Trusted Brands:</span>
-        <span class="pchip">Hikvision</span>
-        <span class="pchip">Dahua</span>
-        <span class="pchip">CP Plus</span>
-        <span class="pchip">Bosch</span>
-        <span class="pchip">Honeywell</span>
-      </div>
-    </div>
+<div class="lg-page">
 
-    <div class="hero-panel">
-      <div class="panel-head">
-        <div class="panel-title">Get a Free Site Survey</div>
-        <div class="panel-sub">Our security consultant visits your property at no cost</div>
+  <div class="lg-subnav">
+    <a href="#lg-services">Services</a>
+    <a href="#lg-packages">Packages</a>
+    <a href="#lg-video-call">Physical Guardian</a>
+    <a href="#lg-process">How it works</a>
+    <a href="#lg-why">Why HOMEXO</a>
+    <a href="#lg-cta">Get Started</a>
+  </div>
+
+  <!-- HERO -->
+  <div class="lg-hero">
+    <div class="lg-hero-left">
+      <div class="lg-hero-eyebrow">Security & Surveillance &middot; Pan India</div>
+      <h1 class="lg-hero-headline">Protect your property.<br><em>Day & night,</em><br>seamlessly.</h1>
+      <p class="lg-hero-sub">End-to-end security infrastructure for residential and commercial properties — from CCTV installation to 24/7 remote monitoring and smart access control.</p>
+      <div class="lg-hero-actions">
+        <a href="#lg-packages" class="lg-btn-primary">
+          View packages
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#lg-process" class="lg-btn-secondary">See how it works</a>
+        {% if user.is_authenticated %}
+        <a href="#" style="display:none;" class="lg-btn-secondary" style="border-color: var(--teal); color: var(--teal); font-weight: 500;">Go to Dashboard</a>
+        {% endif %}
       </div>
-      <form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
-        {% csrf_token %}
-        <input type="hidden" name="enquiry_type" value="general">
-        <input type="hidden" name="service_detail" id="secServiceDetail" value="CCTV Installation">
-        <div class="sec-tabs">
-          <button type="button" class="sec-tab active" data-service="CCTV Installation" onclick="selectSecTab(this)">CCTV</button>
-          <button type="button" class="sec-tab" data-service="Alarm System" onclick="selectSecTab(this)">Alarm</button>
-          <button type="button" class="sec-tab" data-service="Access Control" onclick="selectSecTab(this)">Access</button>
-          <button type="button" class="sec-tab" data-service="Full Security Audit" onclick="selectSecTab(this)">Audit</button>
+      <div class="lg-trust">
+        <div class="lg-trust-item"><span class="lg-trust-num">100%</span><span class="lg-trust-label">Satisfaction Guaranteed</span></div>
+        <div class="lg-trust-item"><span class="lg-trust-num">24/7</span><span class="lg-trust-label">Live Monitoring</span></div>
+        <div class="lg-trust-item"><span class="lg-trust-num">48 hrs</span><span class="lg-trust-label">Installation Turnaround</span></div>
+      </div>
+    </div>
+    <div class="lg-hero-right">
+      <div class="dash-card">
+        <div class="dash-hdr">
+          <span class="dash-hdr-title">Live system status</span>
+          <span class="dash-hdr-order">#HXS-LOBBY</span>
         </div>
-        <div class="field">
-          <label>Full Name</label>
-          <input type="text" name="name" placeholder="Your Name" required>
+        <div class="dash-prop">
+          <div class="dash-prop-lbl">Cameras Online</div>
+          <div class="dash-prop-name">8 / 8 Active Streams</div>
+          <div class="dash-prop-addr">All zones secure &middot; Recording</div>
         </div>
-        <div class="field">
-          <label>Phone Number</label>
-          <div class="phone-wrap">
-            <select class="phone-code" name="phone_code">
-              <option value="+91">🇮🇳 India (+91)</option>
-              <option value="+1">🇺🇸 US (+1)</option>
-              <option value="+44">🇬🇧 UK (+44)</option>
-              <option value="+971">🇦🇪 UAE (+971)</option>
-              <option value="+65">🇸🇬 Singapore (+65)</option>
-              <option value="+61">🇦🇺 Australia (+61)</option>
-              <option value="+966">🇸🇦 KSA (+966)</option>
-              <option value="+974">🇶🇦 Qatar (+974)</option>
-              <option value="+60">🇲🇾 Malaysia (+60)</option>
-              <option value="+49">🇩🇪 Germany (+49)</option>
-            </select>
-            <input type="tel" name="phone" placeholder="Phone number" class="phone-num" required>
+        <div class="dash-steps">
+          <div class="dash-step">
+            <div class="step-dot step-done">&#10003;</div>
+            <div class="step-info"><div class="step-name">Main Gate</div><div class="step-detail">Motion Detected - 2 mins ago</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-done">&#10003;</div>
+            <div class="step-info"><div class="step-name">Rear Entrance</div><div class="step-detail">Clear</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-active">&bull;</div>
+            <div class="step-info"><div class="step-name">Lobby</div><div class="step-detail active-msg">Live Feed Active</div></div>
+          </div>
+          <div class="dash-step">
+            <div class="step-dot step-done">&#10003;</div>
+            <div class="step-info"><div class="step-name">Parking</div><div class="step-detail">Clear</div></div>
           </div>
         </div>
-        <div class="field">
-          <label>Property Location</label>
-          <input type="text" name="location" placeholder="e.g. Whitefield, Bengaluru">
+        <div class="dash-verdict">
+          <div class="vd-dot">&#128994;</div>
+          <div><div class="vd-text">System Normal</div><div class="vd-sub">Storage: 63% Used &middot; Battery Backup 100%</div></div>
         </div>
-        <button type="submit" class="form-submit">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Request Free Survey
-        </button>
-        <div class="form-note">Free site visit &nbsp;·&nbsp; No hidden charges &nbsp;·&nbsp; Expert within 24 hrs</div>
-      </form>
-    </div>
-  </section>
-
-  <section class="sec sec-white">
-    <div class="sec-hd">
-      <div>
-        <div class="sec-eyebrow">What We Offer</div>
-        <h2 class="sec-title">Comprehensive <em>Security</em> Services</h2>
-        <p class="sec-sub">Every property is different. We design, supply, install, and maintain a layered security ecosystem tailored to your needs.</p>
       </div>
     </div>
+  </div>
+  <!-- PACKAGES -->
+  <div id="lg-packages" class="lg-packages">
+    <div class="lg-section-label"><span class="lg-s-label">Pricing plans</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Transparent pricing.<br><em style="color:var(--gold-light);">Complete protection.</em></h2>
+    <p class="lg-sub-text" style="color:rgba(247,244,238,0.5);">No hidden costs. All packages include free site survey, installation, and app setup.</p>
+    <div class="pkg-grid">
+      <div class="pkg-card fade-up">
+        <div class="pkg-tier">Starter</div>
+        <div class="pkg-name">Essential Shield</div>
+        <div class="pkg-price"><sup>&#8377;</sup>18,999</div>
+        <div class="pkg-timeline">&#9201; 48-hour installation</div>
+        <ul class="pkg-features">
+          <li><span class="feat-yes">&#10003;</span> 4 Full-HD CCTV cameras</li>
+          <li><span class="feat-yes">&#10003;</span> 4-channel DVR with 1TB HDD</li>
+          <li><span class="feat-yes">&#10003;</span> Mobile app remote viewing</li>
+          <li><span class="feat-yes">&#10003;</span> Motion detection alerts</li>
+          <li><span class="feat-yes">&#10003;</span> 1-year on-site warranty</li>
+          <li><span class="feat-no">&ndash;</span> Remote Monitoring</li>
+          <li><span class="feat-no">&ndash;</span> Video door phone</li>
+        </ul>
+        <a href="#lg-cta" class="pkg-cta pkg-cta-outline">Get started &rarr;</a>
+      </div>
+      <div class="pkg-card featured fade-up">
+        <div class="pkg-badge">Most popular</div>
+        <div class="pkg-tier">Professional</div>
+        <div class="pkg-name">Guardian Pro</div>
+        <div class="pkg-price"><sup>&#8377;</sup>42,999</div>
+        <div class="pkg-timeline">&#9201; Detailed system layout & config</div>
+        <ul class="pkg-features">
+          <li><span class="feat-yes">&#10003;</span> 8 Full-HD IP cameras with night vision</li>
+          <li><span class="feat-yes">&#10003;</span> 8-channel NVR with 2TB HDD + cloud</li>
+          <li><span class="feat-yes">&#10003;</span> AI-based person & vehicle detection</li>
+          <li><span class="feat-yes">&#10003;</span> Video door phone (2 indoor units)</li>
+          <li><span class="feat-yes">&#10003;</span> Smart access control for main door</li>
+          <li><span class="feat-yes">&#10003;</span> 24/7 remote monitoring (6 mo)</li>
+          <li><span class="feat-yes">&#10003;</span> 2-year comprehensive warranty</li>
+        </ul>
+        <a href="#lg-cta" class="pkg-cta pkg-cta-gold">Get started &rarr;</a>
+      </div>
+      <div class="pkg-card fade-up">
+        <div class="pkg-tier">Enterprise</div>
+        <div class="pkg-name">Fort Knox</div>
+        <div class="pkg-price"><span style="font-size:32px;">Custom</span></div>
+        <div class="pkg-timeline">&#9201; Bespoke scope</div>
+        <ul class="pkg-features">
+          <li><span class="feat-yes">&#10003;</span> 4K PTZ + panoramic camera array</li>
+          <li><span class="feat-yes">&#10003;</span> Perimeter fence intrusion detection</li>
+          <li><span class="feat-yes">&#10003;</span> Facial recognition access control</li>
+          <li><span class="feat-yes">&#10003;</span> Dedicated 24/7 monitoring + disp.</li>
+          <li><span class="feat-yes">&#10003;</span> Fire & smoke detector integration</li>
+          <li><span class="feat-yes">&#10003;</span> Seamless smart-home integration</li>
+          <li><span class="feat-yes">&#10003;</span> 3-year AMC included</li>
+        </ul>
+        <a href="#lg-cta" class="pkg-cta pkg-cta-outline">Request Quote &rarr;</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- VIDEO CALL ADD-ON -->
+  <div id="lg-video-call" class="lg-video-call" style="background:var(--cream);">
+    <div class="lg-section-label"><span class="lg-s-label">New Service</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">No Camera Needed. <em style="color:var(--gold);">Real People.</em><br>Real Protection.</h2>
+    <p class="lg-sub-text" style="margin-bottom:52px;">Some properties can't have cameras — or the owner prefers not to. Our Physical Property Guardian service deploys trained on-ground personnel to visit, inspect, and report on your property.</p>
+
+    <div class="video-grid">
+      <div class="video-card">
+        <div style="position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%); border-radius:50%;"></div>
+        <div style="position:relative; z-index:2;">
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.25); border-radius:99px; padding:6px 14px; margin-bottom:24px;">
+            <span style="font-size:16px;">&#128110;&#8205;&#9794;&#65039;</span>
+            <span style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);">Physical Guardian</span>
+          </div>
+          <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--cream); margin-bottom:6px;">₹2,499 <span style="font-size:18px; font-weight:300; color:rgba(247,244,238,0.5);">/ month</span></div>
+          <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); margin-bottom:28px;">No hardware needed</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:32px;">
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Trained officer visits your property in person
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Flexible schedule — daily, weekly, or custom
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
+              <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Timestamped photo + video log after every visit
+            </li>
+          </ul>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="#lg-cta"
+              style="flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 20px; background:var(--gold); color:var(--ink); font-size:14px; font-weight:600; border-radius:8px; text-decoration:none; transition:all 0.2s;">
+              Enquire Now
+            </a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="background:var(--teal-light); border:1px solid rgba(26,92,82,0.15); border-radius:16px; padding:28px;">
+          <div style="font-size:14px; font-weight:600; color:var(--teal); margin-bottom:16px;">📋 Who is this for?</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> NRIs & frequent travellers</li>
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Plot & land owners vulnerable to encroachment</li>
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Second home or farmhouse owners</li>
+            <li style="display:flex; gap:10px; font-size:13px; color:var(--muted);"><span style="color:var(--teal); font-weight:600; flex-shrink:0;">→</span> Landlords with vacant flats between tenants</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- PROCESS -->
+  <div id="lg-process" class="lg-process">
+    <div class="lg-section-label"><span class="lg-s-label">How it works</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">From Survey to<br><em>Active Protection</em></h2>
+    <p class="lg-sub-text">A structured four-step process ensures your property is covered with zero guesswork and minimal disruption.</p>
+    <div class="process-grid">
+      <div class="proc-steps">
+        <div class="proc-step fade-up">
+          <div class="proc-num">01</div>
+          <div class="proc-content">
+            <div class="proc-state">SURVEY</div>
+            <div class="proc-title">Free Site Survey</div>
+            <div class="proc-desc">Our security consultant visits your property, maps entry points, identifies blind spots, and assesses environmental factors like lighting and layout.</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">02</div>
+          <div class="proc-content">
+            <div class="proc-title">Custom Design</div>
+            <div class="proc-desc">We deliver a detailed security plan — camera placement diagrams, hardware specs, cabling routes, and a transparent itemised quotation.</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">03</div>
+          <div class="proc-content">
+            <div class="proc-title">Professional Installation</div>
+            <div class="proc-desc">Certified technicians install all hardware typically within 48 hours. We handle end-to-end configuration including NVR setup, app pairing, and user training.</div>
+          </div>
+        </div>
+        <div class="proc-step fade-up">
+          <div class="proc-num">04</div>
+          <div class="proc-content">
+            <div class="proc-title">Monitoring & AMC</div>
+            <div class="proc-desc">Choose round-the-clock monitoring or self-monitoring. Our Annual Maintenance Contracts cover preventive servicing, remote diagnostics, and priority support.</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-visual">
+        <div class="verdict-display">
+          <div class="verdict-head">
+            <span>Security Setup</span>
+            <span class="verdict-stamp">Certified Installers</span>
+          </div>
+          <div class="verdict-main">
+            <div class="big-dot" style="font-size:24px;">&#128249;</div>
+            <div>
+              <div class="verdict-title-big">Armed & Secure</div>
+              <div class="verdict-sub-big">Professional Installation Complete</div>
+            </div>
+          </div>
+          <div class="verdict-checks">
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Cameras Calibrated</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>NVR Configured</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>App Paired</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Motion Zones Set</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Alerts Tested</div>
+            <div class="v-check"><div class="v-check-dot dot-g"></div>Power Backup Check</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SERVICES -->
+  <div id="lg-services" class="lg-services">
+    <div class="lg-section-label"><span class="lg-s-label">What we offer</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Comprehensive<br><em>Security Services</em></h2>
+    <p class="lg-sub-text">Every property is different. We design, supply, install, and maintain a layered security ecosystem tailored to your needs.</p>
     <div class="services-grid">
-      <div class="service-tile">
-        <div class="tile-ghost">01</div>
-        <div class="tile-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M20.188 10.934c.412.636.612.985.612 1.066s-.2.43-.612 1.066C18.768 15.157 15.636 18 12 18c-3.636 0-6.768-2.843-8.188-4.934C3.4 12.43 3.2 12.081 3.2 12s.2-.43.612-1.066C5.232 8.843 8.364 6 12 6c3.636 0 6.768 2.843 8.188 4.934z"/></svg>
-        </div>
-        <div class="tile-title">CCTV & IP Camera Installation</div>
-        <div class="tile-desc">Full-HD, 4K, and PTZ cameras for indoor and outdoor coverage. Night vision, weatherproof options with DVR/NVR setup and app-based remote viewing.</div>
-        <div class="tile-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          1-year on-site warranty
-        </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">01</div>
+        <div class="svc-icon">&#128249;</div>
+        <div class="svc-name">CCTV & IP Camera Installation</div>
+        <div class="svc-body">Full-HD, 4K, and PTZ cameras for indoor and outdoor coverage. Night vision, weatherproof options with DVR/NVR setup and app-based remote viewing.</div>
       </div>
-
-      <div class="service-tile">
-        <div class="tile-ghost">02</div>
-        <div class="tile-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div class="tile-title">24/7 Remote Monitoring</div>
-        <div class="tile-desc">Round-the-clock monitoring from our operations centre. Real-time alerts on motion, perimeter breach, or unusual activity — delivered to your phone instantly.</div>
-        <div class="tile-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          AI-powered detection
-        </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">02</div>
+        <div class="svc-icon">&#128187;</div>
+        <div class="svc-name">24/7 Remote Monitoring</div>
+        <div class="svc-body">Round-the-clock monitoring from our operations centre. Real-time alerts on motion, perimeter breach, or unusual activity — delivered to your phone instantly.</div>
       </div>
-
-      <div class="service-tile">
-        <div class="tile-ghost">03</div>
-        <div class="tile-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        </div>
-        <div class="tile-title">Access Control & Video Door Phone</div>
-        <div class="tile-desc">Biometric, RFID, and PIN-based entry for gates, lifts, and server rooms — combined with HD video intercom, two-way audio, and remote door unlock from your mobile app.</div>
-        <div class="tile-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Control from anywhere
-        </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">03</div>
+        <div class="svc-icon">&#128274;</div>
+        <div class="svc-name">Access Control & Video Door Phone</div>
+        <div class="svc-body">Biometric, RFID, and PIN-based entry for gates, lifts, and server rooms — combined with HD video intercom, two-way audio, and remote door unlock.</div>
       </div>
-
-      <div class="service-tile">
-        <div class="tile-ghost">04</div>
-        <div class="tile-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <div class="tile-title">Burglar & Intruder Alarm</div>
-        <div class="tile-desc">PIR sensors, magnetic contacts, glass-break detectors, and siren units on a central panel. Police-linkable with instant SMS and call alerts.</div>
-        <div class="tile-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Instant SMS + call alerts
-        </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">04</div>
+        <div class="svc-icon">&#128680;</div>
+        <div class="svc-name">Burglar & Intruder Alarm</div>
+        <div class="svc-body">PIR sensors, magnetic contacts, glass-break detectors, and siren units on a central panel. Police-linkable with instant SMS and call alerts.</div>
       </div>
-
-      <div class="service-tile">
-        <div class="tile-ghost">05</div>
-        <div class="tile-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="tile-title">Security Audit & Consulting</div>
-        <div class="tile-desc">A certified expert surveys your site, maps blind spots, and delivers a written risk report with prioritised recommendations — before you invest in hardware.</div>
-        <div class="tile-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Written risk report
-        </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">05</div>
+        <div class="svc-icon">&#128203;</div>
+        <div class="svc-name">Security Audit & Consulting</div>
+        <div class="svc-body">A certified expert surveys your site, maps blind spots, and delivers a written risk report with prioritised recommendations — before you invest in hardware.</div>
       </div>
-
-      <div class="service-tile">
-        <div class="tile-ghost">06</div>
-        <div class="tile-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/><circle cx="19" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="19" y1="3" x2="19" y2="7"/><line x1="17" y1="5" x2="21" y2="5"/></svg>
-        </div>
-        <div class="tile-title">Physical Property Guardian</div>
-        <div class="tile-desc">No cameras required. Our trained field officers physically visit your plot, flat, or home on a schedule — inspect, photograph, and report directly to you on WhatsApp.</div>
-        <div class="tile-tag">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          No hardware needed
-        </div>
+      <div class="svc-cell fade-up">
+        <div class="svc-num">06</div>
+        <div class="svc-icon">&#128110;&#8205;&#9794;&#65039;</div>
+        <div class="svc-name">Physical Property Guardian</div>
+        <div class="svc-body">No cameras required. Our trained field officers physically visit your plot, flat, or home on a schedule — inspect, photograph, and report directly to you.</div>
       </div>
     </div>
-  </section>
-
-  <section class="sec quiz-section" id="quizSection">
-    <div class="quiz-wrap">
-      <div class="sec-eyebrow" style="color:var(--gold);justify-content:center;margin-bottom:10px;">Interactive Assessment</div>
-      <h2 class="sec-title wht" style="text-align:center;margin-bottom:8px;">How Secure Is <em>Your Property?</em></h2>
-      <p class="sec-sub wht" style="text-align:center;max-width:500px;margin:0 auto 40px;">Answer 5 quick questions and get a personalised security score with a recommended plan.</p>
-
-      <div id="quizBody">
-        <div class="quiz-progress" id="quizProgress"></div>
-        <div class="quiz-q-text" id="quizQuestion"></div>
-        <div class="quiz-options" id="quizOptions"></div>
-        <div class="quiz-nav">
-          <button class="quiz-nav-btn secondary" id="quizBack" style="display:none;" type="button" onclick="quizPrev()">Back</button>
-          <button class="quiz-nav-btn primary" id="quizNext" type="button" onclick="quizAdvance()">Next</button>
-        </div>
-      </div>
-
-      <div class="quiz-result" id="quizResult">
-        <div class="quiz-score-ring">
-          <svg viewBox="0 0 140 140"><circle class="ring-bg" cx="70" cy="70" r="65"/><circle class="ring-fill" id="quizRingFill" cx="70" cy="70" r="65"/></svg>
-          <div class="quiz-score-val"><div class="quiz-score-num" id="quizScoreNum">0</div><div class="quiz-score-lbl">Security Score</div></div>
-        </div>
-        <div class="quiz-result-title" id="quizResultTitle"></div>
-        <div class="quiz-result-desc" id="quizResultDesc"></div>
-        <div class="quiz-result-rec">
-          <div class="quiz-rec-label">Recommended Plan</div>
-          <div class="quiz-rec-plan" id="quizRecPlan"></div>
-          <div class="quiz-rec-reason" id="quizRecReason"></div>
-        </div>
-        <button class="quiz-nav-btn primary" type="button" onclick="quizReset()">Retake Quiz</button>
-        <button class="quiz-nav-btn primary" type="button" style="margin-left:12px;" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Get Free Survey</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-dark" id="remoteGuardian" style="background:linear-gradient(135deg,#0f0e0c 0%,#1a1918 60%,#232220 100%);position:relative;overflow:hidden;">
-    <div class="rg-pattern"></div>
-    <div class="sec-hd" style="margin-bottom:56px;">
-      <div>
-        <div class="sec-eyebrow" style="color:#C9A84C;">New Service</div>
-        <h2 class="sec-title" style="color:#F0EEE8;">No Camera Needed. <em style="color:#C9A84C;">Real People.</em><br>Real Protection.</h2>
-        <p class="sec-sub" style="color:rgba(240,238,232,0.75);max-width:560px;">Some properties can't have cameras — or the owner simply prefers not to. Our Physical Property Guardian service deploys trained on-ground personnel to visit, inspect, and report on your property on a scheduled basis. No hardware. No installation. Just trusted human eyes.</p>
-      </div>
-    </div>
-
-    <div class="rg-feature-grid">
-      <div class="rg-feature-card">
-        <div class="rg-feature-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5"><circle cx="12" cy="4" r="2"/><path d="M15 8H9l-1 5h2l1 7h2l1-7h2z"/></svg>
-        </div>
-        <div class="rg-feature-title">Scheduled Physical Visits</div>
-        <div class="rg-feature-desc">Our trained field officers visit your plot, flat, or home on a fixed schedule — daily, twice a week, or weekly. They check boundaries, entrances, and the general condition of the property in person.</div>
-      </div>
-      <div class="rg-feature-card featured">
-        <div class="rg-feature-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-        </div>
-        <div class="rg-feature-title">Instant Issue Reporting</div>
-        <div class="rg-feature-desc">If anything looks wrong — encroachment, damage, unauthorised presence, water leakage — your field officer flags it immediately via WhatsApp with photos and a written note, directly to you.</div>
-      </div>
-      <div class="rg-feature-card">
-        <div class="rg-feature-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        </div>
-        <div class="rg-feature-title">Photo & Video Visit Log</div>
-        <div class="rg-feature-desc">After every visit, you receive a timestamped photo and video walkthrough of your property on WhatsApp — so you can see exactly what was checked and how things look, from anywhere in the world.</div>
-      </div>
-    </div>
-
-    <div class="rg-bottom-grid">
-      <div>
-        <div class="rg-heading">Who is this for?</div>
-        <div class="rg-list">
-          <div class="rg-list-item">
-            <div class="rg-list-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="rg-list-text"><strong>NRIs & frequent travellers</strong> — own property in India but live or work abroad</div>
-          </div>
-          <div class="rg-list-item">
-            <div class="rg-list-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="rg-list-text"><strong>Plot & land owners</strong> — open plots vulnerable to encroachment or dumping</div>
-          </div>
-          <div class="rg-list-item">
-            <div class="rg-list-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="rg-list-text"><strong>Second home owners</strong> — farmhouses or holiday homes left vacant for months</div>
-          </div>
-          <div class="rg-list-item">
-            <div class="rg-list-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="rg-list-text"><strong>Landlords with vacant units</strong> — flats or shops empty between tenants</div>
-          </div>
-        </div>
-      </div>
-      <div class="rg-plan-card">
-        <div class="rg-plan-label">Guardian Away Plan</div>
-        <div class="rg-plan-price">₹2,499<span>/month</span></div>
-        <div class="rg-plan-note">No camera or hardware required</div>
-        <div class="rg-plan-features">
-          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Trained officer visits your property in person</div>
-          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Flexible schedule — daily, weekly, or custom</div>
-          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Timestamped photo + video log after every visit</div>
-          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Instant WhatsApp alert if any issue found</div>
-          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> No cameras, no installation, no tech needed</div>
-        </div>
-        <button class="pkg-cta rg-plan-cta" type="button" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Enquire About This Plan</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-cream">
-    <div class="sec-hd">
-      <div>
-        <div class="sec-eyebrow">Our Process</div>
-        <h2 class="sec-title">From Survey to <em>Active</em> Protection</h2>
-        <p class="sec-sub">A structured four-step process ensures your property is covered with zero guesswork and minimal disruption.</p>
-      </div>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Free Site Survey</div>
-        <div class="step-desc">Our security consultant visits your property, maps entry points, identifies blind spots, and assesses environmental factors like lighting and layout.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">Custom Design</div>
-        <div class="step-desc">We deliver a detailed security plan — camera placement diagrams, hardware specs, cabling routes, and a transparent itemised quotation.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">Professional Installation</div>
-        <div class="step-desc">Certified technicians install all hardware typically within 48 hours. We handle end-to-end configuration including NVR setup, app pairing, and user training.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-title">Monitoring & AMC</div>
-        <div class="step-desc">Choose round-the-clock monitoring or self-monitoring. Our Annual Maintenance Contracts cover preventive servicing, remote diagnostics, and priority support.</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-dark">
-    <div class="tech-grid">
-      <div>
-        <div class="sec-eyebrow" style="color:var(--gold)">Powered By Technology</div>
-        <h2 class="sec-title wht">Smart Surveillance, <em>Smarter</em> Alerts</h2>
-        <p class="sec-sub wht" style="margin-bottom:0">Our platform goes beyond passive recording. AI-powered analytics detect unusual behaviour, loitering, and unauthorised entry — and notify you in real time.</p>
-        <ul class="tech-list">
-          <li>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-            AI-based person & vehicle detection with zone-based alerts
-          </li>
-          <li>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-            Cloud storage with 30-day rolling footage accessible from any device
-          </li>
-          <li>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-            End-to-end encrypted video streams — no data leaves your property unprotected
-          </li>
-          <li>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-            Integration with smart home hubs (Amazon Alexa, Google Home, Apple HomeKit)
-          </li>
-          <li>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-            Automatic failover to cellular backup if internet goes down
-          </li>
-        </ul>
-      </div>
-      <div class="tech-visual">
-        <div class="tech-display">
-          <div class="tech-screen-header">
-            <div class="tech-dot"></div><div class="tech-dot"></div><div class="tech-dot"></div>
-            <span class="tech-screen-label">Live Dashboard</span>
-          </div>
-          <div class="cam-feeds">
-            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-maingate.jpg' %}');">
-              <span class="cam-label">Main Gate</span>
-              <div class="cam-rec"><div class="cam-rec-dot"></div><span class="cam-rec-lbl">REC</span></div>
-            </div>
-            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-rear.jpg' %}');">
-              <span class="cam-label">Rear Entrance</span>
-              <div class="cam-rec"><div class="cam-rec-dot"></div><span class="cam-rec-lbl">REC</span></div>
-            </div>
-            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-lobby.jpg' %}');">
-              <span class="cam-label">Lobby</span>
-              <div class="cam-rec"><div class="cam-rec-dot" style="background:#81C784;"></div><span class="cam-rec-lbl">LIVE</span></div>
-            </div>
-            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-parking.jpg' %}');">
-              <span class="cam-label">Parking</span>
-              <div class="cam-rec"><div class="cam-rec-dot"></div><span class="cam-rec-lbl">REC</span></div>
-            </div>
-          </div>
-          <div class="alerts-row">
-            <div class="alert-chip">
-              <div class="alert-chip-label">Cameras Online</div>
-              <div class="alert-chip-val">8 / 8</div>
-            </div>
-            <div class="alert-chip warn">
-              <div class="alert-chip-label">Last Alert</div>
-              <div class="alert-chip-val">2 min ago</div>
-            </div>
-            <div class="alert-chip">
-              <div class="alert-chip-label">Storage Used</div>
-              <div class="alert-chip-val">63%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="tech-sample-note">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Sample footage shown for illustration purposes only.
-    </p>
-  </section>
-
-  <section class="sec sec-cream">
-    <div class="sec-hd">
-      <div>
-        <div class="sec-eyebrow">Pricing Plans</div>
-        <h2 class="sec-title">Choose Your <em>Protection</em> Level</h2>
-        <p class="sec-sub">Transparent pricing with no hidden costs. All packages include free site survey, installation, and app setup.</p>
-      </div>
-    </div>
-    <div class="packages">
-      <div class="pkg">
-        <div class="pkg-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="pkg-name">Starter</div>
-        <div class="pkg-title">Essential Shield</div>
-        <div class="pkg-price">Starts at ₹18,999 installed</div>
-        <div class="pkg-divider"></div>
-        <ul class="pkg-features">
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4 Full-HD CCTV cameras (indoor/outdoor)</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4-channel DVR with 1TB HDD (30-day storage)</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Mobile app remote viewing</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Motion detection alerts</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 1-year on-site hardware warranty</li>
-        </ul>
-        <button class="pkg-cta" type="button">Get This Plan</button>
-      </div>
-
-      <div class="pkg featured">
-        <div class="pkg-badge">Most Popular</div>
-        <div class="pkg-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-        </div>
-        <div class="pkg-name">Professional</div>
-        <div class="pkg-title">Guardian Pro</div>
-        <div class="pkg-price">Starts at ₹42,999 installed</div>
-        <div class="pkg-divider"></div>
-        <ul class="pkg-features">
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 8 Full-HD IP cameras with night vision</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 8-channel NVR with 2TB HDD + cloud backup</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> AI-based person & vehicle detection</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Video door phone (2 indoor units)</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Smart access control for main door</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 24/7 remote monitoring (6 months)</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 2-year comprehensive warranty + free AMC year 1</li>
-        </ul>
-        <button class="pkg-cta" type="button">Get This Plan</button>
-      </div>
-
-      <div class="pkg">
-        <div class="pkg-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <div class="pkg-name">Enterprise</div>
-        <div class="pkg-title">Fort Knox</div>
-        <div class="pkg-price">Custom quote · Bespoke scope</div>
-        <div class="pkg-divider"></div>
-        <ul class="pkg-features">
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4K PTZ + panoramic camera array (16–64 channels)</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Perimeter fence intrusion detection</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Facial recognition access control</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Dedicated 24/7 monitoring with guard dispatch</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Fire & smoke detector integration</li>
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Comprehensive 3-year AMC included</li>
-        </ul>
-        <button class="pkg-cta" type="button">Request Custom Quote</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-white">
-    <div class="sec-hd" style="justify-content:center;text-align:center;">
-      <div>
-        <div class="sec-eyebrow" style="justify-content:center;">Side-by-Side</div>
-        <h2 class="sec-title">Compare <em>All</em> Plans</h2>
-        <p class="sec-sub" style="margin:0 auto;">A detailed look at what's included in each package — so you can pick with confidence.</p>
-      </div>
-    </div>
-    <div class="compare-table-wrap">
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th>Essential Shield</th>
-            <th class="th-featured">Guardian Pro</th>
-            <th>Fort Knox</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Number of Cameras</td><td>4 Full-HD</td><td class="td-featured">8 Full-HD IP</td><td>16–64 (4K PTZ)</td></tr>
-          <tr><td>Night Vision</td><td><span class="compare-check">✓</span></td><td class="td-featured"><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
-          <tr><td>Storage</td><td>1TB HDD (30 days)</td><td class="td-featured">2TB HDD + Cloud</td><td>Custom NAS + Cloud</td></tr>
-          <tr><td>Mobile App Remote Viewing</td><td><span class="compare-check">✓</span></td><td class="td-featured"><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
-          <tr><td>AI Person & Vehicle Detection</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
-          <tr><td>Video Door Phone</td><td><span class="compare-cross">—</span></td><td class="td-featured">2 Indoor Units</td><td>Custom</td></tr>
-          <tr><td>Smart Access Control</td><td><span class="compare-cross">—</span></td><td class="td-featured">Main Door</td><td>Multi-point + Facial Recognition</td></tr>
-          <tr><td>Burglar Alarm System</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-cross">—</span></td><td><span class="compare-check">✓</span> Perimeter + PIR</td></tr>
-          <tr><td>24/7 Remote Monitoring</td><td><span class="compare-cross">—</span></td><td class="td-featured">6 Months Included</td><td>Dedicated + Guard Dispatch</td></tr>
-          <tr><td>Fire & Smoke Integration</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-cross">—</span></td><td><span class="compare-check">✓</span></td></tr>
-          <tr><td>Warranty</td><td>1-year on-site</td><td class="td-featured">2-year comprehensive</td><td>3-year comprehensive</td></tr>
-          <tr><td>AMC Included</td><td><span class="compare-cross">—</span></td><td class="td-featured">Year 1 Free</td><td>3 Years Included</td></tr>
-          <tr><td>Smart Home Integration</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-check">✓</span> Alexa, Google, HomeKit</td><td><span class="compare-check">✓</span> + ONVIF</td></tr>
-          <tr><td>Price</td><td style="font-weight:500;color:var(--text-primary);">From ₹18,999</td><td class="td-featured" style="font-weight:600;color:var(--gold);">From ₹42,999</td><td style="font-weight:500;color:var(--text-primary);">Custom Quote</td></tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td></td>
-            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
-            <td><button class="pkg-cta" type="button" style="background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--obsidian);border-color:var(--gold);" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
-            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-panel').scrollIntoView({behavior:'smooth',block:'center'})">Request Quote</button></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </section>
-
-  <section class="sec sec-white">
-    <div class="sec-hd">
-      <div>
-        <div class="sec-eyebrow">Why HOMEXO Security</div>
-        <h2 class="sec-title">Your Property Deserves <em>Better</em> Than Average</h2>
-        <p class="sec-sub">We don't just sell hardware. We design, install, and maintain complete security ecosystems — backed by real accountability.</p>
-      </div>
-    </div>
+  </div>
+  <!-- WHY HOMEXO -->
+  <div id="lg-why" class="lg-why">
+    <div class="lg-section-label"><span class="lg-s-label">Why Homexo Security</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Your Property Deserves<br><em>Better Than Average</em></h2>
     <div class="why-grid">
-      <div class="why-card">
-        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <div class="why-title">48-Hour Installation</div>
-        <div class="why-desc">From confirmed booking to a fully operational system — our certified technicians typically complete any residential installation within 48 hours.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="why-title">Certified & Vetted Technicians</div>
-        <div class="why-desc">Every installation team member is background-checked, manufacturer-certified, and covered under our liability insurance — so your home stays safe during installation too.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <div class="why-title">Real-Time AI Monitoring</div>
-        <div class="why-desc">Our AI detection engine cuts false alarms by up to 90%, so when you get a notification, it actually means something. No more phantom alerts from leaves and shadows.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg></div>
-        <div class="why-title">Brand-Agnostic Design</div>
-        <div class="why-desc">We work with all leading brands — Hikvision, Dahua, CP Plus, Bosch, Honeywell — and recommend based on your actual needs and budget, not on margins.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-        <div class="why-title">Dedicated Support</div>
-        <div class="why-desc">Every client gets a named account manager and a direct WhatsApp support line — not a call centre queue. Issues resolved within 4 hours for AMC clients.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
-        <div class="why-title">Transparent Pricing</div>
-        <div class="why-desc">Detailed itemised quotations before you commit — hardware, labour, cabling, GST. What you sign is exactly what you pay. No surprises after installation day.</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-cream">
-    <div class="sec-hd">
-      <div>
-        <div class="sec-eyebrow">Client Stories</div>
-        <h2 class="sec-title">Trusted by Property Owners <em>Across India</em></h2>
-      </div>
-    </div>
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <div class="testimonial-quote">"</div>
-        <div class="testimonial-stars">★★★★★</div>
-        <div class="testimonial-text">We had two break-in attempts at our warehouse before HOMEXO set up the surveillance system. Since installation 14 months ago — zero incidents. The AI alerts are razor-sharp; not a single false alarm after they tuned the zones.</div>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">RK</div>
-          <div>
-            <div class="testimonial-name">Rajesh Kulkarni</div>
-            <div class="testimonial-role">Commercial Property · Peenya, Bengaluru</div>
-          </div>
+      <div class="why-list">
+        <div class="why-item fade-up">
+          <div class="why-icon">&#9201;</div>
+          <div><div class="why-title">48-Hour Installation</div><div class="why-desc">From confirmed booking to a fully operational system — our certified technicians typically complete any residential installation within 48 hours.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#128110;&#8205;&#9792;&#65039;</div>
+          <div><div class="why-title">Certified & Vetted Technicians</div><div class="why-desc">Every installation team member is background-checked, manufacturer-certified, and covered under our liability insurance.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#129302;</div>
+          <div><div class="why-title">Real-Time AI Monitoring</div><div class="why-desc">Our AI detection engine cuts false alarms by up to 90%, so when you get a notification, it actually means something.</div></div>
+        </div>
+        <div class="why-item fade-up">
+          <div class="why-icon">&#128172;</div>
+          <div><div class="why-title">Dedicated Support</div><div class="why-desc">Every client gets a direct WhatsApp support line. Issues resolved within 4 hours for AMC clients.</div></div>
         </div>
       </div>
-      <div class="testimonial-card">
-        <div class="testimonial-quote">"</div>
-        <div class="testimonial-stars">★★★★★</div>
-        <div class="testimonial-text">I'm an NRI and was worried about my Pune flat sitting empty. HOMEXO installed cameras and set up remote monitoring. I can literally check my flat from London with one tap. The team was professional, on time, and left the place clean.</div>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">SM</div>
-          <div>
-            <div class="testimonial-name">Sunita Menon</div>
-            <div class="testimonial-role">Residential Flat · Baner, Pune</div>
-          </div>
-        </div>
+      <div class="comp-wrap fade-up">
+        <div class="comp-title">Homexo vs Local Vendors</div>
+        <table class="comp-table">
+          <thead>
+            <tr><th>Feature</th><th>Local Vendor</th><th>Homexo Security</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Transparent Pricing</td><td class="cell-no">&#10007; Hidden Costs</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003; Itemised Quotes</td></tr>
+            <tr><td>Equipment Quality</td><td class="cell-no">Unbranded/Cheap</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">Top Tier Brands</td></tr>
+            <tr><td>AI Event Detection</td><td class="cell-no">&#10007; Basic Motion</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003; Smart AI</td></tr>
+            <tr><td>Response Time</td><td class="cell-no">Days/Weeks</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&lt; 4 Hours (AMC)</td></tr>
+            <tr><td>Remote Monitoring</td><td class="cell-no">&#10007; None</td><td class="cell-yes" style="color:#4abd9e;font-weight:500;">&#10003; 24/7 Operations Center</td></tr>
+            <tr class="hl-row"><td>Vetted Technicians</td><td>&#10007; No</td><td>&#10003; Fully Verified</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="testimonial-card">
-        <div class="testimonial-quote">"</div>
-        <div class="testimonial-stars">★★★★☆</div>
-        <div class="testimonial-text">The Guardian Pro package was perfect for our villa. The video door phone means we never have to open the gate without seeing who's there. The biometric lock for the kids' room is an added bonus we hadn't expected. Fantastic value.</div>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">AP</div>
-          <div>
-            <div class="testimonial-name">Amit Prasad</div>
-            <div class="testimonial-role">Independent Villa · Sarjapur Road, Bengaluru</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-white">
-    <div class="sec-hd" style="justify-content:center;text-align:center;">
-      <div>
-        <div class="sec-eyebrow" style="justify-content:center;">Common Questions</div>
-        <h2 class="sec-title">Frequently <em>Asked</em> Questions</h2>
-      </div>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q" type="button" onclick="toggleFaq(this)">
-          How many cameras do I need for my property?
-          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </button>
-        <div class="faq-a">There's no one-size-fits-all answer — it depends on your property layout, the number of entry/exit points, and your specific risk areas. Our site survey is designed to answer exactly this. As a rough guide: a 2BHK apartment typically needs 4–6 cameras, a villa 8–12, and a commercial premises varies widely. We'll design the optimal layout before you spend anything.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" type="button" onclick="toggleFaq(this)">
-          Will my CCTV footage be accessible remotely?
-          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </button>
-        <div class="faq-a">Yes, all our systems — even the entry-level Starter package — include mobile app-based remote viewing. You can watch live feeds and review recordings from anywhere in the world with an internet connection. For our Guardian Pro and above, footage is also synced to encrypted cloud storage, so even if the local DVR/NVR is tampered with, your recordings are safe.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" type="button" onclick="toggleFaq(this)">
-          Do I need to be present during installation?
-          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </button>
-        <div class="faq-a">You or a trusted representative should ideally be present to grant access and to walk through the final setup with our technician. However, for NRI clients or those who can't be present, we accommodate handover-key installations with a detailed video walkthrough sent after completion, followed by a live virtual tour of the system.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" type="button" onclick="toggleFaq(this)">
-          What's covered under the Annual Maintenance Contract (AMC)?
-          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </button>
-        <div class="faq-a">Our AMC covers two preventive maintenance visits per year, remote diagnostics, firmware/software updates, labour charges for any repairs, and priority response (within 4 hours on working days). Hardware replacement due to manufacturing defects is covered under warranty. Damage due to power surges or physical impact can be added with an optional top-up cover.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" type="button" onclick="toggleFaq(this)">
-          Is my CCTV footage legally admissible as evidence?
-          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </button>
-        <div class="faq-a">CCTV footage is widely accepted by Indian courts as evidence in criminal and civil proceedings, provided it is not tampered with, has accurate timestamps, and is from a system installed in compliance with privacy laws (i.e., cameras should not face areas where privacy is expected, such as neighbours' private areas). Our systems use NTP-synced timestamps and we provide export instructions to ensure footage integrity for legal use.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" type="button" onclick="toggleFaq(this)">
-          Can I integrate the security system with my existing smart home setup?
-          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </button>
-        <div class="faq-a">Yes. Our Guardian Pro and Fort Knox packages support integration with Amazon Alexa, Google Home, and Apple HomeKit. This lets you view cameras, arm/disarm alarms, and lock/unlock access points directly from your smart home dashboard or voice commands. For other platforms, we also support ONVIF-compliant integrations with most third-party home automation systems.</div>
-      </div>
-    </div>
-  </section>
-
-  <div class="cta-banner">
-    <div class="cta-bg-text">SECURE</div>
-    <div>
-      <h2 class="cta-title">Protect What<br><em>Matters Most.</em><br>Start Today.</h2>
-    </div>
-    <div class="cta-form">
-      <div class="cta-form-row">
-        <input type="text" placeholder="Your Full Name">
-        <input type="tel" placeholder="Phone Number">
-      </div>
-      <div class="cta-form-row">
-        <input type="email" placeholder="Email Address">
-        <select>
-          <option>Select Service</option>
-          <option>CCTV Installation</option>
-          <option>Remote Monitoring</option>
-          <option>Smart Access Control</option>
-          <option>Alarm System</option>
-          <option>Video Door Phone</option>
-          <option>Full Security Audit</option>
-        </select>
-      </div>
-      <button class="cta-submit" type="button" onclick="openBooking()">Get Free Site Survey →</button>
     </div>
   </div>
+  <!-- TESTIMONIALS -->
+  <div class="lg-testimonials">
+    <div class="lg-section-label"><span class="lg-s-label">Client stories</span><span class="lg-s-line"></span></div>
+    <h2 class="lg-heading">Trusted by Property Owners<br><em>Across India</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card fade-up">
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">We had two break-in attempts at our warehouse before HOMEXO set up the surveillance system. Since installation 14 months ago — zero incidents. The AI alerts are razor-sharp.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--teal-light);color:var(--teal);">RK</div>
+          <div><div class="testi-name">Rajesh Kulkarni</div><div class="testi-detail">Commercial Property &middot; Peenya</div></div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">I'm an NRI and was worried about my Pune flat. HOMEXO installed cameras and set up remote monitoring. I can literally check my flat from London with one tap. Professional service.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--rust-light);color:var(--rust);">SM</div>
+          <div><div class="testi-name">Sunita Menon</div><div class="testi-detail">Residential Flat &middot; Baner</div></div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">The Guardian Pro package was perfect for our villa. The video door phone means we never have to open the gate without seeing who's there. The biometric lock for the kids' room is an added bonus.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#faeeda;color:#854f0b;">AP</div>
+          <div><div class="testi-name">Amit Prasad</div><div class="testi-detail">Independent Villa &middot; Sarjapur</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- GET STARTED FORM -->
+  <div id="lg-cta" class="lg-cta">
+    <div class="lg-section-label" style="justify-content:center;"><span class="lg-s-label" style="color:rgba(247,244,238,0.5);">Start today</span></div>
+    <h2 class="lg-heading" style="text-align:center;color:var(--cream);">Protect what matters most,<br><em style="color:var(--gold-light);">starting with a free survey</em></h2>
+    <p class="cta-sub">Our security consultant will visit your property at no cost. Get a detailed assessment and an itemized quotation.</p>
 
-  <div class="booking-overlay" id="bookingOverlay">
-    <div class="booking-card">
-      <button class="booking-close" type="button" onclick="closeBooking()">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <form method="POST" action="{% url 'enquiries:create' %}" style="max-width:560px;margin:0 auto;">
+      {% csrf_token %}
+      <input type="hidden" name="enquiry_type" value="security">
+      <input type="hidden" name="service_detail" value="Security CTA Section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <input type="text" name="name" required placeholder="Full Name *"
+            value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}"
+            {% if user.is_authenticated %}readonly{% endif %}
+            style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <input type="tel" name="phone" required placeholder="Phone *"
+            value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% endif %}"
+            {% if user.is_authenticated and user.phone %}readonly{% endif %}
+            style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <input type="email" name="email" required placeholder="Email Address *"
+          value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+          {% if user.is_authenticated %}readonly{% endif %}
+          style="width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(247,244,238,0.2);background:rgba(247,244,238,0.08);color:var(--cream);font-size:14px;outline:none;box-sizing:border-box;">
+      </div>
+      <button type="submit" style="width:100%;padding:15px;background:var(--cream);color:var(--teal);font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:background 0.2s;">
+        Request Free Site Survey &rarr;
       </button>
-      <div id="bookingForm">
-        <div class="booking-title">Book Your Site Survey</div>
-        <div class="booking-sub">Pick a date and time that works for you. Our security consultant will visit your property at the scheduled slot.</div>
-        <span class="booking-lbl">Select Date</span>
-        <div class="booking-cal-header">
-          <div class="booking-cal-title" id="bookingCalTitle"></div>
-          <div class="booking-cal-nav">
-            <button type="button" onclick="bookingNavMonth(-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
-            <button type="button" onclick="bookingNavMonth(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg></button>
-          </div>
-        </div>
-        <div class="booking-dates" id="bookingDates"></div>
-        <span class="booking-lbl">Select Time Slot</span>
-        <div class="booking-slots" id="bookingSlots">
-          <div class="booking-slot" onclick="selectSlot(this)">9:00 AM</div>
-          <div class="booking-slot" onclick="selectSlot(this)">10:30 AM</div>
-          <div class="booking-slot" onclick="selectSlot(this)">12:00 PM</div>
-          <div class="booking-slot" onclick="selectSlot(this)">2:00 PM</div>
-          <div class="booking-slot" onclick="selectSlot(this)">3:30 PM</div>
-          <div class="booking-slot" onclick="selectSlot(this)">5:00 PM</div>
-        </div>
-        <button class="booking-confirm-btn" id="bookingConfirmBtn" type="button" disabled onclick="confirmBooking()">Confirm Booking</button>
+      <div style="display:flex;align-items:center;gap:12px;margin:14px 0;">
+        <div style="flex:1;height:1px;background:rgba(247,244,238,0.15);"></div>
+        <span style="font-size:12px;color:rgba(247,244,238,0.4);letter-spacing:0.08em;">OR</span>
+        <div style="flex:1;height:1px;background:rgba(247,244,238,0.15);"></div>
       </div>
-      <div class="booking-success" id="bookingSuccess">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
-        <h3>Survey Booked</h3>
-        <p id="bookingSuccessMsg">Your site survey has been scheduled. Our consultant will visit your property on the selected date and time. You'll receive a confirmation SMS shortly.</p>
-      </div>
-    </div>
+      <a href="https://wa.me/918105568225" target="_blank" rel="noopener"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:12px;padding:14px;background:#25D366;color:#fff;font-size:14px;font-weight:600;border-radius:8px;text-decoration:none;box-sizing:border-box;transition:background 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.122 1.532 5.859L.057 23.571a.75.75 0 0 0 .916.937l5.878-1.538A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 0 1-4.932-1.341l-.353-.21-3.664.959.977-3.572-.23-.368A9.721 9.721 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </form>
   </div>
+
 </div>
 {% endblock %}
 
+{% block pre_footer %}
+<div class="cta-banner">
+  <div class="cta-bg-text">SECURITY</div>
+  <div>
+    <h2 class="cta-title">Need a free<br><em>Site</em> Survey?</h2>
+    <p style="font-size:14px;color:rgba(245,240,232,.5);margin-top:20px;line-height:1.7;">Share your property details and our expert team will visit you at no cost to offer the best security solution.</p>
+  </div>
+  <form action="{% url 'enquiries:create' %}" method="POST" class="cta-form">
+    {% csrf_token %}
+    <input type="hidden" name="enquiry_type" value="security">
+    <div class="cta-form-row">
+      <input type="text" name="name" placeholder="Your Full Name" value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}" required>
+      <input type="tel" name="phone" placeholder="Phone Number" value="{% if user.is_authenticated %}{{ user.phone|default:'' }}{% endif %}" required>
+    </div>
+    <div class="cta-form-row">
+      <input type="email" name="email" placeholder="Email Address" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required>
+      <select name="service_detail" required>
+        <option value="">Security Service Needed</option>
+        <option value="Title & Document Verification">CCTV Installation</option>
+        <option value="Access Control & Alarms">Access Control & Alarms</option>
+        <option value="Physical Property Guardian">Physical Property Guardian</option>
+        <option value="Security Audit">Security Audit</option>
+      </select>
+    </div>
+    <div class="cta-form-row">
+      <select name="budget">
+        <option value="">Property Value Range</option>
+        <option value="Under ₹50L">Under ₹50L</option>
+        <option value="₹50L – ₹1Cr">₹50L – ₹1Cr</option>
+        <option value="₹1Cr – ₹2Cr">₹1Cr – ₹2Cr</option>
+        <option value="Above ₹2Cr">Above ₹2Cr</option>
+      </select>
+      <input type="text" name="message" placeholder="Property area or concern (optional)">
+    </div>
+    <button type="submit" class="cta-submit">Request Free Survey &rarr;</button>
+  </form>
+</div>
+{% endblock pre_footer %}
+
 {% block extra_js %}
 <script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add('vis');
-  });
-}, { threshold: 0.08 });
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 
-document.querySelectorAll('.service-tile,.pkg,.why-card,.testimonial-card,.step').forEach(el => obs.observe(el));
-
-function toggleFaq(btn) {
-  const answer = btn.nextElementSibling;
-  const isOpen = btn.classList.contains('active');
-  document.querySelectorAll('.faq-q').forEach(q => {
-    q.classList.remove('active');
-    q.nextElementSibling.classList.remove('open');
-  });
-  if (!isOpen) {
-    btn.classList.add('active');
-    answer.classList.add('open');
-  }
+const steps = document.querySelectorAll('.dash-step .step-dot');
+let cur = 2;
+if (steps.length) {
+  setInterval(() => {
+    steps.forEach((dot, i) => {
+      if (i < cur) { dot.className = 'step-dot step-done'; dot.innerHTML = '&#10003;'; }
+      else if (i === cur) { dot.className = 'step-dot step-active'; dot.innerHTML = '&rarr;'; }
+      else { dot.className = 'step-dot step-pending'; dot.textContent = i + 1; }
+    });
+    cur = (cur + 1) % steps.length;
+    if (cur === 0) cur = 1;
+  }, 2500);
 }
-
-function selectSecTab(btn) {
-  btn.closest('.sec-tabs').querySelectorAll('.sec-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  const el = document.getElementById('secServiceDetail');
-  if (el) el.value = btn.dataset.service || btn.textContent.trim();
-}
-
-document.querySelectorAll('.pkg-cta').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const form = document.querySelector('.hero-panel');
-    if (form) form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
-});
-
-const quizData = [
-  {
-    q: 'What type of property are you securing?',
-    opts: [
-      { text: 'Apartment / Flat', score: 2, letter: 'A' },
-      { text: 'Independent Villa / House', score: 3, letter: 'B' },
-      { text: 'Commercial Office / Shop', score: 4, letter: 'C' },
-      { text: 'Warehouse / Factory / Plot', score: 5, letter: 'D' }
-    ]
-  },
-  {
-    q: 'Do you currently have any security system installed?',
-    opts: [
-      { text: 'Yes — CCTV + alarms in place', score: 1, letter: 'A' },
-      { text: 'Partial — a few cameras only', score: 3, letter: 'B' },
-      { text: 'Just a security guard', score: 4, letter: 'C' },
-      { text: 'No security at all', score: 5, letter: 'D' }
-    ]
-  },
-  {
-    q: 'How many entry and exit points does your property have?',
-    opts: [
-      { text: '1–2 (single main door)', score: 1, letter: 'A' },
-      { text: '3–4 (main gate + back door)', score: 3, letter: 'B' },
-      { text: '5–8 (multiple gates, windows)', score: 4, letter: 'C' },
-      { text: '8+ (complex commercial layout)', score: 5, letter: 'D' }
-    ]
-  },
-  {
-    q: 'Is the property occupied round the clock?',
-    opts: [
-      { text: 'Yes — family lives here 24/7', score: 1, letter: 'A' },
-      { text: 'Mostly — empty a few hours daily', score: 2, letter: 'B' },
-      { text: 'Only during work hours', score: 4, letter: 'C' },
-      { text: 'Often empty (NRI / weekend use)', score: 5, letter: 'D' }
-    ]
-  },
-  {
-    q: 'Have you experienced any security incidents in the past?',
-    opts: [
-      { text: 'Never — area feels safe', score: 1, letter: 'A' },
-      { text: 'Minor issues (package theft, etc.)', score: 3, letter: 'B' },
-      { text: 'Break-in attempt or trespassing', score: 4, letter: 'C' },
-      { text: 'Serious incident (burglary, vandalism)', score: 5, letter: 'D' }
-    ]
-  }
-];
-
-let quizStep = 0;
-let quizAnswers = [];
-
-function renderQuiz() {
-  const prog = document.getElementById('quizProgress');
-  prog.innerHTML = quizData.map((_, i) => {
-    let cls = 'quiz-dot';
-    if (i < quizStep) cls += ' done';
-    else if (i === quizStep) cls += ' active';
-    return `<div class="${cls}"></div>`;
-  }).join('');
-
-  document.getElementById('quizQuestion').textContent = quizData[quizStep].q;
-  document.getElementById('quizOptions').innerHTML = quizData[quizStep].opts.map((o, i) => {
-    const sel = quizAnswers[quizStep] === i ? ' selected' : '';
-    return `<div class="quiz-opt${sel}" onclick="selectQuizOpt(${i})"><div class="quiz-opt-letter">${o.letter}</div>${o.text}</div>`;
-  }).join('');
-
-  document.getElementById('quizBack').style.display = quizStep > 0 ? 'inline-block' : 'none';
-  document.getElementById('quizNext').textContent = quizStep === quizData.length - 1 ? 'See Results' : 'Next';
-}
-
-function selectQuizOpt(idx) {
-  quizAnswers[quizStep] = idx;
-  document.querySelectorAll('.quiz-opt').forEach((o, i) => o.classList.toggle('selected', i === idx));
-}
-
-function quizAdvance() {
-  if (quizAnswers[quizStep] === undefined) return;
-  if (quizStep < quizData.length - 1) {
-    quizStep++;
-    renderQuiz();
-  } else {
-    showQuizResult();
-  }
-}
-
-function quizPrev() {
-  if (quizStep > 0) {
-    quizStep--;
-    renderQuiz();
-  }
-}
-
-function showQuizResult() {
-  let total = 0;
-  quizAnswers.forEach((ans, i) => {
-    total += quizData[i].opts[ans].score;
-  });
-
-  const maxScore = 25;
-  const vulnerability = Math.round((total / maxScore) * 100);
-  const securityScore = 100 - vulnerability;
-
-  document.getElementById('quizBody').style.display = 'none';
-  const result = document.getElementById('quizResult');
-  result.classList.add('show');
-
-  const ring = document.getElementById('quizRingFill');
-  const circumference = 2 * Math.PI * 65;
-  const offset = circumference - (circumference * securityScore / 100);
-  ring.className = 'ring-fill';
-  if (securityScore < 40) ring.classList.add('danger');
-  else if (securityScore < 70) ring.classList.add('warning');
-  else ring.classList.add('good');
-  setTimeout(() => {
-    ring.style.strokeDashoffset = offset;
-  }, 100);
-
-  let count = 0;
-  const numEl = document.getElementById('quizScoreNum');
-  const interval = setInterval(() => {
-    count += 2;
-    if (count >= securityScore) {
-      count = securityScore;
-      clearInterval(interval);
-    }
-    numEl.textContent = count;
-  }, 20);
-
-  let title, desc, plan, reason;
-  if (securityScore < 40) {
-    title = 'Your Property Needs Urgent Attention';
-    desc = 'Based on your answers, your property has significant security gaps — multiple vulnerabilities that could be exploited. We strongly recommend a comprehensive security overhaul.';
-    plan = 'Fort Knox — Enterprise';
-    reason = "Your property's risk profile calls for a multi-layered system: 4K cameras, perimeter detection, access control, alarms, and 24/7 monitoring with guard dispatch.";
-  } else if (securityScore < 70) {
-    title = 'Room for Improvement';
-    desc = 'Your property has some protection, but there are clear gaps that leave you vulnerable. A professional setup would significantly improve your security posture.';
-    plan = 'Guardian Pro — Professional';
-    reason = 'You need a solid mid-tier system: 8 IP cameras with AI detection, video door phone, access control, and 6 months of remote monitoring included.';
-  } else {
-    title = 'Looking Good, But Stay Ahead';
-    desc = 'Your property is reasonably secure, but technology-based monitoring and smart features can add another layer of protection for complete peace of mind.';
-    plan = 'Essential Shield — Starter';
-    reason = 'A starter CCTV package with 4 Full-HD cameras and mobile remote viewing would complement your existing security nicely.';
-  }
-
-  document.getElementById('quizResultTitle').textContent = title;
-  document.getElementById('quizResultDesc').textContent = desc;
-  document.getElementById('quizRecPlan').textContent = plan;
-  document.getElementById('quizRecReason').textContent = reason;
-}
-
-function quizReset() {
-  quizStep = 0;
-  quizAnswers = [];
-  document.getElementById('quizBody').style.display = 'block';
-  document.getElementById('quizResult').classList.remove('show');
-  document.getElementById('quizRingFill').style.strokeDashoffset = 408;
-  renderQuiz();
-}
-
-renderQuiz();
-
-let bookingMonth;
-let bookingYear;
-let selectedDate = null;
-let selectedSlot = null;
-
-function initBooking() {
-  const now = new Date();
-  bookingMonth = now.getMonth();
-  bookingYear = now.getFullYear();
-  renderCalendar();
-}
-
-function renderCalendar() {
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('bookingCalTitle').textContent = months[bookingMonth] + ' ' + bookingYear;
-
-  const grid = document.getElementById('bookingDates');
-  const dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  let html = dows.map(d => `<div class="booking-dow">${d}</div>`).join('');
-
-  const firstDay = new Date(bookingYear, bookingMonth, 1).getDay();
-  const daysInMonth = new Date(bookingYear, bookingMonth + 1, 0).getDate();
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  for (let i = 0; i < firstDay; i++) html += '<div class="booking-day disabled"></div>';
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const date = new Date(bookingYear, bookingMonth, d);
-    const isPast = date < today;
-    const isSunday = date.getDay() === 0;
-    const disabled = isPast || isSunday;
-    const isSelected = selectedDate && selectedDate.getTime() === date.getTime();
-    html += `<div class="booking-day${disabled ? ' disabled' : ''}${isSelected ? ' selected' : ''}" onclick="selectDate(${bookingYear},${bookingMonth},${d})">${d}</div>`;
-  }
-
-  grid.innerHTML = html;
-}
-
-function bookingNavMonth(dir) {
-  bookingMonth += dir;
-  if (bookingMonth > 11) {
-    bookingMonth = 0;
-    bookingYear++;
-  }
-  if (bookingMonth < 0) {
-    bookingMonth = 11;
-    bookingYear--;
-  }
-  renderCalendar();
-}
-
-function selectDate(y, m, d) {
-  selectedDate = new Date(y, m, d);
-  renderCalendar();
-  updateBookingBtn();
-}
-
-function selectSlot(el) {
-  document.querySelectorAll('.booking-slot').forEach(s => s.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedSlot = el.textContent;
-  updateBookingBtn();
-}
-
-function updateBookingBtn() {
-  document.getElementById('bookingConfirmBtn').disabled = !(selectedDate && selectedSlot);
-}
-
-function openBooking() {
-  selectedDate = null;
-  selectedSlot = null;
-  document.querySelectorAll('.booking-slot').forEach(s => s.classList.remove('selected'));
-  document.getElementById('bookingForm').style.display = 'block';
-  document.getElementById('bookingSuccess').classList.remove('show');
-  document.getElementById('bookingConfirmBtn').disabled = true;
-  initBooking();
-  const ov = document.getElementById('bookingOverlay');
-  ov.style.display = 'flex';
-  requestAnimationFrame(() => {
-    ov.style.opacity = '1';
-  });
-  document.body.style.overflow = 'hidden';
-}
-
-function closeBooking() {
-  const ov = document.getElementById('bookingOverlay');
-  ov.style.opacity = '0';
-  setTimeout(() => {
-    ov.style.display = 'none';
-  }, 300);
-  document.body.style.overflow = '';
-}
-
-function confirmBooking() {
-  if (!selectedDate || !selectedSlot) return;
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dateStr = selectedDate.getDate() + ' ' + months[selectedDate.getMonth()] + ' ' + selectedDate.getFullYear();
-  document.getElementById('bookingSuccessMsg').textContent =
-    `Your site survey is confirmed for ${dateStr} at ${selectedSlot}. Our security consultant will visit your property. You'll receive a confirmation SMS shortly.`;
-  document.getElementById('bookingForm').style.display = 'none';
-  document.getElementById('bookingSuccess').classList.add('show');
-}
-
-document.getElementById('bookingOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeBooking();
-});
 </script>
 {% endblock %}
