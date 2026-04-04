@@ -1,544 +1,3479 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home Security Services — HOMEXO{% endblock %}
-{% block meta_description %}Professional home security and surveillance solutions from HOMEXO. CCTV installation, smart locks, intercom systems, and 24/7 monitoring services.{% endblock %}
+{% block title %}Security & Surveillance — HOMEXO{% endblock %}
+{% block meta_description %}HOMEXO Security & Surveillance for property with CCTV, remote monitoring, access control, alarm systems, security audits, and physical property guardian services.{% endblock %}
 
 {% block extra_head %}
-<style>
-  /* ── Layout Helpers ────────────────────────────────────────── */
-  .sec-page { font-family: 'Source Sans 3', sans-serif; --white: #fff; }
-  .sec-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-  .section-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: var(--sky); margin-bottom: 18px;
-  }
-  .section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--sky); }
-  .section-heading {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: clamp(34px, 4vw, 52px); font-weight: 300;
-    line-height: 1.15; color: var(--charcoal); margin-bottom: 18px;
-  }
-  .section-heading em { font-style: italic; color: var(--sky); }
-  .section-sub { font-size: 15px; line-height: 1.8; color: var(--warm-grey); max-width: 560px; font-weight: 300; }
-  .sec-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
 
-  /* ── Hero ──────────────────────────────────────────────────── */
-  .sh-hero {
-    background: linear-gradient(140deg, #061522 0%, #0D2B4E 55%, #0e2d52 100%);
-    padding: 90px 40px 100px;
-    position: relative; overflow: hidden;
+{% block extra_css %}
+<style>
+  .security-page-exact {
+    --obsidian: #080C10;
+    --void: #0C1117;
+    --deep: #111820;
+    --surface: #161E28;
+    --panel: #1C2636;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+    --glass-hover: rgba(255,255,255,0.07);
+    --gold: #C9A84C;
+    --gold-bright: #E2C06A;
+    --gold-dim: rgba(201,168,76,0.35);
+    --gold-glow: rgba(201,168,76,0.12);
+    --white: #FFFFFF;
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.55);
+    --text-muted: rgba(240,238,232,0.28);
+    --border: rgba(255,255,255,0.07);
+    --border-gold: rgba(201,168,76,0.25);
+    --sky: #4A90C4;
+    --green: #6FCF97;
+    --amber: #F2994A;
+    --red: #EB5757;
   }
-  .sh-hero::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 70% 80% at 80% 50%, rgba(74,144,196,.12) 0%, transparent 65%);
+
+  html { scroll-behavior: smooth; }
+
+  body.security-exact-page {
+    font-family: 'Outfit', sans-serif;
+    background: #080C10;
+    color: #F0EEE8;
+    overflow-x: hidden;
+  }
+
+  body.security-exact-page::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.6;
+  }
+
+  body.security-exact-page .floating-actions {
+    display: none;
+  }
+
+  #scroll-progress {
+    background: var(--sky);
+  }
+
+  .security-page-exact {
+    background: var(--obsidian);
+    color: var(--text-primary);
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero {
+    margin-top: 80px;
+    background: var(--obsidian);
+    padding: 80px 64px 0;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 64px;
+    align-items: end;
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 80px);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 80% at 80% 20%, rgba(74,144,196,0.05) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 40% at 50% 80%, rgba(201,168,76,0.03) 0%, transparent 65%);
     pointer-events: none;
   }
-  .sh-hero-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: center;
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
   }
-  .sh-hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: var(--sky); margin-bottom: 28px;
+
+  .hero-left {
+    position: relative;
+    z-index: 1;
+    padding-bottom: 80px;
   }
-  .sh-hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--sky); }
-  .sh-hero h1 {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.1;
-    color: #fff; margin-bottom: 24px;
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
-  .sh-hero h1 em { font-style: italic; color: var(--sky); }
-  .sh-hero-desc {
-    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.65);
-    max-width: 480px; font-weight: 300; margin-bottom: 40px;
+
+  .eyebrow::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
   }
-  .sh-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-  .sh-btn-primary {
-    display: inline-block; padding: 14px 32px;
-    background: var(--sky); color: #fff;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    text-decoration: none; font-family: 'Source Sans 3', sans-serif;
-    transition: background .3s;
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.05;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
   }
-  .sh-btn-primary:hover { background: #3a7ab0; }
-  .sh-btn-ghost {
-    display: inline-block; padding: 14px 32px;
-    background: transparent; color: rgba(255,255,255,.8);
-    border: 1px solid rgba(255,255,255,.25);
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    text-decoration: none; font-family: 'Source Sans 3', sans-serif;
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    font-weight: 300;
+    max-width: 500px;
+    margin-bottom: 44px;
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 44px;
+  }
+
+  .hero-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 12px 18px;
+    backdrop-filter: blur(12px);
+    transition: border-color .3s, background .3s;
+  }
+
+  .hero-pill:hover {
+    background: var(--glass-hover);
+    border-color: var(--border-gold);
+  }
+
+  .hero-pill svg {
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .pill-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .pill-lbl {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-partners {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .hero-partners-lbl {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .pchip {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 5px 13px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
     transition: all .3s;
   }
-  .sh-btn-ghost:hover { border-color: var(--sky); color: var(--sky); }
 
-  /* Hero shield visual */
-  .sh-hero-visual {
-    display: flex; align-items: center; justify-content: center;
-    position: relative; z-index: 1;
-  }
-  .sh-shield-wrap {
-    width: 280px; height: 320px; position: relative; display: flex;
-    align-items: center; justify-content: center;
-  }
-  .sh-shield-ring {
-    position: absolute; border-radius: 50%; border: 1px solid rgba(74,144,196,.2);
-    animation: shieldPulse 3s ease-in-out infinite;
-  }
-  .sh-shield-ring:nth-child(1) { width: 280px; height: 280px; animation-delay: 0s; }
-  .sh-shield-ring:nth-child(2) { width: 220px; height: 220px; animation-delay: .6s; }
-  .sh-shield-ring:nth-child(3) { width: 160px; height: 160px; animation-delay: 1.2s; }
-  @keyframes shieldPulse {
-    0%,100%  { opacity: .25; transform: scale(1);   }
-    50%      { opacity: .6;  transform: scale(1.04); }
-  }
-  .sh-shield-icon {
-    position: relative; z-index: 2;
-    width: 100px; height: 100px; background: rgba(74,144,196,.12);
-    border: 1.5px solid rgba(74,144,196,.35);
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 2px;
-  }
-  /* floating badge */
-  .sh-shield-badge {
-    position: absolute; bottom: 30px; right: 0;
-    background: var(--navy); border: 1px solid rgba(74,144,196,.3);
-    padding: 10px 18px; display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-  }
-  .sh-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; animation: liveBlink .9s ease-in-out infinite; }
-  @keyframes liveBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
-  .sh-badge-txt { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.8); }
-
-  /* ── Stats Bar ─────────────────────────────────────────────── */
-  .sh-stats {
-    background: var(--navy); padding: 36px 40px;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid rgba(74,144,196,.12);
-  }
-  .sh-stat {
-    display: flex; flex-direction: column; align-items: center;
-    padding: 12px 0; text-align: center;
-    border-right: 1px solid rgba(255,255,255,.07);
-  }
-  .sh-stat:last-child { border-right: none; }
-  .sh-stat-val {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 40px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px;
-  }
-  .sh-stat-val span { font-size: .55em; color: var(--sky); }
-  .sh-stat-lbl { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.4); }
-
-  /* ── Services Grid ─────────────────────────────────────────── */
-  .sh-services { padding: 90px 40px; background: var(--ivory); }
-  .sh-services-header { text-align: center; margin-bottom: 56px; }
-  .sh-services-header .section-sub { margin: 0 auto; text-align: center; }
-  .sh-grid {
-    max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-  }
-  .sh-card {
-    background: #fff; padding: 40px 36px;
-    border: 1px solid var(--border);
-    transition: all .4s cubic-bezier(.23,1,.32,1);
-    position: relative; overflow: hidden;
-  }
-  .sh-card::before {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--sky), var(--navy));
-    transform: scaleX(0); transform-origin: left;
-    transition: transform .4s cubic-bezier(.23,1,.32,1);
-  }
-  .sh-card:hover { box-shadow: 0 20px 60px rgba(13,43,78,.1); transform: translateY(-4px); }
-  .sh-card:hover::before { transform: scaleX(1); }
-  .sh-card-icon {
-    width: 56px; height: 56px; border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--sky); margin-bottom: 24px;
-    transition: all .3s;
-  }
-  .sh-card:hover .sh-card-icon { background: var(--navy); color: #fff; border-color: var(--navy); }
-  .sh-card-title { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 500; color: var(--charcoal); margin-bottom: 10px; }
-  .sh-card-desc { font-size: 13px; line-height: 1.75; color: var(--warm-grey); font-weight: 300; }
-  .sh-card-tag {
-    display: inline-block; margin-top: 18px;
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--sky); border: 1px solid rgba(74,144,196,.25); padding: 4px 12px;
+  .pchip:hover {
+    border-color: var(--border-gold);
+    color: var(--gold);
   }
 
-  /* ── Process Steps ─────────────────────────────────────────── */
-  .sh-process { padding: 90px 40px; background: var(--charcoal); }
-  .sh-process-header { text-align: center; margin-bottom: 60px; }
-  .sh-process-header .section-eyebrow { color: var(--sky); }
-  .sh-process-header .section-heading { color: #fff; }
-  .sh-process-header .section-heading em { color: var(--sky); }
-  .sh-process-header .section-sub { color: rgba(255,255,255,.55); margin: 0 auto; }
-  .sh-process-track {
-    max-width: 1100px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  .hero-form-card {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-top: 2px solid var(--gold);
+    padding: 40px 36px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .hero-form-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
     position: relative;
   }
-  .sh-process-track::before {
-    content: ''; position: absolute;
-    top: 28px; left: calc(12.5%); right: calc(12.5%); height: 1px;
-    background: linear-gradient(90deg, rgba(74,144,196,.15), rgba(74,144,196,.4), rgba(74,144,196,.15));
+
+  .form-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  label.lbl {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .fi,
+  .fs {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    appearance: none;
+    transition: border-color .3s, background .3s;
+  }
+
+  .fi::placeholder {
+    color: var(--text-muted);
+  }
+
+  .fi:focus,
+  .fs:focus {
+    border-color: var(--border-gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .fs {
+    color: var(--text-secondary);
+  }
+
+  .fs option {
+    background: var(--surface);
+    color: var(--text-primary);
+  }
+
+  .frow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .ffield {
+    margin-bottom: 14px;
+  }
+
+  .radio-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .ropt {
+    flex: 1;
+    min-width: 72px;
+    padding: 10px 6px;
+    border: 1px solid var(--border);
+    background: var(--glass);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .3s;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ropt:hover {
+    border-color: var(--border-gold);
+    color: var(--gold);
+  }
+
+  .ropt.on {
+    background: var(--gold);
+    color: var(--obsidian);
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--obsidian);
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    transition: all .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    opacity: 0;
+    transition: opacity .3s;
+  }
+
+  .submit-btn:hover::before {
+    opacity: 1;
+  }
+
+  .submit-btn > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .submit-btn:hover {
+    box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+    transform: translateY(-1px);
+  }
+
+  .form-note {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+
+  .sec {
+    padding: 96px 64px;
+  }
+
+  .sec-dark {
+    background: var(--deep);
+  }
+
+  .sec-surface {
+    background: var(--surface);
+  }
+
+  .sec-void {
+    background: var(--void);
+  }
+
+  .sec-white {
+    background: var(--void);
+  }
+
+  .sec-cream {
+    background: var(--deep);
+  }
+
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 3.5vw, 52px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+  }
+
+  .sec-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .sec-title.wht {
+    color: var(--text-primary);
+  }
+
+  .sec-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.85;
+    max-width: 580px;
+  }
+
+  .sec-sub.wht {
+    color: var(--text-secondary);
+  }
+
+  .sec-hd {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 56px;
+  }
+
+  .sec-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .sec-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .service-tile {
+    background: var(--void);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: all .65s cubic-bezier(.23,1,.32,1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service-tile.vis {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .service-tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, var(--gold-glow) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity .4s;
+  }
+
+  .service-tile:hover::before {
+    opacity: 1;
+  }
+
+  .service-tile:hover {
+    background: var(--deep);
+  }
+
+  .service-tile:hover .tile-icon {
+    border-color: var(--border-gold);
+    background: var(--gold-glow);
+  }
+
+  .service-tile:hover .tile-icon svg {
+    color: var(--gold-bright);
+  }
+
+  .tile-ghost {
+    position: absolute;
+    bottom: -16px;
+    right: -8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 130px;
+    font-weight: 400;
+    color: var(--gold);
+    opacity: .03;
+    line-height: 1;
+    pointer-events: none;
+    transition: opacity .4s;
+  }
+
+  .service-tile:hover .tile-ghost {
+    opacity: .06;
+  }
+
+  .tile-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-shrink: 0;
+    transition: all .3s;
+  }
+
+  .tile-icon svg {
+    color: var(--gold-dim);
+    transition: color .3s;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    min-height: 56px;
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.3;
+  }
+
+  .tile-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .tile-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(201,168,76,0.07);
+    border: 1px solid var(--border-gold);
+    padding: 5px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 22px;
+    align-self: flex-start;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
     z-index: 0;
   }
-  .sh-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; position: relative; z-index: 1; }
-  .sh-step-num {
-    width: 56px; height: 56px; border-radius: 50%;
-    border: 1px solid rgba(74,144,196,.35);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 300;
-    color: var(--sky); background: var(--charcoal);
+
+  .step {
+    padding: 0 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .6s cubic-bezier(.23,1,.32,1);
+  }
+
+  .step.vis {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .step:nth-child(2) { transition-delay: .1s; }
+  .step:nth-child(3) { transition-delay: .2s; }
+  .step:nth-child(4) { transition-delay: .3s; }
+
+  .step-num {
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--border-gold);
+    background: var(--void);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--gold);
+    transition: all .3s;
+    box-shadow: 0 0 40px rgba(201,168,76,0.08);
+  }
+
+  .step:hover .step-num {
+    background: var(--gold);
+    color: var(--obsidian);
+    box-shadow: 0 0 40px rgba(201,168,76,0.3);
+  }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .packages {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .pkg {
+    background: var(--void);
+    border: none;
+    padding: 52px 40px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: all .65s cubic-bezier(.23,1,.32,1);
+  }
+
+  .pkg.vis {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .pkg:nth-child(2) { transition-delay: .1s; }
+  .pkg:nth-child(3) { transition-delay: .2s; }
+
+  .pkg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    top: auto;
+    height: 2px;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+    opacity: 0;
+    transition: opacity .4s;
+  }
+
+  .pkg:hover::before {
+    opacity: 1;
+  }
+
+  .pkg.featured {
+    background: var(--surface);
+  }
+
+  .pkg.featured::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .pkg-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--obsidian);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    font-weight: 700;
+  }
+
+  .pkg-icon {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pkg-icon svg {
+    color: var(--gold);
+  }
+
+  .pkg.featured .pkg-icon {
+    border-color: var(--border-gold);
+    background: var(--gold-glow);
+  }
+
+  .pkg-name {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pkg.featured .pkg-name {
+    color: var(--gold);
+  }
+
+  .pkg-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pkg-price {
+    font-size: 13px;
+    color: var(--gold);
+    margin-bottom: 28px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pkg-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pkg.featured .pkg-divider {
+    background: var(--border-gold);
+  }
+
+  .pkg-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 1;
+    padding: 0;
+  }
+
+  .pkg-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .pkg-features li svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--gold);
+  }
+
+  .pkg-cta {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border-gold);
+    background: transparent;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all .3s;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .pkg-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    transform: translateY(101%);
+    transition: transform .35s cubic-bezier(.23,1,.32,1);
+  }
+
+  .pkg-cta:hover::before {
+    transform: translateY(0);
+  }
+
+  .pkg-cta:hover {
+    color: var(--obsidian);
+    border-color: var(--gold);
+  }
+
+  .pkg-cta span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .pkg.featured .pkg-cta {
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--obsidian);
+    border-color: var(--gold);
+  }
+
+  .pkg.featured .pkg-cta::before {
+    background: linear-gradient(135deg, var(--gold-bright), #F0D88A);
+  }
+
+  .pkg.featured .pkg-cta:hover {
+    box-shadow: 0 8px 28px rgba(201,168,76,0.4);
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .why-card {
+    background: var(--void);
+    border: none;
+    padding: 36px 32px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .65s cubic-bezier(.23,1,.32,1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-card.vis {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .why-card:nth-child(2) { transition-delay: .08s; }
+  .why-card:nth-child(3) { transition-delay: .16s; }
+  .why-card:nth-child(4) { transition-delay: .24s; }
+  .why-card:nth-child(5) { transition-delay: .32s; }
+  .why-card:nth-child(6) { transition-delay: .4s; }
+
+  .why-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+
+  .why-card:hover::before {
+    opacity: 1;
+  }
+
+  .why-card:hover {
+    background: var(--deep);
+  }
+
+  .why-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: all .3s;
+  }
+
+  .why-card:hover .why-icon {
+    border-color: var(--border-gold);
+    background: var(--gold-glow);
+  }
+
+  .why-icon svg {
+    color: var(--gold);
+  }
+
+  .why-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .why-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+    align-items: center;
+  }
+
+  .tech-visual {
+    position: relative;
+  }
+
+  .tech-display {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  }
+
+  .tech-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  .tech-screen-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .tech-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .tech-dot:nth-child(1) { background: #EB5757; }
+  .tech-dot:nth-child(2) { background: #F2994A; }
+  .tech-dot:nth-child(3) { background: #6FCF97; }
+
+  .tech-screen-label {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+
+  .cam-feeds {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .cam-feed {
+    background: var(--panel);
+    border: 1px solid var(--glass-border);
+    aspect-ratio: 16/9;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .cam-feed::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.04), transparent);
+  }
+
+  .cam-label {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.9);
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    z-index: 2;
+    background: rgba(0,0,0,0.45);
+    padding: 2px 6px;
+  }
+
+  .cam-rec {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+    background: rgba(0,0,0,0.45);
+    padding: 2px 6px;
+  }
+
+  .cam-rec-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: .2; }
+  }
+
+  .cam-rec-lbl {
+    font-size: 8px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 1px;
+  }
+
+  .alerts-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .alert-chip {
+    flex: 1;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 8px 10px;
+  }
+
+  .alert-chip-label {
+    font-size: 8px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .alert-chip-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .alert-chip.warn .alert-chip-val {
+    color: var(--amber);
+  }
+
+  .tech-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 40px;
+    padding: 0;
+  }
+
+  .tech-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .tech-list li svg {
+    flex-shrink: 0;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .testimonial-card {
+    background: var(--void);
+    padding: 40px 36px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .65s cubic-bezier(.23,1,.32,1);
+    overflow: hidden;
+  }
+
+  .testimonial-card.vis {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .testimonial-card:nth-child(2) { transition-delay: .1s; }
+  .testimonial-card:nth-child(3) { transition-delay: .2s; }
+
+  .testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .testimonial-card:hover {
+    background: var(--deep);
+  }
+
+  .testimonial-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 88px;
+    font-weight: 400;
+    color: var(--gold);
+    opacity: .15;
+    line-height: .6;
+    margin-bottom: 16px;
+  }
+
+  .testimonial-stars {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .testimonial-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .testimonial-avatar {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--obsidian);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .testimonial-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .testimonial-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-q {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: none;
+    border: none;
+    padding: 24px 0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+    transition: color .3s;
+  }
+
+  .faq-q:hover {
+    color: var(--text-primary);
+  }
+
+  .faq-q.active {
+    color: var(--gold);
+  }
+
+  .faq-icon {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .3s;
+    color: var(--text-muted);
+  }
+
+  .faq-q.active .faq-icon {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--obsidian);
+    transform: rotate(45deg);
+  }
+
+  .faq-a {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    font-weight: 300;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s cubic-bezier(.23,1,.32,1), padding .3s;
+  }
+
+  .faq-a.open {
+    max-height: 220px;
+    padding-bottom: 24px;
+  }
+
+  .cta-banner {
+    background: var(--surface);
+    padding: 96px 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--border-gold);
+    border-bottom: 1px solid var(--border-gold);
+  }
+
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 0% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 100% 50%, rgba(74,144,196,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-bg-text {
+    position: absolute;
+    bottom: -50px;
+    left: -20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 240px;
+    font-weight: 400;
+    color: var(--gold);
+    opacity: .025;
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -5px;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 4vw, 64px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .cta-form {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cta-form input,
+  .cta-form select {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color .3s;
+    appearance: none;
+  }
+
+  .cta-form input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .cta-form select {
+    color: var(--text-secondary);
+  }
+
+  .cta-form select option {
+    background: var(--surface);
+    color: var(--text-primary);
+  }
+
+  .cta-form input:focus,
+  .cta-form select:focus {
+    border-color: var(--border-gold);
+  }
+
+  .cta-submit {
+    width: 100%;
+    margin-top: 4px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--obsidian);
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    transition: all .3s;
+  }
+
+  .cta-submit:hover {
+    box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+    transform: translateY(-1px);
+  }
+
+  .wa-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .wa-float-btn {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25D366;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 28px rgba(37,211,102,0.4);
+    transition: transform .3s, box-shadow .3s;
+    animation: waPulse 2.5s infinite;
+  }
+
+  .wa-float-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 36px rgba(37,211,102,0.55);
+  }
+
+  .wa-float-btn svg {
+    width: 28px;
+    height: 28px;
+    fill: #fff;
+  }
+
+  .wa-tooltip {
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: waTooltipIn .5s 2s forwards;
+    pointer-events: none;
+  }
+
+  @keyframes waPulse {
+    0%,100% { box-shadow: 0 6px 28px rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 6px 36px rgba(37,211,102,0.65); }
+  }
+
+  @keyframes waTooltipIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .quiz-section {
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quiz-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 20% 100%, rgba(74,144,196,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .quiz-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 64px;
+    right: 64px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+  }
+
+  .quiz-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quiz-progress {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .quiz-dot {
+    width: 36px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--glass-border);
+    transition: background .4s;
+  }
+
+  .quiz-dot.active {
+    background: var(--gold);
+  }
+
+  .quiz-dot.done {
+    background: var(--green);
+  }
+
+  .quiz-q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.25;
+    margin-bottom: 40px;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .quiz-opt {
+    padding: 18px 20px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all .3s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .quiz-opt:hover {
+    background: var(--gold-glow);
+    border-color: var(--border-gold);
+    color: var(--text-primary);
+  }
+
+  .quiz-opt.selected {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold);
+    color: var(--text-primary);
+  }
+
+  .quiz-opt-letter {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: all .3s;
+  }
+
+  .quiz-opt.selected .quiz-opt-letter {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--obsidian);
+  }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .quiz-nav-btn {
+    padding: 14px 40px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all .3s;
+    border: none;
+  }
+
+  .quiz-nav-btn.primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--obsidian);
+  }
+
+  .quiz-nav-btn.primary:hover {
+    box-shadow: 0 6px 24px rgba(201,168,76,0.4);
+    transform: translateY(-1px);
+  }
+
+  .quiz-nav-btn.secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .quiz-nav-btn.secondary:hover {
+    border-color: var(--border-gold);
+    color: var(--text-primary);
+  }
+
+  .quiz-result {
+    display: none;
+    text-align: center;
+  }
+
+  .quiz-result.show {
+    display: block;
+  }
+
+  .quiz-score-ring {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+
+  .quiz-score-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .quiz-score-ring circle {
+    fill: none;
+    stroke-width: 6;
+  }
+
+  .quiz-score-ring .ring-bg {
+    stroke: var(--glass-border);
+  }
+
+  .quiz-score-ring .ring-fill {
+    stroke: var(--gold);
+    stroke-dasharray: 408;
+    stroke-dashoffset: 408;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.2s cubic-bezier(.23,1,.32,1);
+  }
+
+  .quiz-score-ring .ring-fill.danger { stroke: var(--red); }
+  .quiz-score-ring .ring-fill.warning { stroke: var(--amber); }
+  .quiz-score-ring .ring-fill.good { stroke: var(--green); }
+
+  .quiz-score-val {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quiz-score-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .quiz-score-lbl {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .quiz-result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .quiz-result-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+
+  .quiz-result-rec {
+    background: var(--glass);
+    border: 1px solid var(--border-gold);
+    padding: 22px 26px;
+    margin-bottom: 28px;
+    text-align: left;
+  }
+
+  .quiz-rec-label {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .quiz-rec-plan {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  .quiz-rec-reason {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .compare-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 10px;
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+
+  .compare-table thead th {
+    padding: 20px 16px;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .compare-table thead th:first-child {
+    text-align: left;
+    min-width: 220px;
+  }
+
+  .compare-table thead th.th-featured {
+    background: var(--panel);
+    color: var(--gold);
+    position: relative;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .compare-table thead th.th-featured::after {
+    content: 'POPULAR';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--obsidian);
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    font-weight: 700;
+  }
+
+  .compare-table tbody td {
+    padding: 16px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-weight: 300;
+    transition: background .2s;
+  }
+
+  .compare-table tbody td:first-child {
+    text-align: left;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .compare-table tbody tr:hover td {
+    background: var(--glass);
+  }
+
+  .compare-table tbody td.td-featured {
+    background: rgba(201,168,76,0.04);
+  }
+
+  .compare-table tbody tr:hover td.td-featured {
+    background: rgba(201,168,76,0.07);
+  }
+
+  .compare-check {
+    color: var(--gold);
+    font-size: 16px;
+  }
+
+  .compare-cross {
+    color: var(--border);
+    font-size: 14px;
+  }
+
+  .compare-table tfoot td {
+    padding: 20px 16px;
+    text-align: center;
+    border-bottom: none;
+    background: var(--surface);
+  }
+
+  .compare-table tfoot .pkg-cta {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 11px;
+  }
+
+  .booking-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(16px);
+    z-index: 11000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+
+  .booking-overlay.show {
+    display: flex;
+    opacity: 1;
+  }
+
+  .booking-card {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-top: 2px solid var(--gold);
+    max-width: 520px;
+    width: 90%;
+    padding: 48px 44px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: bookIn .4s cubic-bezier(.23,1,.32,1);
+    box-shadow: 0 60px 120px rgba(0,0,0,0.7);
+  }
+
+  @keyframes bookIn {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .booking-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    background: var(--glass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .3s;
+    color: var(--text-muted);
+  }
+
+  .booking-close:hover {
+    background: var(--gold-glow);
+    border-color: var(--border-gold);
+    color: var(--gold);
+  }
+
+  .booking-close svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+  }
+
+  .booking-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .booking-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  .booking-dates {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+
+  .booking-dow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .booking-day {
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all .3s;
+  }
+
+  .booking-day:hover {
+    background: var(--gold-glow);
+    border-color: var(--border-gold);
+    color: var(--text-primary);
+  }
+
+  .booking-day.disabled {
+    color: var(--text-muted);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .booking-day.selected {
+    background: var(--gold);
+    color: var(--obsidian);
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+
+  .booking-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .booking-cal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+
+  .booking-cal-nav {
+    display: flex;
+    gap: 6px;
+  }
+
+  .booking-cal-nav button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    background: var(--glass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .3s;
+    color: var(--text-muted);
+  }
+
+  .booking-cal-nav button:hover {
+    background: var(--gold-glow);
+    border-color: var(--border-gold);
+    color: var(--gold);
+  }
+
+  .booking-slots {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 8px;
     margin-bottom: 24px;
   }
-  .sh-step-title { font-family: 'Source Sans 3', sans-serif; font-size: 19px; color: #fff; margin-bottom: 10px; }
-  .sh-step-desc { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.45); font-weight: 300; }
 
-  /* ── Why Choose Us ─────────────────────────────────────────── */
-  .sh-why { padding: 90px 40px; background: #fff; }
-  .sh-why-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  .sh-why-list { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-direction: column; gap: 24px; }
-  .sh-why-item { display: flex; gap: 20px; align-items: flex-start; }
-  .sh-why-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sky); margin-top: 5px; flex-shrink: 0; }
-  .sh-why-item-title { font-size: 15px; font-weight: 500; color: var(--charcoal); margin-bottom: 5px; }
-  .sh-why-item-desc { font-size: 13px; line-height: 1.7; color: var(--warm-grey); font-weight: 300; }
-  .sh-why-visual {
-    background: linear-gradient(140deg, var(--navy) 0%, #0a2040 100%);
-    padding: 48px; display: flex; flex-direction: column; gap: 24px;
+  .booking-slot {
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    background: var(--glass);
+    cursor: pointer;
+    transition: all .3s;
   }
-  .sh-cert-item {
-    display: flex; align-items: center; gap: 18px;
-    padding: 18px 22px; border: 1px solid rgba(74,144,196,.18);
-  }
-  .sh-cert-icon { color: var(--sky); flex-shrink: 0; }
-  .sh-cert-name { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 3px; }
-  .sh-cert-body { font-size: 11px; color: rgba(255,255,255,.45); }
 
-  /* ── CTA + Enquiry ─────────────────────────────────────────── */
-  .sh-cta { padding: 90px 40px; background: var(--ivory); }
-  .sh-cta-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: start;
+  .booking-slot:hover {
+    border-color: var(--border-gold);
+    color: var(--gold);
+    background: var(--gold-glow);
   }
-  .sh-cta-left .section-sub { margin-bottom: 32px; }
-  .sh-cta-points { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
-  .sh-cta-points li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--charcoal); }
-  .sh-cta-points li svg { color: var(--sky); flex-shrink: 0; }
-  .sh-form {
-    background: #fff; border: 1px solid var(--border); padding: 36px;
-  }
-  .sh-form-title { font-family: 'Source Sans 3', sans-serif; font-size: 22px; color: var(--charcoal); margin-bottom: 6px; }
-  .sh-form-sub { font-size: 12px; color: var(--warm-grey); margin-bottom: 24px; }
-  .sh-form input, .sh-form select, .sh-form textarea {
-    width: 100%; box-sizing: border-box; padding: 12px 16px;
-    border: 1px solid var(--border); font-family: 'Source Sans 3', sans-serif;
-    font-size: 13px; color: var(--charcoal); background: var(--ivory);
-    margin-bottom: 14px; outline: none; transition: border-color .3s;
-  }
-  .sh-form input:focus, .sh-form select:focus, .sh-form textarea:focus { border-color: var(--sky); background: #fff; }
-  .sh-form textarea { resize: vertical; min-height: 80px; }
-  .sh-form-submit {
-    width: 100%; padding: 14px; background: var(--navy); color: #fff;
-    border: none; font-family: 'Source Sans 3', sans-serif;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
-    transition: background .3s;
-  }
-  .sh-form-submit:hover { background: var(--sky); }
 
-  /* ── Responsive ────────────────────────────────────────────── */
-  @media (max-width: 1100px) {
-    .sh-hero-inner { grid-template-columns: 1fr; gap: 40px; }
-    .sh-hero-visual { display: none; }
-    .sh-grid { grid-template-columns: repeat(2, 1fr); }
-    .sh-why-inner { grid-template-columns: 1fr; }
-    .sh-why-visual { display: none; }
-    .sh-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+  .booking-slot.selected {
+    background: var(--gold);
+    color: var(--obsidian);
+    border-color: var(--gold);
+    font-weight: 600;
   }
-  @media (max-width: 768px) {
-    .sh-hero { padding: 60px 24px 70px; }
-    .sh-stats { grid-template-columns: repeat(2, 1fr); padding: 24px; }
-    .sh-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); padding: 16px 0; }
-    .sh-stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.07); }
-    .sh-stat:nth-child(3), .sh-stat:nth-child(4) { border-bottom: none; }
-    .sh-services, .sh-process, .sh-why, .sh-cta { padding: 56px 24px; }
-    .sh-grid { grid-template-columns: 1fr; }
-    .sh-process-track { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .sh-process-track::before { display: none; }
+
+  .booking-slot.unavailable {
+    opacity: 0.3;
+    pointer-events: none;
+    text-decoration: line-through;
   }
-  @media (max-width: 480px) {
-    .sh-process-track { grid-template-columns: 1fr; }
-    .sh-hero-actions { flex-direction: column; }
+
+  .booking-confirm-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--obsidian);
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    transition: all .3s;
+  }
+
+  .booking-confirm-btn:hover {
+    box-shadow: 0 6px 28px rgba(201,168,76,0.4);
+    transform: translateY(-1px);
+  }
+
+  .booking-confirm-btn:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .booking-lbl {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .booking-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .booking-success.show {
+    display: block;
+  }
+
+  .booking-success svg {
+    width: 64px;
+    height: 64px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .booking-success h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .booking-success p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .tech-sample-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 28px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    justify-content: center;
+  }
+
+  .tech-sample-note svg {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+
+  .rg-pattern {
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%234A90C4' fill-opacity='0.06'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .rg-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+
+  .rg-feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 36px 30px;
+  }
+
+  .rg-feature-card.featured {
+    background: rgba(201,168,76,0.06);
+    border-color: rgba(201,168,76,0.3);
+  }
+
+  .rg-feature-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .rg-feature-card.featured .rg-feature-icon {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.35);
+  }
+
+  .rg-feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #F0EEE8;
+    margin-bottom: 10px;
+  }
+
+  .rg-feature-desc {
+    font-size: 13px;
+    color: rgba(240,238,232,0.45);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .rg-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .rg-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #F0EEE8;
+    margin-bottom: 28px;
+    line-height: 1.4;
+  }
+
+  .rg-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .rg-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .rg-list-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .rg-list-text {
+    font-size: 14px;
+    color: rgba(240,238,232,0.6);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .rg-list-text strong {
+    color: #F0EEE8;
+    font-weight: 500;
+  }
+
+  .rg-plan-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 40px;
+  }
+
+  .rg-plan-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.6);
+    margin-bottom: 20px;
+  }
+
+  .rg-plan-price {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: #F0EEE8;
+    line-height: 1;
+  }
+
+  .rg-plan-price span {
+    font-size: 16px;
+    color: rgba(200,216,236,0.4);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+  }
+
+  .rg-plan-note {
+    font-size: 11px;
+    color: rgba(240,238,232,0.28);
+    margin-top: 6px;
+    margin-bottom: 28px;
+  }
+
+  .rg-plan-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .rg-plan-feature {
+    font-size: 13px;
+    color: rgba(240,238,232,0.45);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .rg-plan-cta {
+    width: 100%;
+    background: linear-gradient(135deg,var(--gold),var(--gold-bright));
+    color: #fff;
+    border-color: var(--gold);
+  }
+
+  @media(max-width:1024px) {
+    .services-grid,
+    .packages,
+    .rg-feature-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .steps::before {
+      display: none;
+    }
+
+    .step {
+      margin-bottom: 36px;
+    }
+
+    .testimonials-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .tech-grid,
+    .rg-bottom-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media(max-width:768px) {
+    .hero {
+      padding: 48px 20px 0;
+      grid-template-columns: 1fr;
+    }
+
+    .hero-form-card {
+      margin-top: 40px;
+    }
+
+    .sec {
+      padding: 72px 20px;
+    }
+
+    .services-grid,
+    .packages,
+    .steps,
+    .why-grid,
+    .testimonials-grid,
+    .rg-feature-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-banner {
+      padding: 72px 20px;
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+
+    .cta-form-row,
+    .frow,
+    .quiz-options,
+    .rg-bottom-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-card {
+      padding: 36px 24px;
+    }
+
+    .booking-slots {
+      grid-template-columns: repeat(2,1fr);
+    }
+
+    .wa-float {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .wa-float-btn {
+      width: 52px;
+      height: 52px;
+    }
+
   }
 </style>
-{% endblock %}
+{% endblock extra_css %}
 
 {% block pre_footer %}{% endblock pre_footer %}
 
 {% block content %}
-<div class="sec-page">
-
-  <!-- ── Hero ──────────────────────────────────────────────── -->
-  <section class="sh-hero">
-    <div class="sh-hero-inner">
-      <div class="sh-hero-left">
-        <div class="sh-hero-eyebrow">Security Services</div>
-        <h1>Protect Your Home with <em>Smart Security</em></h1>
-        <p class="sh-hero-desc">From CCTV surveillance to smart access control, HOMEXO connects you with vetted security professionals who design, install, and monitor custom home security solutions.</p>
-        <div class="sh-hero-actions">
-          <a href="{% url 'enquiries:create' %}" class="sh-btn-primary">Get Free Audit</a>
-          <a href="#services" class="sh-btn-ghost">Explore Services</a>
+<script>document.body.classList.add('security-exact-page');</script>
+<div class="security-page-exact">
+  <section class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Security & Surveillance</div>
+      <h1 class="hero-title">Protect Your Property.<br><em>Day & Night,</em><br>Seamlessly.</h1>
+      <p class="hero-sub">End-to-end security infrastructure for residential and commercial properties — from CCTV installation to 24/7 remote monitoring and smart access control. Built for peace of mind.</p>
+      <div class="hero-pills">
+        <div class="hero-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div>
+            <div class="pill-val">100%</div>
+            <div class="pill-lbl">Satisfaction Guaranteed</div>
+          </div>
+        </div>
+        <div class="hero-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div>
+            <div class="pill-val">24/7</div>
+            <div class="pill-lbl">Live Monitoring</div>
+          </div>
+        </div>
+        <div class="hero-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+          <div>
+            <div class="pill-val">48 hrs</div>
+            <div class="pill-lbl">Installation Turnaround</div>
+          </div>
         </div>
       </div>
-      <div class="sh-hero-visual">
-        <div class="sh-shield-wrap">
-          <div class="sh-shield-ring"></div>
-          <div class="sh-shield-ring"></div>
-          <div class="sh-shield-ring"></div>
-          <div class="sh-shield-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <polyline points="9 12 11 14 15 10"/>
-            </svg>
+      <div class="hero-partners">
+        <span class="hero-partners-lbl">Trusted Brands:</span>
+        <span class="pchip">Hikvision</span>
+        <span class="pchip">Dahua</span>
+        <span class="pchip">CP Plus</span>
+        <span class="pchip">Bosch</span>
+        <span class="pchip">Honeywell</span>
+      </div>
+    </div>
+
+    <div class="hero-form-card">
+      <div class="form-title">Get a Free Site Survey</div>
+      <div class="form-sub">Our security consultant visits your property at no cost.</div>
+      <div class="ffield">
+        <label class="lbl">Property Type</label>
+        <div class="radio-row">
+          <button class="ropt on" type="button" onclick="selectRopt(this)">Apartment</button>
+          <button class="ropt" type="button" onclick="selectRopt(this)">Villa</button>
+          <button class="ropt" type="button" onclick="selectRopt(this)">Commercial</button>
+          <button class="ropt" type="button" onclick="selectRopt(this)">Plot</button>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="ffield" style="margin-bottom:0">
+          <label class="lbl">Full Name</label>
+          <input type="text" class="fi" placeholder="Arjun Sharma">
+        </div>
+        <div class="ffield" style="margin-bottom:0">
+          <label class="lbl">Phone Number</label>
+          <input type="tel" class="fi" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="ffield" style="margin-top:14px">
+        <label class="lbl">Property Location</label>
+        <input type="text" class="fi" placeholder="e.g. Whitefield, Bengaluru">
+      </div>
+      <div class="ffield">
+        <label class="lbl">Service Needed</label>
+        <select class="fs">
+          <option>CCTV Installation</option>
+          <option>Video Door Phone</option>
+          <option>Smart Access Control</option>
+          <option>Alarm Systems</option>
+          <option>Remote Monitoring</option>
+          <option>Full Security Audit</option>
+        </select>
+      </div>
+      <button class="submit-btn" type="button" onclick="openBooking()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Book Free Site Survey
+      </button>
+      <p class="form-note">100% free consultation · No hidden charges · Expert assigned within 24 hrs</p>
+    </div>
+  </section>
+
+  <section class="sec sec-white">
+    <div class="sec-hd">
+      <div>
+        <div class="sec-eyebrow">What We Offer</div>
+        <h2 class="sec-title">Comprehensive <em>Security</em> Services</h2>
+        <p class="sec-sub">Every property is different. We design, supply, install, and maintain a layered security ecosystem tailored to your needs.</p>
+      </div>
+    </div>
+    <div class="services-grid">
+      <div class="service-tile">
+        <div class="tile-ghost">01</div>
+        <div class="tile-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M20.188 10.934c.412.636.612.985.612 1.066s-.2.43-.612 1.066C18.768 15.157 15.636 18 12 18c-3.636 0-6.768-2.843-8.188-4.934C3.4 12.43 3.2 12.081 3.2 12s.2-.43.612-1.066C5.232 8.843 8.364 6 12 6c3.636 0 6.768 2.843 8.188 4.934z"/></svg>
+        </div>
+        <div class="tile-title">CCTV & IP Camera Installation</div>
+        <div class="tile-desc">Full-HD, 4K, and PTZ cameras for indoor and outdoor coverage. Night vision, weatherproof options with DVR/NVR setup and app-based remote viewing.</div>
+        <div class="tile-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          1-year on-site warranty
+        </div>
+      </div>
+
+      <div class="service-tile">
+        <div class="tile-ghost">02</div>
+        <div class="tile-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="tile-title">24/7 Remote Monitoring</div>
+        <div class="tile-desc">Round-the-clock monitoring from our operations centre. Real-time alerts on motion, perimeter breach, or unusual activity — delivered to your phone instantly.</div>
+        <div class="tile-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          AI-powered detection
+        </div>
+      </div>
+
+      <div class="service-tile">
+        <div class="tile-ghost">03</div>
+        <div class="tile-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div class="tile-title">Access Control & Video Door Phone</div>
+        <div class="tile-desc">Biometric, RFID, and PIN-based entry for gates, lifts, and server rooms — combined with HD video intercom, two-way audio, and remote door unlock from your mobile app.</div>
+        <div class="tile-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Control from anywhere
+        </div>
+      </div>
+
+      <div class="service-tile">
+        <div class="tile-ghost">04</div>
+        <div class="tile-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="tile-title">Burglar & Intruder Alarm</div>
+        <div class="tile-desc">PIR sensors, magnetic contacts, glass-break detectors, and siren units on a central panel. Police-linkable with instant SMS and call alerts.</div>
+        <div class="tile-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Instant SMS + call alerts
+        </div>
+      </div>
+
+      <div class="service-tile">
+        <div class="tile-ghost">05</div>
+        <div class="tile-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="tile-title">Security Audit & Consulting</div>
+        <div class="tile-desc">A certified expert surveys your site, maps blind spots, and delivers a written risk report with prioritised recommendations — before you invest in hardware.</div>
+        <div class="tile-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Written risk report
+        </div>
+      </div>
+
+      <div class="service-tile">
+        <div class="tile-ghost">06</div>
+        <div class="tile-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/><circle cx="19" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="19" y1="3" x2="19" y2="7"/><line x1="17" y1="5" x2="21" y2="5"/></svg>
+        </div>
+        <div class="tile-title">Physical Property Guardian</div>
+        <div class="tile-desc">No cameras required. Our trained field officers physically visit your plot, flat, or home on a schedule — inspect, photograph, and report directly to you on WhatsApp.</div>
+        <div class="tile-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          No hardware needed
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec quiz-section" id="quizSection">
+    <div class="quiz-wrap">
+      <div class="sec-eyebrow" style="color:var(--gold);justify-content:center;margin-bottom:10px;">Interactive Assessment</div>
+      <h2 class="sec-title wht" style="text-align:center;margin-bottom:8px;">How Secure Is <em>Your Property?</em></h2>
+      <p class="sec-sub wht" style="text-align:center;max-width:500px;margin:0 auto 40px;">Answer 5 quick questions and get a personalised security score with a recommended plan.</p>
+
+      <div id="quizBody">
+        <div class="quiz-progress" id="quizProgress"></div>
+        <div class="quiz-q-text" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-nav">
+          <button class="quiz-nav-btn secondary" id="quizBack" style="display:none;" type="button" onclick="quizPrev()">Back</button>
+          <button class="quiz-nav-btn primary" id="quizNext" type="button" onclick="quizAdvance()">Next</button>
+        </div>
+      </div>
+
+      <div class="quiz-result" id="quizResult">
+        <div class="quiz-score-ring">
+          <svg viewBox="0 0 140 140"><circle class="ring-bg" cx="70" cy="70" r="65"/><circle class="ring-fill" id="quizRingFill" cx="70" cy="70" r="65"/></svg>
+          <div class="quiz-score-val"><div class="quiz-score-num" id="quizScoreNum">0</div><div class="quiz-score-lbl">Security Score</div></div>
+        </div>
+        <div class="quiz-result-title" id="quizResultTitle"></div>
+        <div class="quiz-result-desc" id="quizResultDesc"></div>
+        <div class="quiz-result-rec">
+          <div class="quiz-rec-label">Recommended Plan</div>
+          <div class="quiz-rec-plan" id="quizRecPlan"></div>
+          <div class="quiz-rec-reason" id="quizRecReason"></div>
+        </div>
+        <button class="quiz-nav-btn primary" type="button" onclick="quizReset()">Retake Quiz</button>
+        <button class="quiz-nav-btn primary" type="button" style="margin-left:12px;" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Get Free Survey</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-dark" id="remoteGuardian" style="background:linear-gradient(135deg,#080C10 0%,#0C1117 60%,#111820 100%);position:relative;overflow:hidden;">
+    <div class="rg-pattern"></div>
+    <div class="sec-hd" style="margin-bottom:56px;">
+      <div>
+        <div class="sec-eyebrow" style="color:rgba(201,168,76,0.7);">New Service</div>
+        <h2 class="sec-title" style="color:#F0EEE8;">No Camera Needed. <em style="color:#C9A84C;">Real People.</em><br>Real Protection.</h2>
+        <p class="sec-sub" style="color:rgba(240,238,232,0.45);max-width:560px;">Some properties can't have cameras — or the owner simply prefers not to. Our Physical Property Guardian service deploys trained on-ground personnel to visit, inspect, and report on your property on a scheduled basis. No hardware. No installation. Just trusted human eyes.</p>
+      </div>
+    </div>
+
+    <div class="rg-feature-grid">
+      <div class="rg-feature-card">
+        <div class="rg-feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5"><circle cx="12" cy="4" r="2"/><path d="M15 8H9l-1 5h2l1 7h2l1-7h2z"/></svg>
+        </div>
+        <div class="rg-feature-title">Scheduled Physical Visits</div>
+        <div class="rg-feature-desc">Our trained field officers visit your plot, flat, or home on a fixed schedule — daily, twice a week, or weekly. They check boundaries, entrances, and the general condition of the property in person.</div>
+      </div>
+      <div class="rg-feature-card featured">
+        <div class="rg-feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div class="rg-feature-title">Instant Issue Reporting</div>
+        <div class="rg-feature-desc">If anything looks wrong — encroachment, damage, unauthorised presence, water leakage — your field officer flags it immediately via WhatsApp with photos and a written note, directly to you.</div>
+      </div>
+      <div class="rg-feature-card">
+        <div class="rg-feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="rg-feature-title">Photo & Video Visit Log</div>
+        <div class="rg-feature-desc">After every visit, you receive a timestamped photo and video walkthrough of your property on WhatsApp — so you can see exactly what was checked and how things look, from anywhere in the world.</div>
+      </div>
+    </div>
+
+    <div class="rg-bottom-grid">
+      <div>
+        <div class="rg-heading">Who is this for?</div>
+        <div class="rg-list">
+          <div class="rg-list-item">
+            <div class="rg-list-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="rg-list-text"><strong>NRIs & frequent travellers</strong> — own property in India but live or work abroad</div>
           </div>
-          <div class="sh-shield-badge">
-            <div class="sh-badge-dot"></div>
-            <span class="sh-badge-txt">Live Monitoring</span>
+          <div class="rg-list-item">
+            <div class="rg-list-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="rg-list-text"><strong>Plot & land owners</strong> — open plots vulnerable to encroachment or dumping</div>
+          </div>
+          <div class="rg-list-item">
+            <div class="rg-list-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="rg-list-text"><strong>Second home owners</strong> — farmhouses or holiday homes left vacant for months</div>
+          </div>
+          <div class="rg-list-item">
+            <div class="rg-list-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="rg-list-text"><strong>Landlords with vacant units</strong> — flats or shops empty between tenants</div>
+          </div>
+        </div>
+      </div>
+      <div class="rg-plan-card">
+        <div class="rg-plan-label">Guardian Away Plan</div>
+        <div class="rg-plan-price">₹2,499<span>/month</span></div>
+        <div class="rg-plan-note">No camera or hardware required</div>
+        <div class="rg-plan-features">
+          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Trained officer visits your property in person</div>
+          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Flexible schedule — daily, weekly, or custom</div>
+          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Timestamped photo + video log after every visit</div>
+          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Instant WhatsApp alert if any issue found</div>
+          <div class="rg-plan-feature"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A90C4" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> No cameras, no installation, no tech needed</div>
+        </div>
+        <button class="pkg-cta rg-plan-cta" type="button" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Enquire About This Plan</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-cream">
+    <div class="sec-hd">
+      <div>
+        <div class="sec-eyebrow">Our Process</div>
+        <h2 class="sec-title">From Survey to <em>Active</em> Protection</h2>
+        <p class="sec-sub">A structured four-step process ensures your property is covered with zero guesswork and minimal disruption.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Free Site Survey</div>
+        <div class="step-desc">Our security consultant visits your property, maps entry points, identifies blind spots, and assesses environmental factors like lighting and layout.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Custom Design</div>
+        <div class="step-desc">We deliver a detailed security plan — camera placement diagrams, hardware specs, cabling routes, and a transparent itemised quotation.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Professional Installation</div>
+        <div class="step-desc">Certified technicians install all hardware typically within 48 hours. We handle end-to-end configuration including NVR setup, app pairing, and user training.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Monitoring & AMC</div>
+        <div class="step-desc">Choose round-the-clock monitoring or self-monitoring. Our Annual Maintenance Contracts cover preventive servicing, remote diagnostics, and priority support.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-dark">
+    <div class="tech-grid">
+      <div>
+        <div class="sec-eyebrow" style="color:var(--gold)">Powered By Technology</div>
+        <h2 class="sec-title wht">Smart Surveillance, <em>Smarter</em> Alerts</h2>
+        <p class="sec-sub wht" style="margin-bottom:0">Our platform goes beyond passive recording. AI-powered analytics detect unusual behaviour, loitering, and unauthorised entry — and notify you in real time.</p>
+        <ul class="tech-list">
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+            AI-based person & vehicle detection with zone-based alerts
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+            Cloud storage with 30-day rolling footage accessible from any device
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+            End-to-end encrypted video streams — no data leaves your property unprotected
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+            Integration with smart home hubs (Amazon Alexa, Google Home, Apple HomeKit)
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+            Automatic failover to cellular backup if internet goes down
+          </li>
+        </ul>
+      </div>
+      <div class="tech-visual">
+        <div class="tech-display">
+          <div class="tech-screen-header">
+            <div class="tech-dot"></div><div class="tech-dot"></div><div class="tech-dot"></div>
+            <span class="tech-screen-label">Live Dashboard</span>
+          </div>
+          <div class="cam-feeds">
+            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-maingate.jpg' %}');">
+              <span class="cam-label">Main Gate</span>
+              <div class="cam-rec"><div class="cam-rec-dot"></div><span class="cam-rec-lbl">REC</span></div>
+            </div>
+            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-rear.jpg' %}');">
+              <span class="cam-label">Rear Entrance</span>
+              <div class="cam-rec"><div class="cam-rec-dot"></div><span class="cam-rec-lbl">REC</span></div>
+            </div>
+            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-lobby.jpg' %}');">
+              <span class="cam-label">Lobby</span>
+              <div class="cam-rec"><div class="cam-rec-dot" style="background:#81C784;"></div><span class="cam-rec-lbl">LIVE</span></div>
+            </div>
+            <div class="cam-feed" style="background-image:url('{% static 'images/security/cam-feed-parking.jpg' %}');">
+              <span class="cam-label">Parking</span>
+              <div class="cam-rec"><div class="cam-rec-dot"></div><span class="cam-rec-lbl">REC</span></div>
+            </div>
+          </div>
+          <div class="alerts-row">
+            <div class="alert-chip">
+              <div class="alert-chip-label">Cameras Online</div>
+              <div class="alert-chip-val">8 / 8</div>
+            </div>
+            <div class="alert-chip warn">
+              <div class="alert-chip-label">Last Alert</div>
+              <div class="alert-chip-val">2 min ago</div>
+            </div>
+            <div class="alert-chip">
+              <div class="alert-chip-label">Storage Used</div>
+              <div class="alert-chip-val">63%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="tech-sample-note">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Sample footage shown for illustration purposes only.
+    </p>
+  </section>
+
+  <section class="sec sec-cream">
+    <div class="sec-hd">
+      <div>
+        <div class="sec-eyebrow">Pricing Plans</div>
+        <h2 class="sec-title">Choose Your <em>Protection</em> Level</h2>
+        <p class="sec-sub">Transparent pricing with no hidden costs. All packages include free site survey, installation, and app setup.</p>
+      </div>
+    </div>
+    <div class="packages">
+      <div class="pkg">
+        <div class="pkg-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="pkg-name">Starter</div>
+        <div class="pkg-title">Essential Shield</div>
+        <div class="pkg-price">Starts at ₹18,999 installed</div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4 Full-HD CCTV cameras (indoor/outdoor)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4-channel DVR with 1TB HDD (30-day storage)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Mobile app remote viewing</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Motion detection alerts</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 1-year on-site hardware warranty</li>
+        </ul>
+        <button class="pkg-cta" type="button">Get This Plan</button>
+      </div>
+
+      <div class="pkg featured">
+        <div class="pkg-badge">Most Popular</div>
+        <div class="pkg-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <div class="pkg-name">Professional</div>
+        <div class="pkg-title">Guardian Pro</div>
+        <div class="pkg-price">Starts at ₹42,999 installed</div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 8 Full-HD IP cameras with night vision</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 8-channel NVR with 2TB HDD + cloud backup</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> AI-based person & vehicle detection</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Video door phone (2 indoor units)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Smart access control for main door</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 24/7 remote monitoring (6 months)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 2-year comprehensive warranty + free AMC year 1</li>
+        </ul>
+        <button class="pkg-cta" type="button">Get This Plan</button>
+      </div>
+
+      <div class="pkg">
+        <div class="pkg-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="pkg-name">Enterprise</div>
+        <div class="pkg-title">Fort Knox</div>
+        <div class="pkg-price">Custom quote · Bespoke scope</div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4K PTZ + panoramic camera array (16–64 channels)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Perimeter fence intrusion detection</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Facial recognition access control</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Dedicated 24/7 monitoring with guard dispatch</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Fire & smoke detector integration</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Comprehensive 3-year AMC included</li>
+        </ul>
+        <button class="pkg-cta" type="button">Request Custom Quote</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-white">
+    <div class="sec-hd" style="justify-content:center;text-align:center;">
+      <div>
+        <div class="sec-eyebrow" style="justify-content:center;">Side-by-Side</div>
+        <h2 class="sec-title">Compare <em>All</em> Plans</h2>
+        <p class="sec-sub" style="margin:0 auto;">A detailed look at what's included in each package — so you can pick with confidence.</p>
+      </div>
+    </div>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Essential Shield</th>
+            <th class="th-featured">Guardian Pro</th>
+            <th>Fort Knox</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Number of Cameras</td><td>4 Full-HD</td><td class="td-featured">8 Full-HD IP</td><td>16–64 (4K PTZ)</td></tr>
+          <tr><td>Night Vision</td><td><span class="compare-check">✓</span></td><td class="td-featured"><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+          <tr><td>Storage</td><td>1TB HDD (30 days)</td><td class="td-featured">2TB HDD + Cloud</td><td>Custom NAS + Cloud</td></tr>
+          <tr><td>Mobile App Remote Viewing</td><td><span class="compare-check">✓</span></td><td class="td-featured"><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+          <tr><td>AI Person & Vehicle Detection</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+          <tr><td>Video Door Phone</td><td><span class="compare-cross">—</span></td><td class="td-featured">2 Indoor Units</td><td>Custom</td></tr>
+          <tr><td>Smart Access Control</td><td><span class="compare-cross">—</span></td><td class="td-featured">Main Door</td><td>Multi-point + Facial Recognition</td></tr>
+          <tr><td>Burglar Alarm System</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-cross">—</span></td><td><span class="compare-check">✓</span> Perimeter + PIR</td></tr>
+          <tr><td>24/7 Remote Monitoring</td><td><span class="compare-cross">—</span></td><td class="td-featured">6 Months Included</td><td>Dedicated + Guard Dispatch</td></tr>
+          <tr><td>Fire & Smoke Integration</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-cross">—</span></td><td><span class="compare-check">✓</span></td></tr>
+          <tr><td>Warranty</td><td>1-year on-site</td><td class="td-featured">2-year comprehensive</td><td>3-year comprehensive</td></tr>
+          <tr><td>AMC Included</td><td><span class="compare-cross">—</span></td><td class="td-featured">Year 1 Free</td><td>3 Years Included</td></tr>
+          <tr><td>Smart Home Integration</td><td><span class="compare-cross">—</span></td><td class="td-featured"><span class="compare-check">✓</span> Alexa, Google, HomeKit</td><td><span class="compare-check">✓</span> + ONVIF</td></tr>
+          <tr><td>Price</td><td style="font-weight:500;color:var(--text-primary);">From ₹18,999</td><td class="td-featured" style="font-weight:600;color:var(--gold);">From ₹42,999</td><td style="font-weight:500;color:var(--text-primary);">Custom Quote</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
+            <td><button class="pkg-cta" type="button" style="background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--obsidian);border-color:var(--gold);" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Get This Plan</button></td>
+            <td><button class="pkg-cta" type="button" onclick="document.querySelector('.hero-form-card').scrollIntoView({behavior:'smooth',block:'center'})">Request Quote</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec sec-white">
+    <div class="sec-hd">
+      <div>
+        <div class="sec-eyebrow">Why HOMEXO Security</div>
+        <h2 class="sec-title">Your Property Deserves <em>Better</em> Than Average</h2>
+        <p class="sec-sub">We don't just sell hardware. We design, install, and maintain complete security ecosystems — backed by real accountability.</p>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="why-title">48-Hour Installation</div>
+        <div class="why-desc">From confirmed booking to a fully operational system — our certified technicians typically complete any residential installation within 48 hours.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="why-title">Certified & Vetted Technicians</div>
+        <div class="why-desc">Every installation team member is background-checked, manufacturer-certified, and covered under our liability insurance — so your home stays safe during installation too.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="why-title">Real-Time AI Monitoring</div>
+        <div class="why-desc">Our AI detection engine cuts false alarms by up to 90%, so when you get a notification, it actually means something. No more phantom alerts from leaves and shadows.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg></div>
+        <div class="why-title">Brand-Agnostic Design</div>
+        <div class="why-desc">We work with all leading brands — Hikvision, Dahua, CP Plus, Bosch, Honeywell — and recommend based on your actual needs and budget, not on margins.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div class="why-title">Dedicated Support</div>
+        <div class="why-desc">Every client gets a named account manager and a direct WhatsApp support line — not a call centre queue. Issues resolved within 4 hours for AMC clients.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+        <div class="why-title">Transparent Pricing</div>
+        <div class="why-desc">Detailed itemised quotations before you commit — hardware, labour, cabling, GST. What you sign is exactly what you pay. No surprises after installation day.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-cream">
+    <div class="sec-hd">
+      <div>
+        <div class="sec-eyebrow">Client Stories</div>
+        <h2 class="sec-title">Trusted by Property Owners <em>Across India</em></h2>
+      </div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">We had two break-in attempts at our warehouse before HOMEXO set up the surveillance system. Since installation 14 months ago — zero incidents. The AI alerts are razor-sharp; not a single false alarm after they tuned the zones.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">RK</div>
+          <div>
+            <div class="testimonial-name">Rajesh Kulkarni</div>
+            <div class="testimonial-role">Commercial Property · Peenya, Bengaluru</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">I'm an NRI and was worried about my Pune flat sitting empty. HOMEXO installed cameras and set up remote monitoring. I can literally check my flat from London with one tap. The team was professional, on time, and left the place clean.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">SM</div>
+          <div>
+            <div class="testimonial-name">Sunita Menon</div>
+            <div class="testimonial-role">Residential Flat · Baner, Pune</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <div class="testimonial-stars">★★★★☆</div>
+        <div class="testimonial-text">The Guardian Pro package was perfect for our villa. The video door phone means we never have to open the gate without seeing who's there. The biometric lock for the kids' room is an added bonus we hadn't expected. Fantastic value.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AP</div>
+          <div>
+            <div class="testimonial-name">Amit Prasad</div>
+            <div class="testimonial-role">Independent Villa · Sarjapur Road, Bengaluru</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Stats ─────────────────────────────────────────────── -->
-  <div class="sh-stats">
-    <div class="sh-stat">
-      <div class="sh-stat-val">5,000<span>+</span></div>
-      <div class="sh-stat-lbl">Installations</div>
+  <section class="sec sec-white">
+    <div class="sec-hd" style="justify-content:center;text-align:center;">
+      <div>
+        <div class="sec-eyebrow" style="justify-content:center;">Common Questions</div>
+        <h2 class="sec-title">Frequently <em>Asked</em> Questions</h2>
+      </div>
     </div>
-    <div class="sh-stat">
-      <div class="sh-stat-val">24<span>/7</span></div>
-      <div class="sh-stat-lbl">Monitoring</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" type="button" onclick="toggleFaq(this)">
+          How many cameras do I need for my property?
+          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </button>
+        <div class="faq-a">There's no one-size-fits-all answer — it depends on your property layout, the number of entry/exit points, and your specific risk areas. Our site survey is designed to answer exactly this. As a rough guide: a 2BHK apartment typically needs 4–6 cameras, a villa 8–12, and a commercial premises varies widely. We'll design the optimal layout before you spend anything.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button" onclick="toggleFaq(this)">
+          Will my CCTV footage be accessible remotely?
+          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </button>
+        <div class="faq-a">Yes, all our systems — even the entry-level Starter package — include mobile app-based remote viewing. You can watch live feeds and review recordings from anywhere in the world with an internet connection. For our Guardian Pro and above, footage is also synced to encrypted cloud storage, so even if the local DVR/NVR is tampered with, your recordings are safe.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button" onclick="toggleFaq(this)">
+          Do I need to be present during installation?
+          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </button>
+        <div class="faq-a">You or a trusted representative should ideally be present to grant access and to walk through the final setup with our technician. However, for NRI clients or those who can't be present, we accommodate handover-key installations with a detailed video walkthrough sent after completion, followed by a live virtual tour of the system.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button" onclick="toggleFaq(this)">
+          What's covered under the Annual Maintenance Contract (AMC)?
+          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </button>
+        <div class="faq-a">Our AMC covers two preventive maintenance visits per year, remote diagnostics, firmware/software updates, labour charges for any repairs, and priority response (within 4 hours on working days). Hardware replacement due to manufacturing defects is covered under warranty. Damage due to power surges or physical impact can be added with an optional top-up cover.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button" onclick="toggleFaq(this)">
+          Is my CCTV footage legally admissible as evidence?
+          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </button>
+        <div class="faq-a">CCTV footage is widely accepted by Indian courts as evidence in criminal and civil proceedings, provided it is not tampered with, has accurate timestamps, and is from a system installed in compliance with privacy laws (i.e., cameras should not face areas where privacy is expected, such as neighbours' private areas). Our systems use NTP-synced timestamps and we provide export instructions to ensure footage integrity for legal use.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button" onclick="toggleFaq(this)">
+          Can I integrate the security system with my existing smart home setup?
+          <div class="faq-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </button>
+        <div class="faq-a">Yes. Our Guardian Pro and Fort Knox packages support integration with Amazon Alexa, Google Home, and Apple HomeKit. This lets you view cameras, arm/disarm alarms, and lock/unlock access points directly from your smart home dashboard or voice commands. For other platforms, we also support ONVIF-compliant integrations with most third-party home automation systems.</div>
+      </div>
     </div>
-    <div class="sh-stat">
-      <div class="sh-stat-val">98<span>%</span></div>
-      <div class="sh-stat-lbl">Satisfaction Rate</div>
+  </section>
+
+  <div class="cta-banner">
+    <div class="cta-bg-text">SECURE</div>
+    <div>
+      <h2 class="cta-title">Protect What<br><em>Matters Most.</em><br>Start Today.</h2>
     </div>
-    <div class="sh-stat">
-      <div class="sh-stat-val">3<span> Yr</span></div>
-      <div class="sh-stat-lbl">Warranty</div>
+    <div class="cta-form">
+      <div class="cta-form-row">
+        <input type="text" placeholder="Your Full Name">
+        <input type="tel" placeholder="Phone Number">
+      </div>
+      <div class="cta-form-row">
+        <input type="email" placeholder="Email Address">
+        <select>
+          <option>Select Service</option>
+          <option>CCTV Installation</option>
+          <option>Remote Monitoring</option>
+          <option>Smart Access Control</option>
+          <option>Alarm System</option>
+          <option>Video Door Phone</option>
+          <option>Full Security Audit</option>
+        </select>
+      </div>
+      <button class="cta-submit" type="button" onclick="openBooking()">Get Free Site Survey →</button>
     </div>
   </div>
 
-  <!-- ── Services Grid ─────────────────────────────────────── -->
-  <section class="sh-services" id="services">
-    <div class="sh-services-header">
-      <div class="section-eyebrow">What We Offer</div>
-      <h2 class="section-heading">Complete <em>Security Solutions</em></h2>
-      <p class="section-sub">A comprehensive suite of home security services designed for modern residences — from entry-level alarms to full smart-home integration.</p>
-    </div>
-    <div class="sh-grid">
+  <div class="wa-float">
+    <div class="wa-tooltip">Need help? Chat with us</div>
+    <a href="https://wa.me/919876543210?text=Hi%2C%20I%27m%20interested%20in%20HOMEXO%20Security%20services.%20Please%20share%20details." target="_blank" rel="noopener" class="wa-float-btn" aria-label="Chat on WhatsApp">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+  </div>
 
-      <div class="sh-card">
-        <div class="sh-card-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-        </div>
-        <div class="sh-card-title">CCTV Surveillance</div>
-        <p class="sh-card-desc">HD and 4K camera systems covering indoor spaces, perimeters, and entry points. Night-vision and weatherproof cameras for round-the-clock recording.</p>
-        <span class="sh-card-tag">Indoor · Outdoor</span>
-      </div>
-
-      <div class="sh-card">
-        <div class="sh-card-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        </div>
-        <div class="sh-card-title">Smart Door Locks</div>
-        <p class="sh-card-desc">Biometric fingerprint, PIN-code, and app-controlled smart locks. Grant and revoke access remotely and receive real-time entry alerts on your phone.</p>
-        <span class="sh-card-tag">Biometric · App Control</span>
-      </div>
-
-      <div class="sh-card">
-        <div class="sh-card-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-        </div>
-        <div class="sh-card-title">Alarm Systems</div>
-        <p class="sh-card-desc">Motion-sensor triggered alarms with instant SMS and app notifications. Linked to local security response teams for rapid on-ground action.</p>
-        <span class="sh-card-tag">Motion · SMS Alert</span>
-      </div>
-
-      <div class="sh-card">
-        <div class="sh-card-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 0180 2.18 2 2 0 0111 4.07"/>
-          <path d="M12 2a10 10 0 010 20"/><path d="M12 6a6 6 0 010 12"/><circle cx="12" cy="12" r="2"/></svg>
-        </div>
-        <div class="sh-card-title">Video Doorbell</div>
-        <p class="sh-card-desc">See, hear, and speak with visitors from anywhere in the world. Two-way audio and HD video lets you manage deliveries and screen visitors remotely.</p>
-        <span class="sh-card-tag">HD Video · Two-Way Audio</span>
-      </div>
-
-      <div class="sh-card">
-        <div class="sh-card-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="21" height="13" rx="2"/><path d="M8 21h8"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
-        </div>
-        <div class="sh-card-title">Access Control</div>
-        <p class="sh-card-desc">Enterprise-grade access control for gated villas, apartments, and offices. RFID, card-based, and face-recognition systems with audit trails.</p>
-        <span class="sh-card-tag">RFID · Face Recognition</span>
-      </div>
-
-      <div class="sh-card">
-        <div class="sh-card-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="sh-card-title">Security Audit</div>
-        <p class="sh-card-desc">A free on-site security assessment identifies vulnerabilities and recommends the right combination of physical and digital security measures for your home.</p>
-        <span class="sh-card-tag">Free · On-Site</span>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Process Steps ─────────────────────────────────────── -->
-  <section class="sh-process">
-    <div class="sh-process-header">
-      <div class="section-eyebrow">How It Works</div>
-      <h2 class="section-heading">Security in <em>4 Simple Steps</em></h2>
-      <p class="section-sub">From the first consultation to ongoing monitoring — we make protecting your home straightforward and stress-free.</p>
-    </div>
-    <div class="sh-process-track">
-      <div class="sh-step">
-        <div class="sh-step-num">01</div>
-        <div class="sh-step-title">Consultation</div>
-        <p class="sh-step-desc">Our security expert visits your property, assesses vulnerabilities, and recommends a tailored plan.</p>
-      </div>
-      <div class="sh-step">
-        <div class="sh-step-num">02</div>
-        <div class="sh-step-title">Custom Design</div>
-        <p class="sh-step-desc">We design a complete security blueprint — camera placement, alarm zones, and access control layout.</p>
-      </div>
-      <div class="sh-step">
-        <div class="sh-step-num">03</div>
-        <div class="sh-step-title">Installation</div>
-        <p class="sh-step-desc">Certified technicians install and test all equipment with minimal disruption to your daily routine.</p>
-      </div>
-      <div class="sh-step">
-        <div class="sh-step-num">04</div>
-        <div class="sh-step-title">Live Monitoring</div>
-        <p class="sh-step-desc">Ongoing 24/7 monitoring, annual maintenance checks, and a dedicated support line whenever you need us.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Why Choose Us ─────────────────────────────────────── -->
-  <section class="sh-why">
-    <div class="sh-why-inner">
-      <div>
-        <div class="section-eyebrow">Why HOMEXO Security</div>
-        <h2 class="section-heading">Built on <em>Trust & Technology</em></h2>
-        <p class="section-sub">We only work with certified security vendors who meet our quality and reliability benchmarks.</p>
-        <ul class="sh-why-list">
-          <li class="sh-why-item">
-            <div class="sh-why-dot"></div>
-            <div>
-              <div class="sh-why-item-title">RERA & NASSCOM Certified Partners</div>
-              <p class="sh-why-item-desc">All our security vendors are certified by industry bodies and carry full liability insurance for every installation.</p>
-            </div>
-          </li>
-          <li class="sh-why-item">
-            <div class="sh-why-dot"></div>
-            <div>
-              <div class="sh-why-item-title">Manufacturer-Backed Equipment</div>
-              <p class="sh-why-item-desc">We use only authorised products from Hikvision, Bosch, Yale, and Godrej Security — backed by full manufacturer warranties.</p>
-            </div>
-          </li>
-          <li class="sh-why-item">
-            <div class="sh-why-dot"></div>
-            <div>
-              <div class="sh-why-item-title">Single-Window Service</div>
-              <p class="sh-why-item-desc">One point of contact from audit through installation, monitoring, and annual maintenance — no chasing multiple vendors.</p>
-            </div>
-          </li>
-          <li class="sh-why-item">
-            <div class="sh-why-dot"></div>
-            <div>
-              <div class="sh-why-item-title">Transparent Pricing</div>
-              <p class="sh-why-item-desc">Detailed upfront quotes with no hidden costs. Choose from one-time purchase or affordable monthly monitoring plans.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="sh-why-visual">
-        <div class="sh-cert-item">
-          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <div>
-            <div class="sh-cert-name">ISO 9001 Certified</div>
-            <div class="sh-cert-body">Quality management systems for installation</div>
+  <div class="booking-overlay" id="bookingOverlay">
+    <div class="booking-card">
+      <button class="booking-close" type="button" onclick="closeBooking()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div id="bookingForm">
+        <div class="booking-title">Book Your Site Survey</div>
+        <div class="booking-sub">Pick a date and time that works for you. Our security consultant will visit your property at the scheduled slot.</div>
+        <span class="booking-lbl">Select Date</span>
+        <div class="booking-cal-header">
+          <div class="booking-cal-title" id="bookingCalTitle"></div>
+          <div class="booking-cal-nav">
+            <button type="button" onclick="bookingNavMonth(-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button type="button" onclick="bookingNavMonth(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg></button>
           </div>
         </div>
-        <div class="sh-cert-item">
-          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div>
-            <div class="sh-cert-name">PSARA Licensed</div>
-            <div class="sh-cert-body">Private Security Agencies Regulation Act compliant</div>
-          </div>
+        <div class="booking-dates" id="bookingDates"></div>
+        <span class="booking-lbl">Select Time Slot</span>
+        <div class="booking-slots" id="bookingSlots">
+          <div class="booking-slot" onclick="selectSlot(this)">9:00 AM</div>
+          <div class="booking-slot" onclick="selectSlot(this)">10:30 AM</div>
+          <div class="booking-slot" onclick="selectSlot(this)">12:00 PM</div>
+          <div class="booking-slot" onclick="selectSlot(this)">2:00 PM</div>
+          <div class="booking-slot" onclick="selectSlot(this)">3:30 PM</div>
+          <div class="booking-slot" onclick="selectSlot(this)">5:00 PM</div>
         </div>
-        <div class="sh-cert-item">
-          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          <div>
-            <div class="sh-cert-name">24/7 Control Room</div>
-            <div class="sh-cert-body">Centralised monitoring across all installations</div>
-          </div>
-        </div>
-        <div class="sh-cert-item">
-          <div class="sh-cert-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <div>
-            <div class="sh-cert-name">Hikvision Authorised</div>
-            <div class="sh-cert-body">Certified partner for CCTV installations</div>
-          </div>
-        </div>
+        <button class="booking-confirm-btn" id="bookingConfirmBtn" type="button" disabled onclick="confirmBooking()">Confirm Booking</button>
+      </div>
+      <div class="booking-success" id="bookingSuccess">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+        <h3>Survey Booked</h3>
+        <p id="bookingSuccessMsg">Your site survey has been scheduled. Our consultant will visit your property on the selected date and time. You'll receive a confirmation SMS shortly.</p>
       </div>
     </div>
-  </section>
-
-  <!-- ── CTA + Enquiry ─────────────────────────────────────── -->
-  <section class="sh-cta" id="enquire">
-    <div class="sh-cta-inner">
-      <div class="sh-cta-left">
-        <div class="section-eyebrow">Get Started</div>
-        <h2 class="section-heading">Request a <em>Free Security Audit</em></h2>
-        <p class="section-sub">Our security consultant will visit your property within 48 hours for a comprehensive, no-obligation security assessment.</p>
-        <ul class="sh-cta-points">
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Free on-site consultation</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Detailed security proposal within 24 hours</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>No pressure, fully transparent pricing</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>3-year parts & labour warranty included</li>
-        </ul>
-      </div>
-      <div>
-        <form class="sh-form" method="post" action="{% url 'enquiries:create' %}">
-          {% csrf_token %}
-          <input type="hidden" name="service" value="security">
-          <div class="sh-form-title">Book Your Free Audit</div>
-          <p class="sh-form-sub">We'll get back to you within 2 business hours.</p>
-          <input type="text" name="name" placeholder="Your Full Name" required>
-          <input type="tel" name="phone" placeholder="Phone Number" required>
-          <input type="email" name="email" placeholder="Email Address">
-          <input type="text" name="address" placeholder="Property Address / Location">
-          <select name="property_type">
-            <option value="" disabled selected>Property Type</option>
-            <option>Apartment / Flat</option>
-            <option>Independent Villa</option>
-            <option>Gated Community</option>
-            <option>Commercial Space</option>
-          </select>
-          <textarea name="message" placeholder="Any specific security concerns?"></textarea>
-          <button type="submit" class="sh-form-submit">Request Free Audit →</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
+  </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('vis');
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.service-tile,.pkg,.why-card,.testimonial-card,.step').forEach(el => obs.observe(el));
+
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('active');
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.classList.remove('active');
+    q.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    btn.classList.add('active');
+    answer.classList.add('open');
+  }
+}
+
+function selectRopt(btn) {
+  btn.closest('.radio-row').querySelectorAll('.ropt').forEach(r => r.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+document.querySelectorAll('.pkg-cta').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const form = document.querySelector('.hero-form-card');
+    if (form) form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+});
+
+const quizData = [
+  {
+    q: 'What type of property are you securing?',
+    opts: [
+      { text: 'Apartment / Flat', score: 2, letter: 'A' },
+      { text: 'Independent Villa / House', score: 3, letter: 'B' },
+      { text: 'Commercial Office / Shop', score: 4, letter: 'C' },
+      { text: 'Warehouse / Factory / Plot', score: 5, letter: 'D' }
+    ]
+  },
+  {
+    q: 'Do you currently have any security system installed?',
+    opts: [
+      { text: 'Yes — CCTV + alarms in place', score: 1, letter: 'A' },
+      { text: 'Partial — a few cameras only', score: 3, letter: 'B' },
+      { text: 'Just a security guard', score: 4, letter: 'C' },
+      { text: 'No security at all', score: 5, letter: 'D' }
+    ]
+  },
+  {
+    q: 'How many entry and exit points does your property have?',
+    opts: [
+      { text: '1–2 (single main door)', score: 1, letter: 'A' },
+      { text: '3–4 (main gate + back door)', score: 3, letter: 'B' },
+      { text: '5–8 (multiple gates, windows)', score: 4, letter: 'C' },
+      { text: '8+ (complex commercial layout)', score: 5, letter: 'D' }
+    ]
+  },
+  {
+    q: 'Is the property occupied round the clock?',
+    opts: [
+      { text: 'Yes — family lives here 24/7', score: 1, letter: 'A' },
+      { text: 'Mostly — empty a few hours daily', score: 2, letter: 'B' },
+      { text: 'Only during work hours', score: 4, letter: 'C' },
+      { text: 'Often empty (NRI / weekend use)', score: 5, letter: 'D' }
+    ]
+  },
+  {
+    q: 'Have you experienced any security incidents in the past?',
+    opts: [
+      { text: 'Never — area feels safe', score: 1, letter: 'A' },
+      { text: 'Minor issues (package theft, etc.)', score: 3, letter: 'B' },
+      { text: 'Break-in attempt or trespassing', score: 4, letter: 'C' },
+      { text: 'Serious incident (burglary, vandalism)', score: 5, letter: 'D' }
+    ]
+  }
+];
+
+let quizStep = 0;
+let quizAnswers = [];
+
+function renderQuiz() {
+  const prog = document.getElementById('quizProgress');
+  prog.innerHTML = quizData.map((_, i) => {
+    let cls = 'quiz-dot';
+    if (i < quizStep) cls += ' done';
+    else if (i === quizStep) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  document.getElementById('quizQuestion').textContent = quizData[quizStep].q;
+  document.getElementById('quizOptions').innerHTML = quizData[quizStep].opts.map((o, i) => {
+    const sel = quizAnswers[quizStep] === i ? ' selected' : '';
+    return `<div class="quiz-opt${sel}" onclick="selectQuizOpt(${i})"><div class="quiz-opt-letter">${o.letter}</div>${o.text}</div>`;
+  }).join('');
+
+  document.getElementById('quizBack').style.display = quizStep > 0 ? 'inline-block' : 'none';
+  document.getElementById('quizNext').textContent = quizStep === quizData.length - 1 ? 'See Results' : 'Next';
+}
+
+function selectQuizOpt(idx) {
+  quizAnswers[quizStep] = idx;
+  document.querySelectorAll('.quiz-opt').forEach((o, i) => o.classList.toggle('selected', i === idx));
+}
+
+function quizAdvance() {
+  if (quizAnswers[quizStep] === undefined) return;
+  if (quizStep < quizData.length - 1) {
+    quizStep++;
+    renderQuiz();
+  } else {
+    showQuizResult();
+  }
+}
+
+function quizPrev() {
+  if (quizStep > 0) {
+    quizStep--;
+    renderQuiz();
+  }
+}
+
+function showQuizResult() {
+  let total = 0;
+  quizAnswers.forEach((ans, i) => {
+    total += quizData[i].opts[ans].score;
+  });
+
+  const maxScore = 25;
+  const vulnerability = Math.round((total / maxScore) * 100);
+  const securityScore = 100 - vulnerability;
+
+  document.getElementById('quizBody').style.display = 'none';
+  const result = document.getElementById('quizResult');
+  result.classList.add('show');
+
+  const ring = document.getElementById('quizRingFill');
+  const circumference = 2 * Math.PI * 65;
+  const offset = circumference - (circumference * securityScore / 100);
+  ring.className = 'ring-fill';
+  if (securityScore < 40) ring.classList.add('danger');
+  else if (securityScore < 70) ring.classList.add('warning');
+  else ring.classList.add('good');
+  setTimeout(() => {
+    ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  let count = 0;
+  const numEl = document.getElementById('quizScoreNum');
+  const interval = setInterval(() => {
+    count += 2;
+    if (count >= securityScore) {
+      count = securityScore;
+      clearInterval(interval);
+    }
+    numEl.textContent = count;
+  }, 20);
+
+  let title, desc, plan, reason;
+  if (securityScore < 40) {
+    title = 'Your Property Needs Urgent Attention';
+    desc = 'Based on your answers, your property has significant security gaps — multiple vulnerabilities that could be exploited. We strongly recommend a comprehensive security overhaul.';
+    plan = 'Fort Knox — Enterprise';
+    reason = "Your property's risk profile calls for a multi-layered system: 4K cameras, perimeter detection, access control, alarms, and 24/7 monitoring with guard dispatch.";
+  } else if (securityScore < 70) {
+    title = 'Room for Improvement';
+    desc = 'Your property has some protection, but there are clear gaps that leave you vulnerable. A professional setup would significantly improve your security posture.';
+    plan = 'Guardian Pro — Professional';
+    reason = 'You need a solid mid-tier system: 8 IP cameras with AI detection, video door phone, access control, and 6 months of remote monitoring included.';
+  } else {
+    title = 'Looking Good, But Stay Ahead';
+    desc = 'Your property is reasonably secure, but technology-based monitoring and smart features can add another layer of protection for complete peace of mind.';
+    plan = 'Essential Shield — Starter';
+    reason = 'A starter CCTV package with 4 Full-HD cameras and mobile remote viewing would complement your existing security nicely.';
+  }
+
+  document.getElementById('quizResultTitle').textContent = title;
+  document.getElementById('quizResultDesc').textContent = desc;
+  document.getElementById('quizRecPlan').textContent = plan;
+  document.getElementById('quizRecReason').textContent = reason;
+}
+
+function quizReset() {
+  quizStep = 0;
+  quizAnswers = [];
+  document.getElementById('quizBody').style.display = 'block';
+  document.getElementById('quizResult').classList.remove('show');
+  document.getElementById('quizRingFill').style.strokeDashoffset = 408;
+  renderQuiz();
+}
+
+renderQuiz();
+
+let bookingMonth;
+let bookingYear;
+let selectedDate = null;
+let selectedSlot = null;
+
+function initBooking() {
+  const now = new Date();
+  bookingMonth = now.getMonth();
+  bookingYear = now.getFullYear();
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('bookingCalTitle').textContent = months[bookingMonth] + ' ' + bookingYear;
+
+  const grid = document.getElementById('bookingDates');
+  const dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = dows.map(d => `<div class="booking-dow">${d}</div>`).join('');
+
+  const firstDay = new Date(bookingYear, bookingMonth, 1).getDay();
+  const daysInMonth = new Date(bookingYear, bookingMonth + 1, 0).getDate();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  for (let i = 0; i < firstDay; i++) html += '<div class="booking-day disabled"></div>';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(bookingYear, bookingMonth, d);
+    const isPast = date < today;
+    const isSunday = date.getDay() === 0;
+    const disabled = isPast || isSunday;
+    const isSelected = selectedDate && selectedDate.getTime() === date.getTime();
+    html += `<div class="booking-day${disabled ? ' disabled' : ''}${isSelected ? ' selected' : ''}" onclick="selectDate(${bookingYear},${bookingMonth},${d})">${d}</div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function bookingNavMonth(dir) {
+  bookingMonth += dir;
+  if (bookingMonth > 11) {
+    bookingMonth = 0;
+    bookingYear++;
+  }
+  if (bookingMonth < 0) {
+    bookingMonth = 11;
+    bookingYear--;
+  }
+  renderCalendar();
+}
+
+function selectDate(y, m, d) {
+  selectedDate = new Date(y, m, d);
+  renderCalendar();
+  updateBookingBtn();
+}
+
+function selectSlot(el) {
+  document.querySelectorAll('.booking-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSlot = el.textContent;
+  updateBookingBtn();
+}
+
+function updateBookingBtn() {
+  document.getElementById('bookingConfirmBtn').disabled = !(selectedDate && selectedSlot);
+}
+
+function openBooking() {
+  selectedDate = null;
+  selectedSlot = null;
+  document.querySelectorAll('.booking-slot').forEach(s => s.classList.remove('selected'));
+  document.getElementById('bookingForm').style.display = 'block';
+  document.getElementById('bookingSuccess').classList.remove('show');
+  document.getElementById('bookingConfirmBtn').disabled = true;
+  initBooking();
+  const ov = document.getElementById('bookingOverlay');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => {
+    ov.style.opacity = '1';
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBooking() {
+  const ov = document.getElementById('bookingOverlay');
+  ov.style.opacity = '0';
+  setTimeout(() => {
+    ov.style.display = 'none';
+  }, 300);
+  document.body.style.overflow = '';
+}
+
+function confirmBooking() {
+  if (!selectedDate || !selectedSlot) return;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dateStr = selectedDate.getDate() + ' ' + months[selectedDate.getMonth()] + ' ' + selectedDate.getFullYear();
+  document.getElementById('bookingSuccessMsg').textContent =
+    `Your site survey is confirmed for ${dateStr} at ${selectedSlot}. Our security consultant will visit your property. You'll receive a confirmation SMS shortly.`;
+  document.getElementById('bookingForm').style.display = 'none';
+  document.getElementById('bookingSuccess').classList.add('show');
+}
+
+document.getElementById('bookingOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeBooking();
+});
+</script>
 {% endblock %}

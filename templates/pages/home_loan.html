@@ -396,6 +396,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .ropt,.ctab,.btab,.submit-btn,.cta-btn,.ccta{min-height:44px}
   .hl-premium input,.hl-premium select{font-size:16px!important}
 }
+  .fab-wrap:has(.fab-emi) { display: none !important; }
 </style>
 {% endblock %}
 
@@ -632,50 +633,11 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
     </div>
   </div>
   <div class="calc-tabs">
-    <button class="ctab on" onclick="switchCalc(this,'emi')">EMI Calculator</button>
-    <button class="ctab" onclick="switchCalc(this,'elig')">Eligibility Calculator</button>
-  </div>
-
-  <!-- EMI PANEL -->
-  <div class="cpanel on" id="calc-emi">
-    <div class="cleft">
-      <div class="cfield"><label>Loan Amount <span class="cval" id="eAmt">₹ 50 Lakhs</span></label><input type="range" class="cslider" id="slEAmt" min="5" max="500" value="50" oninput="runEmi()"></div>
-      <div class="cfield"><label>Interest Rate p.a. <span class="cval" id="eRate">8.50 %</span></label><input type="range" class="cslider" id="slERate" min="6" max="15" step="0.1" value="8.5" oninput="runEmi()"></div>
-      <div class="cfield"><label>Loan Tenure <span class="cval" id="eTenure">20 Years</span></label><input type="range" class="cslider" id="slETenure" min="1" max="30" value="20" oninput="runEmi()"></div>
-      <div class="calc-bank-row">
-        <div class="calc-bank-label">Banks Offering This Rate</div>
-        <div class="calc-bank-chips">
-          <span class="pchip" style="background:var(--surface2);color:var(--text2);border-color:var(--border)">SBI</span>
-          <span class="pchip" style="background:var(--surface2);color:var(--text2);border-color:var(--border)">HDFC</span>
-          <span class="pchip" style="background:var(--surface2);color:var(--text2);border-color:var(--border)">BOB</span>
-          <span class="pchip" style="background:var(--surface2);color:var(--text2);border-color:var(--border)">PNB</span>
-        </div>
-      </div>
-    </div>
-    <div class="cright">
-      <div class="cright-decor"></div>
-      <div class="cright-decor2"></div>
-      <div class="cr-main">
-        <div class="cr-lbl">Monthly EMI</div>
-        <div class="cr-val"><span>₹ </span><span id="rEmi">43,391</span></div>
-        <div class="cr-note">per month for <span id="rTenure">20</span> years</div>
-      </div>
-      <div class="cr-rows">
-        <div class="cr-row"><span class="cr-row-l">Principal Amount</span><span class="cr-row-v" id="rPrin">₹ 50,00,000</span></div>
-        <div class="cr-row"><span class="cr-row-l">Total Interest</span><span class="cr-row-v" id="rInt">₹ 54,13,840</span></div>
-        <div class="cr-row"><span class="cr-row-l">Total Payable</span><span class="cr-row-v" id="rTotal">₹ 1,04,13,840</span></div>
-      </div>
-      <div class="cr-bar-wrap">
-        <div class="cr-bar-lbl">Principal vs Interest</div>
-        <div class="cr-bar"><div class="cr-bar-fill" id="barEmi" style="width:48%"></div></div>
-        <div class="cr-legend"><span>Principal</span><span style="flex-direction:row-reverse">Interest</span></div>
-      </div>
-      <button class="ccta" onclick="document.querySelector('.elig-card').scrollIntoView({behavior:'smooth'})">Apply for This Loan →</button>
-    </div>
+    <button class="ctab on" onclick="switchCalc(this,'elig')">Eligibility Calculator</button>
   </div>
 
   <!-- ELIGIBILITY PANEL -->
-  <div class="cpanel" id="calc-elig">
+  <div class="cpanel on" id="calc-elig">
     <div class="cleft">
       <div class="cfield"><label>Monthly Income <span class="cval" id="elIncome">₹ 1,00,000</span></label><input type="range" class="cslider" id="slElIncome" min="15000" max="500000" step="5000" value="100000" oninput="runElig()"></div>
       <div class="cfield"><label>Existing EMIs <span class="cval" id="elExist">₹ 0</span></label><input type="range" class="cslider" id="slElExist" min="0" max="100000" step="1000" value="0" oninput="runElig()"></div>

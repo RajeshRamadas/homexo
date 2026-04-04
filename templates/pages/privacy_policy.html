@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy | HOMEXO{% endblock %}
+{% block meta_description %}Read HOMEXO's Privacy Policy to understand how we collect, use, store, and protect your personal data when you use our real estate platform.{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Hero ─────────────────────────────────────────────────── */
+  .tc-hero {
+    background: linear-gradient(135deg, #071929 0%, #0D2B4E 100%);
+    padding: 100px 40px 120px; position: relative; overflow: hidden;
+    text-align: center;
+  }
+  .tc-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.5;
+  }
+  .tc-hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+  .tc-eyebrow {
+    font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--sky);
+    margin-bottom: 16px; display: inline-block;
+  }
+  .tc-hero-title {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 52px);
+    font-weight: 300; color: var(--ivory); line-height: 1.15; margin-bottom: 20px;
+  }
+  .tc-hero-subtitle {
+    font-family: 'Source Sans 3', sans-serif; font-size: 15px;
+    color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto;
+    line-height: 1.7;
+  }
+  .tc-last-updated {
+    display: inline-block; margin-top: 20px;
+    font-size: 12px; color: rgba(255,255,255,.35); letter-spacing: .5px;
+  }
+
+  /* ── Layout ───────────────────────────────────────────────── */
+  .tc-wrapper {
+    max-width: 860px; margin: 0 auto; padding: 72px 40px 96px;
+    display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start;
+  }
+
+  /* ── TOC Sidebar ──────────────────────────────────────────── */
+  .tc-toc {
+    position: sticky; top: 100px;
+    background: var(--off-white); border: 1px solid var(--border);
+    border-left: 3px solid var(--sky); padding: 28px 24px;
+  }
+  .tc-toc h3 {
+    font-family: 'Source Sans 3', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase; color: var(--sky);
+    margin-bottom: 16px;
+  }
+  .tc-toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc-counter; }
+  .tc-toc ol li { counter-increment: toc-counter; margin-bottom: 10px; }
+  .tc-toc ol li a {
+    font-size: 13px; color: var(--warm-grey); text-decoration: none;
+    display: flex; align-items: baseline; gap: 8px; line-height: 1.4;
+    transition: color .2s;
+  }
+  .tc-toc ol li a::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-size: 10px; color: var(--sky); font-weight: 600; flex-shrink: 0;
+  }
+  .tc-toc ol li a:hover { color: var(--charcoal); }
+
+  /* ── Content ──────────────────────────────────────────────── */
+  .tc-section { margin-bottom: 52px; scroll-margin-top: 110px; }
+  .tc-section-num {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sky); font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .tc-section h2 {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500;
+    color: var(--charcoal); margin-bottom: 16px; line-height: 1.25;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .tc-section p {
+    font-size: 15px; color: var(--warm-grey); line-height: 1.85; margin-bottom: 14px;
+  }
+  .tc-section ul, .tc-section ol {
+    padding-left: 20px; margin-bottom: 14px;
+  }
+  .tc-section li {
+    font-size: 15px; color: var(--warm-grey); line-height: 1.8; margin-bottom: 6px;
+  }
+  .tc-highlight {
+    background: rgba(74,144,196,.06); border-left: 3px solid var(--sky);
+    padding: 16px 20px; margin: 20px 0; border-radius: 0 4px 4px 0;
+  }
+  .tc-highlight p { margin-bottom: 0; font-size: 14px; }
+
+  /* ── Contact CTA ──────────────────────────────────────────── */
+  .tc-contact-cta {
+    background: linear-gradient(135deg, #071929 0%, #0D2B4E 100%);
+    padding: 48px 40px; text-align: center; margin-top: 16px;
+  }
+  .tc-contact-cta p {
+    color: rgba(255,255,255,.65); font-size: 15px; margin-bottom: 20px;
+  }
+  .tc-contact-cta a.btn-primary {
+    display: inline-block; padding: 14px 32px;
+    background: var(--sky); color: #fff; font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; transition: background .2s;
+  }
+  .tc-contact-cta a.btn-primary:hover { background: #3a7fbb; }
+
+  @media(max-width: 900px) {
+    .tc-wrapper { grid-template-columns: 1fr; padding: 48px 24px 72px; gap: 32px; }
+    .tc-toc { position: static; }
+    .tc-hero { padding: 72px 24px 88px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════ HERO ══════════════════════════════════════ -->
+<section class="tc-hero">
+  <div class="tc-hero-inner">
+    <span class="tc-eyebrow">Legal</span>
+    <h1 class="tc-hero-title">Privacy Policy</h1>
+    <p class="tc-hero-subtitle">
+      This Privacy Policy describes how HOMEXO Real Estate Private Limited ("HOMEXO", "we", "us", or "our") collects, uses, shares, and protects your personal information when you use our website, mobile application, or any of our services.
+    </p>
+    <span class="tc-last-updated">Last updated: April 4, 2026</span>
+  </div>
+</section>
+
+<!-- ══════════════ MAIN CONTENT ═════════════════════════════ -->
+<div class="tc-wrapper">
+  <!-- Table of Contents -->
+  <aside class="tc-toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#collection">Collection of Information</a></li>
+      <li><a href="#use">Use of Information</a></li>
+      <li><a href="#sharing">Sharing of Information</a></li>
+      <li><a href="#security">Security of Information</a></li>
+      <li><a href="#exclusion">Exclusion</a></li>
+      <li><a href="#retention">Data Retention</a></li>
+      <li><a href="#withdrawal">Right to Withdraw Consent</a></li>
+      <li><a href="#correction">Right to Correction</a></li>
+      <li><a href="#access-outside">Access Outside India</a></li>
+      <li><a href="#changes">Notification of Changes</a></li>
+      <li><a href="#opt">Opt In and Opt Out Procedures</a></li>
+      <li><a href="#permissions">Permissions</a></li>
+      <li><a href="#grievance">Grievance Officer</a></li>
+      <li><a href="#contact">Contact for Privacy Questions</a></li>
+      <li><a href="#cookies">Cookies Policy</a></li>
+    </ol>
+  </aside>
+
+  <!-- Sections -->
+  <main class="tc-content">
+    <div class="tc-section" id="introduction">
+      <div class="tc-section-num">01</div>
+      <h2>Introduction</h2>
+      <p>
+        HOMEXO Real Estate Private Limited ("HOMEXO", "we", "us", or "our") is committed to protecting your privacy. This Privacy Policy sets out our practices regarding the collection, use, and disclosure of your information through our website (<a href="https://homexo.in">homexo.in</a>), mobile application, and related services (collectively, the "Platform").
+      </p>
+      <p>
+        By using our Platform or providing us with your information, you agree to the terms of this Privacy Policy and our Terms of Use. If you do not agree, please do not use our services or provide us with your information.
+      </p>
+    </div>
+
+    <div class="tc-section" id="collection">
+      <div class="tc-section-num">02</div>
+      <h2>Collection of Information</h2>
+      <p>We may collect information from you in various ways, including:</p>
+      <ul>
+        <li>Information you provide at registration (name, address, email, phone, etc.)</li>
+        <li>Property details, photos, and documents you upload</li>
+        <li>Bank details (for transactions, if applicable)</li>
+        <li>Automatically captured data such as IP address, device information, browser type, and usage patterns</li>
+        <li>Information from cookies and similar tracking technologies</li>
+        <li>Information provided through social media or marketing partners</li>
+      </ul>
+      <p>
+        We may also collect information when you join the HOMEXO community on social media or interact with our marketing partners.
+      </p>
+    </div>
+
+    <div class="tc-section" id="use">
+      <div class="tc-section-num">03</div>
+      <h2>Use of Information</h2>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Provide and improve our services</li>
+        <li>Administer your account and verify your identity</li>
+        <li>Analyze usage and diagnose technical issues</li>
+        <li>Send you service-related communications and administrative notices</li>
+        <li>Comply with legal and regulatory obligations</li>
+        <li>Conduct market research, troubleshooting, and fraud prevention</li>
+        <li>Enforce our Terms of Use</li>
+      </ul>
+      <p>
+        We may use your information for other purposes with your consent or as permitted by law.
+      </p>
+    </div>
+
+    <div class="tc-section" id="sharing">
+      <div class="tc-section-num">04</div>
+      <h2>Sharing of Information</h2>
+      <p>We may share your information with:</p>
+      <ul>
+        <li>Service providers and partners who assist in delivering our services</li>
+        <li>Third-party advertisers for targeted advertising (with your consent)</li>
+        <li>Government or law enforcement officials as required by law</li>
+        <li>Other users, if you use referral or sharing features</li>
+        <li>Our affiliates, subsidiaries, or related entities</li>
+        <li>In connection with a merger, acquisition, or sale of assets</li>
+      </ul>
+      <p>
+        We do not sell your personal information to third parties. We may disclose your information to comply with legal obligations, protect our rights, or prevent fraud or abuse.
+      </p>
+    </div>
+
+    <div class="tc-section" id="security">
+      <div class="tc-section-num">05</div>
+      <h2>Security of Information</h2>
+      <p>
+        We use reasonable security measures to protect your information from unauthorized access, loss, misuse, or alteration. Your data may be stored and processed in India or other jurisdictions. By using our Platform, you consent to such transfer and storage.
+      </p>
+      <p>
+        While we strive to protect your information, no method of transmission over the internet or electronic storage is 100% secure. We cannot guarantee absolute security and you use the Platform at your own risk.
+      </p>
+      <p>
+        In the event of a security breach, we will notify you and take appropriate action as required by law.
+      </p>
+    </div>
+
+    <div class="tc-section" id="exclusion">
+      <div class="tc-section-num">06</div>
+      <h2>Exclusion</h2>
+      <p>
+        This Privacy Policy does not apply to information collected by third parties or information you provide in public areas of the Platform. Unsolicited information provided by you will be deemed non-confidential and may be used or disclosed without limitation.
+      </p>
+      <p>
+        We are not responsible for the confidentiality or security of your information shared with partners or third parties outside the scope of our agreements.
+      </p>
+    </div>
+
+    <div class="tc-section" id="retention">
+      <div class="tc-section-num">07</div>
+      <h2>Data Retention</h2>
+      <p>
+        We retain your information only as long as necessary to fulfill the purposes for which it was collected and as permitted by law. If you wish to cancel your account or request deletion of your information, contact us at <a href="mailto:privacy@homexo.in">privacy@homexo.in</a>.
+      </p>
+      <p>
+        Even after account termination, we may retain information as needed to comply with legal obligations, resolve disputes, and enforce our agreements.
+      </p>
+    </div>
+
+    <div class="tc-section" id="withdrawal">
+      <div class="tc-section-num">08</div>
+      <h2>Right to Withdraw Consent</h2>
+      <p>
+        You may withdraw your consent to our collection, use, or disclosure of your information at any time by contacting us. We will stop processing your information except as required by law. We will respond to your request within a reasonable timeframe.
+      </p>
+    </div>
+
+    <div class="tc-section" id="correction">
+      <div class="tc-section-num">09</div>
+      <h2>Right to Correction</h2>
+      <p>
+        You are responsible for maintaining the accuracy of your information. To correct or update your data, contact us at <a href="mailto:privacy@homexo.in">privacy@homexo.in</a>.
+      </p>
+    </div>
+
+    <div class="tc-section" id="access-outside">
+      <div class="tc-section-num">10</div>
+      <h2>Access Outside India</h2>
+      <p>
+        Our Platform is intended for use in India. If you access it from outside India, you do so at your own risk and are responsible for compliance with local laws. This Privacy Policy is governed by Indian law.
+      </p>
+    </div>
+
+    <div class="tc-section" id="changes">
+      <div class="tc-section-num">11</div>
+      <h2>Notification of Changes</h2>
+      <p>
+        We may update this Privacy Policy from time to time. Changes will be effective immediately upon posting. Material changes will be communicated via email or notice on the Platform. Please review this page periodically for updates.
+      </p>
+    </div>
+
+    <div class="tc-section" id="opt">
+      <div class="tc-section-num">12</div>
+      <h2>Opt In and Opt Out Procedures</h2>
+      <p>
+        Upon registration, you may receive communications from us. You may opt out at any time by contacting us at <a href="mailto:privacy@homexo.in">privacy@homexo.in</a> or using the unsubscribe link in our emails.
+      </p>
+    </div>
+
+    <div class="tc-section" id="permissions">
+      <div class="tc-section-num">13</div>
+      <h2>Permissions</h2>
+      <ul>
+        <li><strong>Contacts Permission:</strong> We may request access to your contacts to help you connect with acquaintances using HOMEXO. This is optional and you can deny access.</li>
+        <li><strong>Location Permission:</strong> We may request access to your location to show you relevant properties nearby. You can control this via your device settings.</li>
+        <li><strong>Phone Number:</strong> We collect and store your phone number for communications and authentication.</li>
+        <li><strong>Installed Application Data:</strong> We may collect information about installed applications (for fraud prevention and security, if applicable).</li>
+      </ul>
+    </div>
+
+    <div class="tc-section" id="grievance">
+      <div class="tc-section-num">14</div>
+      <h2>Grievance Officer</h2>
+      <p>
+        In accordance with the Information Technology Act, 2000 and rules made thereunder, the name and contact details of the Grievance Officer are provided below. Any user grievance relating to misuse of information may be addressed to:
+      </p>
+      <ul>
+        <li><strong>Name:</strong> Data Protection Officer</li>
+        <li><strong>Contact Email:</strong> <a href="mailto:privacy@homexo.in">privacy@homexo.in</a></li>
+        <li><strong>Address:</strong> HOMEXO Real Estate Pvt. Ltd., Bengaluru, Karnataka, India</li>
+      </ul>
+      <p>
+        The Grievance Officer will address grievances within one month of receipt.
+      </p>
+    </div>
+
+    <div class="tc-section" id="contact">
+      <div class="tc-section-num">15</div>
+      <h2>Contact for Privacy Questions</h2>
+      <p>
+        For questions about this Privacy Policy or our data practices, contact us at <a href="mailto:privacy@homexo.in">privacy@homexo.in</a> or use the <a href="{% url 'pages:contact' %}">Contact page</a>.
+      </p>
+    </div>
+
+    <div class="tc-section" id="cookies">
+      <div class="tc-section-num">16</div>
+      <h2>Cookies Policy</h2>
+      <p>
+        HOMEXO uses cookies and similar technologies to enhance your experience. Cookies are small text files stored on your device that help us recognize you, remember your preferences, and improve our services.
+      </p>
+      <h3>Types of Cookies We Use</h3>
+      <ul>
+        <li><strong>Technical Cookies:</strong> Necessary for basic site functionality and session management.</li>
+        <li><strong>Analytical Cookies:</strong> Help us analyze usage and improve performance (e.g., Google Analytics).</li>
+        <li><strong>Functionality Cookies:</strong> Remember your preferences and settings.</li>
+        <li><strong>Advertising and Retargeting Cookies:</strong> Used to show you relevant ads based on your browsing history. You can opt out via your browser settings.</li>
+      </ul>
+      <h3>Managing Cookies</h3>
+      <p>
+        You can control cookies through your browser settings. Disabling cookies may affect some features of the Platform. For questions about our Cookie Policy, contact <a href="mailto:privacy@homexo.in">privacy@homexo.in</a>.
+      </p>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════ CTA ══════════════════════════════════ -->
+<div class="tc-contact-cta">
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--ivory);margin-bottom:12px;">
+    Questions About Your Privacy?
+  </h2>
+  <p>Our team is happy to explain how your data is handled before you proceed.</p>
+  <a href="{% url 'pages:contact' %}" class="btn-primary">Contact Us →</a>
+</div>
+
+{% endblock %}
