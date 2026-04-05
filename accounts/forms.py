@@ -15,14 +15,9 @@ class RegisterForm(UserCreationForm):
     last_name  = forms.CharField(max_length=80, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     phone      = forms.CharField(max_length=20, required=True,
                                  widget=forms.TextInput(attrs={'placeholder': 'Phone Number'}))
-    role       = forms.ChoiceField(choices=[
-                     ('buyer',  'I want to Buy / Rent'),
-                     ('seller', 'I want to List / Sell'),
-                 ])
-
     class Meta:
         model  = User
-        fields = ('email', 'first_name', 'last_name', 'phone', 'role', 'password1', 'password2')
+        fields = ('email', 'first_name', 'last_name', 'phone', 'password1', 'password2')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
