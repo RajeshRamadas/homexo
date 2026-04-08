@@ -645,55 +645,65 @@
 
   <!-- Hero Ad Slider -->
   <div class="hero-slider" id="mainHeroSlider">
-    <!-- Slide 1 -->
-    <div class="ad-slide active">
-      <div class="ad-bg">
-        <img src="{% static 'images/hero_luxury.jpg' %}" alt="Sanjeevini Group">
-        <div class="ad-overlay"></div>
-      </div>
-      <div class="ad-content">
-        <div class="ad-text-block">
-          <div class="ad-logos">
-            <h3 style="margin:0;font-family:'Source Sans 3',sans-serif;letter-spacing:1px;font-size:18px;font-weight:600;">SANJEEVINI<br><span style="font-size:9px;font-weight:300;letter-spacing:2px;">GROUP</span></h3>
-            <div style="width:1px;height:35px;background:rgba(255,255,255,0.2);"></div>
-            <div class="ad-rera">RERA No. PRM/KA/RERA/1251/446/PR/140825/007996<br>https://rera.karnataka.gov.in</div>
+    {% if hero_sliders %}
+      {% for slide in hero_sliders %}
+        <div class="ad-slide {% if forloop.first %}active{% endif %}">
+          <div class="ad-bg" {% if not slide.is_dark_background %}style="background:#f5f0e8;"{% endif %}>
+            {% if slide.image %}<img src="{{ slide.image.url }}" alt="{{ slide.developer_name }}">{% endif %}
+            <div class="ad-overlay" {% if not slide.is_dark_background %}style="background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(245,240,232,0.9) 60%, rgba(245,240,232,1) 100%);"{% endif %}></div>
           </div>
-          <h2 class="ad-headline">Own it with <span>10%</span> Enjoy No EMI Till Possession</h2>
-          <div class="ad-subhead"><strong>10%</strong> Now &nbsp;|&nbsp; <strong>90%</strong> Possession</div>
-          <div class="ad-actions">
-            <a href="#" class="ad-explore">Explore Now &nbsp;&rarr;</a>
-            <div class="ad-qr">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=Sanjeevini+Explore" alt="QR Code">
+          <div class="ad-content">
+            <div class="ad-text-block" {% if not slide.is_dark_background %}style="color:var(--charcoal);"{% endif %}>
+              <div class="ad-logos" {% if not slide.is_dark_background %}style="border-bottom-color:rgba(0,0,0,0.1);"{% endif %}>
+                <h3 style="margin:0;font-family:'Source Sans 3',sans-serif;letter-spacing:1px;font-size:18px;font-weight:600;{% if not slide.is_dark_background %}color:var(--navy);{% endif %}">
+                  {{ slide.developer_name|default:"HOMEXO"|upper }}<br>
+                  {% if slide.developer_subtitle %}
+                    <span style="font-size:9px;font-weight:300;letter-spacing:2px;{% if not slide.is_dark_background %}color:rgba(13,43,78,0.7);{% endif %}">{{ slide.developer_subtitle|upper }}</span>
+                  {% endif %}
+                </h3>
+                <div style="width:1px;height:35px;{% if slide.is_dark_background %}background:rgba(255,255,255,0.2);{% else %}background:rgba(0,0,0,0.1);{% endif %}"></div>
+                {% if slide.rera_text %}
+                  <div class="ad-rera" {% if not slide.is_dark_background %}style="color:rgba(0,0,0,0.5);"{% endif %}>{{ slide.rera_text|linebreaksbr }}</div>
+                {% endif %}
+              </div>
+              <h2 class="ad-headline" {% if not slide.is_dark_background %}style="color:var(--charcoal);"{% endif %}>
+                {{ slide.headline_html|safe }}
+              </h2>
+              {% if slide.subheadline %}
+                <div class="ad-subhead" {% if not slide.is_dark_background %}style="color:var(--charcoal);"{% endif %}>{{ slide.subheadline|safe }}</div>
+              {% endif %}
+              
+              <div class="ad-actions">
+                {% if slide.explore_link %}
+                  <a href="{{ slide.explore_link }}" class="ad-explore" {% if not slide.is_dark_background %}style="color:var(--charcoal);border-color:var(--charcoal);"{% endif %}>Explore Now &nbsp;&rarr;</a>
+                {% endif %}
+                {% if slide.qr_data %}
+                  <div class="ad-qr" {% if not slide.is_dark_background %}style="border:1px solid rgba(0,0,0,0.1);"{% endif %}>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ slide.qr_data|urlencode }}" alt="QR Code">
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <!-- Fallback Slide directly to default styling if DB is empty -->
+      <div class="ad-slide active">
+        <div class="ad-bg">
+          <img src="{% static 'images/hero_luxury.jpg' %}" alt="Luxury Real Estate">
+          <div class="ad-overlay"></div>
+        </div>
+        <div class="ad-content">
+          <div class="ad-text-block">
+            <h2 class="ad-headline">Own it with <span>10%</span> Enjoy No EMI Till Possession</h2>
+            <div class="ad-actions">
+              <a href="#properties" class="ad-explore">Explore Now &nbsp;&rarr;</a>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    
-    <!-- Slide 2 -->
-    <div class="ad-slide">
-      <div class="ad-bg" style="background:#f5f0e8;">
-        <img src="{% static 'images/about_luxury.jpg' %}" alt="Casagrand">
-        <div class="ad-overlay" style="background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(245,240,232,0.9) 60%, rgba(245,240,232,1) 100%);"></div>
-      </div>
-      <div class="ad-content">
-        <div class="ad-text-block" style="color:var(--charcoal);">
-          <div class="ad-logos" style="border-bottom-color:rgba(0,0,0,0.1);">
-            <h3 style="margin:0;font-family:'Source Sans 3',sans-serif;letter-spacing:1px;font-size:18px;font-weight:600;color:var(--navy);">CASAGRAND<br><span style="font-size:9px;font-weight:300;letter-spacing:2px;color:rgba(13,43,78,0.7);">ESTANCIA</span></h3>
-            <div style="width:1px;height:35px;background:rgba(0,0,0,0.1);"></div>
-            <div class="ad-rera" style="color:rgba(0,0,0,0.5);">Rera No: PRM/KA/RERA/1251/472/PR/110925/008086<br>www.rera.karnataka.gov.in</div>
-          </div>
-          <h2 class="ad-headline" style="color:var(--charcoal);">DEAR BENGALURU, SORRY, WE TOOK UP SO MUCH SPACE IN <span style="color:var(--sky);">KOGILU</span></h2>
-          <div class="ad-subhead" style="color:var(--charcoal);">Extra-spacious 3 & 4 BHK Homes From ₹ 1.46Cr*</div>
-          <div class="ad-actions">
-            <a href="#" class="ad-explore" style="color:var(--charcoal);border-color:var(--charcoal);">Explore Now &nbsp;&rarr;</a>
-            <div class="ad-qr" style="border:1px solid rgba(0,0,0,0.1);">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=Casagrand" alt="QR Code">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% endif %}
     
     <button class="slider-arrow slider-prev" onclick="moveSearchHero(-1)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>

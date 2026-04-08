@@ -185,6 +185,7 @@ from properties.models import Property, Developer
 from blog.models import Post
 from testimonials.models import Testimonial
 from enquiries.forms import EnquiryForm
+from pages.models import HeroSlider
 
 
 def home(request):
@@ -201,7 +202,23 @@ def home(request):
     total_active = Property.objects.filter(status='active').count()
     total_cities  = Property.objects.filter(status='active').values('city').distinct().count()
 
+    # Hero slider processing
+    hero_sliders = list(HeroSlider.objects.filter(is_active=True))
+    for slide in hero_sliders:
+        if slide.headline_highlight and slide.headline_highlight in slide.headline:
+            # We want to conditionally color the highlight based on dark/light background
+            highlight_color_css = "" if slide.is_dark_background else " style='color:var(--sky);'"
+            slide.headline_html = slide.headline.replace(
+                slide.headline_highlight, 
+                f"<span{highlight_color_css}>{slide.headline_highlight}</span>"
+            )
+        else:
+            slide.headline_html = slide.headline
+
     context = {
+        # Hero slider data from Admin
+        'hero_sliders': hero_sliders,
+
         # Search form tabs
         'listing_types': Property.ListingType.choices,
         'property_types': Property.PropertyType.choices,
