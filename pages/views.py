@@ -229,6 +229,7 @@ def home(request):
         # Popular cities for search chips (top cities by listing count)
         'popular_cities': (
             Property.objects.filter(status='active')
+            .exclude(city__iexact='Bengaluru')
             .values_list('city', flat=True)
             .order_by('city')
             .distinct()[:8]

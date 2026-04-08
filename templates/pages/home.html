@@ -111,12 +111,19 @@
   /* Floating card */
   .search-card {
     max-width:1080px;margin:0 auto;
-    background:rgba(255,255,255,.04);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.10);
-    border-radius:4px;
-    box-shadow:0 32px 80px rgba(0,0,0,.35),0 0 0 1px rgba(74,144,196,.08);
+    background:linear-gradient(145deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 100%);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:24px;
+    box-shadow:0 32px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.2);
     overflow:hidden;
+    transition:transform .4s cubic-bezier(.23,1,.32,1), box-shadow .4s ease, border-color .4s;
+  }
+  .search-card:hover {
+    transform:translateY(-6px);
+    box-shadow:0 42px 100px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.3);
+    border-color:rgba(255,255,255,.25);
   }
 
   /* Tab row */
@@ -530,7 +537,7 @@
     .search-heading{margin-bottom:24px;}
     .search-heading-eyebrow{font-size:9px;letter-spacing:4px;}
     .search-heading-title{font-size:clamp(20px,6vw,28px);}
-    .search-card{border-radius:4px;}
+    .search-card{border-radius:16px;}
     .search-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;padding:0 2px;}
     .search-tabs::-webkit-scrollbar{display:none;}
     .search-tab{flex-shrink:0;padding:14px 18px;font-size:10px;letter-spacing:1.5px;}
@@ -604,7 +611,7 @@
 <div class="search-section">
 
   <!-- Heading -->
-  <div class="search-heading">
+  <div class="search-heading" style="visibility: hidden;">
     <div class="search-heading-eyebrow">Discover Your Next Home</div>
     <h2 class="search-heading-title">Find the right <em>property</em> in minutes</h2>
   </div>
