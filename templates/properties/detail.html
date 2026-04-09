@@ -1258,6 +1258,9 @@
           </div>
           <div class="pd-price-block">
             <div class="pd-price">{{ property.display_price }}</div>
+            {% if property.emi_display %}
+            <div class="pd-price-per" style="margin-top:4px;">EMI starts at {{ property.emi_display }}/mo</div>
+            {% endif %}
             {% if property.area_sqft %}
             <div class="pd-price-per">{{ property.get_property_type_display }} · {{ property.locality }}</div>
             {% endif %}
@@ -2171,6 +2174,7 @@
       </div>
 
       {# EMI CALCULATOR #}
+      {% if property.listing_type != 'rent' and property.listing_type != 'commercial' %}
       <div class="pd-card">
         <div class="pd-emi">
           <div class="pd-emi-title">EMI Calculator</div>
@@ -2179,8 +2183,8 @@
             <input type="range" class="pd-emi-slider" id="pdLoan" min="100" max="2000" value="750" oninput="pdCalcEMI()">
           </div>
           <div class="pd-emi-field">
-            <div class="pd-emi-lbl">Interest Rate <span id="pdRateVal">9%</span></div>
-            <input type="range" class="pd-emi-slider" id="pdRate" min="6" max="15" step="0.1" value="9" oninput="pdCalcEMI()">
+            <div class="pd-emi-lbl">Interest Rate <span id="pdRateVal">7.28%</span></div>
+            <input type="range" class="pd-emi-slider" id="pdRate" min="6" max="15" step="0.01" value="7.28" oninput="pdCalcEMI()">
           </div>
           <div class="pd-emi-field">
             <div class="pd-emi-lbl">Tenure <span id="pdTenureVal">20 Years</span></div>
@@ -2198,14 +2202,54 @@
           </a>
         </div>
       </div>
+      {% endif %}
 
       {# REPORT LINK #}
-      <div class="pd-report"><a href="mailto:support@homexo.in?subject=Report: {{ property.title|urlencode }}">🚩 Report incorrect information</a></div>
+      <div class="pd-report"><button type="button" onclick="pdOpenReport()" style="background:none;border:none;cursor:pointer;color:var(--warm-grey);font-size:12px;padding:0;font-family:inherit;">🚩 Report incorrect information</button></div>
 
     </div>
   </div>
 
 </div>{# end pd-layout #}
+
+{# ── REPORT MODAL ── #}
+<div id="pdReportModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.5);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#fff;max-width:440px;width:100%;padding:28px;box-sizing:border-box;position:relative;">
+    <button onclick="pdCloseReport()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--warm-grey);">&#x2715;</button>
+    <div style="font-size:16px;font-weight:600;color:var(--charcoal);margin-bottom:18px;">Report Incorrect Information</div>
+    <form id="pdReportForm" onsubmit="pdSubmitReport(event)">
+      {% csrf_token %}
+      <div style="margin-bottom:14px;">
+        <label style="font-size:11px;font-weight:600;color:var(--warm-grey);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Reason *</label>
+        <select name="reason" required style="width:100%;border:1px solid var(--border);padding:9px 12px;font-size:13px;font-family:inherit;box-sizing:border-box;background:#fff;">
+          <option value="">— Select reason —</option>
+          <option value="wrong_price">Wrong Price</option>
+          <option value="wrong_location">Wrong Location</option>
+          <option value="fake_listing">Fake / Duplicate Listing</option>
+          <option value="wrong_details">Incorrect Details</option>
+          <option value="already_sold">Already Sold / Rented</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:11px;font-weight:600;color:var(--warm-grey);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Description</label>
+        <textarea name="description" maxlength="1000" rows="3" style="width:100%;border:1px solid var(--border);padding:9px 12px;font-size:13px;font-family:inherit;box-sizing:border-box;resize:vertical;" placeholder="Describe the issue…"></textarea>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:14px;">
+        <div style="flex:1;">
+          <label style="font-size:11px;font-weight:600;color:var(--warm-grey);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Your Name</label>
+          <input type="text" name="name" maxlength="100" style="width:100%;border:1px solid var(--border);padding:9px 12px;font-size:13px;font-family:inherit;box-sizing:border-box;" placeholder="Optional">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:11px;font-weight:600;color:var(--warm-grey);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Email</label>
+          <input type="email" name="email" maxlength="254" style="width:100%;border:1px solid var(--border);padding:9px 12px;font-size:13px;font-family:inherit;box-sizing:border-box;" placeholder="Optional">
+        </div>
+      </div>
+      <div id="pdReportMsg" style="display:none;font-size:13px;margin-bottom:12px;"></div>
+      <button type="submit" id="pdReportSubmit" style="width:100%;background:var(--navy);color:#fff;border:none;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Submit Report</button>
+    </form>
+  </div>
+</div>
 
 {# SHARE TOAST #}
 <div id="pdShareToast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--charcoal);color:#fff;padding:10px 22px;font-size:13px;font-weight:500;border-radius:2px;opacity:0;pointer-events:none;transition:all .35s;z-index:9999;white-space:nowrap;">🔗 Link copied to clipboard</div>
@@ -2441,6 +2485,55 @@ function pdFmtAmt(v) {
   if (v >= 10000000) return '<span class="rupee">₹</span>'+(v/10000000).toFixed(2)+' Cr';
   if (v >= 100000)   return '<span class="rupee">₹</span>'+(v/100000).toFixed(2)+' L';
   return '<span class="rupee">₹</span>'+Math.round(v).toLocaleString('en-IN');
+}
+
+// ── Report modal ──
+function pdOpenReport() {
+  const m = document.getElementById('pdReportModal');
+  m.style.display = 'flex';
+}
+function pdCloseReport() {
+  document.getElementById('pdReportModal').style.display = 'none';
+}
+document.getElementById('pdReportModal').addEventListener('click', function(e) {
+  if (e.target === this) pdCloseReport();
+});
+function pdSubmitReport(e) {
+  e.preventDefault();
+  const form = document.getElementById('pdReportForm');
+  const btn  = document.getElementById('pdReportSubmit');
+  const msg  = document.getElementById('pdReportMsg');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  const data = new FormData(form);
+  fetch('{% url "properties:report" property.slug %}', {
+    method: 'POST',
+    body: data,
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.ok) {
+      msg.style.display = 'block';
+      msg.style.color = '#1a7f4a';
+      msg.textContent = 'Thank you! Your report has been submitted.';
+      form.reset();
+      setTimeout(pdCloseReport, 2000);
+    } else {
+      msg.style.display = 'block';
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Something went wrong. Please try again.';
+      btn.disabled = false;
+      btn.textContent = 'Submit Report';
+    }
+  })
+  .catch(() => {
+    msg.style.display = 'block';
+    msg.style.color = '#c0392b';
+    msg.textContent = 'Network error. Please try again.';
+    btn.disabled = false;
+    btn.textContent = 'Submit Report';
+  });
 }
 
 // ── Map Street / Satellite toggle ──

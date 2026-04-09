@@ -246,6 +246,25 @@ class Property(models.Model):
             return f'₹{p / 1_00_000:.2f} L'
         return f'₹{p:,.0f}'
 
+    @property
+    def emi_display(self):
+        """EMI for 20-year loan at 7.28% p.a. (monthly reducing). Only for buy/new_project/commercial."""
+        if self.price_on_req or not self.price:
+            return None
+        if self.listing_type == self.ListingType.RENT:
+            return None
+        p = float(self.price)
+        r = 7.28 / 100 / 12          # monthly rate
+        n = 240                       # 20 years × 12
+        emi = p * r * (1 + r) ** n / ((1 + r) ** n - 1)
+        if emi >= 1_00_00_000:
+            return f'₹{emi / 1_00_00_000:.2f} Cr'
+        elif emi >= 1_00_000:
+            return f'₹{emi / 1_00_000:.2f} L'
+        elif emi >= 1_000:
+            return f'₹{emi / 1_000:.2f} K'
+        return f'₹{emi:,.0f}'
+
     def increment_views(self):
         Property.objects.filter(pk=self.pk).update(views_count=models.F('views_count') + 1)
 
@@ -349,3 +368,31 @@ class ConnectivityItem(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.distance}) — {self.property.title}'
+
+
+class PropertyReport(models.Model):
+    """User-submitted report for incorrect / misleading property information."""
+
+    class Reason(models.TextChoices):
+        WRONG_PRICE     = 'wrong_price',     'Wrong Price'
+        WRONG_LOCATION  = 'wrong_location',  'Wrong Location'
+        FAKE_LISTING    = 'fake_listing',     'Fake / Duplicate Listing'
+        WRONG_DETAILS   = 'wrong_details',   'Incorrect Details'
+        ALREADY_SOLD    = 'already_sold',    'Already Sold / Rented'
+        OTHER           = 'other',           'Other'
+
+    property    = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='reports')
+    reason      = models.CharField(max_length=30, choices=Reason.choices, default=Reason.OTHER)
+    description = models.TextField(blank=True, max_length=1000)
+    name        = models.CharField(max_length=100, blank=True)
+    email       = models.EmailField(blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    is_reviewed = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name        = 'Property Report'
+        verbose_name_plural = 'Property Reports'
+        ordering            = ['-created_at']
+
+    def __str__(self):
+        return f'Report: {self.get_reason_display()} — {self.property.title}'

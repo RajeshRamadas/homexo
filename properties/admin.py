@@ -6,7 +6,7 @@ Rich admin panel for Property management.
 from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html
-from .models import Developer, Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem
+from .models import Developer, Property, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyTag, ConnectivityItem, PropertyReport
 
 
 @admin.register(Developer)
@@ -137,3 +137,15 @@ class PropertyAdmin(admin.ModelAdmin):
 class PropertyTagAdmin(admin.ModelAdmin):
     list_display        = ('name', 'slug')
     prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(PropertyReport)
+class PropertyReportAdmin(admin.ModelAdmin):
+    list_display        = ('property', 'reason', 'name', 'email', 'created_at', 'is_reviewed')
+    list_display_links  = ('property',)
+    list_filter         = ('reason', 'is_reviewed')
+    list_editable       = ('is_reviewed',)
+    search_fields       = ('property__title', 'name', 'email', 'description')
+    readonly_fields     = ('property', 'reason', 'description', 'name', 'email', 'created_at')
+    date_hierarchy      = 'created_at'
+    ordering            = ('-created_at',)

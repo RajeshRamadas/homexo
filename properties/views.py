@@ -13,7 +13,7 @@ import datetime
 from django.forms import inlineformset_factory
 from django.views.generic import DetailView
 
-from .models import Property, PropertyTag, PropertyImage, PropertyFloorPlan, PropertyFeature
+from .models import Property, PropertyTag, PropertyImage, PropertyFloorPlan, PropertyFeature, PropertyReport
 from .forms import PropertySearchForm, PropertyCreateForm
 try:
     from properties.models import Developer
@@ -331,3 +331,29 @@ def featured_properties(request):
         'bedrooms', 'bathrooms', 'area_sqft',
     )[:6]
     return JsonResponse({'properties': list(props)})
+
+
+def report_property(request, slug):
+    """Handle report-incorrect-info form submission (POST only)."""
+    from django.http import JsonResponse
+    prop = get_object_or_404(Property, slug=slug)
+    if request.method != 'POST':
+        return JsonResponse({'ok': False, 'error': 'Method not allowed'}, status=405)
+
+    reason = request.POST.get('reason', '').strip()
+    description = request.POST.get('description', '').strip()[:1000]
+    name  = request.POST.get('name', '').strip()[:100]
+    email = request.POST.get('email', '').strip()[:254]
+
+    valid_reasons = [r.value for r in PropertyReport.Reason]
+    if reason not in valid_reasons:
+        reason = PropertyReport.Reason.OTHER
+
+    PropertyReport.objects.create(
+        property=prop,
+        reason=reason,
+        description=description,
+        name=name,
+        email=email,
+    )
+    return JsonResponse({'ok': True})
