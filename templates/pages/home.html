@@ -653,6 +653,9 @@
     {% if hero_sliders %}
       {% for slide in hero_sliders %}
         <div class="ad-slide {% if forloop.first %}active{% endif %}">
+          {% if slide.explore_link %}
+            <a href="{{ slide.explore_link }}" style="position:absolute; inset:0; z-index:3; cursor:pointer;" title="Explore {{ slide.developer_name|default:'Property' }}"></a>
+          {% endif %}
           <div class="ad-bg" {% if not slide.is_dark_background %}style="background:#f5f0e8;"{% endif %}>
             {% if slide.image %}
               {% if slide.mobile_image %}
@@ -664,8 +667,11 @@
             {% endif %}
             <div class="ad-overlay" {% if not slide.is_dark_background %}style="background: rgba(245,240,232,0.3);"{% endif %}></div>
           </div>
+          {% if slide.headline_html or slide.developer_name or slide.explore_link or slide.subheadline %}
           <div class="ad-content">
             <div class="ad-text-block" {% if not slide.is_dark_background %}style="color:var(--charcoal); text-shadow:0 4px 16px rgba(255,255,255,0.7);"{% endif %}>
+              
+              {% if slide.developer_name or slide.rera_text %}
               <div class="ad-logos" {% if not slide.is_dark_background %}style="border-bottom-color:rgba(0,0,0,0.1);"{% endif %}>
                 <h3 style="margin:0;font-family:'Source Sans 3',sans-serif;letter-spacing:1px;font-size:18px;font-weight:600;{% if not slide.is_dark_background %}color:var(--navy);{% endif %}">
                   {{ slide.developer_name|default:"HOMEXO"|upper }}<br>
@@ -678,13 +684,19 @@
                   <div class="ad-rera" {% if not slide.is_dark_background %}style="color:rgba(0,0,0,0.5);"{% endif %}>{{ slide.rera_text|linebreaksbr }}</div>
                 {% endif %}
               </div>
+              {% endif %}
+              
+              {% if slide.headline_html %}
               <h2 class="ad-headline" {% if not slide.is_dark_background %}style="color:var(--charcoal);"{% endif %}>
                 {{ slide.headline_html|safe }}
               </h2>
+              {% endif %}
+              
               {% if slide.subheadline %}
                 <div class="ad-subhead" {% if not slide.is_dark_background %}style="color:var(--charcoal);"{% endif %}>{{ slide.subheadline|safe }}</div>
               {% endif %}
               
+              {% if slide.explore_link or slide.qr_data %}
               <div class="ad-actions">
                 {% if slide.explore_link %}
                   <a href="{{ slide.explore_link }}" class="ad-explore" {% if not slide.is_dark_background %}style="color:var(--charcoal);border-color:var(--charcoal);"{% endif %}>Explore Now &nbsp;&rarr;</a>
@@ -695,13 +707,16 @@
                   </div>
                 {% endif %}
               </div>
+              {% endif %}
             </div>
           </div>
+          {% endif %}
         </div>
       {% endfor %}
     {% else %}
       <!-- Fallback Slide directly to default styling if DB is empty -->
       <div class="ad-slide active">
+        <a href="#properties" style="position:absolute; inset:0; z-index:3; cursor:pointer;" title="Explore Premium Real Estate"></a>
         <div class="ad-bg">
           <img src="{% static 'images/hero_luxury.jpg' %}" alt="Luxury Real Estate">
           <div class="ad-overlay"></div>
@@ -717,12 +732,14 @@
       </div>
     {% endif %}
     
+    {% if hero_sliders|length > 1 %}
     <button class="slider-arrow slider-prev" onclick="moveSearchHero(-1)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <button class="slider-arrow slider-next" onclick="moveSearchHero(1)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
+    {% endif %}
   </div>
   
   <script>
@@ -874,37 +891,37 @@
 <div class="services-strip">
   <a href="#" onclick="openCityModal(event)" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/home.png' %}" alt="Builder Projects" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/home.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Builder Projects</span>
   </a>
   <a href="{% url 'pages:legal' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/registation.png' %}" alt="Sale Agreement" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/registation.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Sale Agreement</span>
   </a>
   <a href="{% url 'pages:home_loan' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/loan.png' %}" alt="Home Loan" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/loan.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Home Loan</span>
   </a>
   <a href="{% url 'pages:legal' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/legal.png' %}" alt="Property Legal Services" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/legal.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Property Legal Services</span>
   </a>
   <a href="{% url 'pages:security' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/survalence.png' %}" alt="Security &amp; Surveillance" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/survalence.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">Security &amp; Surveillance</span>
   </a>
   <a href="{% url 'pages:nri_service' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/nri.png' %}" alt="NRI Services" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/nri.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">NRI Services</span>
   </a>

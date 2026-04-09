@@ -4,11 +4,12 @@ from django.db import models
 # This file is intentionally kept minimal; add page-specific models here if needed.
 
 class HeroSlider(models.Model):
-    developer_name = models.CharField(max_length=100, help_text="e.g. SANJEEVINI")
+    internal_name = models.CharField(max_length=100, default="Untitled Slide", help_text="Admin-only name to identify this slide. Not visible to users.")
+    developer_name = models.CharField(max_length=100, blank=True, help_text="e.g. SANJEEVINI")
     developer_subtitle = models.CharField(max_length=100, blank=True, help_text="e.g. GROUP or ESTANCIA")
     rera_text = models.CharField(max_length=255, blank=True)
     
-    headline = models.CharField(max_length=200, help_text="Main headline text")
+    headline = models.CharField(max_length=200, blank=True, help_text="Main headline text")
     headline_highlight = models.CharField(max_length=100, blank=True, help_text="Specific word in headline to highlight")
     subheadline = models.CharField(max_length=200, blank=True)
     
@@ -25,4 +26,4 @@ class HeroSlider(models.Model):
         ordering = ['order', '-id']
 
     def __str__(self):
-        return f"Hero Slide: {self.developer_name}"
+        return f"{self.internal_name}"
