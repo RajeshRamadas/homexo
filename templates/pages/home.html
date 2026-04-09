@@ -696,9 +696,9 @@
                 <div class="ad-subhead" {% if not slide.is_dark_background %}style="color:var(--charcoal);"{% endif %}>{{ slide.subheadline|safe }}</div>
               {% endif %}
               
-              {% if slide.explore_link or slide.qr_data %}
+              {% if slide.explore_link and slide.show_explore_button or slide.qr_data %}
               <div class="ad-actions">
-                {% if slide.explore_link %}
+                {% if slide.explore_link and slide.show_explore_button %}
                   <a href="{{ slide.explore_link }}" class="ad-explore" {% if not slide.is_dark_background %}style="color:var(--charcoal);border-color:var(--charcoal);"{% endif %}>Explore Now &nbsp;&rarr;</a>
                 {% endif %}
                 {% if slide.qr_data %}

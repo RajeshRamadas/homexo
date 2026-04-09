@@ -16,6 +16,7 @@ class HeroSlider(models.Model):
     image = models.ImageField(upload_to='hero_sliders/', help_text="Background hero image (Desktop).")
     mobile_image = models.ImageField(upload_to='hero_sliders/mobile/', blank=True, null=True, help_text="Optional background image optimized specifically for mobile (portrait) screens.")
     explore_link = models.URLField(max_length=500, blank=True, help_text="URL for the Explore Now button")
+    show_explore_button = models.BooleanField(default=True, help_text="Display the visible 'Explore Now' button on this slide.")
     qr_data = models.CharField(max_length=255, blank=True, help_text="Data/URL to encode in the QR code")
     
     is_dark_background = models.BooleanField(default=True, help_text="Check this if the background is dark (uses white text)")
