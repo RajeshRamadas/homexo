@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% block title %}Property Approvals — HOMEXO{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block content %}
+<style>
+  .apr-wrap     { max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px; }
+  .apr-header   { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+  .apr-title    { font-size: 26px; font-weight: 600; color: var(--navy); }
+  .apr-tabs     { display: flex; gap: 0; border: 1px solid var(--border); background: var(--white); flex-wrap: wrap; margin-bottom: 20px; }
+  .apr-tab      { padding: 9px 16px; font-size: 13px; font-weight: 500; color: var(--warm-grey); text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; }
+  .apr-tab:last-child { border-right: none; }
+  .apr-tab.active { background: var(--navy); color: var(--white); }
+  .apr-badge    { display: inline-block; font-size: 10px; border-radius: 10px; padding: 1px 7px; margin-left: 5px; }
+  .apr-tab.active .apr-badge { background: rgba(255,255,255,.25); color: #fff; }
+  .apr-tab:not(.active) .apr-badge { background: var(--ivory); color: var(--charcoal); }
+  .apr-stats    { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+  .apr-stat     { flex: 1; min-width: 100px; background: var(--white); border: 1px solid var(--border); padding: 14px 18px; }
+  .apr-stat-val { font-size: 26px; font-weight: 500; color: var(--navy); line-height: 1; }
+  .apr-stat-lbl { font-size: 10px; color: var(--warm-grey); margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
+  .apr-stat.warn  .apr-stat-val { color: #92400e; }
+  .apr-stat.alert .apr-stat-val { color: #991b1b; }
+  .apr-stat.fix   .apr-stat-val { color: #1e40af; }
+  .apr-table    { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--border); }
+  .apr-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .8px; font-weight: 600; color: var(--warm-grey); padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--ivory); text-align: left; }
+  .apr-table td { padding: 13px 14px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--charcoal); vertical-align: middle; }
+  .apr-table tr:last-child td { border-bottom: none; }
+  .apr-table tr:hover td { background: #fafafa; }
+  .apr-thumb    { width: 64px; height: 48px; object-fit: cover; border-radius: 2px; }
+  .apr-thumb-ph { width: 64px; height: 48px; background: var(--ivory); display: flex; align-items: center; justify-content: center; font-size: 18px; border-radius: 2px; }
+  .apr-prop-name { font-weight: 600; color: var(--navy); }
+  .apr-prop-sub  { font-size: 11px; color: var(--warm-grey); margin-top: 2px; }
+  .s-badge          { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; }
+  .s-badge.pending  { background: #fef3c7; color: #92400e; }
+  .s-badge.active   { background: #d1fae5; color: #065f46; }
+  .s-badge.inactive { background: #f3f4f6; color: #6b7280; }
+  .s-badge.draft    { background: #e0e7ff; color: #3730a3; }
+  .s-badge.rejected { background: #fee2e2; color: #991b1b; }
+  .s-badge.needs_fix{ background: #fef9c3; color: #854d0e; }
+  .apr-actions  { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .apr-btn      { padding: 5px 12px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; font-family: inherit; border-radius: 2px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .apr-btn.approve { background: var(--navy); color: #fff; }
+  .apr-btn.approve:hover { background: var(--sky); }
+  .apr-btn.reject  { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  .apr-btn.reject:hover { background: #fecaca; }
+  .apr-btn.fix     { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+  .apr-btn.fix:hover { background: #fde68a; }
+  .apr-btn.del     { background: #fff; color: #991b1b; border: 1px solid #fca5a5; }
+  .apr-btn.del:hover { background: #fee2e2; }
+  .apr-btn.view    { background: var(--ivory); color: var(--charcoal); border: 1px solid var(--border); }
+  .apr-btn.view:hover { background: var(--border); }
+  .apr-countdown { font-size: 11px; color: #991b1b; margin-top: 3px; }
+  .apr-modal    { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.5); align-items: center; justify-content: center; padding: 16px; }
+  .apr-modal.open { display: flex; }
+  .apr-modal-box { background: #fff; max-width: 420px; width: 100%; padding: 28px; box-sizing: border-box; position: relative; }
+  .apr-modal-title { font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 18px; }
+  .apr-modal label { font-size: 11px; font-weight: 600; color: var(--warm-grey); text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 5px; }
+  .apr-modal input, .apr-modal textarea { width: 100%; border: 1px solid var(--border); padding: 9px 12px; font-size: 13px; font-family: inherit; box-sizing: border-box; margin-bottom: 14px; }
+  .apr-modal textarea { resize: vertical; }
+  .apr-modal-err { color: #991b1b; font-size: 12px; margin-bottom: 10px; display: none; }
+  .apr-modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--warm-grey); }
+  .apr-submit-btn { width: 100%; padding: 11px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; font-family: inherit; color: #fff; }
+  .apr-submit-btn.red  { background: #dc2626; }
+  .apr-submit-btn.red:hover { background: #b91c1c; }
+  .apr-submit-btn.blue { background: var(--navy); }
+  .apr-submit-btn.blue:hover { background: var(--sky); }
+  .apr-empty    { text-align: center; padding: 60px 20px; color: var(--warm-grey); }
+  .apr-pages    { display: flex; gap: 6px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  .apr-page-btn { padding: 7px 14px; font-size: 13px; border: 1px solid var(--border); background: var(--white); color: var(--charcoal); text-decoration: none; }
+  .apr-page-btn.cur { background: var(--navy); color: #fff; border-color: var(--navy); }
+  #aprToast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(20px); background:#1f2937; color:#fff; padding:10px 22px; font-size:13px; font-weight:500; border-radius:2px; opacity:0; pointer-events:none; transition:all .3s; z-index:99999; white-space:nowrap; }
+</style>
+
+{% if messages %}
+<div style="max-width:1200px;margin:16px auto 0;padding:0 20px;">
+  {% for msg in messages %}
+  <div style="padding:12px 18px;margin-bottom:8px;font-size:13px;border-left:4px solid {% if msg.tags == 'success' %}var(--navy){% elif msg.tags == 'warning' %}#92400e{% else %}#991b1b{% endif %};background:{% if msg.tags == 'success' %}#f0f4ff{% elif msg.tags == 'warning' %}#fef9c3{% else %}#fee2e2{% endif %};">{{ msg }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div id="aprToast"></div>
+<div class="apr-wrap">
+  <div class="apr-header">
+    <div class="apr-title">Property Approvals</div>
+    <div style="font-size:12px;color:var(--warm-grey);">{{ request.user.email }}</div>
+  </div>
+
+  <div class="apr-stats">
+    <div class="apr-stat warn"><div class="apr-stat-val">{{ counts.pending }}</div><div class="apr-stat-lbl">Pending</div></div>
+    <div class="apr-stat fix"><div class="apr-stat-val">{{ counts.needs_fix }}</div><div class="apr-stat-lbl">Needs Fix</div></div>
+    <div class="apr-stat"><div class="apr-stat-val">{{ counts.active }}</div><div class="apr-stat-lbl">Live</div></div>
+    <div class="apr-stat alert"><div class="apr-stat-val">{{ counts.rejected }}</div><div class="apr-stat-lbl">Rejected</div></div>
+    <div class="apr-stat"><div class="apr-stat-val">{{ counts.draft }}</div><div class="apr-stat-lbl">Draft</div></div>
+    <div class="apr-stat"><div class="apr-stat-val">{{ counts.inactive }}</div><div class="apr-stat-lbl">Inactive</div></div>
+  </div>
+
+  <div class="apr-tabs">
+    <a href="?status=pending"   class="apr-tab {% if status_filter == 'pending' %}active{% endif %}">Pending<span class="apr-badge">{{ counts.pending }}</span></a>
+    <a href="?status=needs_fix" class="apr-tab {% if status_filter == 'needs_fix' %}active{% endif %}">Needs Fix<span class="apr-badge">{{ counts.needs_fix }}</span></a>
+    <a href="?status=active"    class="apr-tab {% if status_filter == 'active' %}active{% endif %}">Active<span class="apr-badge">{{ counts.active }}</span></a>
+    <a href="?status=rejected"  class="apr-tab {% if status_filter == 'rejected' %}active{% endif %}">Rejected<span class="apr-badge">{{ counts.rejected }}</span></a>
+    <a href="?status=inactive"  class="apr-tab {% if status_filter == 'inactive' %}active{% endif %}">Inactive<span class="apr-badge">{{ counts.inactive }}</span></a>
+    <a href="?status=draft"     class="apr-tab {% if status_filter == 'draft' %}active{% endif %}">Draft<span class="apr-badge">{{ counts.draft }}</span></a>
+  </div>
+
+  {% if properties %}
+  <table class="apr-table">
+    <thead>
+      <tr>
+        <th style="width:70px;"></th>
+        <th>Property</th>
+        <th>Type / Price</th>
+        <th>Submitted By</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th style="min-width:200px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prop in properties %}
+      <tr>
+        <td>
+          {% with prop.images.first as img %}
+          {% if img %}<img src="{{ img.image.url }}" class="apr-thumb" alt="">
+          {% else %}<div class="apr-thumb-ph">🏠</div>{% endif %}
+          {% endwith %}
+        </td>
+        <td>
+          <div class="apr-prop-name">{{ prop.title }}</div>
+          <div class="apr-prop-sub">{{ prop.locality }}, {{ prop.city }}</div>
+          {% if prop.developer %}<div class="apr-prop-sub">by {{ prop.developer.name }}</div>{% endif %}
+          {% if prop.rejection_reason and status_filter == 'rejected' %}
+          <div style="font-size:11px;color:#991b1b;margin-top:4px;"><strong>Reason:</strong> {{ prop.rejection_reason|truncatechars:80 }}</div>
+          {% endif %}
+          {% if prop.fix_notes and status_filter == 'needs_fix' %}
+          <div style="font-size:11px;color:#854d0e;margin-top:4px;"><strong>Notes:</strong> {{ prop.fix_notes|truncatechars:80 }}</div>
+          {% endif %}
+        </td>
+        <td>
+          <div style="font-size:12px;">{{ prop.get_listing_type_display }}</div>
+          <div style="font-size:11px;color:var(--warm-grey);">{{ prop.get_property_type_display }}</div>
+          <div style="font-size:12px;font-weight:500;margin-top:3px;">{{ prop.display_price }}</div>
+        </td>
+        <td>
+          <div style="font-size:12px;font-weight:500;">{{ prop.owner.get_full_name }}</div>
+          <div style="font-size:11px;color:var(--warm-grey);">{{ prop.owner.email }}</div>
+        </td>
+        <td style="font-size:11px;color:var(--warm-grey);white-space:nowrap;">
+          {{ prop.created_at|date:"d M Y" }}
+          {% if prop.auto_delete_at %}
+          <div class="apr-countdown">🗑 Auto-delete {{ prop.auto_delete_at|date:"d M Y" }}</div>
+          {% endif %}
+        </td>
+        <td><span class="s-badge {{ prop.status }}">{{ prop.get_status_display }}</span></td>
+        <td>
+          <div class="apr-actions">
+            <a href="{{ prop.get_absolute_url }}" target="_blank" class="apr-btn view" title="Preview">👁</a>
+            {% if prop.status != 'active' %}
+            <button type="button" class="apr-btn approve" onclick="aprApprove({{ prop.id }}, '{{ prop.title|escapejs }}')">✓</button>
+            {% endif %}
+            {% if prop.status != 'rejected' %}
+            <button type="button" class="apr-btn reject" onclick="aprOpenReject({{ prop.id }}, '{{ prop.title|escapejs }}')">✗ Reject</button>
+            {% endif %}
+            <button type="button" class="apr-btn fix" onclick="aprOpenFix({{ prop.id }}, '{{ prop.title|escapejs }}')">✏ Fix</button>
+            {% if prop.status == 'rejected' %}
+            <button type="button" class="apr-btn del" onclick="aprOpenDelete({{ prop.id }}, '{{ prop.title|escapejs }}')" title="Delete permanently">🗑</button>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if properties.has_other_pages %}
+  <div class="apr-pages">
+    {% if properties.has_previous %}<a href="?status={{ status_filter }}&page={{ properties.previous_page_number }}" class="apr-page-btn">&#8249;</a>{% endif %}
+    {% for n in properties.paginator.page_range %}<a href="?status={{ status_filter }}&page={{ n }}" class="apr-page-btn {% if properties.number == n %}cur{% endif %}">{{ n }}</a>{% endfor %}
+    {% if properties.has_next %}<a href="?status={{ status_filter }}&page={{ properties.next_page_number }}" class="apr-page-btn">&#8250;</a>{% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="apr-empty">
+    <div style="font-size:40px;margin-bottom:12px;">🎉</div>
+    <div style="font-size:16px;font-weight:600;color:var(--charcoal);margin-bottom:6px;">No {{ status_filter }} listings</div>
+    <p>Nothing here right now.</p>
+  </div>
+  {% endif %}
+</div>
+
+{# Reject Modal #}
+<div id="aprRejectModal" class="apr-modal">
+  <div class="apr-modal-box">
+    <button class="apr-modal-close" onclick="aprCloseAll()">&#x2715;</button>
+    <div class="apr-modal-title">Reject Listing</div>
+    <p style="font-size:13px;color:var(--warm-grey);margin-bottom:18px;" id="aprRejectSubtitle"></p>
+    <label>Reason for rejection <span style="color:var(--warm-grey);font-weight:400;text-transform:none;">(sent to owner)</span></label>
+    <textarea id="aprRejectReason" rows="3" placeholder="e.g. Price is inaccurate, images are missing…"></textarea>
+    <label>Your password <span style="color:#dc2626;">*</span></label>
+    <input type="password" id="aprRejectPassword" placeholder="Enter your account password">
+    <div class="apr-modal-err" id="aprRejectErr"></div>
+    <button class="apr-submit-btn red" onclick="aprSubmitReject()">Confirm Rejection</button>
+  </div>
+</div>
+
+{# Fix Modal #}
+<div id="aprFixModal" class="apr-modal">
+  <div class="apr-modal-box">
+    <button class="apr-modal-close" onclick="aprCloseAll()">&#x2715;</button>
+    <div class="apr-modal-title">Request Fix from Owner</div>
+    <p style="font-size:13px;color:var(--warm-grey);margin-bottom:18px;" id="aprFixSubtitle"></p>
+    <label>Notes for the owner <span style="color:#dc2626;">*</span></label>
+    <textarea id="aprFixNotes" rows="4" placeholder="Describe what needs to be corrected or added…"></textarea>
+    <div class="apr-modal-err" id="aprFixErr"></div>
+    <button class="apr-submit-btn blue" onclick="aprSubmitFix()">Send Fix Request</button>
+  </div>
+</div>
+
+{# Delete Modal #}
+<div id="aprDeleteModal" class="apr-modal">
+  <div class="apr-modal-box">
+    <button class="apr-modal-close" onclick="aprCloseAll()">&#x2715;</button>
+    <div class="apr-modal-title">Permanently Delete Listing</div>
+    <p style="font-size:13px;color:var(--warm-grey);margin-bottom:10px;" id="aprDeleteSubtitle"></p>
+    <p style="font-size:12px;color:#991b1b;background:#fee2e2;padding:10px;margin-bottom:16px;">⚠ This cannot be undone.</p>
+    <label>Your password <span style="color:#dc2626;">*</span></label>
+    <input type="password" id="aprDeletePassword" placeholder="Enter your account password">
+    <div class="apr-modal-err" id="aprDeleteErr"></div>
+    <button class="apr-submit-btn red" onclick="aprSubmitDelete()">Delete Permanently</button>
+  </div>
+</div>
+
+<script>
+const APR_ACTION_BASE = '{% url "properties:approval_action" 0 %}';
+function aprActionUrl(id) { return APR_ACTION_BASE.replace('/0/', '/' + id + '/'); }
+const APR_CSRF = '{{ csrf_token }}';
+let aprCurrentId = null;
+
+function aprShowToast(msg, err) {
+  const t = document.getElementById('aprToast');
+  t.textContent = msg;
+  t.style.background = err ? '#dc2626' : '#1f2937';
+  t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 3200);
+}
+function aprCloseAll() {
+  document.querySelectorAll('.apr-modal').forEach(m => m.classList.remove('open'));
+  aprCurrentId = null;
+}
+document.querySelectorAll('.apr-modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) aprCloseAll(); }));
+
+function aprApprove(id, title) {
+  if (!confirm('Approve "' + title + '"?')) return;
+  aprPost(id, {action:'approve'}).then(r=>r.json()).then(res=>{
+    if (res.ok) { aprShowToast(res.msg); setTimeout(()=>location.reload(),900); }
+    else aprShowToast(res.error, true);
+  });
+}
+function aprOpenReject(id, title) {
+  aprCurrentId = id;
+  document.getElementById('aprRejectSubtitle').textContent = '"' + title + '"';
+  document.getElementById('aprRejectReason').value = '';
+  document.getElementById('aprRejectPassword').value = '';
+  document.getElementById('aprRejectErr').style.display = 'none';
+  document.getElementById('aprRejectModal').classList.add('open');
+  setTimeout(()=>document.getElementById('aprRejectPassword').focus(), 100);
+}
+function aprSubmitReject() {
+  const reason = document.getElementById('aprRejectReason').value.trim();
+  const pw = document.getElementById('aprRejectPassword').value;
+  const err = document.getElementById('aprRejectErr');
+  if (!pw) { err.textContent='Password is required.'; err.style.display='block'; return; }
+  aprPost(aprCurrentId, {action:'reject', rejection_reason:reason, password:pw}).then(r=>r.json()).then(res=>{
+    if (res.ok) { aprCloseAll(); aprShowToast(res.msg); setTimeout(()=>location.reload(),900); }
+    else { err.textContent=res.error; err.style.display='block'; }
+  });
+}
+function aprOpenFix(id, title) {
+  aprCurrentId = id;
+  document.getElementById('aprFixSubtitle').textContent = '"' + title + '"';
+  document.getElementById('aprFixNotes').value = '';
+  document.getElementById('aprFixErr').style.display = 'none';
+  document.getElementById('aprFixModal').classList.add('open');
+  setTimeout(()=>document.getElementById('aprFixNotes').focus(), 100);
+}
+function aprSubmitFix() {
+  const notes = document.getElementById('aprFixNotes').value.trim();
+  const err = document.getElementById('aprFixErr');
+  if (!notes) { err.textContent='Please write notes for the owner.'; err.style.display='block'; return; }
+  aprPost(aprCurrentId, {action:'needs_fix', fix_notes:notes}).then(r=>r.json()).then(res=>{
+    if (res.ok) { aprCloseAll(); aprShowToast(res.msg); setTimeout(()=>location.reload(),900); }
+    else { err.textContent=res.error; err.style.display='block'; }
+  });
+}
+function aprOpenDelete(id, title) {
+  aprCurrentId = id;
+  document.getElementById('aprDeleteSubtitle').textContent = '"' + title + '"';
+  document.getElementById('aprDeletePassword').value = '';
+  document.getElementById('aprDeleteErr').style.display = 'none';
+  document.getElementById('aprDeleteModal').classList.add('open');
+  setTimeout(()=>document.getElementById('aprDeletePassword').focus(), 100);
+}
+function aprSubmitDelete() {
+  const pw = document.getElementById('aprDeletePassword').value;
+  const err = document.getElementById('aprDeleteErr');
+  if (!pw) { err.textContent='Password is required.'; err.style.display='block'; return; }
+  aprPost(aprCurrentId, {action:'delete_rejected', password:pw}).then(r=>r.json()).then(res=>{
+    if (res.ok) { aprCloseAll(); aprShowToast(res.msg); setTimeout(()=>location.reload(),900); }
+    else { err.textContent=res.error; err.style.display='block'; }
+  });
+}
+function aprPost(id, data) {
+  const fd = new FormData();
+  fd.append('csrfmiddlewaretoken', APR_CSRF);
+  Object.entries(data).forEach(([k,v]) => fd.append(k, v));
+  return fetch(aprActionUrl(id), {method:'POST', body:fd, headers:{'X-Requested-With':'XMLHttpRequest'}});
+}
+</script>
+{% endblock %}

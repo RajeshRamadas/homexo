@@ -31,6 +31,9 @@
       <a href="{% url 'enquiries:dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);background:var(--navy);transition:all .2s;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--navy)'">📋 Enquiry Dashboard</a>
       {% endif %}
       {% endif %}
+      {% if user.is_superuser or user.role == 'admin' or user.role == 'approver' %}
+      <a href="{% url 'properties:approval_dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);background:var(--navy);transition:all .2s;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--navy)'">✅ Property Approvals</a>
+      {% endif %}
       <a href="{% url 'properties:create' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">+ List Property</a>
       <form action="{% url 'accounts:logout' %}" method="POST" style="padding:0;">
         {% csrf_token %}
@@ -93,7 +96,59 @@
       </div>
       {% endif %}
       {% endwith %}
+
+      <!-- Notifications panel -->
+      {% if notifications %}
+      <div style="background:var(--white);padding:28px;border:1px solid var(--border);margin-top:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);">
+            Notifications
+            {% if unread_count %}<span id="notif-badge" style="display:inline-block;background:#e53935;color:white;border-radius:50%;font-size:10px;width:18px;height:18px;line-height:18px;text-align:center;margin-left:8px;font-weight:700;">{{ unread_count }}</span>{% endif %}
+          </div>
+          {% if unread_count %}
+          <button id="notif-mark-read-btn" onclick="markAllRead()" style="font-size:11px;color:var(--navy);text-decoration:underline;background:none;border:none;cursor:pointer;">Mark all read</button>
+          {% endif %}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;" id="notif-list">
+          {% for notif in notifications %}
+          {% if notif.kind == 'rejected' %}
+          <div style="padding:14px 16px;background:#fff3f3;border-left:3px solid #e53935;display:flex;gap:12px;align-items:flex-start;{% if not notif.is_read %}font-weight:500;{% endif %}">
+            <span style="font-size:18px;flex-shrink:0;margin-top:1px;">🚫</span>
+          {% elif notif.kind == 'needs_fix' %}
+          <div style="padding:14px 16px;background:#fff8e1;border-left:3px solid #f57c00;display:flex;gap:12px;align-items:flex-start;{% if not notif.is_read %}font-weight:500;{% endif %}">
+            <span style="font-size:18px;flex-shrink:0;margin-top:1px;">🔧</span>
+          {% elif notif.kind == 'approved' %}
+          <div style="padding:14px 16px;background:#f1f8f1;border-left:3px solid #2e7d32;display:flex;gap:12px;align-items:flex-start;{% if not notif.is_read %}font-weight:500;{% endif %}">
+            <span style="font-size:18px;flex-shrink:0;margin-top:1px;">✅</span>
+          {% else %}
+          <div style="padding:14px 16px;background:var(--ivory);border-left:3px solid var(--navy);display:flex;gap:12px;align-items:flex-start;{% if not notif.is_read %}font-weight:500;{% endif %}">
+            <span style="font-size:18px;flex-shrink:0;margin-top:1px;">ℹ️</span>
+          {% endif %}
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;color:var(--charcoal);">{{ notif.title }}</div>
+              <div style="font-size:12px;color:var(--warm-grey);margin-top:4px;">{{ notif.body }}</div>
+              {% if notif.link %}<a href="{{ notif.link }}" style="font-size:11px;color:var(--navy);margin-top:6px;display:inline-block;text-decoration:none;">View listing →</a>{% endif %}
+            </div>
+            <div style="font-size:10px;color:var(--warm-grey);flex-shrink:0;white-space:nowrap;">{{ notif.created_at|date:"d M Y" }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </section>
+
+<script>
+function markAllRead() {
+  fetch("{% url 'accounts:mark_notifications_read' %}", {
+    method: 'POST',
+    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+  }).then(r => r.json()).then(() => {
+    document.getElementById('notif-badge')?.remove();
+    document.getElementById('notif-mark-read-btn')?.remove();
+    document.querySelectorAll('#notif-list > div').forEach(el => el.style.fontWeight = '');
+  });
+}
+</script>
 {% endblock %}

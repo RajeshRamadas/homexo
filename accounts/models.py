@@ -40,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         LEGAL_ADMIN      = 'legal_admin',      'Legal Admin'
         ADVOCATE         = 'advocate',         'Advocate'
         CUSTOMER_SUPPORT = 'customer_support', 'Customer Support'
+        APPROVER         = 'approver',         'Property Approver'
 
     email        = models.EmailField(unique=True, db_index=True)
     first_name   = models.CharField(max_length=80)
@@ -95,6 +96,33 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_seller(self):
         return self.role in (self.Role.SELLER, self.Role.AGENT)
+
+
+class Notification(models.Model):
+    """In-app notification for a user (property approval feedback, etc.)."""
+
+    class Kind(models.TextChoices):
+        REJECTED  = 'rejected',  'Listing Rejected'
+        NEEDS_FIX = 'needs_fix', 'Listing Needs Fix'
+        APPROVED  = 'approved',  'Listing Approved'
+        INFO      = 'info',      'Info'
+
+    user        = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='notifications')
+    kind        = models.CharField(max_length=20, choices=Kind.choices, default=Kind.INFO)
+    title       = models.CharField(max_length=200)
+    body        = models.TextField(blank=True)
+    # Optional link back to the related property (stored as path, not FK, to survive property deletion)
+    link        = models.CharField(max_length=300, blank=True)
+    is_read     = models.BooleanField(default=False)
+    created_at  = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name        = 'Notification'
+        verbose_name_plural = 'Notifications'
+        ordering            = ['-created_at']
+
+    def __str__(self):
+        return f'[{self.kind}] {self.title} → {self.user.email}'
 
 
 class PhoneOTP(models.Model):

@@ -6,7 +6,7 @@ Custom admin for User model.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
-from .models import User
+from .models import User, Notification
 from .forms import AdminUserCreationForm, AdminUserChangeForm
 
 
@@ -53,3 +53,14 @@ class UserAdmin(BaseUserAdmin):
     @admin.display(description='Name')
     def get_full_name(self, obj):
         return obj.get_full_name()
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display   = ('user', 'kind', 'title', 'is_read', 'created_at')
+    list_filter    = ('kind', 'is_read')
+    search_fields  = ('user__email', 'title', 'body')
+    readonly_fields = ('user', 'kind', 'title', 'body', 'link', 'created_at')
+    list_editable  = ('is_read',)
+    date_hierarchy = 'created_at'
+    ordering       = ('-created_at',)

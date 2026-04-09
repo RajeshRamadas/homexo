@@ -113,12 +113,14 @@ class Property(models.Model):
         SIX_P   = '6+bhk',  '6+ BHK'
 
     class Status(models.TextChoices):
-        ACTIVE    = 'active',    'Active'
-        SOLD      = 'sold',      'Sold'
-        RENTED    = 'rented',    'Rented'
-        PENDING   = 'pending',   'Pending Approval'
-        DRAFT     = 'draft',     'Draft'
-        INACTIVE  = 'inactive',  'Inactive'
+        ACTIVE     = 'active',     'Active'
+        SOLD       = 'sold',       'Sold'
+        RENTED     = 'rented',     'Rented'
+        PENDING    = 'pending',    'Pending Approval'
+        DRAFT      = 'draft',      'Draft'
+        INACTIVE   = 'inactive',   'Inactive'
+        REJECTED   = 'rejected',   'Rejected'
+        NEEDS_FIX  = 'needs_fix',  'Needs Fix'
 
     class FurnishingStatus(models.TextChoices):
         FURNISHED    = 'furnished',     'Fully Furnished'
@@ -200,8 +202,10 @@ class Property(models.Model):
     possession_date      = models.DateField(null=True, blank=True)
     ownership_type       = models.CharField(max_length=15, choices=OwnershipType.choices, blank=True,
                                             verbose_name='Ownership Type')
-    rera_approved   = models.BooleanField(default=False, verbose_name='RERA Approved')
-    rera_number     = models.CharField(max_length=100, blank=True, verbose_name='RERA Registration No.')
+    rera_approved      = models.BooleanField(default=False, verbose_name='RERA Approved')
+    rera_number        = models.CharField(max_length=100, blank=True, verbose_name='RERA Registration No.')
+    title_verified     = models.BooleanField(default=False, verbose_name='Title Verified')
+    is_negotiable      = models.BooleanField(default=False, verbose_name='Price Negotiable')
 
     # ── Flags ─────────────────────────────────────────────────────────────────
     is_featured    = models.BooleanField(default=False, db_index=True)
@@ -215,6 +219,16 @@ class Property(models.Model):
     views_count    = models.PositiveIntegerField(default=0, editable=False)
     created_at     = models.DateTimeField(auto_now_add=True)
     updated_at     = models.DateTimeField(auto_now=True)
+
+    # ── Rejection / Review tracking ───────────────────────────────────────────
+    rejection_reason   = models.TextField(blank=True, help_text='Reason shown to the listing owner on rejection.')
+    fix_notes          = models.TextField(blank=True, help_text='Notes sent back to owner when requesting a fix.')
+    rejected_at        = models.DateTimeField(null=True, blank=True)
+    auto_delete_at     = models.DateTimeField(null=True, blank=True, help_text='Rejected listings are auto-deleted after 30 days.')
+    rejected_by        = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='rejected_properties',
+    )
 
     class Meta:
         verbose_name        = 'Property'
@@ -246,6 +260,13 @@ class Property(models.Model):
     @property
     def primary_image(self):
         return self.images.filter(is_primary=True).first() or self.images.first()
+
+    @property
+    def price_per_sqft(self):
+        """Auto-computed price per sq.ft based on super built-up area."""
+        if self.price and self.area_sqft and self.area_sqft > 0:
+            return int(self.price / self.area_sqft)
+        return None
 
     @property
     def display_price(self):

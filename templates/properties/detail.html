@@ -1391,16 +1391,18 @@
           <div class="pd-ov-item"><div class="pd-ov-lbl">Property Type</div><div class="pd-ov-val">{{ property.get_property_type_display }}</div></div>
           <div class="pd-ov-item"><div class="pd-ov-lbl">Status</div><div class="pd-ov-val ready">{{ property.get_status_display }}</div></div>
           {% if property.area_sqft %}<div class="pd-ov-item"><div class="pd-ov-lbl">Super Built-up Area</div><div class="pd-ov-val">{{ property.area_sqft|floatformat:0 }} sq.ft.</div></div>{% endif %}
-          {% if property.carpet_area %}<div class="pd-ov-item"><div class="pd-ov-lbl">Carpet Area</div><div class="pd-ov-val">{{ property.carpet_area|floatformat:0 }} sq.ft.</div></div>{% endif %}
+          {% if property.carpet_area and property.listing_type != 'rent' %}<div class="pd-ov-item"><div class="pd-ov-lbl">Carpet Area</div><div class="pd-ov-val">{{ property.carpet_area|floatformat:0 }} sq.ft.</div></div>{% endif %}
+          {% if property.price_per_sqft and property.listing_type != 'rent' %}<div class="pd-ov-item"><div class="pd-ov-lbl">Price per sq.ft</div><div class="pd-ov-val">₹{{ property.price_per_sqft|floatformat:0 }}</div></div>{% endif %}
           {% if property.bathrooms %}<div class="pd-ov-item"><div class="pd-ov-lbl">{% if property.listing_type == 'commercial' %}Washrooms{% else %}Bathrooms{% endif %}</div><div class="pd-ov-val">{{ property.bathrooms }}</div></div>{% endif %}
           {% if property.parking_slots %}<div class="pd-ov-item"><div class="pd-ov-lbl">Parking</div><div class="pd-ov-val">{{ property.parking_slots }} Slot{{ property.parking_slots|pluralize }}{% if property.two_wheeler_parking or property.four_wheeler_parking %} &middot; {% if property.two_wheeler_parking %}2W{% endif %}{% if property.two_wheeler_parking and property.four_wheeler_parking %} &amp; {% endif %}{% if property.four_wheeler_parking %}4W{% endif %}{% endif %}</div></div>{% endif %}
           {% if property.furnishing %}<div class="pd-ov-item"><div class="pd-ov-lbl">Furnishing</div><div class="pd-ov-val">{{ property.get_furnishing_display }}</div></div>{% endif %}
-          {% if property.construction_status %}<div class="pd-ov-item"><div class="pd-ov-lbl">Construction Status</div><div class="pd-ov-val">{{ property.get_construction_status_display }}</div></div>{% endif %}
+          {% if property.construction_status and property.listing_type != 'rent' %}<div class="pd-ov-item"><div class="pd-ov-lbl">Construction Status</div><div class="pd-ov-val">{{ property.get_construction_status_display }}</div></div>{% endif %}
           <div class="pd-ov-item"><div class="pd-ov-lbl">Transaction</div><div class="pd-ov-val">{{ property.get_listing_type_display }}</div></div>
-          {% if property.age_years is not None %}<div class="pd-ov-item"><div class="pd-ov-lbl">Age of Property</div><div class="pd-ov-val">{% if property.age_years == 0 %}New Construction{% else %}{{ property.age_years }} Year{{ property.age_years|pluralize }}{% endif %}</div></div>{% endif %}
+          {% if property.age_years is not None and property.listing_type != 'new_project' %}<div class="pd-ov-item"><div class="pd-ov-lbl">Age of Property</div><div class="pd-ov-val">{% if property.age_years == 0 %}New Construction{% else %}{{ property.age_years }} Year{{ property.age_years|pluralize }}{% endif %}</div></div>{% endif %}
           {% if property.total_floors %}<div class="pd-ov-item"><div class="pd-ov-lbl">Total Floors</div><div class="pd-ov-val">{{ property.total_floors }}</div></div>{% endif %}
           {% if property.facing %}<div class="pd-ov-item"><div class="pd-ov-lbl">Facing</div><div class="pd-ov-val">{{ property.facing }}</div></div>{% endif %}
-          {% if property.ownership_type %}<div class="pd-ov-item"><div class="pd-ov-lbl">Ownership</div><div class="pd-ov-val">{{ property.get_ownership_type_display }}</div></div>{% endif %}
+          {% if property.ownership_type and property.listing_type != 'rent' and property.listing_type != 'new_project' %}<div class="pd-ov-item"><div class="pd-ov-lbl">Ownership</div><div class="pd-ov-val">{{ property.get_ownership_type_display }}</div></div>{% endif %}
+          {% if property.is_negotiable %}<div class="pd-ov-item"><div class="pd-ov-lbl">Negotiation</div><div class="pd-ov-val" style="color:#2E7D32;font-weight:600;">&#10003; Negotiable</div></div>{% endif %}
           <div class="pd-ov-item"><div class="pd-ov-lbl">Location</div><div class="pd-ov-val">{{ property.locality }}, {{ property.city }}</div></div>
           {% if property.security_deposit %}<div class="pd-ov-item"><div class="pd-ov-lbl">Security Deposit</div><div class="pd-ov-val">₹ {{ property.security_deposit }}</div></div>{% endif %}
           {% if property.maintenance_charge %}<div class="pd-ov-item"><div class="pd-ov-lbl">Maintenance</div><div class="pd-ov-val">₹ {{ property.maintenance_charge }} /mo</div></div>{% endif %}
@@ -1419,6 +1421,9 @@
               {% endif %}
             </div>
           </div>
+          {% if property.title_verified and property.listing_type != 'rent' and property.listing_type != 'new_project' %}
+          <div class="pd-ov-item"><div class="pd-ov-lbl">Title</div><div class="pd-ov-val" style="color:#2E7D32;font-weight:600;">&#10003; Verified</div></div>
+          {% endif %}
         </div>
       </div>
 

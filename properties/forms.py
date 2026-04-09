@@ -40,6 +40,7 @@ class PropertyCreateForm(forms.ModelForm):
             'age_years', 'parking_slots', 'two_wheeler_parking', 'four_wheeler_parking',
             'construction_status', 'possession_date',
             'ownership_type', 'rera_approved', 'rera_number',
+            'title_verified', 'is_negotiable',
             'latitude', 'longitude',
             'tags',
         )

@@ -113,7 +113,7 @@ class PropertyAdmin(admin.ModelAdmin):
                        'parking_slots', 'two_wheeler_parking', 'four_wheeler_parking',
                        'possession_date', 'available_from', 'tenant_preference',
                        'ownership_type', 'lock_in_period', 'power_backup',
-                       'rera_approved', 'rera_number')
+                       'rera_approved', 'rera_number', 'title_verified', 'is_negotiable')
         }),
         ('Flags & Tags', {
             'fields': ('is_featured', 'is_signature', 'is_new', 'is_exclusive', 'tags')

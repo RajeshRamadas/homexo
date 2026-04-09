@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 
 from .forms import RegisterForm, LoginForm, ProfileUpdateForm, ProfileCompleteForm, AdvocateRegisterForm
-from .models import User, PhoneOTP
+from .models import User, PhoneOTP, Notification
 from .sms import generate_otp, send_otp_sms
 
 
@@ -136,7 +136,24 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')[:30]
+    unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
+    return render(request, 'accounts/profile.html', {
+        'user': request.user,
+        'notifications': notifications,
+        'unread_count': unread_count,
+    })
+
+
+@login_required
+def mark_notifications_read(request):
+    """POST — mark all unread notifications for current user as read."""
+    if request.method == 'POST':
+        Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+        from django.http import JsonResponse
+        return JsonResponse({'ok': True})
+    from django.http import HttpResponseNotAllowed
+    return HttpResponseNotAllowed(['POST'])
 
 
 @login_required
