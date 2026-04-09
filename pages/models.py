@@ -12,7 +12,8 @@ class HeroSlider(models.Model):
     headline_highlight = models.CharField(max_length=100, blank=True, help_text="Specific word in headline to highlight")
     subheadline = models.CharField(max_length=200, blank=True)
     
-    image = models.ImageField(upload_to='hero_sliders/', help_text="Background hero image.")
+    image = models.ImageField(upload_to='hero_sliders/', help_text="Background hero image (Desktop).")
+    mobile_image = models.ImageField(upload_to='hero_sliders/mobile/', blank=True, null=True, help_text="Optional background image optimized specifically for mobile (portrait) screens.")
     explore_link = models.URLField(max_length=500, blank=True, help_text="URL for the Explore Now button")
     qr_data = models.CharField(max_length=255, blank=True, help_text="Data/URL to encode in the QR code")
     
