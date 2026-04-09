@@ -32,6 +32,8 @@ class PropertyCreateForm(forms.ModelForm):
         fields = (
             'title', 'listing_type', 'property_type', 'description',
             'price', 'price_label', 'price_on_req',
+            'security_deposit', 'maintenance_charge', 'tenant_preference', 'available_from',
+            'lock_in_period', 'power_backup',
             'bhk', 'bedrooms', 'bathrooms', 'area_sqft', 'carpet_area',
             'address', 'locality', 'city', 'state', 'pincode',
             'floor_no', 'total_floors', 'furnishing', 'facing',
@@ -45,5 +47,6 @@ class PropertyCreateForm(forms.ModelForm):
             'description':     forms.Textarea(attrs={'rows': 5}),
             'address':         forms.Textarea(attrs={'rows': 3}),
             'possession_date': forms.DateInput(attrs={'type': 'date'}),
+            'available_from':  forms.DateInput(attrs={'type': 'date'}),
             'tags':            forms.CheckboxSelectMultiple(),
         }

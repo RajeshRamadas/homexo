@@ -55,6 +55,16 @@
       <input type="checkbox" name="price_on_req" id="priceOnReq" {% if form.price_on_req.value %}checked{% endif %} style="width:auto;">
       <label for="priceOnReq" style="font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;">Price on Request (hide price from listing)</label>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;">
+      <div class="form-group">
+        <label>Security Deposit (<span class="rupee">₹</span>)</label>
+        <input type="number" name="security_deposit" value="{{ form.security_deposit.value|default:'' }}" placeholder="For rent (e.g. 100000)">
+      </div>
+      <div class="form-group">
+        <label>Maintenance Charge (<span class="rupee">₹</span> / Month)</label>
+        <input type="number" name="maintenance_charge" value="{{ form.maintenance_charge.value|default:'' }}" placeholder="e.g. 3000">
+      </div>
+    </div>
   </div>
 
   <!-- Section: Location -->
@@ -186,6 +196,19 @@
         <label>Possession Date</label>
         <input type="date" name="possession_date" value="{{ form.possession_date.value|default:'' }}" style="max-width:200px;">
       </div>
+      <div class="form-group">
+        <label>Available From (Rent)</label>
+        <input type="date" name="available_from" value="{{ form.available_from.value|default:'' }}" style="max-width:200px;">
+      </div>
+      <div class="form-group">
+        <label>Tenant Preference</label>
+        <select name="tenant_preference">
+          <option value="">Any...</option>
+          {% for val, label in form.fields.tenant_preference.choices %}
+          {% if val %}<option value="{{ val }}" {% if form.tenant_preference.value == val %}selected{% endif %}>{{ label }}</option>{% endif %}
+          {% endfor %}
+        </select>
+      </div>
     </div>
   </div>
 
@@ -201,6 +224,18 @@
           {% if val %}<option value="{{ val }}" {% if form.ownership_type.value == val %}selected{% endif %}>{{ label }}</option>{% endif %}
           {% endfor %}
         </select>
+      </div>
+      <div class="form-group">
+        <label>Lock-in Period (Years)</label>
+        <input type="number" name="lock_in_period" value="{{ form.lock_in_period.value|default:'' }}" min="0" placeholder="e.g. 3">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;">
+      <div class="form-group">
+        <label style="display:flex;align-items:center;height:100%;gap:10px;font-size:13px;color:var(--soft-brown);cursor:pointer;margin:0;">
+          <input type="checkbox" name="power_backup" value="True" {% if form.power_backup.value %}checked{% endif %} style="width:auto;margin:0;">
+          Power Backup Available
+        </label>
       </div>
       <div class="form-group">
         <label>RERA Approved <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional)</span></label>

@@ -1302,14 +1302,14 @@
 
       {# KEY HIGHLIGHTS #}
       <div class="pd-highlights">
-        {% if property.bedrooms %}
+        {% if property.bhk or property.bedrooms %}
         <div class="pd-hl">
           <div class="pd-hl-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
           <div class="pd-hl-text">
             <div class="pd-hl-val">{% if property.bhk %}{{ property.get_bhk_display }}{% else %}{{ property.bedrooms }} BHK{% endif %}</div>
-            <div class="pd-hl-lbl">Bedrooms</div>
+            <div class="pd-hl-lbl">{% if property.listing_type == 'commercial' %}Configuration{% else %}Bedrooms{% endif %}</div>
           </div>
         </div>
         {% endif %}
@@ -1333,13 +1333,13 @@
             <div class="pd-hl-lbl">Possession</div>
           </div>
         </div>
-        {% if property.floor_no %}
+        {% if property.floor_no is not None %}
         <div class="pd-hl">
           <div class="pd-hl-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
           </div>
           <div class="pd-hl-text">
-            <div class="pd-hl-val">{{ property.floor_no }}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div>
+            <div class="pd-hl-val">{% if property.floor_no == 0 %}Ground{% else %}{{ property.floor_no }}{% endif %}{% if property.total_floors %}/{{ property.total_floors }}{% endif %}</div>
             <div class="pd-hl-lbl">Floor</div>
           </div>
         </div>
@@ -1392,7 +1392,7 @@
           <div class="pd-ov-item"><div class="pd-ov-lbl">Status</div><div class="pd-ov-val ready">{{ property.get_status_display }}</div></div>
           {% if property.area_sqft %}<div class="pd-ov-item"><div class="pd-ov-lbl">Super Built-up Area</div><div class="pd-ov-val">{{ property.area_sqft|floatformat:0 }} sq.ft.</div></div>{% endif %}
           {% if property.carpet_area %}<div class="pd-ov-item"><div class="pd-ov-lbl">Carpet Area</div><div class="pd-ov-val">{{ property.carpet_area|floatformat:0 }} sq.ft.</div></div>{% endif %}
-          {% if property.bathrooms %}<div class="pd-ov-item"><div class="pd-ov-lbl">Bathrooms</div><div class="pd-ov-val">{{ property.bathrooms }}</div></div>{% endif %}
+          {% if property.bathrooms %}<div class="pd-ov-item"><div class="pd-ov-lbl">{% if property.listing_type == 'commercial' %}Washrooms{% else %}Bathrooms{% endif %}</div><div class="pd-ov-val">{{ property.bathrooms }}</div></div>{% endif %}
           {% if property.parking_slots %}<div class="pd-ov-item"><div class="pd-ov-lbl">Parking</div><div class="pd-ov-val">{{ property.parking_slots }} Slot{{ property.parking_slots|pluralize }}{% if property.two_wheeler_parking or property.four_wheeler_parking %} &middot; {% if property.two_wheeler_parking %}2W{% endif %}{% if property.two_wheeler_parking and property.four_wheeler_parking %} &amp; {% endif %}{% if property.four_wheeler_parking %}4W{% endif %}{% endif %}</div></div>{% endif %}
           {% if property.furnishing %}<div class="pd-ov-item"><div class="pd-ov-lbl">Furnishing</div><div class="pd-ov-val">{{ property.get_furnishing_display }}</div></div>{% endif %}
           {% if property.construction_status %}<div class="pd-ov-item"><div class="pd-ov-lbl">Construction Status</div><div class="pd-ov-val">{{ property.get_construction_status_display }}</div></div>{% endif %}
@@ -1402,6 +1402,12 @@
           {% if property.facing %}<div class="pd-ov-item"><div class="pd-ov-lbl">Facing</div><div class="pd-ov-val">{{ property.facing }}</div></div>{% endif %}
           {% if property.ownership_type %}<div class="pd-ov-item"><div class="pd-ov-lbl">Ownership</div><div class="pd-ov-val">{{ property.get_ownership_type_display }}</div></div>{% endif %}
           <div class="pd-ov-item"><div class="pd-ov-lbl">Location</div><div class="pd-ov-val">{{ property.locality }}, {{ property.city }}</div></div>
+          {% if property.security_deposit %}<div class="pd-ov-item"><div class="pd-ov-lbl">Security Deposit</div><div class="pd-ov-val">₹ {{ property.security_deposit }}</div></div>{% endif %}
+          {% if property.maintenance_charge %}<div class="pd-ov-item"><div class="pd-ov-lbl">Maintenance</div><div class="pd-ov-val">₹ {{ property.maintenance_charge }} /mo</div></div>{% endif %}
+          {% if property.tenant_preference %}<div class="pd-ov-item"><div class="pd-ov-lbl">Tenant Preference</div><div class="pd-ov-val">{{ property.get_tenant_preference_display }}</div></div>{% endif %}
+          {% if property.available_from %}<div class="pd-ov-item"><div class="pd-ov-lbl">Available From</div><div class="pd-ov-val">{{ property.available_from|date:"d M, Y" }}</div></div>{% endif %}
+          {% if property.lock_in_period %}<div class="pd-ov-item"><div class="pd-ov-lbl">Lock-in Period</div><div class="pd-ov-val">{{ property.lock_in_period }} Year{{ property.lock_in_period|pluralize }}</div></div>{% endif %}
+          {% if property.power_backup %}<div class="pd-ov-item"><div class="pd-ov-lbl">Power Backup</div><div class="pd-ov-val">Available</div></div>{% endif %}
           <div class="pd-ov-item">
             <div class="pd-ov-lbl">RERA</div>
             <div class="pd-ov-val">
@@ -1563,7 +1569,7 @@
             <span id="fpwStatArea">{{ property.area_sqft|floatformat:0 }} sq.ft</span>
           </div>
           {% endif %}
-          {% if property.bedrooms %}
+          {% if property.bhk or property.bedrooms %}
           <div class="fpw-stat">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             {% if property.bhk %}{{ property.get_bhk_display }}{% else %}{{ property.bedrooms }} Bed{% endif %}

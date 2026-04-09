@@ -136,6 +136,12 @@ class Property(models.Model):
         COOP       = 'coop',       'Co-operative Society'
         POA        = 'poa',        'Power of Attorney'
 
+    class TenantPreference(models.TextChoices):
+        ANY       = 'any',      'Anyone'
+        FAMILY    = 'family',   'Family Only'
+        BACHELORS = 'bachelors','Bachelors Only'
+        COMPANY   = 'company',  'Company Lease'
+
     # ── Ownership & Classification ────────────────────────────────────────────
     owner          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                        related_name='owned_properties')
@@ -155,6 +161,14 @@ class Property(models.Model):
     price_label    = models.CharField(max_length=50, blank=True,
                                       help_text='e.g. "/ Onwards", "/ Month"')
     price_on_req   = models.BooleanField(default=False, verbose_name='Price on Request')
+    
+    # ── Rent / Commercial Specific ────────────────────────────────────────────
+    security_deposit   = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    maintenance_charge = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, help_text="Monthly maintenance")
+    tenant_preference  = models.CharField(max_length=15, choices=TenantPreference.choices, blank=True)
+    available_from     = models.DateField(null=True, blank=True)
+    lock_in_period     = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Lock-in period in years")
+    power_backup       = models.BooleanField(default=False)
 
     # ── Location ──────────────────────────────────────────────────────────────
     address        = models.TextField()
