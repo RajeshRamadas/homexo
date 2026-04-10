@@ -394,6 +394,7 @@ class ConnectivityItem(models.Model):
     category = models.CharField(max_length=20, choices=Category.choices, default=Category.OTHER)
     name     = models.CharField(max_length=200, help_text='e.g. Whitefield Metro Station')
     distance = models.CharField(max_length=50, help_text='e.g. 2.5 km, 10 min drive')
+    icon     = models.CharField(max_length=100, blank=True, default='', help_text='SVG sprite icon ID, e.g. i-near-metro')
     order    = models.PositiveSmallIntegerField(default=0)
 
     class Meta:

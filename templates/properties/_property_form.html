@@ -1,5 +1,15 @@
 {# Shared form body — included by create.html and update.html #}
+{% include "_property_icon_sprite.html" %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+{# ── Icon picker panel (shared, hidden) ── #}
+<div id="pdIconPickerPanel" style="display:none;" role="dialog" aria-label="Choose icon">
+  <div class="pd-ip-head">
+    <input type="text" id="pdIconPickerSearch" placeholder="Search icons…" autocomplete="off" oninput="pdFilterIcons(this.value)">
+    <button type="button" class="pd-ip-close" onclick="pdCloseIconPicker()" aria-label="Close">✕</button>
+  </div>
+  <div id="pdIconPickerGrid"></div>
+</div>
 
 {# ── Field Visibility Rules (data-show-for="buy rent new_project commercial") ── #}
 {# Each .pf-field-group gets a data-show-for with space-separated listing types.  #}
@@ -23,6 +33,50 @@
   .hint-rent    { background: #eafaf0; color: #1a6a3a; border: 1px solid #a0d8b0; }
   .hint-newproj { background: #faf5e0; color: #7a5a00; border: 1px solid #d8c870; }
   .hint-commercial { background: #f5eaff; color: #5a1a7a; border: 1px solid #c8a0e8; }
+
+  /* ── Amenity row icon picker ── */
+  .pd-amenity-row { display:flex; gap:5px; align-items:center; }
+  .pd-ai-btn {
+    width:32px; height:32px; border:1.5px solid var(--border); background:var(--ivory);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color:var(--warm-grey); flex-shrink:0; transition:border-color .2s,background .2s;
+    border-radius:4px; padding:0;
+  }
+  .pd-ai-btn:hover { border-color:var(--sky); background:#eaf3fa; color:var(--sky); }
+  .pd-ai-name {
+    flex:1; min-width:80px; padding:6px 8px; border:1px solid var(--border);
+    font-family:'Source Sans 3',sans-serif; font-size:12px; color:var(--charcoal);
+    background:var(--ivory); outline:none; transition:border-color .2s;
+  }
+  .pd-ai-name:focus { border-color:var(--navy); background:var(--white); }
+  .pd-ai-del { cursor:pointer; color:#c62828; font-size:11px; display:flex; align-items:center; gap:2px; flex-shrink:0; }
+  .pd-ai-del input[type="checkbox"] { display:none; }
+
+  /* ── Icon picker panel ── */
+  #pdIconPickerPanel {
+    position:fixed; z-index:9999; width:340px; max-height:400px;
+    background:#fff; border:1px solid var(--border);
+    box-shadow:0 8px 32px rgba(0,0,0,0.18); border-radius:8px;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .pd-ip-head { display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border); background:var(--ivory); flex-shrink:0; }
+  .pd-ip-head input { flex:1; padding:6px 10px; border:1px solid var(--border); font-size:12px; outline:none; border-radius:4px; }
+  .pd-ip-head input:focus { border-color:var(--sky); }
+  .pd-ip-close { background:none; border:none; font-size:16px; cursor:pointer; color:var(--warm-grey); padding:4px 8px; flex-shrink:0; border-radius:4px; }
+  .pd-ip-close:hover { background:#f0f0f0; }
+  #pdIconPickerGrid { overflow-y:auto; padding:10px; display:grid; grid-template-columns:repeat(auto-fill,minmax(60px,1fr)); gap:5px; flex:1; }
+  .pd-ip-card {
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:7px 4px; border:1.5px solid var(--border); border-radius:6px;
+    cursor:pointer; background:var(--ivory); transition:border-color .15s,background .15s;
+  }
+  .pd-ip-card:hover { border-color:var(--sky); background:#eaf3fa; }
+  .pd-ip-card.pd-ip-active { border-color:var(--sky); background:#eaf3fa; }
+  .pd-ip-lbl { font-size:9px; color:var(--warm-grey); text-align:center; line-height:1.2; word-break:break-word; }
+
+  /* ── Connectivity category icon indicator ── */
+  .pd-conn-cat-wrap { display:flex; align-items:center; gap:6px; }
+  .pd-conn-cat-icon { width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--sky); }
 </style>
 
 <form method="POST" enctype="multipart/form-data" id="pfForm">
@@ -415,31 +469,29 @@
   {{ feature_formset.management_form }}
   <div class="pf-section">
     <div class="pf-section-title">Amenities &amp; Features</div>
-    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">List features like Swimming Pool, Gymnasium, 24/7 Security, Clubhouse, etc.</p>
-    <div id="pdAmenityGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">
+      Click the icon button to pick from 95 property icons. Type the feature name for auto-match.
+    </p>
+    <div id="pdAmenityGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
       {% for f_form in feature_formset %}
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <div class="pd-amenity-row">
         {{ f_form.id }}
-        <input type="text" name="{{ f_form.name.html_name }}" value="{{ f_form.name.value|default:'' }}"
-               placeholder="e.g. Swimming Pool"
-               style="flex:1;min-width:120px;padding:9px 13px;border:1px solid var(--border);font-family:'Source Sans 3',sans-serif;font-size:13px;color:var(--charcoal);background:var(--ivory);outline:none;transition:border-color .2s;"
-               onfocus="this.style.borderColor='var(--navy)';this.style.background='var(--white)'"
-               onblur="this.style.borderColor='var(--border)';this.style.background='var(--ivory)'">
-        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;flex-shrink:0;" title="Upload icon image">
-          {% if f_form.instance.icon_image %}
-          <img src="{{ f_form.instance.icon_image.url }}" alt="" style="width:28px;height:28px;object-fit:contain;border:1px solid var(--border);border-radius:4px;">
+        <input type="hidden" name="{{ f_form.icon.html_name }}" value="{{ f_form.icon.value|default:'' }}" class="pd-ai-val">
+        <button type="button" class="pd-ai-btn" onclick="pdOpenIconPicker(this)" title="Choose icon">
+          {% if f_form.icon.value %}
+          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="#{{ f_form.icon.value }}"/></svg>
+          {% elif f_form.instance.icon_image %}
+          <img src="{{ f_form.instance.icon_image.url }}" alt="" style="width:20px;height:20px;object-fit:contain;">
+          {% else %}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           {% endif %}
-          <input type="file" name="{{ f_form.icon_image.html_name }}" accept="image/*" style="width:0;height:0;overflow:hidden;position:absolute;opacity:0;" onchange="pdPreviewAmenityIcon(this)">
-          <span style="padding:5px 10px;border:1px solid var(--border);font-size:11px;color:var(--warm-grey);background:var(--ivory);white-space:nowrap;cursor:pointer;transition:border-color .2s;"
-                onmouseover="this.style.borderColor='var(--sky)';this.style.color='var(--sky)'"
-                onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--warm-grey)'">
-            {% if f_form.instance.icon_image %}Change{% else %}+ Icon{% endif %}
-          </span>
-        </label>
+        </button>
+        <input type="file" name="{{ f_form.icon_image.html_name }}" accept="image/*" class="pd-ai-file" style="display:none;">
+        <input type="text" name="{{ f_form.name.html_name }}" value="{{ f_form.name.value|default:'' }}"
+               placeholder="e.g. Swimming Pool" class="pd-ai-name"
+               oninput="pdAmenityAutoIcon(this)">
         {% if f_form.instance.pk %}
-        <label title="Remove this amenity" style="cursor:pointer;color:#c62828;font-size:11px;display:flex;align-items:center;gap:3px;flex-shrink:0;">
-          {{ f_form.DELETE }}✕
-        </label>
+        <label class="pd-ai-del" title="Remove this amenity">{{ f_form.DELETE }}<span>✕</span></label>
         {% endif %}
       </div>
       {% endfor %}
@@ -461,11 +513,28 @@
     <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Add nearby landmarks — metro stations, schools, hospitals, malls, etc.</p>
     <div id="pfConnectivityGrid">
       {% for c_form in connectivity_formset %}
-      <div class="pf-connectivity-row" style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:12px;align-items:end;margin-bottom:12px;">
+      <div class="pf-connectivity-row" style="display:grid;grid-template-columns:auto 1fr 2fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px;">
         {{ c_form.id }}
+        <input type="hidden" name="{{ c_form.icon.html_name }}" value="{{ c_form.icon.value|default:'' }}" class="pd-ai-val">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <label style="font-size:11px;color:var(--warm-grey);">Icon</label>
+          <button type="button" class="pd-ai-btn" onclick="pdOpenIconPicker(this)" title="Choose icon">
+            {% with iid=c_form.icon.value cat=c_form.category.value %}
+            {% if iid %}
+            <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#{{ iid }}"/></svg>
+            {% elif cat == 'transit' %}<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-near-metro"/></svg>
+            {% elif cat == 'education' %}<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-near-school"/></svg>
+            {% elif cat == 'healthcare' %}<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-near-hospital"/></svg>
+            {% elif cat == 'shopping' %}<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-near-mall"/></svg>
+            {% elif cat == 'lifestyle' %}<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-yoga-area"/></svg>
+            {% else %}<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-near-highway"/></svg>
+            {% endif %}
+            {% endwith %}
+          </button>
+        </div>
         <div class="form-group" style="margin:0;">
           <label style="font-size:11px;">Category</label>
-          <select name="{{ c_form.category.html_name }}" style="padding:9px 12px;">
+          <select name="{{ c_form.category.html_name }}" style="padding:9px 12px;" onchange="pdUpdateConnCatIcon(this)">
             {% for val, lbl in c_form.fields.category.choices %}
             <option value="{{ val }}" {% if c_form.category.value == val %}selected{% endif %}>{{ lbl }}</option>
             {% endfor %}
@@ -563,6 +632,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── Add Connectivity Row ──────────────────────────────────────────────────────
+var PD_CONN_ICONS = {
+  transit:    'i-near-metro',
+  education:  'i-near-school',
+  healthcare: 'i-near-hospital',
+  shopping:   'i-near-mall',
+  lifestyle:  'i-yoga-area',
+  other:      'i-near-highway'
+};
+
+function pdConnCatIconSvg(catVal) {
+  var id = PD_CONN_ICONS[catVal] || 'i-near-highway';
+  return '<svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><use href="#' + id + '"/></svg>';
+}
+
+function pdUpdateConnCatIcon(select) {
+  var row = select.closest('.pf-connectivity-row');
+  if (!row) return;
+  var iconId = PD_CONN_ICONS[select.value] || 'i-near-highway';
+  // Update the picker button preview
+  var btn = row.querySelector('.pd-ai-btn');
+  if (btn) btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="#' + iconId + '"/></svg>';
+  // Also update hidden value so the category default is saved
+  var hiddenInput = row.querySelector('.pd-ai-val');
+  if (hiddenInput) hiddenInput.value = iconId;
+}
+
 function pfAddConnectivity() {
   var total = document.getElementById('id_connectivity-TOTAL_FORMS');
   if (!total) return;
@@ -573,11 +668,18 @@ function pfAddConnectivity() {
   var opts = categories.map(function(v,i){ return '<option value="'+v+'">'+catLabels[i]+'</option>'; }).join('');
   var row = document.createElement('div');
   row.className = 'pf-connectivity-row';
-  row.style.cssText = 'display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:12px;align-items:end;margin-bottom:12px;';
+  row.style.cssText = 'display:grid;grid-template-columns:auto 1fr 2fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px;';
   row.innerHTML =
     '<input type="hidden" name="connectivity-'+idx+'-id" value="">' +
+    '<input type="hidden" name="connectivity-'+idx+'-icon" value="i-near-metro" class="pd-ai-val">' +
+    '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
+      '<label style="font-size:11px;color:var(--warm-grey);">Icon</label>' +
+      '<button type="button" class="pd-ai-btn" onclick="pdOpenIconPicker(this)" title="Choose icon">' +
+        '<svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-near-metro"/></svg>' +
+      '</button>' +
+    '</div>' +
     '<div class="form-group" style="margin:0;"><label style="font-size:11px;">Category</label>' +
-    '<select name="connectivity-'+idx+'-category" style="padding:9px 12px;">'+opts+'</select></div>' +
+    '<select name="connectivity-'+idx+'-category" style="padding:9px 12px;" onchange="pdUpdateConnCatIcon(this)">'+opts+'</select></div>' +
     '<div class="form-group" style="margin:0;"><label style="font-size:11px;">Name</label>' +
     '<input type="text" name="connectivity-'+idx+'-name" placeholder="e.g. Metro Station"></div>' +
     '<div class="form-group" style="margin:0;"><label style="font-size:11px;">Distance</label>' +
@@ -710,33 +812,247 @@ function pdAddAmenity() {
   var idx   = parseInt(total.value);
   var grid  = document.getElementById('pdAmenityGrid');
   var div   = document.createElement('div');
-  div.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
+  div.className = 'pd-amenity-row';
   div.innerHTML =
     '<input type="hidden" name="features-' + idx + '-id" value="">' +
-    '<input type="text" name="features-' + idx + '-name" placeholder="e.g. Swimming Pool" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid var(--border);font-family:\'Source Sans 3\',sans-serif;font-size:13px;color:var(--charcoal);background:var(--ivory);outline:none;" onfocus="this.style.borderColor=\'var(--navy)\';this.style.background=\'var(--white)\'" onblur="this.style.borderColor=\'var(--border)\';this.style.background=\'var(--ivory)\'">' +
-    '<label style="display:flex;align-items:center;gap:4px;cursor:pointer;flex-shrink:0;">' +
-    '<input type="file" name="features-' + idx + '-icon_image" accept="image/*" style="width:0;height:0;overflow:hidden;position:absolute;opacity:0;" onchange="pdPreviewAmenityIcon(this)">' +
-    '<span style="padding:5px 10px;border:1px solid var(--border);font-size:11px;color:var(--warm-grey);background:var(--ivory);cursor:pointer;">+ Icon</span>' +
-    '</label>' +
-    '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#c62828;font-size:20px;cursor:pointer;line-height:1;padding:0 4px;">×</button>';
+    '<input type="hidden" name="features-' + idx + '-icon" value="" class="pd-ai-val">' +
+    '<button type="button" class="pd-ai-btn" onclick="pdOpenIconPicker(this)" title="Choose icon">' +
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+    '</button>' +
+    '<input type="file" name="features-' + idx + '-icon_image" accept="image/*" class="pd-ai-file" style="display:none;">' +
+    '<input type="text" name="features-' + idx + '-name" placeholder="e.g. Swimming Pool" class="pd-ai-name" oninput="pdAmenityAutoIcon(this)">' +
+    '<button type="button" onclick="this.closest(\'.pd-amenity-row\').remove()" style="background:none;border:none;color:#c62828;font-size:20px;cursor:pointer;line-height:1;padding:0 4px;" title="Remove">×</button>';
   grid.appendChild(div);
   total.value = idx + 1;
 }
 
-function pdPreviewAmenityIcon(input) {
-  if (!input.files || !input.files[0]) return;
-  var label = input.closest('label');
-  var oldImg = label.querySelector('img');
-  if (oldImg) oldImg.remove();
-  var img = document.createElement('img');
-  img.style.cssText = 'width:28px;height:28px;object-fit:contain;border:1px solid var(--border);border-radius:4px;';
-  var reader = new FileReader();
-  reader.onload = function(e) { img.src = e.target.result; };
-  reader.readAsDataURL(input.files[0]);
-  label.insertBefore(img, input);
-  var span = label.querySelector('span');
-  if (span) span.textContent = 'Change';
+// ── Icon Picker ──────────────────────────────────────────────────────────────
+var PD_ICONS = [
+  {id:"i-fan",label:"Fan"},{id:"i-light",label:"Lights"},{id:"i-bed",label:"Bed"},
+  {id:"i-sofa",label:"Sofa"},{id:"i-dining",label:"Dining Table"},{id:"i-wardrobe",label:"Wardrobe"},
+  {id:"i-curtains",label:"Curtains"},{id:"i-tv-unit",label:"TV Unit"},{id:"i-study-table",label:"Study Table"},
+  {id:"i-ac",label:"Air Conditioner"},{id:"i-fridge",label:"Refrigerator"},{id:"i-washing",label:"Washing Machine"},
+  {id:"i-microwave",label:"Microwave"},{id:"i-oven",label:"Oven"},{id:"i-dishwasher",label:"Dishwasher"},
+  {id:"i-water-purifier",label:"Water Purifier"},{id:"i-geyser",label:"Geyser"},{id:"i-kitchen",label:"Modular Kitchen"},
+  {id:"i-chimney",label:"Chimney"},{id:"i-stove",label:"Stove"},{id:"i-attached-bathroom",label:"Attached Bathrooms"},
+  {id:"i-western-toilet",label:"Western Toilet"},{id:"i-bathtub",label:"Bathtub"},{id:"i-shower-cabin",label:"Shower Cabin"},
+  {id:"i-utility-area",label:"Utility Area"},{id:"i-washing-area",label:"Washing Area"},
+  {id:"i-swimming-pool",label:"Swimming Pool"},{id:"i-gym",label:"Gym"},{id:"i-clubhouse",label:"Clubhouse"},
+  {id:"i-garden",label:"Garden"},{id:"i-play-area",label:"Children's Play Area"},{id:"i-jogging-track",label:"Jogging Track"},
+  {id:"i-sports-courts",label:"Sports Courts"},{id:"i-indoor-games",label:"Indoor Games"},{id:"i-yoga-area",label:"Yoga Area"},
+  {id:"i-party-hall",label:"Party Hall"},{id:"i-amphitheater",label:"Amphitheater"},
+  {id:"i-security-247",label:"24x7 Security"},{id:"i-cctv",label:"CCTV"},{id:"i-gated-community",label:"Gated Community"},
+  {id:"i-intercom",label:"Intercom"},{id:"i-fire-safety",label:"Fire Safety"},{id:"i-video-door-phone",label:"Video Door Phone"},
+  {id:"i-covered-parking",label:"Covered Parking"},{id:"i-open-parking",label:"Open Parking"},
+  {id:"i-visitor-parking",label:"Visitor Parking"},{id:"i-ev-charging",label:"EV Charging"},
+  {id:"i-lift",label:"Lift"},{id:"i-service-lift",label:"Service Lift"},
+  {id:"i-power-backup",label:"Power Backup"},{id:"i-water-supply",label:"Water Supply"},
+  {id:"i-rainwater",label:"Rainwater Harvesting"},{id:"i-sewage-treatment",label:"Sewage Treatment"},
+  {id:"i-solar-panel",label:"Solar Panels"},{id:"i-waste-management",label:"Waste Management"},
+  {id:"i-piped-gas",label:"Piped Gas"},{id:"i-wifi",label:"WiFi"},
+  {id:"i-balcony",label:"Balcony"},{id:"i-terrace",label:"Terrace"},{id:"i-duplex",label:"Duplex"},
+  {id:"i-penthouse",label:"Penthouse"},{id:"i-studio",label:"Studio"},{id:"i-private-terrace",label:"Private Terrace"},
+  {id:"i-servant-room",label:"Servant Room"},{id:"i-pooja-room",label:"Pooja Room"},
+  {id:"i-vastu",label:"Vastu Compliant"},{id:"i-corner-property",label:"Corner Property"},
+  {id:"i-park-facing",label:"Park Facing"},{id:"i-road-facing",label:"Road Facing"},
+  {id:"i-lake-view",label:"Lake View"},{id:"i-garden-view",label:"Garden View"},
+  {id:"i-ready-to-move",label:"Ready to Move"},{id:"i-under-construction",label:"Under Construction"},
+  {id:"i-rera",label:"RERA Approved"},{id:"i-clear-title",label:"Clear Title"},
+  {id:"i-loan-approved",label:"Loan Approved"},{id:"i-oc-received",label:"OC Received"},{id:"i-cc-received",label:"CC Received"},
+  {id:"i-pet-friendly",label:"Pet Friendly"},{id:"i-family-only",label:"Family Only"},
+  {id:"i-bachelor-allowed",label:"Bachelor Allowed"},{id:"i-non-veg",label:"Non-Veg Allowed"},
+  {id:"i-smoking-allowed",label:"Smoking Allowed"},
+  {id:"i-smart-lock",label:"Smart Door Lock"},{id:"i-home-automation",label:"Home Automation"},
+  {id:"i-smart-lighting",label:"Smart Lighting"},{id:"i-voice-control",label:"Voice Control"},
+  {id:"i-smart-security",label:"Smart Security"},
+  {id:"i-near-school",label:"Near School"},{id:"i-near-hospital",label:"Near Hospital"},
+  {id:"i-near-metro",label:"Near Metro"},{id:"i-near-it-park",label:"Near IT Park"},
+  {id:"i-near-mall",label:"Near Mall"},{id:"i-near-highway",label:"Near Highway"}
+];
+
+// Alias map for auto-match on name typing
+var PD_ICON_ALIASES = {
+  'swimming pool':'i-swimming-pool','pool':'i-swimming-pool',
+  'gym':'i-gym','gymnasium':'i-gym','fitness center':'i-gym',
+  'clubhouse':'i-clubhouse','club house':'i-clubhouse',
+  'garden':'i-garden','park':'i-garden','landscape':'i-garden',
+  'play area':'i-play-area','playground':'i-play-area',"children's play area":'i-play-area','kids play area':'i-play-area',
+  'jogging track':'i-jogging-track','jogging':'i-jogging-track','running track':'i-jogging-track',
+  'sports court':'i-sports-courts','sports courts':'i-sports-courts','badminton court':'i-sports-courts',
+  'indoor games':'i-indoor-games','game room':'i-indoor-games',
+  'yoga':'i-yoga-area','yoga area':'i-yoga-area','meditation':'i-yoga-area',
+  'party hall':'i-party-hall','banquet':'i-party-hall','community hall':'i-party-hall',
+  'amphitheater':'i-amphitheater','amphitheatre':'i-amphitheater',
+  '24x7 security':'i-security-247','24/7 security':'i-security-247','security':'i-security-247','security guard':'i-security-247',
+  'cctv':'i-cctv','surveillance':'i-cctv','cctv cameras':'i-cctv',
+  'gated community':'i-gated-community','gated':'i-gated-community',
+  'intercom':'i-intercom','video intercom':'i-intercom',
+  'fire safety':'i-fire-safety','fire fighting':'i-fire-safety','fire extinguisher':'i-fire-safety',
+  'video door phone':'i-video-door-phone','video doorbell':'i-video-door-phone',
+  'covered parking':'i-covered-parking','stilt parking':'i-covered-parking','basement parking':'i-covered-parking',
+  'open parking':'i-open-parking','surface parking':'i-open-parking',
+  'visitor parking':'i-visitor-parking',
+  'ev charging':'i-ev-charging','ev charging point':'i-ev-charging','electric vehicle charging':'i-ev-charging',
+  'lift':'i-lift','elevator':'i-lift',
+  'service lift':'i-service-lift','cargo lift':'i-service-lift',
+  'power backup':'i-power-backup','generator':'i-power-backup','100% power backup':'i-power-backup',
+  'water supply':'i-water-supply','24x7 water':'i-water-supply','borewell':'i-water-supply',
+  'rainwater harvesting':'i-rainwater','rainwater':'i-rainwater',
+  'sewage treatment':'i-sewage-treatment','stp':'i-sewage-treatment',
+  'solar panels':'i-solar-panel','solar energy':'i-solar-panel','solar':'i-solar-panel',
+  'waste management':'i-waste-management','garbage collection':'i-waste-management',
+  'piped gas':'i-piped-gas','gas pipeline':'i-gas-pipeline',
+  'wifi':'i-wifi','wi-fi':'i-wifi','internet':'i-wifi','high speed internet':'i-wifi',
+  'balcony':'i-balcony',
+  'terrace':'i-terrace','rooftop':'i-terrace',
+  'duplex':'i-duplex',
+  'penthouse':'i-penthouse',
+  'studio':'i-studio',
+  'private terrace':'i-private-terrace',
+  'servant room':'i-servant-room','maid room':'i-servant-room',
+  'pooja room':'i-pooja-room','puja room':'i-pooja-room','mandir':'i-pooja-room','prayer room':'i-pooja-room',
+  'vastu':'i-vastu','vastu compliant':'i-vastu',
+  'corner property':'i-corner-property',
+  'park facing':'i-park-facing',
+  'road facing':'i-road-facing',
+  'lake view':'i-lake-view','sea view':'i-lake-view','water view':'i-lake-view',
+  'garden view':'i-garden-view',
+  'ready to move':'i-ready-to-move','ready to occupy':'i-ready-to-move',
+  'under construction':'i-under-construction','new launch':'i-under-construction',
+  'rera':'i-rera','rera approved':'i-rera','rera registered':'i-rera',
+  'clear title':'i-clear-title',
+  'loan approved':'i-loan-approved','bank approved':'i-loan-approved',
+  'oc received':'i-oc-received','occupancy certificate':'i-oc-received',
+  'cc received':'i-cc-received','completion certificate':'i-cc-received',
+  'pet friendly':'i-pet-friendly','pets allowed':'i-pet-friendly',
+  'family only':'i-family-only',
+  'bachelor allowed':'i-bachelor-allowed','bachelors allowed':'i-bachelor-allowed',
+  'non veg allowed':'i-non-veg','non-veg allowed':'i-non-veg',
+  'smoking allowed':'i-smoking-allowed',
+  'smart lock':'i-smart-lock','smart door lock':'i-smart-lock','digital lock':'i-smart-lock',
+  'home automation':'i-home-automation','smart home':'i-home-automation',
+  'smart lighting':'i-smart-lighting','automated lighting':'i-smart-lighting',
+  'voice control':'i-voice-control','alexa':'i-voice-control','google home':'i-voice-control',
+  'smart security':'i-smart-security',
+  'air conditioner':'i-ac','ac':'i-ac','air conditioning':'i-ac',
+  'refrigerator':'i-fridge','fridge':'i-fridge',
+  'washing machine':'i-washing','laundry machine':'i-washing',
+  'microwave':'i-microwave',
+  'oven':'i-oven',
+  'dishwasher':'i-dishwasher',
+  'water purifier':'i-water-purifier','ro':'i-water-purifier','ro water purifier':'i-water-purifier',
+  'geyser':'i-geyser','water heater':'i-geyser',
+  'modular kitchen':'i-kitchen','kitchen':'i-kitchen',
+  'chimney':'i-chimney','kitchen chimney':'i-chimney',
+  'stove':'i-stove','gas stove':'i-stove',
+  'fan':'i-fan','ceiling fan':'i-fan','fans':'i-fan',
+  'lights':'i-light','lighting':'i-light','led lights':'i-light',
+  'sofa':'i-sofa','couch':'i-sofa',
+  'dining table':'i-dining','dining set':'i-dining',
+  'wardrobe':'i-wardrobe','cupboard':'i-wardrobe',
+  'curtains':'i-curtains','blinds':'i-curtains',
+  'tv unit':'i-tv-unit','television':'i-tv-unit','tv':'i-tv-unit',
+  'study table':'i-study-table','study room':'i-study-table',
+  'attached bathroom':'i-attached-bathroom','attached bathrooms':'i-attached-bathroom',
+  'western toilet':'i-western-toilet','commode':'i-western-toilet',
+  'bathtub':'i-bathtub',
+  'shower':'i-shower-cabin','shower cabin':'i-shower-cabin',
+  'utility area':'i-utility-area','store room':'i-utility-area',
+  'washing area':'i-washing-area'
+};
+
+var _pdPickerTarget = null;
+
+function pdOpenIconPicker(btn) {
+  var panel = document.getElementById('pdIconPickerPanel');
+  if (!panel) return;
+  _pdPickerTarget = btn;
+  // Position panel near the button
+  var rect = btn.getBoundingClientRect();
+  var pW = 340, pH = 400;
+  var left = Math.min(rect.left, window.innerWidth - pW - 8);
+  var top  = rect.bottom + 4;
+  if (top + pH > window.innerHeight - 8) top = rect.top - pH - 4;
+  panel.style.left = Math.max(8, left) + 'px';
+  panel.style.top  = Math.max(8, top) + 'px';
+  panel.style.display = 'flex';
+  // Highlight current value (row can be amenity or connectivity)
+  var row = btn.closest('.pd-amenity-row, .pf-connectivity-row');
+  var hiddenInput = row ? row.querySelector('.pd-ai-val') : null;
+  var cur = hiddenInput ? hiddenInput.value : '';
+  panel.querySelectorAll('.pd-ip-card').forEach(function(c) {
+    c.classList.toggle('pd-ip-active', c.dataset.id === cur);
+  });
+  var searchEl = document.getElementById('pdIconPickerSearch');
+  if (searchEl) { searchEl.value = ''; pdFilterIcons(''); searchEl.focus(); }
 }
+
+function pdCloseIconPicker() {
+  var panel = document.getElementById('pdIconPickerPanel');
+  if (panel) panel.style.display = 'none';
+  _pdPickerTarget = null;
+}
+
+function pdSelectIcon(iconId, label) {
+  if (!_pdPickerTarget) return;
+  var row = _pdPickerTarget.closest('.pd-amenity-row, .pf-connectivity-row');
+  if (!row) return;
+  var hiddenInput = row.querySelector('.pd-ai-val');
+  if (hiddenInput) hiddenInput.value = iconId;
+  // Update button preview
+  _pdPickerTarget.innerHTML = '<svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="#' + iconId + '"/></svg>';
+  // Auto-fill name only for amenity rows (not connectivity — name is a specific place)
+  if (row.classList.contains('pd-amenity-row')) {
+    var nameInput = row.querySelector('.pd-ai-name');
+    if (nameInput && !nameInput.value.trim()) nameInput.value = label;
+  }
+  pdCloseIconPicker();
+}
+
+function pdFilterIcons(q) {
+  q = (q || '').toLowerCase().trim();
+  document.querySelectorAll('#pdIconPickerGrid .pd-ip-card').forEach(function(card) {
+    card.style.display = (!q || card.dataset.q.includes(q)) ? '' : 'none';
+  });
+}
+
+function pdAmenityAutoIcon(nameInput) {
+  var val = nameInput.value.trim().toLowerCase();
+  if (!val) return;
+  var iconId = PD_ICON_ALIASES[val];
+  if (!iconId) return;
+  var row = nameInput.closest('.pd-amenity-row');
+  if (!row) return;
+  var hiddenInput = row.querySelector('.pd-ai-val');
+  if (hiddenInput && !hiddenInput.value) {
+    hiddenInput.value = iconId;
+    var btn = row.querySelector('.pd-ai-btn');
+    if (btn) btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="#' + iconId + '"/></svg>';
+  }
+}
+
+// Close picker on outside click
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('pdIconPickerPanel');
+  if (!panel || panel.style.display === 'none') return;
+  if (!panel.contains(e.target) && !e.target.closest('.pd-ai-btn')) pdCloseIconPicker();
+});
+
+// Build icon picker grid on load
+document.addEventListener('DOMContentLoaded', function() {
+  var grid = document.getElementById('pdIconPickerGrid');
+  if (!grid) return;
+  PD_ICONS.forEach(function(icon) {
+    var card = document.createElement('div');
+    card.className = 'pd-ip-card';
+    card.dataset.id = icon.id;
+    card.dataset.q  = (icon.id + ' ' + icon.label).toLowerCase();
+    card.title = icon.label;
+    card.onclick = function() { pdSelectIcon(icon.id, icon.label); };
+    card.innerHTML = '<svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><use href="#' + icon.id + '"/></svg><span class="pd-ip-lbl">' + icon.label + '</span>';
+    grid.appendChild(card);
+  });
+});
 
 // ── Map Location Picker ───────────────────────────────────────────────────────
 (function initPropertyMap() {

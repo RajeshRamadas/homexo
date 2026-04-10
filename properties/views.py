@@ -20,14 +20,14 @@ from .forms import PropertySearchForm, PropertyCreateForm
 # Inline formset for amenities / features (used by create & update views)
 PropertyFeatureFormSet = inlineformset_factory(
     Property, PropertyFeature,
-    fields=('name', 'icon_image'),
+    fields=('name', 'icon', 'icon_image'),
     extra=6, can_delete=True,
 )
 
 # Inline formset for connectivity / nearby items
 ConnectivityFormSet = inlineformset_factory(
     Property, ConnectivityItem,
-    fields=('category', 'name', 'distance', 'order'),
+    fields=('category', 'name', 'distance', 'order', 'icon'),
     extra=4, can_delete=True,
 )
 
