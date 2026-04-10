@@ -189,6 +189,9 @@ class Property(models.Model):
 
     # ── Flags ─────────────────────────────────────────────────────────────────
     is_featured    = models.BooleanField(default=False, db_index=True)
+    show_in_explore = models.BooleanField(default=False, db_index=True,
+                                          verbose_name='Show in Explore Section',
+                                          help_text='Display this property in the Explore Properties grid on the home page.')
     is_signature   = models.BooleanField(default=False, help_text='Ultra-premium / Signature collection')
     is_new         = models.BooleanField(default=True)
     is_exclusive   = models.BooleanField(default=False)

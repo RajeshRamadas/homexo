@@ -78,14 +78,14 @@ class ConnectivityItemInline(admin.TabularInline):
 class PropertyAdmin(admin.ModelAdmin):
     list_display   = ('primary_thumb', 'title', 'developer', 'listing_type', 'property_type',
                       'display_price', 'locality', 'city', 'bedrooms', 'bathrooms',
-                      'is_featured', 'is_signature', 'status', 'views_count', 'created_at')
+                      'is_featured', 'show_in_explore', 'is_signature', 'status', 'views_count', 'created_at')
     list_display_links = ('title',)
     list_filter    = ('status', 'listing_type', 'property_type', 'city',
-                      'is_featured', 'is_signature', 'is_new')
+                      'is_featured', 'show_in_explore', 'is_signature', 'is_new')
     search_fields  = ('title', 'locality', 'city', 'address', 'owner__email')
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ('views_count', 'created_at', 'updated_at', 'display_price')
-    list_editable  = ('is_featured', 'is_signature', 'status')
+    list_editable  = ('is_featured', 'show_in_explore', 'is_signature', 'status')
     date_hierarchy = 'created_at'
     ordering       = ('-created_at',)
     inlines        = [PropertyImageInline, PropertyFloorPlanInline, PropertyFeatureInline, ConnectivityItemInline]
@@ -115,7 +115,7 @@ class PropertyAdmin(admin.ModelAdmin):
                        'rera_approved', 'rera_number', 'title_verified', 'is_negotiable')
         }),
         ('Flags & Tags', {
-            'fields': ('is_featured', 'is_signature', 'is_new', 'is_exclusive', 'tags')
+            'fields': ('is_featured', 'show_in_explore', 'is_signature', 'is_new', 'is_exclusive', 'tags')
         }),
         ('Meta', {
             'fields': ('views_count', 'created_at', 'updated_at'),

@@ -235,6 +235,11 @@ def home(request):
             status='active', is_featured=True
         ).prefetch_related('images', 'tags').order_by('-created_at')[:6],
 
+        # Explore properties grid (filterable tabs — New Launch, Apartments, Plots, Villas, Luxury)
+        'explore_properties': Property.objects.filter(
+            status='active', show_in_explore=True
+        ).prefetch_related('images').order_by('-is_new', '-created_at')[:20],
+
         # Testimonials carousel
         'testimonials': Testimonial.objects.filter(is_active=True).order_by('order')[:6],
 

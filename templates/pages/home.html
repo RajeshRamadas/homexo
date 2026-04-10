@@ -482,6 +482,50 @@
   .news-dot { width:6px;height:6px;border-radius:50%;background:rgba(13,43,78,.2);cursor:pointer;transition:all .3s; }
   .news-dot.active { background:var(--navy);width:20px;border-radius:3px; }
 
+  /* ═══ EXPLORE PROPERTIES ═══ */
+  .ep-tabs { display:flex;gap:0;border-bottom:2px solid rgba(13,43,78,.08);margin-bottom:28px;overflow-x:auto;scrollbar-width:none; }
+  .ep-tabs::-webkit-scrollbar { display:none; }
+  .ep-tab { padding:10px 24px;font-size:13px;font-weight:600;font-family:'Source Sans 3',sans-serif;letter-spacing:.3px;background:none;border:none;cursor:pointer;color:var(--warm-grey);position:relative;white-space:nowrap;transition:color .25s; }
+  .ep-tab::after { content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--sky);transform:scaleX(0);transition:transform .3s cubic-bezier(.23,1,.32,1); }
+  .ep-tab.active { color:var(--sky); }
+  .ep-tab.active::after { transform:scaleX(1); }
+  .ep-tab:hover:not(.active) { color:var(--charcoal); }
+
+  .ep-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;grid-auto-rows:auto; }
+  .ep-card-hero { grid-column:1/3;grid-row:1/2; }
+  .ep-card { background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(13,43,78,.06);transition:box-shadow .3s,transform .3s; }
+  .ep-card:hover { box-shadow:0 8px 32px rgba(13,43,78,.14);transform:translateY(-3px); }
+  .ep-card-img { position:relative;overflow:hidden;height:200px; }
+  .ep-card-hero .ep-card-img { height:300px; }
+  .ep-card-img img { width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.23,1,.32,1); }
+  .ep-card:hover .ep-card-img img { transform:scale(1.05); }
+  .ep-badges { position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:5px; }
+  .ep-badge { font-size:9px;font-weight:700;letter-spacing:1.5px;color:#fff;padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block; }
+  .ep-card-body { padding:16px 18px 18px; }
+  .ep-card-title { font-size:15px;font-weight:600;color:var(--charcoal);line-height:1.4;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+  .ep-card-hero .ep-card-title { font-size:17px; }
+  .ep-card-desc { font-size:12px;line-height:1.6;color:var(--warm-grey);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden; }
+  .ep-card-loc { font-size:10px;letter-spacing:1.5px;color:var(--warm-grey);display:flex;align-items:center;gap:5px;font-weight:600; }
+  .ep-card-loc svg { color:var(--sky);flex-shrink:0; }
+
+  .ep-pagination { display:flex;align-items:center;justify-content:center;gap:12px;margin-top:32px; }
+  .ep-page-btn { padding:9px 24px;border:1px solid rgba(13,43,78,.2);background:var(--white);color:var(--charcoal);font-size:12px;font-weight:500;font-family:'Source Sans 3',sans-serif;cursor:pointer;border-radius:4px;transition:all .25s; }
+  .ep-page-btn:hover:not(:disabled) { background:var(--navy);color:var(--white);border-color:var(--navy); }
+  .ep-page-btn:disabled { opacity:.4;cursor:not-allowed; }
+  .ep-page-btn-next { background:var(--sky);color:var(--white);border-color:var(--sky); }
+  .ep-page-btn-next:hover:not(:disabled) { background:#2E6FA8;border-color:#2E6FA8; }
+  .ep-page-info { font-size:12px;color:var(--warm-grey);font-family:'Source Sans 3',sans-serif; }
+
+  @media(max-width:1024px) {
+    .ep-grid { grid-template-columns:repeat(2,1fr); }
+    .ep-card-hero { grid-column:1/3; }
+  }
+  @media(max-width:600px) {
+    .ep-grid { grid-template-columns:1fr; }
+    .ep-card-hero { grid-column:1; }
+    .ep-card-hero .ep-card-img { height:220px; }
+  }
+
   /* ═══ TESTIMONIALS ═══ */
   .testimonials-section { padding:44px 48px;background:var(--cream); }
   .testimonial-carousel-wrapper { position:relative;overflow:hidden;margin-top:32px; }
@@ -1064,6 +1108,71 @@
   </div>
 </section>
 
+<!-- ════════════════════ EXPLORE PROPERTIES ══════════════════ -->
+{% if explore_properties %}
+<section class="section" id="exploreSection" style="background:var(--cream);">
+  <div class="section-flex" style="margin-bottom:28px;">
+    <div>
+      <div class="section-eyebrow">Browse By Category</div>
+      <h2 class="section-title">Explore<br><em>Properties</em></h2>
+    </div>
+    <a href="{% url 'properties:list' %}" class="view-all"><span></span> View All</a>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="ep-tabs" id="epTabs">
+    <button class="ep-tab active" data-filter="all" onclick="epFilter(this,'all')">New Launch</button>
+    <button class="ep-tab" data-filter="apartment" onclick="epFilter(this,'apartment')">Apartments</button>
+    <button class="ep-tab" data-filter="plot" onclick="epFilter(this,'plot')">Plots</button>
+    <button class="ep-tab" data-filter="villa" onclick="epFilter(this,'villa')">Villas</button>
+    <button class="ep-tab" data-filter="luxury" onclick="epFilter(this,'luxury')">Luxury Homes</button>
+    <button class="ep-tab" data-filter="upcoming" onclick="epFilter(this,'upcoming')">Upcoming</button>
+  </div>
+
+  <!-- Grid -->
+  <div class="ep-grid" id="epGrid">
+    {% for prop in explore_properties %}
+    <a href="{{ prop.get_absolute_url }}" class="ep-card {% if forloop.first %}ep-card-hero{% endif %}"
+       data-type="{{ prop.property_type }}"
+       data-new="{{ prop.is_new|yesno:'1,0' }}"
+       data-luxury="{{ prop.is_signature|yesno:'1,0' }}"
+       data-upcoming="{% if prop.construction_status == 'under_construction' %}1{% else %}0{% endif %}"
+       style="text-decoration:none;">
+      <div class="ep-card-img">
+        {% if prop.primary_image %}
+        <img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" loading="lazy">
+        {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>
+        {% endif %}
+        <div class="ep-badges">
+          {% if prop.is_new %}<span class="ep-badge" style="background:#E86A2C;">NEW LAUNCH</span>{% endif %}
+          {% if prop.is_signature %}<span class="ep-badge" style="background:linear-gradient(90deg,#8B6914,#C89B2A);">LUXURY</span>{% endif %}
+          {% if prop.construction_status == 'under_construction' %}<span class="ep-badge" style="background:#1A7A4A;">UPCOMING</span>{% endif %}
+        </div>
+      </div>
+      <div class="ep-card-body">
+        <div class="ep-card-title">{{ prop.title }}</div>
+        {% if prop.description %}
+        <div class="ep-card-desc">{{ prop.description|truncatechars:120 }}</div>
+        {% endif %}
+        <div class="ep-card-loc">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          {{ prop.locality|upper }}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  <div class="ep-pagination" id="epPagination">
+    <button class="ep-page-btn" id="epPrev" onclick="epChangePage(-1)" disabled>Previous</button>
+    <span class="ep-page-info" id="epPageInfo">Page 1 of 1</span>
+    <button class="ep-page-btn ep-page-btn-next" id="epNext" onclick="epChangePage(1)">Next</button>
+  </div>
+</section>
+{% endif %}
+
 <!-- ════════════════════ FEATURED DEVELOPERS ══════════════════ -->
 {% if featured_developers %}
 <section class="section" style="background:var(--white);">
@@ -1333,6 +1442,55 @@ function slideProp(dir) {
 // ── Developer slider ──
 let devIndex = 0;
 const totalDevs = document.querySelectorAll('#devSlider .property-card').length;
+
+// ── Explore Properties ──
+const EP_PER_PAGE = 7; // 1 hero + 6 grid
+let epCurrentPage = 1;
+let epCurrentFilter = 'all';
+
+function epFilter(btn, filter) {
+  document.querySelectorAll('.ep-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  epCurrentFilter = filter;
+  epCurrentPage = 1;
+  epRender();
+}
+
+function epChangePage(dir) {
+  epCurrentPage += dir;
+  epRender();
+  document.getElementById('exploreSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function epRender() {
+  const allCards = Array.from(document.querySelectorAll('#epGrid .ep-card'));
+  const filtered = allCards.filter(card => {
+    if (epCurrentFilter === 'all')      return card.dataset.new === '1';
+    if (epCurrentFilter === 'luxury')   return card.dataset.luxury === '1';
+    if (epCurrentFilter === 'upcoming') return card.dataset.upcoming === '1';
+    return card.dataset.type === epCurrentFilter;
+  });
+
+  // Fallback: if no match show all
+  const pool = filtered.length ? filtered : allCards;
+  const totalPages = Math.max(1, Math.ceil(pool.length / EP_PER_PAGE));
+  epCurrentPage = Math.min(epCurrentPage, totalPages);
+
+  const start = (epCurrentPage - 1) * EP_PER_PAGE;
+  const visible = pool.slice(start, start + EP_PER_PAGE);
+
+  allCards.forEach(c => { c.style.display = 'none'; c.classList.remove('ep-card-hero'); });
+  visible.forEach((c, i) => {
+    c.style.display = '';
+    if (i === 0) c.classList.add('ep-card-hero');
+  });
+
+  document.getElementById('epPageInfo').textContent = 'Page ' + epCurrentPage + ' of ' + totalPages;
+  document.getElementById('epPrev').disabled = epCurrentPage <= 1;
+  document.getElementById('epNext').disabled = epCurrentPage >= totalPages;
+}
+
+document.addEventListener('DOMContentLoaded', epRender);
 
 function slideDev(dir) {
   const slider  = document.getElementById('devSlider');
