@@ -11,7 +11,7 @@
   <div id="pdIconPickerGrid"></div>
 </div>
 
-{# ── Field Visibility Rules (data-show-for="buy rent new_project commercial") ── #}
+{# ── Field Visibility Rules (data-show-for="buy new_project") ── #}
 {# Each .pf-field-group gets a data-show-for with space-separated listing types.  #}
 {# JS reads the select value and toggles display accordingly.                     #}
 
@@ -30,9 +30,7 @@
     letter-spacing: .3px; margin-bottom: 16px;
   }
   .hint-buy     { background: #eaf3fa; color: #1a4a7a; border: 1px solid #b0d0f0; }
-  .hint-rent    { background: #eafaf0; color: #1a6a3a; border: 1px solid #a0d8b0; }
   .hint-newproj { background: #faf5e0; color: #7a5a00; border: 1px solid #d8c870; }
-  .hint-commercial { background: #f5eaff; color: #5a1a7a; border: 1px solid #c8a0e8; }
 
   /* ── Amenity row icon picker ── */
   .pd-amenity-row { display:flex; gap:5px; align-items:center; }
@@ -139,31 +137,19 @@
     <div class="pf-section-title">Pricing</div>
     <div class="pf-grid-3">
 
-      {# Price — Buy, New Project, Commercial #}
-      <div class="form-group pf-field-group" data-show-for="buy new_project commercial" style="grid-column: span 2;">
+      {# Price — Buy, New Project #}
+      <div class="form-group pf-field-group" data-show-for="buy new_project" style="grid-column: span 2;">
         <label>Price (₹) *</label>
         <input type="number" name="price" value="{{ form.price.value|default:'' }}" placeholder="e.g. 5000000">
         {% if form.price.errors %}<div class="form-error">{{ form.price.errors.0 }}</div>{% endif %}
       </div>
 
-      {# Rent amount — Rent only (reuses price field) #}
-      <div class="form-group pf-field-group" data-show-for="rent" style="grid-column: span 2;">
-        <label>Monthly Rent (₹) *</label>
-        <input type="number" name="price" value="{{ form.price.value|default:'' }}" placeholder="e.g. 35000">
-        <div class="pf-note">This is the monthly rent amount.</div>
-      </div>
-
-      {# Price Label — Buy, New Project, Commercial only #}
-      <div class="form-group pf-field-group" data-show-for="buy new_project commercial">
+      {# Price Label — Buy, New Project only #}
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Price Label</label>
         <input type="text" name="price_label" value="{{ form.price_label.value|default:'' }}" placeholder="e.g. / Onwards">
       </div>
 
-      {# Rent label hint — Rent only #}
-      <div class="form-group pf-field-group" data-show-for="rent">
-        <label>Label</label>
-        <input type="text" name="price_label" value="{{ form.price_label.value|default:'/ Month' }}" placeholder="/ Month">
-      </div>
     </div>
 
     <div class="pf-grid-3" style="margin-top:16px;">
@@ -173,24 +159,13 @@
         <label for="priceOnReq" style="font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;">Price on Request (hide price from listing)</label>
       </div>
 
-      {# Negotiable — Buy, Rent, Commercial (not new_project) #}
-      <div class="form-group pf-field-group" data-show-for="buy rent commercial" style="display:flex;align-items:center;gap:10px;">
+      {# Negotiable — Buy (not new_project) #}
+      <div class="form-group pf-field-group" data-show-for="buy" style="display:flex;align-items:center;gap:10px;">
         <input type="checkbox" name="is_negotiable" id="isNegotiable" {% if form.is_negotiable.value %}checked{% endif %} style="width:auto;">
         <label for="isNegotiable" style="font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;">Price is Negotiable</label>
       </div>
     </div>
 
-    {# Rent-specific fields #}
-    <div class="pf-grid-2 pf-field-group" data-show-for="rent commercial" style="margin-top:20px;">
-      <div class="form-group">
-        <label>Security Deposit (₹)</label>
-        <input type="number" name="security_deposit" value="{{ form.security_deposit.value|default:'' }}" placeholder="e.g. 100000">
-      </div>
-      <div class="form-group">
-        <label>Maintenance Charge (₹ / Month)</label>
-        <input type="number" name="maintenance_charge" value="{{ form.maintenance_charge.value|default:'' }}" placeholder="e.g. 3000">
-      </div>
-    </div>
   </div>
 
   {# ── Section 3: Location ── #}
@@ -236,9 +211,9 @@
   <div class="pf-section">
     <div class="pf-section-title">Property Details</div>
 
-    {# BHK / Bedrooms — not for commercial (show "Configuration" instead) #}
+    {# BHK / Bedrooms #}
     <div class="pf-grid-4">
-      <div class="form-group pf-field-group" data-show-for="buy rent new_project">
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>BHK</label>
         <select name="bhk">
           {% for val, label in form.fields.bhk.choices %}
@@ -246,18 +221,15 @@
           {% endfor %}
         </select>
       </div>
-      <div class="form-group pf-field-group" data-show-for="buy rent new_project">
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Bedrooms</label>
         <input type="number" name="bedrooms" value="{{ form.bedrooms.value|default:'0' }}" min="0" max="20">
       </div>
-      <div class="form-group pf-field-group" data-show-for="buy rent new_project">
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Bathrooms</label>
         <input type="number" name="bathrooms" value="{{ form.bathrooms.value|default:'0' }}" min="0" max="20">
       </div>
-      <div class="form-group pf-field-group" data-show-for="commercial">
-        <label>Washrooms</label>
-        <input type="number" name="bathrooms" value="{{ form.bathrooms.value|default:'0' }}" min="0" max="50">
-      </div>
+
       <div class="form-group">
         <label>Parking Slots</label>
         <input type="number" name="parking_slots" value="{{ form.parking_slots.value|default:'0' }}" min="0" max="10">
@@ -279,17 +251,17 @@
         <label>Built-up Area (sq.ft)</label>
         <input type="number" name="area_sqft" value="{{ form.area_sqft.value|default:'' }}" placeholder="e.g. 1850">
       </div>
-      {# Carpet Area — Buy, New Project, Commercial (not Rent) #}
-      <div class="form-group pf-field-group" data-show-for="buy new_project commercial">
+      {# Carpet Area — Buy, New Project #}
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Carpet Area (sq.ft)</label>
         <input type="number" name="carpet_area" value="{{ form.carpet_area.value|default:'' }}" placeholder="e.g. 1450">
       </div>
-      {# Floor / Total Floors — all residential types #}
-      <div class="form-group pf-field-group" data-show-for="buy rent new_project commercial">
+      {# Floor / Total Floors — all types #}
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Floor No.</label>
         <input type="number" name="floor_no" value="{{ form.floor_no.value|default:'' }}" min="0">
       </div>
-      <div class="form-group pf-field-group" data-show-for="buy rent new_project commercial">
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Total Floors</label>
         <input type="number" name="total_floors" value="{{ form.total_floors.value|default:'' }}" min="1">
       </div>
@@ -297,7 +269,7 @@
 
     {# Additional Details #}
     <div class="pf-grid-3" style="margin-top:16px;">
-      <div class="form-group pf-field-group" data-show-for="buy rent new_project commercial">
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>Furnishing</label>
         <select name="furnishing">
           <option value="">Select...</option>
@@ -310,15 +282,15 @@
         <label>Facing</label>
         <input type="text" name="facing" value="{{ form.facing.value|default:'' }}" placeholder="e.g. East, North-East">
       </div>
-      {# Age of Property — Buy, Rent, Commercial (not new_project) #}
-      <div class="form-group pf-field-group" data-show-for="buy rent commercial">
+      {# Age of Property — Buy (not new_project) #}
+      <div class="form-group pf-field-group" data-show-for="buy">
         <label>Property Age (yrs)</label>
         <input type="number" name="age_years" value="{{ form.age_years.value|default:'' }}" min="0">
       </div>
     </div>
 
-    {# Construction Status + Possession Date — Buy, New Project, Commercial #}
-    <div class="pf-grid-3 pf-field-group" data-show-for="buy new_project commercial" style="margin-top:16px;">
+    {# Construction Status + Possession Date — Buy, New Project #}
+    <div class="pf-grid-3 pf-field-group" data-show-for="buy new_project" style="margin-top:16px;">
       <div class="form-group">
         <label>Construction Status</label>
         <select name="construction_status">
@@ -328,40 +300,12 @@
           {% endfor %}
         </select>
       </div>
-      <div class="form-group pf-field-group" data-show-for="new_project commercial">
+      <div class="form-group pf-field-group" data-show-for="new_project">
         <label>Possession Date</label>
         <input type="date" name="possession_date" value="{{ form.possession_date.value|default:'' }}" style="max-width:200px;">
       </div>
     </div>
 
-    {# Rent-specific: Available From, Tenant Preference #}
-    <div class="pf-grid-3 pf-field-group" data-show-for="rent commercial" style="margin-top:16px;">
-      <div class="form-group">
-        <label>Available From</label>
-        <input type="date" name="available_from" value="{{ form.available_from.value|default:'' }}" style="max-width:200px;">
-      </div>
-      <div class="form-group pf-field-group" data-show-for="rent">
-        <label>Tenant Preference</label>
-        <select name="tenant_preference">
-          <option value="">Any...</option>
-          {% for val, label in form.fields.tenant_preference.choices %}
-          {% if val %}<option value="{{ val }}" {% if form.tenant_preference.value == val %}selected{% endif %}>{{ label }}</option>{% endif %}
-          {% endfor %}
-        </select>
-      </div>
-    </div>
-
-    {# Commercial-specific: Lock-in period, Power Backup #}
-    <div class="pf-grid-3 pf-field-group" data-show-for="commercial" style="margin-top:16px;">
-      <div class="form-group">
-        <label>Lock-in Period (Years)</label>
-        <input type="number" name="lock_in_period" value="{{ form.lock_in_period.value|default:'' }}" min="0" placeholder="e.g. 3">
-      </div>
-      <div class="form-group" style="display:flex;align-items:center;gap:10px;">
-        <input type="checkbox" name="power_backup" value="True" id="pfPowerBackup" {% if form.power_backup.value %}checked{% endif %} style="width:auto;margin:0;">
-        <label for="pfPowerBackup" style="font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;cursor:pointer;">Power Backup Available</label>
-      </div>
-    </div>
   </div>
 
   {# ── Section 5: Ownership & Legal ── #}
@@ -369,8 +313,8 @@
     <div class="pf-section-title">Ownership &amp; Legal</div>
 
     <div class="pf-grid-3">
-      {# Ownership Type — Buy, Commercial (not rent, not new_project) #}
-      <div class="form-group pf-field-group" data-show-for="buy commercial">
+      {# Ownership Type — Buy (not new_project) #}
+      <div class="form-group pf-field-group" data-show-for="buy">
         <label>Ownership Type</label>
         <select name="ownership_type">
           <option value="">Select...</option>
@@ -380,14 +324,14 @@
         </select>
       </div>
 
-      {# Title Verified — Buy, Commercial #}
-      <div class="form-group pf-field-group" data-show-for="buy commercial" style="display:flex;align-items:center;gap:10px;">
+      {# Title Verified — Buy #}
+      <div class="form-group pf-field-group" data-show-for="buy" style="display:flex;align-items:center;gap:10px;">
         <input type="checkbox" name="title_verified" value="True" id="pfTitleVerified" {% if form.title_verified.value %}checked{% endif %} style="width:auto;margin:0;">
         <label for="pfTitleVerified" style="font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;cursor:pointer;">Title / Legal Verified</label>
       </div>
 
-      {# RERA — Buy, New Project, Commercial (not Rent) #}
-      <div class="form-group pf-field-group" data-show-for="buy new_project commercial">
+      {# RERA — Buy, New Project #}
+      <div class="form-group pf-field-group" data-show-for="buy new_project">
         <label>RERA Approved <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional)</span></label>
         <label style="display:flex;align-items:center;gap:10px;height:44px;font-size:13px;color:var(--soft-brown);text-transform:none;letter-spacing:0;margin:0;cursor:pointer;">
           <input type="checkbox" name="rera_approved" id="reraApproved" value="True" {% if form.rera_approved.value %}checked{% endif %} style="width:auto;margin:0;" onchange="pdToggleRera(this.checked)">
@@ -396,7 +340,7 @@
       </div>
     </div>
 
-    <div class="form-group pf-field-group" data-show-for="buy new_project commercial" id="reraNumberRow"
+    <div class="form-group pf-field-group" data-show-for="buy new_project" id="reraNumberRow"
          style="margin-top:12px;{% if not form.rera_approved.value %}display:none;{% endif %}">
       <label>RERA Registration Number</label>
       <input type="text" name="rera_number" id="id_rera_number" value="{{ form.rera_number.value|default:'' }}" placeholder="e.g. P52100012345" style="max-width:320px;">
@@ -436,7 +380,7 @@
   </div>
 
   {# ── Section 7: Floor Plans ── #}
-  <div class="pf-section pf-field-group" data-show-for="buy new_project commercial">
+  <div class="pf-section pf-field-group" data-show-for="buy new_project">
     <div class="pf-section-title">Floor Plans</div>
     <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Upload one or more floor plan / layout images (JPG, PNG, WEBP). Max 10 MB each.</p>
 
@@ -601,9 +545,7 @@
 // ── Listing Type → Field Visibility ──────────────────────────────────────────
 const PF_HINTS = {
   buy:         { cls: 'hint-buy',       icon: '🏠', label: 'Buy Listing — Show price, ownership, RERA, title verified' },
-  rent:        { cls: 'hint-rent',      icon: '🔑', label: 'Rent Listing — Show monthly rent, deposit, tenant preference, available from' },
   new_project: { cls: 'hint-newproj',   icon: '🏗️', label: 'New Project — Show project price, possession date, RERA, construction status' },
-  commercial:  { cls: 'hint-commercial',icon: '🏢', label: 'Commercial — Show rent/price, lock-in period, power backup, washrooms' },
 };
 
 function pfHandleListingType() {

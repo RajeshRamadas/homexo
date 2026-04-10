@@ -98,14 +98,12 @@ class ProfileCompleteForm(forms.ModelForm):
             'phone':      forms.TextInput(attrs={'placeholder': 'Phone Number'}),
             'preferred_city': forms.TextInput(attrs={'placeholder': 'e.g. Bangalore'}),
             'preferred_listing_type':  forms.Select(choices=[('', 'Select…')] + [
-                ('buy', 'Buy'), ('rent', 'Rent'),
-                ('new_project', 'New Project'), ('commercial', 'Commercial'),
+                ('buy', 'Buy'),
+                ('new_project', 'New Project'),
             ]),
             'preferred_property_type': forms.Select(choices=[('', 'Select…')] + [
                 ('apartment', 'Apartment'), ('villa', 'Villa'),
                 ('penthouse', 'Penthouse'), ('plot', 'Plot / Land'),
-                ('office', 'Office Space'), ('shop', 'Shop / Retail'),
-                ('warehouse', 'Warehouse'),
             ]),
             'preferred_bhk': forms.Select(choices=[('', 'Select…')] + [
                 ('studio', 'Studio'), ('1bhk', '1 BHK'), ('2bhk', '2 BHK'),

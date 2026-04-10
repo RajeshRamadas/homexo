@@ -97,8 +97,7 @@ class PropertyAdmin(admin.ModelAdmin):
                        'owner', 'status')
         }),
         ('Pricing', {
-            'fields': ('price', 'display_price', 'price_label', 'price_on_req',
-                       'security_deposit', 'maintenance_charge')
+            'fields': ('price', 'display_price', 'price_label', 'price_on_req')
         }),
         ('Location', {
             'fields': ('address', 'locality', 'city', 'state', 'pincode',
@@ -111,8 +110,8 @@ class PropertyAdmin(admin.ModelAdmin):
         ('Details', {
             'fields': ('furnishing', 'construction_status', 'facing', 'age_years',
                        'parking_slots', 'two_wheeler_parking', 'four_wheeler_parking',
-                       'possession_date', 'available_from', 'tenant_preference',
-                       'ownership_type', 'lock_in_period', 'power_backup',
+                       'possession_date',
+                       'ownership_type',
                        'rera_approved', 'rera_number', 'title_verified', 'is_negotiable')
         }),
         ('Flags & Tags', {

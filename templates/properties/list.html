@@ -3,9 +3,7 @@
 
 {% block title %}
   {% if request.GET.type == 'buy' %}Properties for Sale
-  {% elif request.GET.type == 'rent' %}Properties for Rent
   {% elif request.GET.type == 'new_project' %}New Projects
-  {% elif request.GET.type == 'commercial' %}Commercial Properties
   {% else %}Browse Properties{% endif %} — HOMEXO
 {% endblock %}
 
@@ -452,14 +450,11 @@
         <a href="{% url 'pages:home' %}">Home</a>
         <span class="page-breadcrumb-sep">›</span>
         {% if request.GET.type == 'buy' %}<span>Buy</span>
-        {% elif request.GET.type == 'rent' %}<span>Rent</span>
         {% elif request.GET.type == 'new_project' %}<span>New Projects</span>
-        {% elif request.GET.type == 'commercial' %}<span>Commercial</span>
         {% elif request.GET.property_type == 'apartment' %}<span>Apartments</span>
         {% elif request.GET.property_type == 'villa' %}<span>Villas</span>
         {% elif request.GET.property_type == 'penthouse' %}<span>Penthouses</span>
         {% elif request.GET.property_type == 'plot' %}<span>Plots</span>
-        {% elif request.GET.property_type == 'office' %}<span>Offices</span>
         {% else %}<span>All Properties</span>{% endif %}
         {% if request.GET.location %}
         <span class="page-breadcrumb-sep">›</span><span>{{ request.GET.location }}</span>
@@ -468,14 +463,11 @@
       <div class="page-eyebrow">Property Listings</div>
       <h1 class="page-title">
         {% if request.GET.type == 'buy' %}Homes for <em>Sale</em>
-        {% elif request.GET.type == 'rent' %}Homes for <em>Rent</em>
         {% elif request.GET.type == 'new_project' %}New <em>Projects</em>
-        {% elif request.GET.type == 'commercial' %}Commercial <em>Properties</em>
         {% elif request.GET.property_type == 'apartment' %}Browse <em>Apartments</em>
         {% elif request.GET.property_type == 'villa' %}Browse <em>Villas</em>
         {% elif request.GET.property_type == 'penthouse' %}Browse <em>Penthouses</em>
         {% elif request.GET.property_type == 'plot' %}Browse <em>Plots</em>
-        {% elif request.GET.property_type == 'office' %}Browse <em>Offices</em>
         {% else %}Browse <em>Properties</em>{% endif %}
         {% if request.GET.location %}<br><em>{{ request.GET.location }}</em>{% endif %}
       </h1>
@@ -506,12 +498,11 @@
   {# FILTER BAR (desktop) #}
   <div class="lx-filter-bar">
     <div class="lx-filter-tabs">
-      <button type="button" class="lx-filter-tab {% if not request.GET.property_type and request.GET.type != 'commercial' %}active{% endif %}" onclick="quickFilter('property_type','')">All</button>
+      <button type="button" class="lx-filter-tab {% if not request.GET.property_type %}active{% endif %}" onclick="quickFilter('property_type','')">All</button>
       <button type="button" class="lx-filter-tab {% if request.GET.property_type == 'apartment' %}active{% endif %}" onclick="quickFilter('property_type','apartment')">Apartment</button>
       <button type="button" class="lx-filter-tab {% if request.GET.property_type == 'villa' %}active{% endif %}" onclick="quickFilter('property_type','villa')">Villa</button>
       <button type="button" class="lx-filter-tab {% if request.GET.property_type == 'penthouse' %}active{% endif %}" onclick="quickFilter('property_type','penthouse')">Penthouse</button>
       <button type="button" class="lx-filter-tab {% if request.GET.property_type == 'plot' %}active{% endif %}" onclick="quickFilter('property_type','plot')">Plots</button>
-      <button type="button" class="lx-filter-tab {% if request.GET.type == 'commercial' %}active{% endif %}" onclick="quickFilter('type','commercial')">Commercial</button>
     </div>
     <div class="lx-filter-actions">
       <div class="lx-filter-sep"></div>
@@ -599,7 +590,6 @@
         <div class="lx-chips">
           <button type="button" class="lx-chip {% if not request.GET.type %}active{% endif %}" onclick="setChip('iType','',this)">Any</button>
           <button type="button" class="lx-chip {% if request.GET.type == 'buy' %}active{% endif %}" onclick="setChip('iType','buy',this)">Buy</button>
-          <button type="button" class="lx-chip {% if request.GET.type == 'rent' %}active{% endif %}" onclick="setChip('iType','rent',this)">Rent</button>
           <button type="button" class="lx-chip {% if request.GET.type == 'new_project' %}active{% endif %}" onclick="setChip('iType','new_project',this)">New Project</button>
         </div>
       </div>
@@ -612,7 +602,6 @@
           <button type="button" class="lx-chip {% if request.GET.property_type == 'villa' %}active{% endif %}" onclick="setChip('iPropertyType','villa',this)">Villa</button>
           <button type="button" class="lx-chip {% if request.GET.property_type == 'penthouse' %}active{% endif %}" onclick="setChip('iPropertyType','penthouse',this)">Penthouse</button>
           <button type="button" class="lx-chip {% if request.GET.property_type == 'plot' %}active{% endif %}" onclick="setChip('iPropertyType','plot',this)">Plot / Land</button>
-          <button type="button" class="lx-chip {% if request.GET.property_type == 'office' %}active{% endif %}" onclick="setChip('iPropertyType','office',this)">Office</button>
         </div>
       </div>
 
@@ -976,8 +965,8 @@ function quickFilter(field, value) {
   if (field === 'property_type') {
     document.getElementById('iPropertyType').value = value;
     // Clicking a property-type tab (All/Apartment/Villa/etc.) means the user is
-    // browsing by property type — clear the Commercial listing-type tab so they
-    // are never stuck with type=commercial + a property_type filter combined.
+    // browsing by property type — clear listing-type tab so they
+    // are never stuck with a stale type filter combined.
     document.getElementById('iType').value = '';
   } else if (field === 'type') {
     document.getElementById('iType').value = value;

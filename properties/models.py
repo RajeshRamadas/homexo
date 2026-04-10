@@ -86,9 +86,7 @@ class Property(models.Model):
 
     class ListingType(models.TextChoices):
         BUY        = 'buy',        'Buy'
-        RENT       = 'rent',       'Rent'
         NEW_PROJ   = 'new_project','New Project'
-        COMMERCIAL = 'commercial', 'Commercial'
 
     class PropertyType(models.TextChoices):
         APARTMENT         = 'apartment',         'Apartment'
@@ -98,9 +96,6 @@ class Property(models.Model):
         VILLA             = 'villa',             'Villa'
         PENTHOUSE         = 'penthouse',         'Penthouse'
         PLOT              = 'plot',              'Plot / Land'
-        OFFICE            = 'office',            'Office Space'
-        SHOP              = 'shop',              'Shop / Retail'
-        WAREHOUSE         = 'warehouse',         'Warehouse'
 
     class BHK(models.TextChoices):
         STUDIO  = 'studio', 'Studio'
@@ -115,7 +110,6 @@ class Property(models.Model):
     class Status(models.TextChoices):
         ACTIVE     = 'active',     'Active'
         SOLD       = 'sold',       'Sold'
-        RENTED     = 'rented',     'Rented'
         PENDING    = 'pending',    'Pending Approval'
         DRAFT      = 'draft',      'Draft'
         INACTIVE   = 'inactive',   'Inactive'
@@ -138,12 +132,6 @@ class Property(models.Model):
         COOP       = 'coop',       'Co-operative Society'
         POA        = 'poa',        'Power of Attorney'
 
-    class TenantPreference(models.TextChoices):
-        ANY       = 'any',      'Anyone'
-        FAMILY    = 'family',   'Family Only'
-        BACHELORS = 'bachelors','Bachelors Only'
-        COMPANY   = 'company',  'Company Lease'
-
     # ── Ownership & Classification ────────────────────────────────────────────
     owner          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                        related_name='owned_properties')
@@ -164,14 +152,6 @@ class Property(models.Model):
                                       help_text='e.g. "/ Onwards", "/ Month"')
     price_on_req   = models.BooleanField(default=False, verbose_name='Price on Request')
     
-    # ── Rent / Commercial Specific ────────────────────────────────────────────
-    security_deposit   = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
-    maintenance_charge = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, help_text="Monthly maintenance")
-    tenant_preference  = models.CharField(max_length=15, choices=TenantPreference.choices, blank=True)
-    available_from     = models.DateField(null=True, blank=True)
-    lock_in_period     = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Lock-in period in years")
-    power_backup       = models.BooleanField(default=False)
-
     # ── Location ──────────────────────────────────────────────────────────────
     address        = models.TextField()
     locality       = models.CharField(max_length=100)
@@ -283,10 +263,8 @@ class Property(models.Model):
 
     @property
     def emi_display(self):
-        """EMI for 20-year loan at 7.28% p.a. (monthly reducing). Only for buy/new_project/commercial."""
+        """EMI for 20-year loan at 7.28% p.a. (monthly reducing). Only for buy/new_project."""
         if self.price_on_req or not self.price:
-            return None
-        if self.listing_type == self.ListingType.RENT:
             return None
         p = float(self.price)
         r = 7.28 / 100 / 12          # monthly rate

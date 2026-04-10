@@ -9,7 +9,6 @@ from django.conf import settings
 class Enquiry(models.Model):
     class EnquiryType(models.TextChoices):
         BUY          = 'buy',          'Buy Property'
-        RENT         = 'rent',         'Rent Property'
         SELL         = 'sell',         'Sell / List Property'
         HOME_LOAN    = 'home_loan',    'Home Loan'
         LEGAL        = 'legal',        'Property Legal'
