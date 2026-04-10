@@ -290,8 +290,26 @@
       <a href="{% url 'pages:nri_service' %}">NRI Services</a>
     </div>
   </div>
-  <a href="{% url 'properties:list' %}">Properties</a>
-  <a href="{% url 'pages:developers' %}">Developers</a>
+  <div class="mobile-dropdown">
+    <button class="mobile-dropdown-btn">Properties ▾</button>
+    <div class="mobile-dropdown-menu">
+      <a href="{% url 'properties:list' %}?type=new_project&con_status=under_construction">Upcoming Projects</a>
+      <a href="{% url 'properties:list' %}?is_new=1">New Launch</a>
+      <a href="{% url 'properties:list' %}?type=buy&sort=price_desc">Luxury Homes</a>
+      <a href="{% url 'properties:list' %}">All Properties</a>
+    </div>
+  </div>
+  <div class="mobile-dropdown">
+    <button class="mobile-dropdown-btn">Cities ▾</button>
+    <div class="mobile-dropdown-menu">
+      <a href="{% url 'properties:list' %}?location=Bengaluru">Bengaluru</a>
+      <a href="{% url 'properties:list' %}?location=Mumbai">Mumbai</a>
+      <a href="{% url 'properties:list' %}?location=Hyderabad">Hyderabad</a>
+      <a href="{% url 'properties:list' %}?location=Chennai">Chennai</a>
+      <a href="{% url 'properties:list' %}?location=Pune">Pune</a>
+      <a href="{% url 'properties:list' %}?location=Delhi">Delhi</a>
+    </div>
+  </div>
   <a href="{% url 'blog:list' %}">Blog</a>
   {% if user.is_authenticated %}
     <a href="{% url 'wishlist:list' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;">
@@ -299,10 +317,8 @@
       Wishlist{% if wishlist_count > 0 %} ({{ wishlist_count }}){% endif %}
     </a>
     <a href="{% url 'accounts:profile' %}">{{ user.first_name }}</a>
-    <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:14px 40px;border-bottom:none;margin-top:8px;">List Property</a>
   {% else %}
     <a href="{% url 'accounts:login' %}">Login</a>
-    <a href="{% url 'properties:create' %}" style="background:var(--navy);color:white;padding:14px 40px;border-bottom:none;margin-top:8px;">List Property</a>
   {% endif %}
 </div>
 
@@ -326,8 +342,26 @@
         <a href="{% url 'pages:nri_service' %}">NRI Services</a>
       </div>
     </div>
-    <a href="{% url 'properties:list' %}">Properties</a>
-    <a href="{% url 'pages:developers' %}">Developers</a>
+    <div class="nav-dropdown">
+      <a style="cursor: pointer; display: flex; align-items: center; gap: 4px;">Properties ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="{% url 'properties:list' %}?type=new_project&con_status=under_construction">Upcoming Projects</a>
+        <a href="{% url 'properties:list' %}?is_new=1">New Launch</a>
+        <a href="{% url 'properties:list' %}?type=buy&sort=price_desc">Luxury Homes</a>
+        <a href="{% url 'properties:list' %}">All Properties</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <a style="cursor: pointer; display: flex; align-items: center; gap: 4px;">Cities ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="{% url 'properties:list' %}?location=Bengaluru">Bengaluru</a>
+        <a href="{% url 'properties:list' %}?location=Mumbai">Mumbai</a>
+        <a href="{% url 'properties:list' %}?location=Hyderabad">Hyderabad</a>
+        <a href="{% url 'properties:list' %}?location=Chennai">Chennai</a>
+        <a href="{% url 'properties:list' %}?location=Pune">Pune</a>
+        <a href="{% url 'properties:list' %}?location=Delhi">Delhi</a>
+      </div>
+    </div>
     <a href="{% url 'blog:list' %}">Blog</a>
     {% if user.is_authenticated %}
       <a href="{% url 'wishlist:list' %}" class="nav-wishlist">
@@ -340,10 +374,8 @@
       {% if user.role == 'advocate' %}
       <a href="{% url 'legal_services:advocate_dashboard' %}" class="nav-cta" style="background:var(--teal)!important;">My Cases</a>
       {% endif %}
-      <a href="{% url 'properties:create' %}" class="nav-cta">List Property</a>
     {% else %}
       <a href="{% url 'accounts:login' %}">Login</a>
-      <a href="{% url 'properties:create' %}" class="nav-cta">List Property</a>
     {% endif %}
   </div>
   <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
