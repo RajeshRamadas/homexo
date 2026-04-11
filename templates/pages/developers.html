@@ -281,127 +281,142 @@
 /* ══ DEVELOPER GRID ══ */
 .dev-grid {
   display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 24px; margin-bottom: 48px;
+  gap: 28px; margin-bottom: 48px;
 }
 
 /* ── Card shell ── */
 .dev-card {
   background: var(--white);
-  border-radius: 2px;
+  border-radius: 16px;
   overflow: hidden; position: relative;
   cursor: pointer;
   display: flex; flex-direction: column;
-  box-shadow: 0 2px 12px rgba(13,43,78,.07);
-  transition: box-shadow .4s cubic-bezier(.23,1,.32,1), transform .4s cubic-bezier(.23,1,.32,1);
+  border: 1px solid rgba(13,43,78,.07);
+  box-shadow: 0 4px 20px rgba(13,43,78,.07);
+  transition: box-shadow .4s cubic-bezier(.23,1,.32,1), transform .4s cubic-bezier(.23,1,.32,1), border-color .35s;
 }
 .dev-card:hover {
-  box-shadow: 0 24px 64px rgba(13,43,78,.18);
-  transform: translateY(-6px); z-index: 2;
+  box-shadow: 0 28px 72px rgba(13,43,78,.16);
+  transform: translateY(-8px); z-index: 2;
+  border-color: rgba(74,144,196,.25);
 }
+/* Accent top bar that reveals on hover */
+.dev-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--sky), #3a7db5, #0D2B4E);
+  opacity: 0; transition: opacity .35s;
+  z-index: 5;
+}
+.dev-card:hover::before { opacity: 1; }
 
 /* ── Cover / header ── */
 .dev-card-cover {
   position: relative; overflow: hidden;
-  padding: 28px 24px 0;
-  background: linear-gradient(145deg, #0a1e33 0%, #0D2B4E 60%, #1A3A5C 100%);
-  min-height: 160px;
+  padding: 28px 24px 24px;
+  background: linear-gradient(145deg, #071929 0%, #0D2B4E 55%, #1A3A5C 100%);
+  min-height: 180px;
   display: flex; flex-direction: column;
 }
-/* Subtle grid pattern on cover */
 .dev-card-cover::before {
   content: '';
   position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(74,144,196,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74,144,196,.06) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(rgba(74,144,196,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,144,196,.05) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
-/* Animated shimmer sweep on hover */
 .dev-card-cover::after {
   content: '';
   position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(105deg, transparent 40%, rgba(74,144,196,.08) 50%, transparent 60%);
-  transform: translateX(-100%);
-  transition: transform .6s ease;
+  background: linear-gradient(115deg, transparent 35%, rgba(74,144,196,.10) 50%, transparent 65%);
+  transform: translateX(-120%); transition: transform .65s ease;
 }
-.dev-card:hover .dev-card-cover::after { transform: translateX(100%); }
+.dev-card:hover .dev-card-cover::after { transform: translateX(120%); }
 
-/* Established year — top-left corner badge */
+/* Established year */
 .dev-est-badge {
-  position: absolute; top: 0; left: 0;
-  background: rgba(74,144,196,.18); border-bottom: 1px solid rgba(74,144,196,.25); border-right: 1px solid rgba(74,144,196,.25);
-  padding: 4px 10px; font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(200,216,236,.7);
-  z-index: 2;
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(74,144,196,.15); border: 1px solid rgba(74,144,196,.25);
+  padding: 3px 10px; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(200,216,236,.75);
+  border-radius: 20px; z-index: 2;
 }
 
-/* Verified badge — top-right */
+/* Verified badge */
 .dev-verified {
-  position: absolute; top: 0; right: 0; z-index: 3;
+  position: absolute; top: 12px; right: 12px; z-index: 3;
   display: flex; align-items: center; gap: 4px;
-  background: rgba(46,125,50,.2); border-left: 1px solid rgba(46,125,50,.35); border-bottom: 1px solid rgba(46,125,50,.35);
-  padding: 4px 10px; font-size: 9px; letter-spacing: 1.5px;
+  background: rgba(46,125,50,.18); border: 1px solid rgba(46,125,50,.35);
+  padding: 3px 10px; font-size: 9px; letter-spacing: 1.5px;
   text-transform: uppercase; color: #6fcf7f;
+  border-radius: 20px;
 }
 .dev-verified svg { color: #6fcf7f; }
 
-/* Logo circle */
+/* Logo box */
 .dev-logo {
-  width: 72px; height: 72px; flex-shrink: 0;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.14);
-  border-radius: 2px;
+  width: 76px; height: 76px; flex-shrink: 0;
+  background: rgba(255,255,255,.09);
+  border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 24px; font-weight: 700; color: var(--white);
+  font-size: 26px; font-weight: 700; color: var(--white);
   overflow: hidden;
   margin-bottom: 14px;
   position: relative; z-index: 1;
-  transition: border-color .3s;
+  transition: border-color .3s, box-shadow .3s;
 }
-.dev-card:hover .dev-logo { border-color: rgba(74,144,196,.6); }
+.dev-card:hover .dev-logo {
+  border-color: rgba(74,144,196,.7);
+  box-shadow: 0 0 0 4px rgba(74,144,196,.12);
+}
 
-/* Developer name & location inside cover */
-.dev-cover-body { position: relative; z-index: 1; padding-bottom: 20px; }
+/* Name & location */
+.dev-cover-body { position: relative; z-index: 1; }
 .dev-name {
-  font-family: 'Source Sans 3', sans-serif; font-size: 20px;
+  font-family: 'Source Sans 3', sans-serif; font-size: 19px;
   font-weight: 600; color: var(--white); line-height: 1.2; margin-bottom: 6px;
 }
 .dev-location {
-  font-size: 11px; color: rgba(200,216,236,.5); letter-spacing: .5px;
+  font-size: 11px; color: rgba(200,216,236,.55); letter-spacing: .5px;
   display: flex; align-items: center; gap: 4px; margin-bottom: 10px;
 }
-.dev-location svg { color: rgba(74,144,196,.7); flex-shrink: 0; }
+.dev-location svg { color: rgba(74,144,196,.8); flex-shrink: 0; }
+
+/* Segment tags */
 .dev-tags { display: flex; gap: 5px; flex-wrap: wrap; }
 .dev-tag {
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 2px 8px; border: 1px solid rgba(74,144,196,.2);
-  color: rgba(200,216,236,.5); border-radius: 1px;
+  padding: 3px 9px; border: 1px solid rgba(74,144,196,.2);
+  color: rgba(200,216,236,.55); border-radius: 20px;
 }
 .dev-tag.primary {
-  background: rgba(74,144,196,.15);
-  border-color: rgba(74,144,196,.4); color: #8cc5e8;
+  background: rgba(74,144,196,.18);
+  border-color: rgba(74,144,196,.45); color: #9fd0ee;
 }
 
 /* ── Stats bar ── */
 .dev-card-stats {
   display: grid; grid-template-columns: repeat(3,1fr);
-  border-bottom: 1px solid var(--border);
-}
-.dev-stat {
-  text-align: center; padding: 14px 8px;
-  border-right: 1px solid var(--border);
+  border-bottom: 1px solid rgba(13,43,78,.07);
   background: var(--white);
 }
+.dev-stat {
+  text-align: center; padding: 14px 8px 12px;
+  border-right: 1px solid rgba(13,43,78,.07);
+}
 .dev-stat:last-child { border-right: none; }
+.dev-stat-icon { color: var(--sky); margin-bottom: 4px; display: flex; justify-content: center; }
 .dev-stat-val {
-  font-family: 'Source Sans 3', sans-serif; font-size: 20px;
-  font-weight: 400; color: var(--navy); line-height: 1; margin-bottom: 3px;
+  font-family: 'Source Sans 3', sans-serif; font-size: 18px;
+  font-weight: 500; color: var(--navy); line-height: 1; margin-bottom: 3px;
 }
 .dev-stat-lbl { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--warm-grey); }
 
 /* ── Card body ── */
-.dev-card-body { padding: 18px 24px 16px; flex: 1; }
+.dev-card-body { padding: 18px 22px 14px; flex: 1; }
 .dev-desc {
   font-size: 13px; color: var(--warm-grey); line-height: 1.75;
   font-weight: 300; margin-bottom: 14px;
@@ -416,17 +431,17 @@
 .dev-project-pills { display: flex; gap: 5px; flex-wrap: wrap; }
 .dev-proj-pill {
   font-size: 10px; color: var(--charcoal);
-  background: var(--ivory); border: 1px solid var(--border);
-  padding: 3px 10px; transition: all .25s;
+  background: rgba(13,43,78,.04); border: 1px solid rgba(13,43,78,.09);
+  padding: 4px 10px; border-radius: 20px; transition: all .25s;
 }
 .dev-card:hover .dev-proj-pill {
-  border-color: rgba(74,144,196,.35);
-  background: rgba(74,144,196,.05); color: var(--navy);
+  border-color: rgba(74,144,196,.4);
+  background: rgba(74,144,196,.06); color: var(--navy);
 }
 
 /* ── Card footer ── */
 .dev-card-footer {
-  padding: 0 24px 20px;
+  padding: 0 22px 20px;
   display: flex; flex-direction: column; gap: 12px; flex: 0;
 }
 .dev-footer-meta {
@@ -440,35 +455,40 @@
   position: relative; z-index: 2;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--white); background: var(--navy);
+  color: var(--white);
+  background: linear-gradient(90deg, #0D2B4E, #2368a2);
   border: none; text-decoration: none;
-  padding: 12px 20px; cursor: pointer;
-  transition: background .25s; font-family: 'Source Sans 3', sans-serif;
+  padding: 13px 20px; border-radius: 10px; cursor: pointer;
+  transition: background .3s, box-shadow .3s; font-family: 'Source Sans 3', sans-serif;
   font-weight: 500;
 }
-.dev-view-btn:hover { background: var(--sky); color: var(--white); }
+.dev-view-btn:hover {
+  background: linear-gradient(90deg, var(--sky), #2368a2);
+  box-shadow: 0 6px 18px rgba(74,144,196,.35);
+  color: var(--white);
+}
 .dev-view-btn svg { transition: transform .25s; }
-.dev-view-btn:hover svg { transform: translateX(3px); }
+.dev-view-btn:hover svg { transform: translateX(4px); }
 
 /* Clickable overlay */
 .dev-card-link { position: absolute; inset: 0; z-index: 1; }
 
 /* Card entrance animation */
 @keyframes card-in {
-  from { opacity: 0; transform: translateY(28px); }
+  from { opacity: 0; transform: translateY(30px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .dev-card {
   opacity: 0;
   animation: card-in .55s cubic-bezier(.23,1,.32,1) forwards;
 }
-.dev-grid .dev-card:nth-child(2) { animation-delay: .07s; }
-.dev-grid .dev-card:nth-child(3) { animation-delay: .14s; }
-.dev-grid .dev-card:nth-child(4) { animation-delay: .05s; }
-.dev-grid .dev-card:nth-child(5) { animation-delay: .12s; }
-.dev-grid .dev-card:nth-child(6) { animation-delay: .19s; }
+.dev-grid .dev-card:nth-child(1) { animation-delay: 0s; }
+.dev-grid .dev-card:nth-child(2) { animation-delay: .08s; }
+.dev-grid .dev-card:nth-child(3) { animation-delay: .16s; }
+.dev-grid .dev-card:nth-child(4) { animation-delay: .06s; }
+.dev-grid .dev-card:nth-child(5) { animation-delay: .14s; }
+.dev-grid .dev-card:nth-child(6) { animation-delay: .22s; }
 .dev-grid .dev-card:nth-child(n+7) { animation-delay: .1s; }
-/* Pause animation for hidden filtered cards */
 .dev-card[style*="display: none"] { animation: none; }
 
 /* ── LIST VIEW ── */
@@ -1103,16 +1123,25 @@
         <!-- Stats bar -->
         <div class="dev-card-stats">
           <div class="dev-stat">
+            <div class="dev-stat-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            </div>
             <div class="dev-stat-val">{{ developer.active_projects_count }}</div>
             <div class="dev-stat-lbl">Projects</div>
           </div>
           <div class="dev-stat">
-            <div class="dev-stat-val">4.8★</div>
+            <div class="dev-stat-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div class="dev-stat-val">4.8</div>
             <div class="dev-stat-lbl">Rating</div>
           </div>
           <div class="dev-stat">
-            <div class="dev-stat-val" style="font-size:13px;color:var(--sky);">100%</div>
-            <div class="dev-stat-lbl">RERA</div>
+            <div class="dev-stat-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <div class="dev-stat-val" style="font-size:14px;color:#2E7D32;font-weight:600;">RERA</div>
+            <div class="dev-stat-lbl">Verified</div>
           </div>
         </div>
 
