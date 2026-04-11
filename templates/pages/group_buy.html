@@ -144,7 +144,8 @@
   .gb2-stat-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); }
 
   /* ── SECTION SHARED ── */
-  .gb2-section { padding: clamp(56px,8vw,100px) clamp(20px,4vw,48px); }
+  .gb2-section { padding: clamp(56px,8vw,100px) clamp(20px,4vw,48px); scroll-margin-top: 120px; }
+  .gb2-section#gb2-join { scroll-margin-top: 120px; }
   .gb2-inner { max-width: 1200px; margin-inline: auto; }
   .gb2-tag {
     font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
@@ -232,8 +233,8 @@
     transition: color 0.2s; border-bottom: 2px solid transparent;
   }
   .gb2-subnav a:hover, .gb2-subnav a.active { color: #0f0e0c; border-bottom-color: #c9a84c; }
-  @media (max-width: 900px) { .gb2-subnav { padding: 0 32px; } }
-  @media (max-width: 600px) { .gb2-subnav { padding: 0 16px; } .gb2-subnav a { padding: 12px 14px; } }
+  @media (max-width: 900px) { .gb2-subnav { padding: 0 32px; top: 69px; } }
+  @media (max-width: 600px) { .gb2-subnav { padding: 0 16px; top: 64px; } .gb2-subnav a { padding: 12px 14px; } }
 
   /* ── TESTIMONIALS ── */
   .gb2-testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
@@ -316,6 +317,7 @@
 
   /* ── Responsive ── */
   @media (max-width: 900px) {
+    .gb2-page { padding-top: 69px; margin-top: -69px; }
     .gb2-hero-inner { grid-template-columns: 1fr; }
     .gb2-hero-card { display: none; }
     .gb2-stats { grid-template-columns: repeat(2,1fr); }
@@ -325,6 +327,7 @@
     .gb2-testi-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 600px) {
+    .gb2-page { padding-top: 64px; margin-top: -64px; }
     .gb2-steps { grid-template-columns: 1fr; }
     .gb2-deals-grid { grid-template-columns: 1fr; }
     .gb2-form-grid { grid-template-columns: 1fr; }
