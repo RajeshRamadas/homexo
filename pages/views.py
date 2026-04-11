@@ -260,8 +260,8 @@ def home(request):
         # CTA / contact enquiry form
         'enquiry_form': EnquiryForm(),
 
-        # Featured developers strip (up to 8, show 4 per view — slider)
-        'featured_developers': Developer.objects.filter(is_featured=True)[:8],
+        # Featured developers grid (up to 20, full-width auto-fill CSS grid)
+        'featured_developers': Developer.objects.filter(is_featured=True)[:20],
 
         # Stats for animated counters
         'stats': {

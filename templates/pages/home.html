@@ -1198,55 +1198,25 @@
     </div>
     <a href="{% url 'pages:developers' %}" class="view-all"><span></span> View All Developers</a>
   </div>
-  <div class="dev-slider-wrapper">
-    <div class="dev-slider" id="devSlider">
-      {% for dev in featured_developers %}
-      <a href="{% url 'pages:developer_profile' dev.slug %}" class="property-card" style="text-decoration:none;display:block;cursor:pointer;">
-        <div class="property-card-img" style="height: 160px;">
-          {% if dev.logo %}
-          <img src="{{ dev.logo.url }}" alt="{{ dev.name }}" style="width:100%;height:100%;object-fit:contain;padding:20px;background:var(--white);">
-          {% else %}
-          <div style="width:100%;height:100%;background:var(--white);display:flex;align-items:center;justify-content:center;">
-            <span style="font-family:'Source Sans 3',sans-serif;font-size:clamp(48px,7vw,80px);font-weight:300;color:var(--navy);letter-spacing:-3px;">{{ dev.initials }}</span>
-          </div>
-          {% endif %}
+  <style>
+    .dev-icon-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:12px; }
+    .dev-icon-card { text-decoration:none; display:flex; align-items:center; justify-content:center; height:90px; border-radius:12px; background:var(--white); border:1px solid rgba(0,0,0,0.07); overflow:hidden; transition:box-shadow 0.2s, transform 0.2s; }
+    .dev-icon-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.10); transform:translateY(-3px); }
+    .dev-icon-card img { width:100%; height:100%; object-fit:contain; padding:14px; }
+    .dev-icon-card .dev-initials { font-family:'Source Sans 3',sans-serif; font-size:clamp(22px,3vw,36px); font-weight:300; color:var(--navy); letter-spacing:-2px; }
+  </style>
+  <div class="dev-icon-grid">
+    {% for dev in featured_developers %}
+    <a href="{% url 'pages:developer_profile' dev.slug %}" class="dev-icon-card" title="{{ dev.name }}">
+      {% if dev.logo %}
+      <img src="{{ dev.logo.url }}" alt="{{ dev.name }}">
+      {% else %}
+      <span class="dev-initials">{{ dev.initials }}</span>
+      {% endif %}
+    </a>
+    {% endfor %}
+  </div>
 
-        </div>
-        <div class="property-body">
-          <div class="property-price" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(74,144,196,.85);">{% if dev.established_year %}Est. {{ dev.established_year }}{% else %}Verified Builder{% endif %}</div>
-          <div class="property-name">{{ dev.name }}</div>
-          <div class="property-location">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-            {{ dev.location|default:"Pan India" }}
-          </div>
-          <div class="property-specs">
-            <div class="spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-              {{ dev.properties.count }} Projects
-            </div>
-            <div class="spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              RERA Verified
-            </div>
-          </div>
-        </div>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  <div class="prop-slider-controls">
-    <button class="prop-arrow" onclick="slideDev(-1)" aria-label="Previous">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <div class="prop-dots" id="devDots">
-      {% for dev in featured_developers %}
-      <div class="prop-dot{% if forloop.first %} active{% endif %}"></div>
-      {% endfor %}
-    </div>
-    <button class="prop-arrow" onclick="slideDev(1)" aria-label="Next">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-  </div>
 </section>
 {% endif %}
 
