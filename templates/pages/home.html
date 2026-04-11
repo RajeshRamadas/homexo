@@ -1164,9 +1164,15 @@
         {% if prop.description %}
         <div class="ep-card-desc">{{ prop.description|truncatechars:120 }}</div>
         {% endif %}
-        <div class="ep-card-loc">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-          {{ prop.locality|upper }}
+        <div class="ep-card-loc" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:5px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            {{ prop.locality|upper }}
+          </span>
+          <span class="btn-group-buy" onclick="event.preventDefault();event.stopPropagation();window.location.href='{% url 'pages:group_buy' %}';" style="margin-top:0;padding:6px 10px;font-size:9px;cursor:pointer;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Join Group Buy
+          </span>
         </div>
       </div>
     </a>
