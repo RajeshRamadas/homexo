@@ -1,535 +1,694 @@
-{% extends 'base.html' %}
+]633;E;head -318 templates/pages/group_buy.html;f31961fb-1b5e-40a9-9429-4063b940f5f6]633;C{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Group Buy — Save More Together | HOMEXO{% endblock %}
 {% block meta_description %}Join HOMEXO's Group Buy program and unlock exclusive bulk discounts on premium properties. Pool together with other buyers and negotiate better prices directly with developers.{% endblock %}
 
 {% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300..700&display=swap" rel="stylesheet">
 <style>
-  /* ── Hero ── */
-  .gb-hero {
-    background: linear-gradient(145deg, #071929 0%, #0D2B4E 55%, #1A3A5C 100%);
-    padding: 100px 40px 110px; position: relative; overflow: hidden;
+  /* ── GroupNest-inspired design tokens (scoped to gb2-) ── */
+  .gb2-page {
+    --gfont: 'Instrument Serif', Georgia, serif;
+    --gbody: 'Work Sans', 'Helvetica Neue', sans-serif;
+    --bg: #f5f3ee;
+    --surface: #f9f7f3;
+    --surface2: #fdfcfa;
+    --divider: #d8d4cc;
+    --text: #1e1c17;
+    --muted: #6b6860;
+    --faint: #b0ada6;
+    --primary: #1a6b5e;
+    --primary-hover: #124f45;
+    --primary-hl: #c8deda;
+    --accent: #c47a2e;
+    --accent-light: #f5e8d4;
+    --radius-sm: .375rem;
+    --radius-md: .5rem;
+    --radius-lg: .75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.07);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.09);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
+    font-family: var(--gbody);
+    color: var(--text);
   }
-  .gb-hero::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 55% 80% at 90% 50%, rgba(27,107,58,.18) 0%, transparent 65%);
-    pointer-events: none;
+  .gb2-page *, .gb2-page *::before, .gb2-page *::after { box-sizing: border-box; }
+  /* Override homexo.css global input resets inside gb2 */
+  .gb2-page input[type="text"], .gb2-page input[type="email"], .gb2-page input[type="tel"],
+  .gb2-page select, .gb2-page textarea {
+    border-radius: var(--radius-md) !important;
+    font-family: var(--gbody) !important;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    padding: 12px 16px !important;
   }
-  .gb-hero-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 400px; gap: 70px; align-items: center;
-  }
-  .gb-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: #4CAF7D; margin-bottom: 26px;
-  }
-  .gb-eyebrow::before { content: ''; width: 32px; height: 1px; background: #4CAF7D; display: block; }
-  .gb-hero h1 {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: clamp(38px, 4.5vw, 60px); font-weight: 300; line-height: 1.1;
-    color: #fff; margin-bottom: 22px;
-  }
-  .gb-hero h1 em { font-style: italic; color: #4CAF7D; }
-  .gb-hero-desc {
-    font-size: 15px; line-height: 1.8; color: rgba(255,255,255,.6);
-    max-width: 480px; font-weight: 300; margin-bottom: 40px;
-  }
-  .gb-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-  .gb-btn-primary {
-    display: inline-block; padding: 14px 32px;
-    background: #1B6B3A; color: #fff;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    text-decoration: none; transition: background .3s;
-  }
-  .gb-btn-primary:hover { background: #24924F; color: #fff; }
-  .gb-btn-ghost {
-    display: inline-block; padding: 14px 32px;
-    background: transparent; color: rgba(255,255,255,.75);
-    border: 1px solid rgba(255,255,255,.25);
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    text-decoration: none; transition: all .3s;
-  }
-  .gb-btn-ghost:hover { border-color: #4CAF7D; color: #4CAF7D; }
 
-  /* Register widget */
-  .gb-widget {
-    background: rgba(255,255,255,.05); border: 1px solid rgba(76,175,125,.22);
-    padding: 34px 28px; backdrop-filter: blur(8px);
-  }
-  .gb-widget h3 { font-family: 'Source Sans 3', sans-serif; font-size: 20px; font-weight: 400; color: #fff; margin: 0 0 6px; }
-  .gb-widget p { font-size: 12px; color: rgba(255,255,255,.45); margin: 0 0 22px; }
-  .gb-input {
-    width: 100%; box-sizing: border-box; padding: 12px 14px; margin-bottom: 12px;
-    background: rgba(255,255,255,.07); border: 1px solid rgba(76,175,125,.25);
-    color: rgba(255,255,255,.85); font-family: 'Source Sans 3', sans-serif; font-size: 13px;
-    outline: none;
-  }
-  .gb-input::placeholder { color: rgba(255,255,255,.3); }
-  .gb-input:focus { border-color: #4CAF7D; }
-  .gb-select {
-    width: 100%; box-sizing: border-box; padding: 12px 14px; margin-bottom: 12px;
-    background: rgba(255,255,255,.07); border: 1px solid rgba(76,175,125,.25);
-    color: rgba(255,255,255,.8); font-family: 'Source Sans 3', sans-serif; font-size: 13px;
-    outline: none; appearance: none; cursor: pointer;
-  }
-  .gb-select option { background: #0D2B4E; color: #fff; }
-  .gb-submit {
-    width: 100%; padding: 13px; background: #1B6B3A; color: #fff; border: none;
-    font-family: 'Source Sans 3', sans-serif; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; cursor: pointer; transition: background .3s;
-  }
-  .gb-submit:hover { background: #24924F; }
+  /* Reveal animation */
+  .gb2-reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+  .gb2-reveal.visible { opacity: 1; transform: none; }
 
-  /* ── Stats bar ── */
-  .gb-stats {
-    background: var(--navy); padding: 36px 40px;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid rgba(76,175,125,.1);
-  }
-  .gb-stat { display: flex; flex-direction: column; align-items: center; text-align: center; border-right: 1px solid rgba(255,255,255,.07); padding: 8px 0; }
-  .gb-stat:last-child { border-right: none; }
-  .gb-stat-val { font-family: 'Source Sans 3', sans-serif; font-size: 38px; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 6px; }
-  .gb-stat-val span { font-size: .55em; color: #4CAF7D; }
-  .gb-stat-lbl { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.4); }
-
-  /* ── How it works ── */
-  .gb-how { padding: 90px 40px; background: var(--cream); }
-  .gb-how-inner { max-width: 1200px; margin: 0 auto; }
-  .gb-section-eyebrow {
-    display: inline-flex; align-items: center; gap: 14px;
-    font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase;
-    color: #1B6B3A; margin-bottom: 14px;
-  }
-  .gb-section-eyebrow::before { content:''; display:block; width:32px; height:1px; background:#1B6B3A; }
-  .gb-section-title {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: clamp(28px, 3.5vw, 44px); font-weight: 300; color: var(--charcoal);
-    line-height: 1.2; margin-bottom: 56px;
-  }
-  .gb-section-title em { font-style: italic; color: #1B6B3A; }
-  .gb-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-  .gb-step {
-    background: #fff; padding: 40px 28px 36px;
-    border: 1px solid var(--border); position: relative;
-    transition: box-shadow .3s, transform .3s;
-  }
-  .gb-step:hover { box-shadow: 0 12px 40px rgba(13,43,78,.1); transform: translateY(-4px); }
-  .gb-step-num {
-    font-family: 'Source Sans 3', sans-serif; font-size: 52px; font-weight: 200;
-    color: rgba(27,107,58,.12); line-height: 1; margin-bottom: 20px;
-  }
-  .gb-step-icon {
-    width: 48px; height: 48px; background: rgba(27,107,58,.08); border: 1px solid rgba(27,107,58,.2);
-    display: flex; align-items: center; justify-content: center;
-    color: #1B6B3A; margin-bottom: 18px;
-  }
-  .gb-step h4 { font-family: 'Source Sans 3', sans-serif; font-size: 18px; font-weight: 500; color: var(--charcoal); margin: 0 0 10px; }
-  .gb-step p { font-size: 13px; line-height: 1.75; color: var(--warm-grey); margin: 0; }
-
-  /* ── Benefits ── */
-  .gb-benefits { padding: 90px 40px; background: #fff; }
-  .gb-benefits-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  .gb-benefit-visual {
-    background: linear-gradient(145deg, #071929, #0D2B4E);
-    padding: 50px 40px; position: relative; overflow: hidden;
-  }
-  .gb-benefit-visual::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 30% 70%, rgba(27,107,58,.25) 0%, transparent 70%);
-  }
-  .gb-benefit-pct {
-    font-family: 'Source Sans 3', sans-serif; font-size: 96px; font-weight: 200; line-height: 1;
-    color: #fff; position: relative; z-index: 1;
-  }
-  .gb-benefit-pct span { font-size: .28em; color: #4CAF7D; vertical-align: super; }
-  .gb-benefit-caption { font-size: 13px; color: rgba(255,255,255,.5); position: relative; z-index: 1; margin-top: 10px; }
-  .gb-benefit-list { list-style: none; padding: 0; margin: 0; }
-  .gb-benefit-list li {
-    display: flex; align-items: flex-start; gap: 16px;
-    padding: 20px 0; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 1.65; color: var(--charcoal);
-  }
-  .gb-benefit-list li:first-child { padding-top: 0; }
-  .gb-benefit-list li:last-child { border-bottom: none; }
-  .gb-benefit-icon {
-    width: 36px; height: 36px; flex-shrink: 0;
-    background: rgba(27,107,58,.08); border: 1px solid rgba(27,107,58,.2);
-    display: flex; align-items: center; justify-content: center; color: #1B6B3A; margin-top: 2px;
-  }
-  .gb-benefit-list strong { display: block; font-size: 15px; margin-bottom: 3px; color: var(--charcoal); }
-
-  /* ── Active Groups ── */
-  .gb-groups { padding: 90px 40px; background: var(--cream); }
-  .gb-groups-inner { max-width: 1200px; margin: 0 auto; }
-  .gb-groups-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
-  .gb-card {
-    background: #fff; border: 1px solid var(--border); overflow: hidden;
-    transition: box-shadow .3s, transform .3s;
-  }
-  .gb-card:hover { box-shadow: 0 12px 40px rgba(13,43,78,.1); transform: translateY(-4px); }
-  .gb-card-img {
-    height: 200px; background: linear-gradient(135deg, #0D2B4E, #1A4A7A);
+  /* ── HERO ── */
+  .gb2-hero {
+    background: var(--bg); padding: clamp(40px,5vw,72px) clamp(20px,4vw,48px) clamp(40px,6vw,80px);
     position: relative; overflow: hidden;
   }
-  .gb-card-img img { width: 100%; height: 100%; object-fit: cover; }
-  .gb-card-badge {
-    position: absolute; top: 14px; left: 14px;
-    background: #1B6B3A; color: #fff;
-    font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 5px 10px;
+  .gb2-hero::before {
+    content: ''; position: absolute; top: -20%; right: -10%; width: 60%; height: 140%;
+    background: radial-gradient(ellipse, rgba(26,107,94,.07) 0%, transparent 70%); pointer-events: none;
   }
-  .gb-card-slots {
-    position: absolute; bottom: 14px; right: 14px;
-    background: rgba(0,0,0,.65); color: #fff; font-size: 11px;
-    padding: 4px 10px; backdrop-filter: blur(4px);
+  .gb2-hero-inner {
+    max-width: 1200px; margin-inline: auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px,5vw,80px); align-items: center;
   }
-  .gb-card-body { padding: 22px 20px 24px; }
-  .gb-card-locality { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #1B6B3A; margin-bottom: 8px; }
-  .gb-card-title { font-family: 'Source Sans 3', sans-serif; font-size: 18px; font-weight: 500; color: var(--charcoal); margin-bottom: 10px; }
-  .gb-card-meta { display: flex; gap: 18px; font-size: 12px; color: var(--warm-grey); margin-bottom: 18px; }
-  .gb-card-discount {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 14px; background: rgba(27,107,58,.06); border: 1px solid rgba(27,107,58,.15);
-    margin-bottom: 16px;
+  .gb2-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-family: var(--gbody);
+    font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--primary); background: var(--primary-hl);
+    padding: 4px 12px; border-radius: var(--radius-full); margin-bottom: 20px;
   }
-  .gb-card-discount-label { font-size: 11px; color: var(--warm-grey); }
-  .gb-card-discount-val { font-size: 20px; font-weight: 600; color: #1B6B3A; }
-  .gb-card-cta {
-    display: block; text-align: center; padding: 11px;
-    background: var(--navy); color: #fff;
-    font-size: 10px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none;
-    transition: background .3s;
+  .gb2-hero h1 {
+    font-family: var(--gfont); font-size: clamp(2.5rem,6vw,5.5rem); font-weight: 400;
+    color: var(--text); margin-bottom: 20px; line-height: 1.06;
   }
-  .gb-card-cta:hover { background: #1B6B3A; color: #fff; }
-  .gb-progress-wrap { margin-bottom: 16px; }
-  .gb-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--warm-grey); margin-bottom: 6px; }
-  .gb-progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .gb-progress-fill { height: 100%; background: linear-gradient(90deg, #1B6B3A, #24924F); border-radius: 2px; }
+  .gb2-hero h1 em { font-style: italic; color: var(--primary); }
+  .gb2-hero-desc {
+    font-size: clamp(1rem,1.2vw,1.25rem); color: var(--muted); max-width: 52ch;
+    margin-bottom: 32px; line-height: 1.7;
+  }
+  .gb2-ctas { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .gb2-btn-primary {
+    font-family: var(--gbody); font-size: 15px; font-weight: 600;
+    padding: 12px 32px; border-radius: var(--radius-full);
+    background: var(--primary); color: #fff; text-decoration: none;
+    transition: background .18s, box-shadow .18s; display: inline-block;
+  }
+  .gb2-btn-primary:hover { background: var(--primary-hover); box-shadow: var(--shadow-md); color: #fff; }
+  .gb2-btn-outline {
+    font-family: var(--gbody); font-size: 15px; font-weight: 500;
+    padding: 12px 32px; border-radius: var(--radius-full);
+    border: 1.5px solid rgba(30,28,23,.2); color: var(--text); text-decoration: none;
+    transition: border-color .18s, background .18s, color .18s; display: inline-block;
+  }
+  .gb2-btn-outline:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-hl); }
+
+  /* Hero right-side card */
+  .gb2-hero-card {
+    background: var(--surface); border: 1px solid rgba(30,28,23,.1);
+    border-radius: var(--radius-2xl); padding: 24px; box-shadow: var(--shadow-lg);
+  }
+  .gb2-hero-card-title {
+    font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .05em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .gb2-deal-card {
+    background: var(--bg); border: 1px solid rgba(30,28,23,.08);
+    border-radius: var(--radius-xl); padding: 16px; margin-bottom: 12px;
+  }
+  .gb2-deal-card:last-child { margin-bottom: 0; }
+  .gb2-deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .gb2-deal-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .gb2-deal-location { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .gb2-deal-badge {
+    font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: var(--radius-full);
+    background: var(--accent-light); color: var(--accent); white-space: nowrap;
+  }
+  .gb2-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .gb2-progress-bar { height: 6px; background: rgba(30,28,23,.1); border-radius: var(--radius-full); overflow: hidden; }
+  .gb2-progress-fill { height: 100%; border-radius: var(--radius-full); background: var(--primary); transition: width 1.2s ease; }
+  .gb2-deal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .gb2-avatar-stack { display: flex; }
+  .gb2-avatar {
+    width: 22px; height: 22px; border-radius: var(--radius-full); border: 2px solid var(--surface);
+    margin-right: -6px; display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: #fff;
+  }
+  .gb2-saving { font-size: 12px; font-weight: 700; color: var(--primary); }
+
+  /* ── STATS ── */
+  .gb2-stats {
+    background: var(--text); padding: clamp(32px,5vw,56px) clamp(20px,4vw,48px);
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; text-align: center;
+  }
+  .gb2-stat { border-right: 1px solid rgba(255,255,255,.07); padding: 8px 0; }
+  .gb2-stat:last-child { border-right: none; }
+  .gb2-stat-num { font-family: var(--gfont); font-size: clamp(2rem,3.5vw,3.5rem); font-weight: 400; color: #fff; line-height: 1; margin-bottom: 8px; }
+  .gb2-stat-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); }
+
+  /* ── SECTION SHARED ── */
+  .gb2-section { padding: clamp(56px,8vw,100px) clamp(20px,4vw,48px); }
+  .gb2-inner { max-width: 1200px; margin-inline: auto; }
+  .gb2-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--primary); margin-bottom: 12px;
+  }
+  .gb2-title { font-family: var(--gfont); font-size: clamp(1.75rem,3vw,3rem); font-weight: 400; color: var(--text); margin-bottom: 16px; line-height: 1.15; }
+  .gb2-title em { font-style: italic; color: var(--primary); }
+  .gb2-desc { font-size: 15px; color: var(--muted); max-width: 58ch; line-height: 1.7; margin-bottom: 40px; }
+
+  /* ── HOW IT WORKS ── */
+  .gb2-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .gb2-step {
+    background: var(--surface); border: 1px solid rgba(30,28,23,.08);
+    border-radius: var(--radius-xl); padding: 32px 24px;
+    transition: box-shadow .18s, transform .18s;
+  }
+  .gb2-step:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .gb2-step-num {
+    font-family: var(--gfont); font-size: clamp(2rem,3vw,3.5rem); font-weight: 400;
+    color: rgba(26,107,94,.15); line-height: 1; margin-bottom: 16px;
+  }
+  .gb2-step-icon {
+    width: 44px; height: 44px; background: var(--primary-hl); border-radius: var(--radius-lg);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--primary);
+  }
+  .gb2-step h4 { font-size: 17px; font-weight: 600; color: var(--text); margin: 0 0 8px; }
+  .gb2-step p { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0; }
+
+  /* ── BENEFITS ── */
+  .gb2-benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px,6vw,80px); align-items: center; }
+  .gb2-benefit-list { display: flex; flex-direction: column; gap: 20px; }
+  .gb2-benefit-item { display: flex; gap: 16px; align-items: flex-start; }
+  .gb2-benefit-icon {
+    width: 40px; height: 40px; flex-shrink: 0; background: var(--primary-hl);
+    border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--primary);
+  }
+  .gb2-benefit-item h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 4px; }
+  .gb2-benefit-item p { font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+  .gb2-savings-card {
+    background: var(--bg); border: 1px solid rgba(30,28,23,.1);
+    border-radius: var(--radius-2xl); padding: 32px; box-shadow: var(--shadow-lg);
+  }
+  .gb2-savings-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 24px; }
+  .gb2-savings-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid rgba(30,28,23,.07);
+  }
+  .gb2-savings-row:last-of-type { border-bottom: none; }
+  .gb2-savings-label { font-size: 14px; color: var(--muted); }
+  .gb2-savings-value { font-weight: 600; font-size: 14px; color: var(--text); }
+  .gb2-savings-value.hl { color: var(--primary); font-size: 15px; }
+  .gb2-savings-total {
+    margin-top: 24px; padding: 16px 20px; background: var(--primary);
+    border-radius: var(--radius-lg); display: flex; justify-content: space-between; align-items: center;
+  }
+  .gb2-savings-total-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8); }
+  .gb2-savings-total-value { font-family: var(--gfont); font-size: clamp(1.25rem,2vw,2rem); color: #fff; }
+
+  /* ── ACTIVE DEALS (property cards) ── */
+  .gb2-deals-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .gb2-deals-grid .property-card { cursor: pointer; }
+  .gb2-deals-grid .property-body { display: flex; flex-direction: column; }
+  .gb2-deals-grid .property-specs { margin-top: auto; }
+  .gb2-btn-join {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    margin-top: 14px; padding: 10px 16px; border-radius: var(--radius-full);
+    background: var(--primary); color: #fff;
+    font-size: 12px; font-weight: 600; letter-spacing: .5px; text-decoration: none;
+    transition: background .18s, box-shadow .18s; cursor: pointer; border: none;
+  }
+  .gb2-btn-join:hover { background: var(--primary-hover); box-shadow: var(--shadow-sm); color: #fff; }
+
+  /* ── TESTIMONIALS ── */
+  .gb2-testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .gb2-testi-card {
+    background: var(--surface); border: 1px solid rgba(30,28,23,.08);
+    border-radius: var(--radius-xl); padding: 24px; transition: box-shadow .18s;
+  }
+  .gb2-testi-card:hover { box-shadow: var(--shadow-md); }
+  .gb2-stars { color: var(--accent); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
+  .gb2-testi-text { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+  .gb2-testi-author { display: flex; align-items: center; gap: 12px; }
+  .gb2-author-avatar {
+    width: 36px; height: 36px; border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .gb2-author-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .gb2-author-meta { font-size: 11px; color: var(--muted); }
+
+  /* ── JOIN FORM ── */
+  .gb2-form-card {
+    background: var(--bg); border: 1px solid rgba(30,28,23,.1);
+    border-radius: var(--radius-2xl); padding: clamp(24px,4vw,48px) clamp(24px,5vw,56px);
+    max-width: 720px; margin-inline: auto; box-shadow: var(--shadow-lg);
+  }
+  .gb2-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .gb2-form-group { display: flex; flex-direction: column; gap: 8px; }
+  .gb2-form-group.full { grid-column: 1/-1; }
+  .gb2-form-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .gb2-form-group input, .gb2-form-group select, .gb2-form-group textarea {
+    font-family: var(--gbody); font-size: 13px; color: var(--text);
+    background: var(--surface); border: 1px solid rgba(30,28,23,.15);
+    border-radius: var(--radius-md); padding: 12px 16px; width: 100%;
+    transition: border-color .18s, box-shadow .18s; outline: none;
+  }
+  .gb2-form-group input:focus, .gb2-form-group select:focus, .gb2-form-group textarea:focus {
+    border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,107,94,.15);
+  }
+  .gb2-form-group textarea { resize: vertical; min-height: 80px; }
+  .gb2-btn-submit {
+    width: 100%; padding: 16px; font-family: var(--gbody); font-size: 15px; font-weight: 600;
+    border-radius: var(--radius-full); background: var(--primary); color: #fff; border: none;
+    margin-top: 24px; cursor: pointer; transition: background .18s, box-shadow .18s;
+  }
+  .gb2-btn-submit:hover { background: var(--primary-hover); box-shadow: var(--shadow-md); }
+  .gb2-form-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 12px; }
 
   /* ── FAQ ── */
-  .gb-faq { padding: 90px 40px; background: #fff; }
-  .gb-faq-inner { max-width: 760px; margin: 0 auto; }
-  .gb-faq-item { border-bottom: 1px solid var(--border); }
-  .gb-faq-q {
-    width: 100%; background: none; border: none; padding: 22px 0;
-    text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-    font-family: 'Source Sans 3', sans-serif; font-size: 16px; font-weight: 400; color: var(--charcoal);
-    gap: 20px;
+  .gb2-faq-inner { max-width: 760px; margin-inline: auto; }
+  .gb2-faq-item { border-bottom: 1px solid var(--divider); }
+  .gb2-faq-q {
+    width: 100%; background: none; border: none; padding: 20px 0; text-align: left;
+    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--gbody); font-size: 15px; font-weight: 500; color: var(--text); gap: 20px;
   }
-  .gb-faq-q svg { flex-shrink: 0; transition: transform .3s; }
-  .gb-faq-q.open svg { transform: rotate(45deg); }
-  .gb-faq-a { font-size: 14px; line-height: 1.8; color: var(--warm-grey); padding-bottom: 22px; display: none; }
-  .gb-faq-q.open + .gb-faq-a { display: block; }
+  .gb2-faq-q svg { flex-shrink: 0; transition: transform .3s; color: var(--primary); }
+  .gb2-faq-q.open svg { transform: rotate(45deg); }
+  .gb2-faq-a { font-size: 14px; line-height: 1.8; color: var(--muted); padding-bottom: 20px; display: none; }
+  .gb2-faq-q.open + .gb2-faq-a { display: block; }
 
-  /* ── CTA Banner ── */
-  .gb-cta {
-    background: linear-gradient(145deg, #071929, #0D2B4E);
-    padding: 80px 40px; text-align: center;
+  /* ── CTA ── */
+  .gb2-cta {
+    padding: clamp(64px,10vw,128px) clamp(20px,4vw,48px); background: var(--primary);
+    text-align: center; position: relative; overflow: hidden;
   }
-  .gb-cta h2 { font-family: 'Source Sans 3', sans-serif; font-size: clamp(28px,3.5vw,44px); font-weight: 300; color: #fff; margin-bottom: 16px; }
-  .gb-cta h2 em { font-style: italic; color: #4CAF7D; }
-  .gb-cta p { font-size: 14px; color: rgba(255,255,255,.5); margin-bottom: 36px; }
+  .gb2-cta::before {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 120%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,.06) 0%, transparent 60%); pointer-events: none;
+  }
+  .gb2-cta-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7); margin-bottom: 16px; }
+  .gb2-cta h2 { font-family: var(--gfont); font-size: clamp(1.75rem,3vw,3rem); font-weight: 400; color: #fff; margin-bottom: 16px; }
+  .gb2-cta h2 em { font-style: italic; }
+  .gb2-cta p { font-size: 15px; color: rgba(255,255,255,.75); max-width: 50ch; margin-inline: auto; margin-bottom: 32px; line-height: 1.7; }
+  .gb2-btn-white {
+    background: #fff; color: var(--primary); font-family: var(--gbody); font-size: 15px; font-weight: 600;
+    padding: 12px 40px; border-radius: var(--radius-full); display: inline-block; text-decoration: none;
+    transition: box-shadow .18s, transform .18s;
+  }
+  .gb2-btn-white:hover { box-shadow: 0 8px 24px rgba(0,0,0,.2); transform: translateY(-1px); color: var(--primary); }
 
   /* ── Responsive ── */
   @media (max-width: 900px) {
-    .gb-hero-inner { grid-template-columns: 1fr; }
-    .gb-widget { display: none; }
-    .gb-steps { grid-template-columns: 1fr 1fr; }
-    .gb-benefits-inner { grid-template-columns: 1fr; }
-    .gb-groups-grid { grid-template-columns: 1fr 1fr; }
-    .gb-stats { grid-template-columns: repeat(2, 1fr); }
+    .gb2-hero-inner { grid-template-columns: 1fr; }
+    .gb2-hero-card { display: none; }
+    .gb2-stats { grid-template-columns: repeat(2,1fr); }
+    .gb2-steps { grid-template-columns: 1fr 1fr; }
+    .gb2-benefits-grid { grid-template-columns: 1fr; }
+    .gb2-deals-grid { grid-template-columns: 1fr 1fr; }
+    .gb2-testi-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 600px) {
-    .gb-hero { padding: 70px 20px 80px; }
-    .gb-steps { grid-template-columns: 1fr; }
-    .gb-groups-grid { grid-template-columns: 1fr; }
-    .gb-how, .gb-benefits, .gb-groups, .gb-faq, .gb-cta { padding: 60px 20px; }
+    .gb2-steps { grid-template-columns: 1fr; }
+    .gb2-deals-grid { grid-template-columns: 1fr; }
+    .gb2-form-grid { grid-template-columns: 1fr; }
+    .gb2-stats { grid-template-columns: 1fr 1fr; }
+    .gb2-form-card { padding: 24px; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="gb2-page">
 
-<!-- ── HERO ── -->
-<section class="gb-hero">
-  <div class="gb-hero-inner">
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="gb2-hero">
+  <div class="gb2-hero-inner">
     <div>
-      <div class="gb-eyebrow">Collective Buying Power</div>
-      <h1>Buy Together,<br><em>Save More</em></h1>
-      <p class="gb-hero-desc">
-        Pool your buying power with other homebuyers and unlock exclusive bulk discounts — directly negotiated with developers. No middlemen, no hidden fees.
-      </p>
-      <div class="gb-hero-actions">
-        <a href="#register" class="gb-btn-primary">Join a Group</a>
-        <a href="#how-it-works" class="gb-btn-ghost">How It Works</a>
+      <div class="gb2-eyebrow">
+        <svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+        Smart Group Buying
+      </div>
+      <h1>Buy <em>better</em><br>together.</h1>
+      <p class="gb2-hero-desc">Join forces with like-minded buyers to unlock exclusive property deals. Developers say yes when demand is collective — saving you lakhs with no extra effort.</p>
+      <div class="gb2-ctas">
+        <a href="#gb2-deals" class="gb2-btn-primary">Explore Active Deals</a>
+        <a href="#gb2-how" class="gb2-btn-outline">How It Works</a>
       </div>
     </div>
+    <!-- Deal cards -->
+    <div class="gb2-hero-card">
+      <div class="gb2-hero-card-title">Active Group Deals</div>
+      <div class="gb2-deal-card">
+        <div class="gb2-deal-header">
+          <div>
+            <div class="gb2-deal-name">Prestige Lakeside Residences</div>
+            <div class="gb2-deal-location">Sarjapur Road, Bengaluru</div>
+          </div>
+          <div class="gb2-deal-badge">–15%</div>
+        </div>
+        <div class="gb2-progress-label"><span>12 of 20 buyers joined</span><span>60%</span></div>
+        <div class="gb2-progress-bar"><div class="gb2-progress-fill" data-width="60"></div></div>
+        <div class="gb2-deal-footer">
+          <div class="gb2-avatar-stack">
+            <div class="gb2-avatar" style="background:#1a6b5e">R</div>
+            <div class="gb2-avatar" style="background:#c47a2e">K</div>
+            <div class="gb2-avatar" style="background:#4a7c8e">S</div>
+            <div class="gb2-avatar" style="background:#7a4e8e">A</div>
+          </div>
+          <div class="gb2-saving">Save ₹15L avg</div>
+        </div>
+      </div>
+      <div class="gb2-deal-card">
+        <div class="gb2-deal-header">
+          <div>
+            <div class="gb2-deal-name">Brigade Horizon Towers</div>
+            <div class="gb2-deal-location">Whitefield, Bengaluru</div>
+          </div>
+          <div class="gb2-deal-badge">–10%</div>
+        </div>
+        <div class="gb2-progress-label"><span>8 of 15 buyers joined</span><span>53%</span></div>
+        <div class="gb2-progress-bar"><div class="gb2-progress-fill" data-width="53"></div></div>
+        <div class="gb2-deal-footer">
+          <div class="gb2-avatar-stack">
+            <div class="gb2-avatar" style="background:#1a6b5e">V</div>
+            <div class="gb2-avatar" style="background:#8e4a4a">M</div>
+            <div class="gb2-avatar" style="background:#4a7c8e">P</div>
+          </div>
+          <div class="gb2-saving">Save ₹10L avg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Quick Register Widget -->
-    <div class="gb-widget" id="register">
-      <h3>Register Interest</h3>
-      <p>We'll match you with an active group in your preferred location.</p>
-      <form method="POST" action="{% url 'enquiries:create' %}">
+<!-- ══════════════════════ HOW IT WORKS ══════════════════════ -->
+<section class="gb2-section" id="gb2-how" style="background:var(--bg);">
+  <div class="gb2-inner">
+    <div class="gb2-tag">The Process</div>
+    <h2 class="gb2-title">Three steps to your<br><em>best deal ever.</em></h2>
+    <p class="gb2-desc">HOMEXO aggregates buyer demand, coordinates with developers, and delivers discounts that no individual buyer could negotiate alone.</p>
+    <div class="gb2-steps">
+      <div class="gb2-step gb2-reveal">
+        <div class="gb2-step-num">01</div>
+        <div class="gb2-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <h4>Find Your Property</h4>
+        <p>Browse active group deals by location, budget, and type — or request a new deal for a developer you have in mind.</p>
+      </div>
+      <div class="gb2-step gb2-reveal">
+        <div class="gb2-step-num">02</div>
+        <div class="gb2-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h4>Join the Group</h4>
+        <p>Express intent and join a buyer group. No commitment yet — you commit only when the group hits the minimum size for the deal to activate.</p>
+      </div>
+      <div class="gb2-step gb2-reveal">
+        <div class="gb2-step-num">03</div>
+        <div class="gb2-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h4>Close at Group Price</h4>
+        <p>Once the group is complete, HOMEXO negotiates on your behalf. Each member picks their own unit and closes directly with the developer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ BENEFITS ══════════════════════ -->
+<section class="gb2-section" style="background:var(--surface);">
+  <div class="gb2-inner">
+    <div class="gb2-benefits-grid">
+      <div>
+        <div class="gb2-tag">Why Group Buying</div>
+        <h2 class="gb2-title">Individual choice,<br><em>collective power.</em></h2>
+        <p class="gb2-desc">You pick your unit. You own it independently. You just pay less for it.</p>
+        <div class="gb2-benefit-list">
+          <div class="gb2-benefit-item gb2-reveal">
+            <div class="gb2-benefit-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div>
+              <h3>Verified Group Discounts</h3>
+              <p>Group size translates directly to negotiating power. Perks also include waived brokerage, free parking, and premium fittings.</p>
+            </div>
+          </div>
+          <div class="gb2-benefit-item gb2-reveal">
+            <div class="gb2-benefit-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div>
+              <h3>Shared Due Diligence</h3>
+              <p>Multiple buyers bring diverse expertise — legal, technical, financial. Collective research improves decision quality considerably.</p>
+            </div>
+          </div>
+          <div class="gb2-benefit-item gb2-reveal">
+            <div class="gb2-benefit-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="3"/></svg></div>
+            <div>
+              <h3>Access Premium Properties</h3>
+              <p>Group buying makes high-ticket developments accessible to first-time buyers who would be priced out individually.</p>
+            </div>
+          </div>
+          <div class="gb2-benefit-item gb2-reveal">
+            <div class="gb2-benefit-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div>
+              <h3>No Hidden Commitments</h3>
+              <p>Express interest freely. Commit only when your group is complete and the deal is confirmed — no upfront lock-in, ever.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gb2-reveal">
+        <div class="gb2-savings-card">
+          <div class="gb2-savings-title">Sample Deal Breakdown</div>
+          <div class="gb2-savings-row"><span class="gb2-savings-label">Property (3BHK, Sarjapur Rd)</span><span class="gb2-savings-value">₹1.20 Cr</span></div>
+          <div class="gb2-savings-row"><span class="gb2-savings-label">Individual buyer price</span><span class="gb2-savings-value">₹1.20 Cr</span></div>
+          <div class="gb2-savings-row"><span class="gb2-savings-label">Group discount (10%)</span><span class="gb2-savings-value hl">– ₹12 L</span></div>
+          <div class="gb2-savings-row"><span class="gb2-savings-label">Brokerage waived</span><span class="gb2-savings-value hl">– ₹1.2 L</span></div>
+          <div class="gb2-savings-total">
+            <span class="gb2-savings-total-label">Your effective saving</span>
+            <span class="gb2-savings-total-value">₹13.2 L</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ACTIVE DEALS ══════════════════════ -->
+{% if group_buy_properties %}
+<section class="gb2-section" id="gb2-deals" style="background:var(--bg);">
+  <div class="gb2-inner">
+    <div class="gb2-tag">Live Opportunities</div>
+    <h2 class="gb2-title">Active Group Deals</h2>
+    <p class="gb2-desc">These groups are filling fast. Join before the threshold is met and prices are locked in.</p>
+    <div class="gb2-deals-grid">
+      {% for prop in group_buy_properties %}
+      <div class="property-card gb2-reveal" onclick="window.location.href='{{ prop.get_absolute_url }}'" style="cursor:pointer;">
+        <div class="property-card-img">
+          {% if prop.primary_image %}
+          <img src="{{ prop.primary_image.image.url }}" alt="{{ prop.title }}" loading="lazy">
+          {% else %}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A,#071929);"></div>
+          {% endif %}
+          {% if prop.is_signature %}<div class="property-tag signature">Signature</div>
+          {% elif prop.is_featured %}<div class="property-tag featured">Featured</div>
+          {% elif prop.is_new %}<div class="property-tag">New</div>
+          {% elif prop.is_exclusive %}<div class="property-tag">Exclusive</div>{% endif %}
+          <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.stopPropagation(); handleSave(this, {{ prop.id }})" title="Save to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="property-body">
+          <div class="property-price">{{ prop.display_price }}{% if prop.price_label %} <span>{{ prop.price_label }}</span>{% endif %}</div>
+          <div class="property-name">{{ prop.title }}</div>
+          <div class="property-location">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            {{ prop.locality }}, {{ prop.city }}
+          </div>
+          <div class="property-specs">
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              {{ prop.bedrooms }} Beds
+            </div>
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><path d="M21 10H7M21 6H3m18 8H3m18 4H7"/></svg>
+              {{ prop.bathrooms }} Baths
+            </div>
+            {% if prop.area_sqft %}
+            <div class="spec">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--sky)"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              {{ prop.area_sqft|floatformat:0 }} sq.ft
+            </div>
+            {% endif %}
+          </div>
+          <button class="gb2-btn-join" onclick="event.stopPropagation();document.getElementById('gb2-join').scrollIntoView({behavior:'smooth'});">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Join Group Buy
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <a href="{% url 'properties:list' %}" class="gb2-btn-outline" style="display:inline-flex;align-items:center;gap:8px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        View More Properties
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ══════════════════════ TESTIMONIALS ══════════════════════ -->
+<section class="gb2-section" style="background:var(--surface);">
+  <div class="gb2-inner">
+    <div class="gb2-tag">Buyer Stories</div>
+    <h2 class="gb2-title">What group buyers say.</h2>
+    <p class="gb2-desc">Real outcomes from real buyers who bought smarter together.</p>
+    <div class="gb2-testi-grid">
+      <div class="gb2-testi-card gb2-reveal">
+        <div class="gb2-stars">★★★★★</div>
+        <p class="gb2-testi-text">"I saved ₹19 lakhs on my 3BHK in Whitefield compared to what my friend paid for the same floor plan individually. HOMEXO handled every negotiation."</p>
+        <div class="gb2-testi-author">
+          <div class="gb2-author-avatar" style="background:#1a6b5e">RK</div>
+          <div><div class="gb2-author-name">Rakesh Kumar</div><div class="gb2-author-meta">Software Engineer, Bengaluru</div></div>
+        </div>
+      </div>
+      <div class="gb2-testi-card gb2-reveal">
+        <div class="gb2-stars">★★★★★</div>
+        <p class="gb2-testi-text">"As a first-time buyer I was nervous. Joining a group gave me the confidence of shared due diligence — seven of us reviewed RERA filings together. I'd never go back to buying alone."</p>
+        <div class="gb2-testi-author">
+          <div class="gb2-author-avatar" style="background:#c47a2e">PM</div>
+          <div><div class="gb2-author-name">Priya Menon</div><div class="gb2-author-meta">UX Designer, Hyderabad</div></div>
+        </div>
+      </div>
+      <div class="gb2-testi-card gb2-reveal">
+        <div class="gb2-stars">★★★★★</div>
+        <p class="gb2-testi-text">"The developer threw in free covered parking worth ₹4L and waived brokerage entirely. Our group of 14 locked the deal in under 3 weeks. Incredibly efficient."</p>
+        <div class="gb2-testi-author">
+          <div class="gb2-author-avatar" style="background:#4a7c8e">AS</div>
+          <div><div class="gb2-author-name">Aditya Sharma</div><div class="gb2-author-meta">Investment Analyst, Mumbai</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ JOIN FORM ══════════════════════ -->
+<section class="gb2-section" id="gb2-join" style="background:var(--bg);">
+  <div class="gb2-inner">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div class="gb2-tag" style="display:inline-block;">Register Interest</div>
+      <h2 class="gb2-title" style="margin-bottom:8px;">Join a Group Deal</h2>
+      <p style="font-size:15px;color:var(--muted);max-width:52ch;margin-inline:auto;">No upfront commitment. We'll match you with a group and notify you when the deal is ready to close.</p>
+    </div>
+    <div class="gb2-form-card gb2-reveal">
+      <form method="POST" action="{% url 'enquiries:create' %}" id="gb2JoinForm">
         {% csrf_token %}
         <input type="hidden" name="source" value="group_buy">
         <input type="hidden" name="enquiry_type" value="group_buy">
-        <input class="gb-input" type="text"  name="name"     placeholder="Full Name"      required>
-        <input class="gb-input" type="tel"   name="phone"    placeholder="Phone Number"   required>
-        <input class="gb-input" type="email" name="email"    placeholder="Email Address"  required>
-        <select class="gb-select" name="message">
-          <option value="">Preferred Property Type</option>
-          <option>Apartment / Flat</option>
-          <option>Villa / Independent House</option>
-          <option>Plot / Land</option>
-          <option>Luxury / Premium</option>
-        </select>
-        <input class="gb-input" type="text" name="budget" placeholder="Budget (e.g. ₹80L – ₹1.2Cr)">
-        <button type="submit" class="gb-submit">Register Now &rarr;</button>
+        <div class="gb2-form-grid">
+          <div class="gb2-form-group">
+            <label for="gb2_name">Full Name</label>
+            <input type="text" id="gb2_name" name="name" placeholder="e.g. Rakesh Kumar" required autocomplete="name">
+          </div>
+          <div class="gb2-form-group">
+            <label for="gb2_phone">Phone Number</label>
+            <input type="tel" id="gb2_phone" name="phone" placeholder="+91 98765 43210" required autocomplete="tel">
+          </div>
+          <div class="gb2-form-group">
+            <label for="gb2_email">Email Address</label>
+            <input type="email" id="gb2_email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+          <div class="gb2-form-group">
+            <label for="gb2_city">Preferred City</label>
+            <select id="gb2_city" name="city" required>
+              <option value="" disabled selected>Select city</option>
+              <option>Bengaluru</option>
+              <option>Mumbai</option>
+              <option>Hyderabad</option>
+              <option>Pune</option>
+              <option>Chennai</option>
+              <option>Delhi NCR</option>
+            </select>
+          </div>
+          <div class="gb2-form-group">
+            <label for="gb2_budget">Budget Range</label>
+            <select id="gb2_budget" name="budget" required>
+              <option value="" disabled selected>Select budget</option>
+              <option>Under ₹50L</option>
+              <option>₹50L – ₹1Cr</option>
+              <option>₹1Cr – ₹2Cr</option>
+              <option>₹2Cr – ₹5Cr</option>
+              <option>Above ₹5Cr</option>
+            </select>
+          </div>
+          <div class="gb2-form-group">
+            <label for="gb2_type">Property Type</label>
+            <select id="gb2_type" name="message">
+              <option value="" disabled selected>Select type</option>
+              <option>Apartment / Flat</option>
+              <option>Villa / Independent House</option>
+              <option>Plot / Land</option>
+              <option>Luxury / Premium</option>
+            </select>
+          </div>
+          <div class="gb2-form-group full">
+            <label for="gb2_notes">Any specific requirements? <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+            <textarea id="gb2_notes" name="notes" placeholder="E.g. floor preference, facing, specific localities..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="gb2-btn-submit">Register My Interest — It's Free</button>
+        <p class="gb2-form-note">🔒 No spam. No commitment. We only reach out when a matching group deal is available.</p>
       </form>
     </div>
   </div>
 </section>
 
-<!-- ── STATS ── -->
-<div class="gb-stats">
-  <div class="gb-stat">
-    <div class="gb-stat-val">₹4.2<span>Cr+</span></div>
-    <div class="gb-stat-lbl">Savings Unlocked</div>
-  </div>
-  <div class="gb-stat">
-    <div class="gb-stat-val">380<span>+</span></div>
-    <div class="gb-stat-lbl">Group Buyers</div>
-  </div>
-  <div class="gb-stat">
-    <div class="gb-stat-val">22<span>+</span></div>
-    <div class="gb-stat-lbl">Active Groups</div>
-  </div>
-  <div class="gb-stat">
-    <div class="gb-stat-val">8<span>%</span></div>
-    <div class="gb-stat-lbl">Avg. Discount</div>
-  </div>
-</div>
-
-<!-- ── HOW IT WORKS ── -->
-<section class="gb-how" id="how-it-works">
-  <div class="gb-how-inner">
-    <div class="gb-section-eyebrow">Simple Process</div>
-    <h2 class="gb-section-title">How Group Buy<br><em>Works</em></h2>
-    <div class="gb-steps">
-      <div class="gb-step">
-        <div class="gb-step-num">01</div>
-        <div class="gb-step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <h4>Join a Group</h4>
-        <p>Register your interest and get matched with buyers who share your preferred location, budget, and property type.</p>
+<!-- ══════════════════════ FAQ ══════════════════════ -->
+<section class="gb2-section" style="background:var(--surface);">
+  <div class="gb2-inner">
+    <div class="gb2-faq-inner">
+      <div class="gb2-tag" style="text-align:center;">Questions</div>
+      <h2 class="gb2-title" style="margin-bottom:32px;text-align:center;">Frequently Asked<br><em>Questions</em></h2>
+      {% for q, a in faqs %}
+      <div class="gb2-faq-item">
+        <button class="gb2-faq-q" onclick="gb2Faq(this)">
+          {{ q }}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="gb2-faq-a">{{ a }}</div>
       </div>
-      <div class="gb-step">
-        <div class="gb-step-num">02</div>
-        <div class="gb-step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        </div>
-        <h4>Select a Property</h4>
-        <p>Browse HOMEXO-curated group-ready listings. Each property has a minimum group size for the bulk discount to activate.</p>
-      </div>
-      <div class="gb-step">
-        <div class="gb-step-num">03</div>
-        <div class="gb-step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <h4>We Negotiate</h4>
-        <p>Our expert team negotiates directly with developers on your group's behalf — getting bulk pricing, waived fees, and priority allocation.</p>
-      </div>
-      <div class="gb-step">
-        <div class="gb-step-num">04</div>
-        <div class="gb-step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <h4>Close &amp; Save</h4>
-        <p>Once the group fills up, everyone proceeds to booking at the locked-in discounted price with full legal and documentation support.</p>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
 
-<!-- ── BENEFITS ── -->
-<section class="gb-benefits">
-  <div class="gb-benefits-inner">
-    <div class="gb-benefit-visual">
-      <div class="gb-benefit-pct"><span>UP TO</span><br>12%</div>
-      <div class="gb-benefit-caption">Average saving vs. individual market rate</div>
-    </div>
-    <div>
-      <div class="gb-section-eyebrow">Why Group Buy</div>
-      <h2 class="gb-section-title">Real Advantages for<br><em>Every Buyer</em></h2>
-      <ul class="gb-benefit-list">
-        <li>
-          <div class="gb-benefit-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-          </div>
-          <div>
-            <strong>Exclusive Bulk Discounts</strong>
-            Developers offer 5–12% off their best market rates when multiple buyers commit together.
-          </div>
-        </li>
-        <li>
-          <div class="gb-benefit-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div>
-            <strong>HOMEXO Negotiation Shield</strong>
-            Our specialists fight for waived processing fees, complimentary upgrades, and priority floor selection on your behalf.
-          </div>
-        </li>
-        <li>
-          <div class="gb-benefit-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          </div>
-          <div>
-            <strong>Full Legal Support</strong>
-            Every deal is backed by RERA-verified documentation, agreement review, and our in-house legal team at no extra cost.
-          </div>
-        </li>
-        <li>
-          <div class="gb-benefit-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div>
-            <strong>No Commitment Until Group Fills</strong>
-            Your interest is registered at zero cost. You only commit when your group reaches the required size.
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
+<!-- ══════════════════════ CTA ══════════════════════ -->
+<section class="gb2-cta">
+  <div class="gb2-cta-eyebrow">Start Today</div>
+  <h2>Ready to buy <em>better?</em></h2>
+  <p>Join hundreds of smart buyers who are getting the same homes for significantly less. No commitment until your group is complete.</p>
+  <a href="#gb2-join" class="gb2-btn-white">Browse Open Groups</a>
 </section>
 
-<!-- ── ACTIVE GROUPS ── -->
-<section class="gb-groups">
-  <div class="gb-groups-inner">
-    <div class="gb-section-eyebrow">Now Open</div>
-    <h2 class="gb-section-title">Active Group Buy<br><em>Listings</em></h2>
-    <div class="gb-groups-grid">
-
-      <!-- Group 1 -->
-      <div class="gb-card">
-        <div class="gb-card-img">
-          <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>
-          <div class="gb-card-badge">Open</div>
-          <div class="gb-card-slots">4 slots left</div>
-        </div>
-        <div class="gb-card-body">
-          <div class="gb-card-locality">Whitefield, Bengaluru</div>
-          <div class="gb-card-title">Prestige Sunrise Park — 3 BHK</div>
-          <div class="gb-card-meta">
-            <span>₹85L – ₹1.1Cr</span>
-            <span>3 BHK</span>
-            <span>1,450 sq.ft</span>
-          </div>
-          <div class="gb-progress-wrap">
-            <div class="gb-progress-label"><span>Group Progress</span><span>8 / 12 joined</span></div>
-            <div class="gb-progress-bar"><div class="gb-progress-fill" style="width:67%"></div></div>
-          </div>
-          <div class="gb-card-discount">
-            <span class="gb-card-discount-label">Locked-in Group Discount</span>
-            <span class="gb-card-discount-val">7%</span>
-          </div>
-          <a href="#register" class="gb-card-cta">Join This Group</a>
-        </div>
-      </div>
-
-      <!-- Group 2 -->
-      <div class="gb-card">
-        <div class="gb-card-img">
-          <div style="width:100%;height:100%;background:linear-gradient(135deg,#1A3A1A,#2A5C2A);"></div>
-          <div class="gb-card-badge">Filling Fast</div>
-          <div class="gb-card-slots">2 slots left</div>
-        </div>
-        <div class="gb-card-body">
-          <div class="gb-card-locality">Sarjapur Road, Bengaluru</div>
-          <div class="gb-card-title">Brigade Oasis — 2 BHK Premium</div>
-          <div class="gb-card-meta">
-            <span>₹62L – ₹78L</span>
-            <span>2 BHK</span>
-            <span>1,150 sq.ft</span>
-          </div>
-          <div class="gb-progress-wrap">
-            <div class="gb-progress-label"><span>Group Progress</span><span>10 / 12 joined</span></div>
-            <div class="gb-progress-bar"><div class="gb-progress-fill" style="width:83%"></div></div>
-          </div>
-          <div class="gb-card-discount">
-            <span class="gb-card-discount-label">Locked-in Group Discount</span>
-            <span class="gb-card-discount-val">9%</span>
-          </div>
-          <a href="#register" class="gb-card-cta">Join This Group</a>
-        </div>
-      </div>
-
-      <!-- Group 3 -->
-      <div class="gb-card">
-        <div class="gb-card-img">
-          <div style="width:100%;height:100%;background:linear-gradient(135deg,#2A1A0D,#5C3A1A);"></div>
-          <div class="gb-card-badge">New Group</div>
-          <div class="gb-card-slots">12 slots open</div>
-        </div>
-        <div class="gb-card-body">
-          <div class="gb-card-locality">Hebbal, Bengaluru</div>
-          <div class="gb-card-title">Sobha City — 4 BHK Luxury</div>
-          <div class="gb-card-meta">
-            <span>₹1.8Cr – ₹2.4Cr</span>
-            <span>4 BHK</span>
-            <span>2,800 sq.ft</span>
-          </div>
-          <div class="gb-progress-wrap">
-            <div class="gb-progress-label"><span>Group Progress</span><span>2 / 12 joined</span></div>
-            <div class="gb-progress-bar"><div class="gb-progress-fill" style="width:17%"></div></div>
-          </div>
-          <div class="gb-card-discount">
-            <span class="gb-card-discount-label">Target Group Discount</span>
-            <span class="gb-card-discount-val">Up to 11%</span>
-          </div>
-          <a href="#register" class="gb-card-cta">Join This Group</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ── FAQ ── -->
-<section class="gb-faq">
-  <div class="gb-faq-inner">
-    <div class="gb-section-eyebrow">Questions</div>
-    <h2 class="gb-section-title" style="margin-bottom:40px;">Frequently Asked<br><em>Questions</em></h2>
-
-    {% for q, a in faqs %}
-    <div class="gb-faq-item">
-      <button class="gb-faq-q" onclick="gbFaq(this)">
-        {{ q }}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </button>
-      <div class="gb-faq-a">{{ a }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</section>
-
-<!-- ── CTA ── -->
-<section class="gb-cta">
-  <h2>Ready to <em>Save Together?</em></h2>
-  <p>Join hundreds of smart buyers who've already unlocked exclusive deals through HOMEXO Group Buy.</p>
-  <a href="#register" class="gb-btn-primary" style="font-size:12px;">Register Your Interest &rarr;</a>
-</section>
+</div><!-- /.gb2-page -->
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function gbFaq(btn) {
+function gb2Faq(btn) {
   const isOpen = btn.classList.contains('open');
-  document.querySelectorAll('.gb-faq-q.open').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.gb2-faq-q.open').forEach(b => b.classList.remove('open'));
   if (!isOpen) btn.classList.add('open');
 }
+
+// Animate progress bars on scroll
+(function(){
+  const bars = document.querySelectorAll('.gb2-progress-fill[data-width]');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.width = e.target.dataset.width + '%'; obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.3 });
+  bars.forEach(b => { b.style.width = '0%'; obs.observe(b); });
+})();
+
+// Scroll reveal
+(function(){
+  const els = document.querySelectorAll('.gb2-reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  els.forEach(el => obs.observe(el));
+})();
 </script>
 {% endblock %}

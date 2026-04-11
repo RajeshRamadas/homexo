@@ -336,12 +336,14 @@
 
 /* Established year */
 .dev-est-badge {
-  position: absolute; top: 12px; left: 12px;
-  background: rgba(74,144,196,.15); border: 1px solid rgba(74,144,196,.25);
-  padding: 3px 10px; font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(200,216,236,.75);
-  border-radius: 20px; z-index: 2;
+  position: absolute; top: 12px; left: 12px; z-index: 4;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.95); border: none;
+  padding: 4px 12px; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--navy); font-weight: 600;
+  border-radius: 20px;
 }
+.dev-est-badge svg { flex-shrink: 0; color: var(--sky); width: 11px; height: 11px; }
 
 /* Verified badge */
 .dev-verified {
@@ -357,20 +359,21 @@
 /* Logo box */
 .dev-logo {
   width: 76px; height: 76px; flex-shrink: 0;
-  background: rgba(255,255,255,.09);
-  border: 1.5px solid rgba(255,255,255,.15);
+  background: #ffffff;
+  border: 1.5px solid rgba(255,255,255,.5);
   border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 26px; font-weight: 700; color: var(--white);
+  font-size: 26px; font-weight: 700; color: var(--navy);
   overflow: hidden;
+  margin-top: 16px;
   margin-bottom: 14px;
   position: relative; z-index: 1;
   transition: border-color .3s, box-shadow .3s;
 }
 .dev-card:hover .dev-logo {
-  border-color: rgba(74,144,196,.7);
-  box-shadow: 0 0 0 4px rgba(74,144,196,.12);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255,255,255,.18);
 }
 
 /* Name & location */
@@ -389,17 +392,21 @@
 .dev-tags { display: flex; gap: 5px; flex-wrap: wrap; }
 .dev-tag {
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 3px 9px; border: 1px solid rgba(74,144,196,.2);
-  color: rgba(200,216,236,.55); border-radius: 20px;
+  padding: 3px 9px; border: 1px solid rgba(74,144,196,.3);
+  color: rgba(200,216,236,.75); border-radius: 20px;
 }
 .dev-tag.primary {
   background: rgba(74,144,196,.18);
-  border-color: rgba(74,144,196,.45); color: #9fd0ee;
+  border-color: rgba(74,144,196,.5); color: #9fd0ee;
+}
+.dev-tag.featured {
+  background: rgba(245,158,11,.15);
+  border-color: rgba(245,158,11,.45); color: #fbbf24;
 }
 
 /* ── Stats bar ── */
 .dev-card-stats {
-  display: grid; grid-template-columns: repeat(3,1fr);
+  display: grid; grid-template-columns: repeat(2,1fr);
   border-bottom: 1px solid rgba(13,43,78,.07);
   background: var(--white);
 }
@@ -1091,7 +1098,12 @@
 
         <!-- Cover / dark header -->
         <div class="dev-card-cover">
-          {% if developer.established_year %}<div class="dev-est-badge">Est. {{ developer.established_year }}</div>{% endif %}
+          {% if developer.established_year %}
+          <div class="dev-est-badge">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Est. {{ developer.established_year }}
+          </div>
+          {% endif %}
           <div class="dev-verified">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             RERA
@@ -1115,7 +1127,7 @@
               {% else %}
                 <span class="dev-tag primary">Residential</span>
               {% endif %}
-              {% if developer.is_featured %}<span class="dev-tag">★ Featured</span>{% endif %}
+              {% if developer.is_featured %}<span class="dev-tag featured">★ Featured</span>{% endif %}
             </div>
           </div>
         </div><!-- /cover -->
@@ -1128,13 +1140,6 @@
             </div>
             <div class="dev-stat-val">{{ developer.active_projects_count }}</div>
             <div class="dev-stat-lbl">Projects</div>
-          </div>
-          <div class="dev-stat">
-            <div class="dev-stat-icon">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </div>
-            <div class="dev-stat-val">4.8</div>
-            <div class="dev-stat-lbl">Rating</div>
           </div>
           <div class="dev-stat">
             <div class="dev-stat-icon">
@@ -1168,11 +1173,6 @@
         <!-- Footer -->
         <div class="dev-card-footer">
           <div class="dev-footer-meta">
-            <div class="dev-rating">
-              <span class="dev-rating-stars">★★★★★</span>
-              <span class="dev-rating-val">4.8</span>
-              <span class="dev-rating-count">buyer rating</span>
-            </div>
             <span style="font-size:10px;letter-spacing:1px;color:var(--warm-grey);text-transform:uppercase;">{{ developer.properties.count }} listing{{ developer.properties.count|pluralize }}</span>
           </div>
           <a href="{% url 'pages:developer_profile' developer.slug %}" class="dev-view-btn">
@@ -1227,10 +1227,7 @@
             <div class="dli-stat-val">{{ developer.active_projects_count }}</div>
             <div class="dli-stat-lbl">Projects</div>
           </div>
-          <div class="dli-stat">
-            <div class="dli-stat-val">4.8★</div>
-            <div class="dli-stat-lbl">Rating</div>
-          </div>
+
           <div class="dli-stat">
             <div class="dli-stat-val">{% if developer.established_year %}{{ developer.established_year }}{% else %}—{% endif %}</div>
             <div class="dli-stat-lbl">Est.</div>

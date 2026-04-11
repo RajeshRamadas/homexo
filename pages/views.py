@@ -354,6 +354,11 @@ def nri_service(request):
 
 def group_buy(request):
     """Group Buy landing page."""
+    from properties.models import Property
+    group_buy_properties = Property.objects.filter(
+        status='active'
+    ).prefetch_related('images').order_by('-is_featured', '-is_new', '-created_at')[:6]
+
     faqs = [
         ("Is there any fee to register interest in a group?",
          "No. Registering interest is completely free with zero commitment. You only move to booking once the group fills up and you choose to proceed."),
@@ -368,7 +373,7 @@ def group_buy(request):
         ("Is the discounted price legally binding?",
          "Yes. Once a group is confirmed, HOMEXO prepares a formal agreement with the developer locking in the price and terms for all group members."),
     ]
-    return render(request, 'pages/group_buy.html', {'faqs': faqs})
+    return render(request, 'pages/group_buy.html', {'faqs': faqs, 'group_buy_properties': group_buy_properties})
 
 
 def legal(request):
