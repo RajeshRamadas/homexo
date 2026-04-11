@@ -1190,7 +1190,7 @@
 
 <!-- ════════════════════ FEATURED DEVELOPERS ══════════════════ -->
 {% if featured_developers %}
-<section class="section" style="background:var(--white);">
+<section class="section" style="background:var(--white);overflow:hidden;">
   <div class="section-flex">
     <div>
       <div class="section-eyebrow">Handpicked For You</div>
@@ -1198,23 +1198,98 @@
     </div>
     <a href="{% url 'pages:developers' %}" class="view-all"><span></span> View All Developers</a>
   </div>
+
   <style>
-    .dev-icon-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:12px; }
-    .dev-icon-card { text-decoration:none; display:flex; align-items:center; justify-content:center; height:90px; border-radius:12px; background:var(--white); border:1px solid rgba(0,0,0,0.07); overflow:hidden; transition:box-shadow 0.2s, transform 0.2s; }
-    .dev-icon-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.10); transform:translateY(-3px); }
-    .dev-icon-card img { width:100%; height:100%; object-fit:contain; padding:14px; }
-    .dev-icon-card .dev-initials { font-family:'Source Sans 3',sans-serif; font-size:clamp(22px,3vw,36px); font-weight:300; color:var(--navy); letter-spacing:-2px; }
+    /* ── Marquee container ── */
+    .dev-marquee-outer {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
+    /* Fade edges */
+    .dev-marquee-outer::before,
+    .dev-marquee-outer::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .dev-marquee-outer::before { left:0;  background:linear-gradient(to right, var(--white), transparent); }
+    .dev-marquee-outer::after  { right:0; background:linear-gradient(to left,  var(--white), transparent); }
+
+    /* ── Sliding track ── */
+    .dev-marquee-track {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+      animation: devMarquee 30s linear infinite;
+    }
+    .dev-marquee-outer:hover .dev-marquee-track {
+      animation-play-state: paused;
+    }
+    @keyframes devMarquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── Individual card ── */
+    .dev-logo-card {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 160px;
+      height: 100px;
+      border-radius: 14px;
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,0.07);
+      overflow: hidden;
+      text-decoration: none;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .dev-logo-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.11);
+      transform: translateY(-4px);
+    }
+    .dev-logo-card img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      padding: 16px;
+    }
+    .dev-logo-card .dev-initials {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: clamp(20px, 2.5vw, 34px);
+      font-weight: 300;
+      color: var(--navy);
+      letter-spacing: -2px;
+    }
   </style>
-  <div class="dev-icon-grid">
-    {% for dev in featured_developers %}
-    <a href="{% url 'pages:developer_profile' dev.slug %}" class="dev-icon-card" title="{{ dev.name }}">
-      {% if dev.logo %}
-      <img src="{{ dev.logo.url }}" alt="{{ dev.name }}">
-      {% else %}
-      <span class="dev-initials">{{ dev.initials }}</span>
-      {% endif %}
-    </a>
-    {% endfor %}
+
+  <div class="dev-marquee-outer">
+    <div class="dev-marquee-track" id="devMarqueeTrack">
+      {# First set #}
+      {% for dev in featured_developers %}
+      <a href="{% url 'pages:developer_profile' dev.slug %}" class="dev-logo-card" title="{{ dev.name }}">
+        {% if dev.logo %}
+        <img src="{{ dev.logo.url }}" alt="{{ dev.name }}">
+        {% else %}
+        <span class="dev-initials">{{ dev.initials }}</span>
+        {% endif %}
+      </a>
+      {% endfor %}
+      {# Duplicate set for seamless loop #}
+      {% for dev in featured_developers %}
+      <a href="{% url 'pages:developer_profile' dev.slug %}" class="dev-logo-card" aria-hidden="true" tabindex="-1" title="{{ dev.name }}">
+        {% if dev.logo %}
+        <img src="{{ dev.logo.url }}" alt="" loading="lazy">
+        {% else %}
+        <span class="dev-initials">{{ dev.initials }}</span>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
   </div>
 
 </section>
@@ -1477,22 +1552,7 @@ function epRender() {
 
 document.addEventListener('DOMContentLoaded', epRender);
 
-function slideDev(dir) {
-  const slider  = document.getElementById('devSlider');
-  if (!slider) return;
-  const wrapper = slider.parentElement;
-  const isMobile = window.innerWidth <= 768;
-  const isTablet = window.innerWidth <= 1024;
-  const visCount = isMobile ? 1 : (isTablet ? 2 : 5);
-  const maxIdx   = Math.max(0, totalDevs - visCount);
-  devIndex = Math.max(0, Math.min(devIndex + dir, maxIdx));
-  const card = slider.querySelector('.property-card');
-  if (!card) return;
-  const cardW = card.offsetWidth + 2;
-  slider.style.transform = `translateX(-${devIndex * cardW}px)`;
-  slider.style.transition = 'transform 0.55s cubic-bezier(.23,1,.32,1)';
-  document.querySelectorAll('#devDots .prop-dot').forEach((d, i) => d.classList.toggle('active', i === devIndex));
-}
+// Developer marquee — pure CSS animation, no JS needed
 
 // ── News carousel ──
 let newsIndex = 0;
