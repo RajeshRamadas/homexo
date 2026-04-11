@@ -192,10 +192,12 @@
   .property-tag.new       { background: var(--sky); color: var(--white); }
   .property-tag.exclusive { background: var(--deep-brown); color: var(--gold-light); }
   .property-tag.signature { background: #E86A2C; color: var(--white); }
-  .property-fav { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; background: rgba(250,247,242,.9); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .3s; }
-  .property-fav svg { width: 16px; height: 16px; }
-  .property-fav:hover { background: var(--navy); }
+  .property-fav { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; background: rgba(255,255,255,.95); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .25s; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+  .property-fav svg { width: 18px; height: 18px; stroke: #E82C2C; transition: all .25s; }
+  .property-fav:hover { background: #E82C2C; box-shadow: 0 4px 16px rgba(232,44,44,.4); transform: scale(1.12); }
   .property-fav:hover svg { stroke: white; }
+  .property-fav[data-saved="true"] { background: #E82C2C; }
+  .property-fav[data-saved="true"] svg { stroke: white; fill: white; }
   .property-body { padding: 20px; }
   .property-price { font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
   .property-price span { font-size: 13px; color: var(--warm-grey); font-family: 'Source Sans 3', sans-serif; font-weight: 300; }
@@ -706,9 +708,7 @@ function handleSave(btn, propertyId) {
   })
   .then(r => r.json())
   .then(data => {
-    const path = btn.querySelector('path');
-    if (path) path.setAttribute('fill', data.saved ? '#0D2B4E' : 'none');
-    btn.dataset.saved = data.saved;
+    btn.dataset.saved = data.saved ? 'true' : 'false';
     btn.title = data.saved ? 'Saved' : 'Save';
     // update nav badge
     const badge = document.querySelector('.nav-wishlist-count');
@@ -725,8 +725,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!saved.length) return;
   document.querySelectorAll('[data-prop-id]').forEach(function(btn) {
     if (saved.includes(String(btn.dataset.propId))) {
-      const path = btn.querySelector('path');
-      if (path) path.setAttribute('fill', '#0D2B4E');
       btn.dataset.saved = 'true';
       btn.title = 'Saved';
     }

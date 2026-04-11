@@ -980,7 +980,7 @@
         <div class="property-tag signature">Signature</div>
         <div class="card-cta">View Property &rarr;</div>
         <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
         </button>
       </div>
       <div class="property-body">
@@ -1007,7 +1007,7 @@
         {% endif %}
       </div>
       <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.preventDefault();handleSave(this, {{ prop.id }})" title="Save">
-        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </button>
       <div class="property-body">
         <div class="property-price">{{ prop.display_price }}</div>
@@ -1057,7 +1057,7 @@
           {% elif prop.is_new %}<div class="property-tag">New</div>
           {% elif prop.is_exclusive %}<div class="property-tag">Exclusive</div>{% endif %}
           <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.stopPropagation(); handleSave(this, {{ prop.id }})" title="Save to wishlist">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           </button>
         </div>
         <div class="property-body">
@@ -1149,6 +1149,9 @@
           {% if prop.is_signature %}<span class="ep-badge" style="background:linear-gradient(90deg,#8B6914,#C89B2A);">LUXURY</span>{% endif %}
           {% if prop.construction_status == 'under_construction' %}<span class="ep-badge" style="background:#1A7A4A;">UPCOMING</span>{% endif %}
         </div>
+        <button class="property-fav" data-prop-id="{{ prop.id }}" onclick="event.preventDefault();event.stopPropagation();handleSave(this,{{ prop.id }})" title="Save to wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
       </div>
       <div class="ep-card-body">
         <div class="ep-card-title">{{ prop.title }}</div>
