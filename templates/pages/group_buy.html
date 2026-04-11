@@ -7,10 +7,12 @@
 {% block extra_head %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* ── GroupNest-inspired design tokens (scoped to gb2-) ── */
+  .page-body:has(.gb2-page) { padding-top: 0; }
   .gb2-page {
+    padding-top: 77px;
     --gfont: 'Instrument Serif', Georgia, serif;
     --gbody: 'Work Sans', 'Helvetica Neue', sans-serif;
     --bg: #f5f3ee;
@@ -54,7 +56,7 @@
 
   /* ── HERO ── */
   .gb2-hero {
-    background: var(--bg); padding: clamp(40px,5vw,72px) clamp(20px,4vw,48px) clamp(40px,6vw,80px);
+    background: var(--bg); padding: 0 clamp(20px,4vw,48px) clamp(40px,6vw,80px);
     position: relative; overflow: hidden;
   }
   .gb2-hero::before {
@@ -63,7 +65,8 @@
   }
   .gb2-hero-inner {
     max-width: 1200px; margin-inline: auto;
-    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px,5vw,80px); align-items: center;
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px,5vw,80px); align-items: start;
+    padding-top: clamp(32px,4vw,56px);
   }
   .gb2-eyebrow {
     display: inline-flex; align-items: center; gap: 8px; font-family: var(--gbody);
@@ -213,6 +216,24 @@
   }
   .gb2-btn-join:hover { background: var(--primary-hover); box-shadow: var(--shadow-sm); color: #fff; }
 
+  /* ── SUBNAV ── */
+  .gb2-subnav {
+    background: #f7f4ee; border-bottom: 1px solid rgba(15,14,12,0.12);
+    padding: 0 60px; display: flex; align-items: center; gap: 0;
+    position: sticky; top: 77px; z-index: 900;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .gb2-subnav::-webkit-scrollbar { display: none; }
+  .gb2-subnav a {
+    padding: 14px 22px; font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #7a766e; text-decoration: none; white-space: nowrap;
+    transition: color 0.2s; border-bottom: 2px solid transparent;
+  }
+  .gb2-subnav a:hover, .gb2-subnav a.active { color: #0f0e0c; border-bottom-color: #c9a84c; }
+  @media (max-width: 900px) { .gb2-subnav { padding: 0 32px; } }
+  @media (max-width: 600px) { .gb2-subnav { padding: 0 16px; } .gb2-subnav a { padding: 12px 14px; } }
+
   /* ── TESTIMONIALS ── */
   .gb2-testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
   .gb2-testi-card {
@@ -315,6 +336,16 @@
 {% block content %}
 <div class="gb2-page">
 
+<!-- ══════════════════════ SUBNAV ══════════════════════ -->
+<div class="gb2-subnav">
+  <a href="#gb2-deals">Active Deals</a>
+  <a href="#gb2-how">How It Works</a>
+  <a href="#gb2-benefits">Benefits</a>
+  <a href="#gb2-testimonials">Testimonials</a>
+  <a href="#gb2-join">Join Now</a>
+  <a href="#gb2-faq">FAQ</a>
+</div>
+
 <!-- ══════════════════════ HERO ══════════════════════ -->
 <section class="gb2-hero">
   <div class="gb2-hero-inner">
@@ -406,7 +437,7 @@
 </section>
 
 <!-- ══════════════════════ BENEFITS ══════════════════════ -->
-<section class="gb2-section" style="background:var(--surface);">
+<section class="gb2-section" id="gb2-benefits" style="background:var(--surface);">
   <div class="gb2-inner">
     <div class="gb2-benefits-grid">
       <div>
@@ -527,7 +558,7 @@
 {% endif %}
 
 <!-- ══════════════════════ TESTIMONIALS ══════════════════════ -->
-<section class="gb2-section" style="background:var(--surface);">
+<section class="gb2-section" id="gb2-testimonials" style="background:var(--surface);">
   <div class="gb2-inner">
     <div class="gb2-tag">Buyer Stories</div>
     <h2 class="gb2-title">What group buyers say.</h2>
@@ -633,7 +664,7 @@
 </section>
 
 <!-- ══════════════════════ FAQ ══════════════════════ -->
-<section class="gb2-section" style="background:var(--surface);">
+<section class="gb2-section" id="gb2-faq" style="background:var(--surface);">
   <div class="gb2-inner">
     <div class="gb2-faq-inner">
       <div class="gb2-tag" style="text-align:center;">Questions</div>
@@ -670,6 +701,22 @@ function gb2Faq(btn) {
   document.querySelectorAll('.gb2-faq-q.open').forEach(b => b.classList.remove('open'));
   if (!isOpen) btn.classList.add('open');
 }
+
+// Subnav scroll-spy
+(function () {
+  const navLinks = document.querySelectorAll('.gb2-subnav a[href^="#"]');
+  const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function onScroll() {
+    const offset = 100;
+    let current = sections[0];
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - offset) current = s; });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current.id);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
 
 // Animate progress bars on scroll
 (function(){
