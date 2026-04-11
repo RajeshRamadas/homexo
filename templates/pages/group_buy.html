@@ -1,4 +1,4 @@
-]633;E;head -318 templates/pages/group_buy.html;f31961fb-1b5e-40a9-9429-4063b940f5f6]633;C{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Group Buy — Save More Together | HOMEXO{% endblock %}
@@ -10,9 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* ── GroupNest-inspired design tokens (scoped to gb2-) ── */
-  .page-body:has(.gb2-page) { padding-top: 0; }
   .gb2-page {
+    margin-top: -77px;
     padding-top: 77px;
+    background: #f7f4ee;
     --gfont: 'Instrument Serif', Georgia, serif;
     --gbody: 'Work Sans', 'Helvetica Neue', sans-serif;
     --bg: #f5f3ee;
