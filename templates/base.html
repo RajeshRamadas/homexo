@@ -144,6 +144,11 @@
   /* ── MAIN CONTENT OFFSET ── */
   .page-body { padding-top: 77px; }
 
+  /* ── GROUP BUY SIDE TAB ── */
+  .group-buy-tab { position: fixed; right: -1px; top: 50%; z-index: 999; background: linear-gradient(180deg, #1B6B3A, #24924F); color: #fff; writing-mode: vertical-rl; text-orientation: mixed; transform: translateY(-50%) rotate(180deg); padding: 18px 10px; font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none; border-radius: 6px 0 0 6px; box-shadow: -3px 0 16px rgba(27,107,58,.35); transition: background .25s, box-shadow .25s, padding .25s; display: flex; align-items: center; gap: 10px; }
+  .group-buy-tab:hover { background: linear-gradient(180deg, #24924F, #2EBD66); box-shadow: -4px 0 24px rgba(27,107,58,.55); padding-top: 22px; padding-bottom: 22px; color: #fff; }
+  .group-buy-tab svg { width: 14px; height: 14px; flex-shrink: 0; }
+
   /* ── GLOBAL FLOATING ACTIONS ── */
   .floating-actions { position:fixed; right:20px; bottom:32px; z-index:1000; display:flex; flex-direction:column; gap:12px; align-items:flex-end; }
   .fab { width:52px; height:52px; border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.2); transition:all .3s cubic-bezier(.23,1,.32,1); text-decoration:none; }
@@ -544,6 +549,12 @@
 })();
 </script>
 {% endif %}
+
+<!-- Group Buy Side Tab -->
+<a href="{% url 'pages:group_buy' %}" class="group-buy-tab" title="Group Buy — Save More Together">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+  Group Buy
+</a>
 
 <div class="floating-actions" aria-label="Quick Actions">
   <div class="fab-wrap">

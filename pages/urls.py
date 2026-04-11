@@ -16,6 +16,7 @@ urlpatterns = [
     path('services/home-service/',    views.home_service,    name='home_service'),
     path('services/nri-service/',      views.nri_service,     name='nri_service'),
     path('services/legal/',            views.legal,            name='legal'),
+    path('group-buy/',                 views.group_buy,        name='group_buy'),
     path('services/legal-homeloan/',  views.legal_homeloan,  name='legal_homeloan'),
     path('services/home-loan/',         views.home_loan,        name='home_loan'),
     path('emi/',             views.emi_calculator,  name='emi_calculator'),

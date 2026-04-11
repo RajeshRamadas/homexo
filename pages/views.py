@@ -352,6 +352,25 @@ def nri_service(request):
     return render(request, 'pages/nri_service.html')
 
 
+def group_buy(request):
+    """Group Buy landing page."""
+    faqs = [
+        ("Is there any fee to register interest in a group?",
+         "No. Registering interest is completely free with zero commitment. You only move to booking once the group fills up and you choose to proceed."),
+        ("How is the discount calculated?",
+         "Discounts are negotiated in bulk directly with the developer once the minimum group size is met. Typical savings range from 5% to 12% off the developer's best individual rate, plus waived processing fees."),
+        ("What happens if the group doesn't fill up?",
+         "If a group doesn't reach its minimum size within the campaign period, all registrations are cancelled at no cost. We'll notify you and suggest alternative groups or properties."),
+        ("Can I use a home loan with a Group Buy deal?",
+         "Absolutely. Group Buy deals are compatible with all major banks and NBFCs. Our home loan advisors can assist you in getting pre-approval alongside your group registration."),
+        ("How long does a typical Group Buy take?",
+         "Most groups fill within 4–8 weeks. Once full, booking and documentation typically completes within 2–3 weeks with HOMEXO's legal support."),
+        ("Is the discounted price legally binding?",
+         "Yes. Once a group is confirmed, HOMEXO prepares a formal agreement with the developer locking in the price and terms for all group members."),
+    ]
+    return render(request, 'pages/group_buy.html', {'faqs': faqs})
+
+
 def legal(request):
     """Dedicated property legal services landing page."""
     return render(request, 'pages/legal.html')
