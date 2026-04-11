@@ -300,6 +300,7 @@
       <a href="{% url 'pages:legal' %}">Property Legal Services</a>
       <a href="{% url 'pages:security' %}">Security & Surveillance</a>
       <a href="{% url 'pages:nri_service' %}">NRI Services</a>
+      <a href="{% url 'pages:group_buy' %}">Group Buy</a>
     </div>
   </div>
   <div class="mobile-dropdown">
@@ -352,6 +353,7 @@
         <a href="{% url 'pages:legal' %}">Property Legal Services</a>
         <a href="{% url 'pages:security' %}">Security & Surveillance</a>
         <a href="{% url 'pages:nri_service' %}">NRI Services</a>
+        <a href="{% url 'pages:group_buy' %}">Group Buy</a>
       </div>
     </div>
     <div class="nav-dropdown">
@@ -687,13 +689,15 @@ if (hamburger && overlay) {
     document.body.style.overflow = open ? 'hidden' : '';
   });
   
-  const mDropdownBtn = document.querySelector('.mobile-dropdown-btn');
-  if (mDropdownBtn) {
-    mDropdownBtn.addEventListener('click', (e) => {
+  overlay.querySelectorAll('.mobile-dropdown-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      document.getElementById('mobileNavDropdown').classList.toggle('open');
+      const parent = btn.closest('.mobile-dropdown');
+      const isOpen = parent.classList.contains('open');
+      overlay.querySelectorAll('.mobile-dropdown').forEach(d => d.classList.remove('open'));
+      if (!isOpen) parent.classList.add('open');
     });
-  }
+  });
 
   overlay.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     overlay.classList.remove('open');
