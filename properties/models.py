@@ -195,6 +195,7 @@ class Property(models.Model):
     is_signature   = models.BooleanField(default=False, help_text='Ultra-premium / Signature collection')
     is_new         = models.BooleanField(default=True)
     is_exclusive   = models.BooleanField(default=False)
+    has_group_buy  = models.BooleanField(default=True, verbose_name='Group Buy Available')
 
     # ── Status & Meta ─────────────────────────────────────────────────────────
     status         = models.CharField(max_length=15, choices=Status.choices, default=Status.DRAFT)

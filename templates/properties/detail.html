@@ -2185,6 +2185,20 @@
         </div>
       </div>
 
+      {# GROUP BUY OPTION #}
+      {% if property.has_group_buy %}
+      <div class="pd-card" style="background: linear-gradient(145deg, #fafdff, #f0f7fd); border-color: #dbeaf7;">
+        <div style="padding: 18px; text-align: center;">
+          <div style="display:flex; justify-content:center; align-items:center; margin-bottom:12px;">
+            <img src="{% static 'icons/group_buy.png' %}" alt="Group Buy" style="width:40px; height:40px;">
+          </div>
+          <div style="font-size:16px; font-weight:700; color:var(--navy); margin-bottom:6px;">Join a Group Buy</div>
+          <div style="font-size:12px; color:var(--warm-grey); line-height:1.5; margin-bottom:14px;">Team up with other buyers to unlock exclusive bulk discounts on this property!</div>
+          <a href="{% url 'pages:group_buy' %}" class="pd-btn pd-btn-primary" style="width:100%; justify-content:center; font-size:13px; padding:10px;">Explore Group Buy</a>
+        </div>
+      </div>
+      {% endif %}
+
       {# EMI CALCULATOR #}
       {% if property.listing_type != 'rent' %}
       <div class="pd-card">

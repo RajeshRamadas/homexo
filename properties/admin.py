@@ -115,7 +115,7 @@ class PropertyAdmin(admin.ModelAdmin):
                        'rera_approved', 'rera_number', 'title_verified', 'is_negotiable')
         }),
         ('Flags & Tags', {
-            'fields': ('is_featured', 'show_in_explore', 'is_signature', 'is_new', 'is_exclusive', 'tags')
+            'fields': ('is_featured', 'show_in_explore', 'is_signature', 'is_new', 'is_exclusive', 'has_group_buy', 'tags')
         }),
         ('Meta', {
             'fields': ('views_count', 'created_at', 'updated_at'),
