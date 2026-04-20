@@ -361,13 +361,29 @@
   .loan-banner-btn:hover { background:var(--sky);color:var(--white); }
 
   /* ═══ SERVICES STRIP ═══ */
-  .services-strip { background:var(--white);display:flex;justify-content:center;flex-wrap:wrap;padding:50px 60px;gap:24px;border:none; }
-  .service-item-card { flex:1;display:flex;flex-direction:column;align-items:center;gap:16px;text-decoration:none;padding:12px;background:transparent;cursor:pointer;border:none; }
+  .services-strip {
+    background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+    display:flex;justify-content:center;flex-wrap:wrap;padding:60px 60px;gap:24px;border:none;
+  }
+  .service-item-card { flex:1;display:flex;flex-direction:column;align-items:center;gap:18px;text-decoration:none;padding:12px;background:transparent;cursor:pointer;border:none; }
   @media(min-width: 769px) { .service-item-card { max-width: 140px; } }
-  .service-icon { width:80px;height:80px;background:var(--ivory);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .4s cubic-bezier(.23,1,.32,1);flex-shrink:0; }
-  .service-icon img { width:42px;height:42px;object-fit:contain;transition:transform .4s; }
-  .service-item-card:hover .service-icon { background:var(--white);box-shadow:0 12px 30px rgba(13,43,78,.1);transform:translateY(-5px); }
-  .service-item-card:hover .service-icon img { transform:scale(1.1); }
+  .service-icon {
+    width:84px;height:84px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F3EFEA 100%);
+    border: 1px solid rgba(13,43,78,.03);
+    box-shadow: 0 12px 30px rgba(13,43,78,.05), inset 0 2px 0 #FFFFFF;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    transition:all .4s cubic-bezier(.23,1,.32,1);flex-shrink:0;
+  }
+  .service-icon img { width:40px;height:40px;object-fit:contain;transition:all .4s cubic-bezier(.23,1,.32,1); opacity: 0.85; }
+  .service-item-card:hover .service-icon {
+    background: linear-gradient(135deg, #FFFFFF 0%, #EBE5DE 100%);
+    box-shadow: 0 20px 40px rgba(13,43,78,.12), inset 0 2px 0 #FFFFFF;
+    border-color: rgba(13,43,78,.06);
+    transform:translateY(-6px);
+  }
+  .service-item-card:hover .service-icon img { transform:scale(1.15); opacity: 1; }
   .service-label { font-family:'Source Sans 3',sans-serif;font-size:14px;color:var(--charcoal);font-weight:500;text-align:center;line-height:1.4;transition:color .3s; }
   .service-item-card:hover .service-label { color:var(--sky); }
 
@@ -915,11 +931,11 @@
     </div>
     <span class="service-label">Builder Projects</span>
   </a>
-  <a href="{% url 'pages:legal' %}" class="service-item-card">
+  <a href="{% url 'pages:group_buy' %}" class="service-item-card">
     <div class="service-icon">
-      <img src="{% static 'icons/registation.png' %}" alt="" width="52" height="52" decoding="async">
+      <img src="{% static 'icons/group_buy.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
-    <span class="service-label">Sale Agreement</span>
+    <span class="service-label">Group Buy</span>
   </a>
   <a href="{% url 'pages:home_loan' %}" class="service-item-card">
     <div class="service-icon">
@@ -944,7 +960,6 @@
       <img src="{% static 'icons/nri.png' %}" alt="" width="52" height="52" decoding="async">
     </div>
     <span class="service-label">NRI Services</span>
-  </a>
 </div>
 
 <!-- ══════════════════ SIGNATURE COLLECTION ═══════════════════ -->
