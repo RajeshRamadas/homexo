@@ -362,7 +362,7 @@
 
   /* ═══ SERVICES STRIP ═══ */
   .services-strip {
-    background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+    background: #FFFFFF;
     box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
     display:flex;justify-content:center;flex-wrap:wrap;padding:60px 60px;gap:24px;border:none;
   }
@@ -704,7 +704,7 @@
       {% for slide in hero_sliders %}
         <div class="ad-slide {% if forloop.first %}active{% endif %}">
           {% if slide.explore_link %}
-            <a href="{{ slide.explore_link }}" style="position:absolute; inset:0; z-index:3; cursor:pointer;" title="Explore {{ slide.developer_name|default:'Property' }}"></a>
+            <a href="{{ slide.explore_link }}" style="position:absolute; inset:0; z-index:3; cursor:pointer;"></a>
           {% endif %}
           <div class="ad-bg" {% if not slide.is_dark_background %}style="background:#f5f0e8;"{% endif %}>
             {% if slide.image %}
@@ -766,7 +766,7 @@
     {% else %}
       <!-- Fallback Slide directly to default styling if DB is empty -->
       <div class="ad-slide active">
-        <a href="#properties" style="position:absolute; inset:0; z-index:3; cursor:pointer;" title="Explore Premium Real Estate"></a>
+        <a href="#properties" style="position:absolute; inset:0; z-index:3; cursor:pointer;"></a>
         <div class="ad-bg">
           <img src="{% static 'images/hero_luxury.jpg' %}" alt="Luxury Real Estate">
           <div class="ad-overlay"></div>
