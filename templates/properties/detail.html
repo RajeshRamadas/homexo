@@ -1926,17 +1926,25 @@
         window.fpwReset = function()  { fpwZl = 1; fpwUpdateZoom(); };
 
         // ── Fullscreen (reuse page lightbox) ──
+        // ── Dedicated floor plan lightbox ──
         window.fpwOpenFullscreen = function() {
-          var plan  = fpwAllPlans[fpwCur];
-          var src   = (fpwView === '3d' && plan.url3d) ? plan.url3d : plan.url;
-          var lb    = document.getElementById('pdLightbox');
-          var stage = document.getElementById('pdLbStage');
-          if (!lb || !stage) { window.open(src, '_blank'); return; }
-          stage.innerHTML = '<div class="pd-lb-slide active"><img src="' + src + '" alt="Floor Plan" style="max-width:100%;max-height:80vh;object-fit:contain;display:block;"></div>';
-          document.getElementById('pdLbCounterTxt').textContent = (fpwCur + 1) + ' / ' + fpwAllPlans.length;
+          var lb = document.getElementById('fpLightbox');
+          if (!lb) { window.open((fpwView==='3d'&&fpwAllPlans[fpwCur].url3d)?fpwAllPlans[fpwCur].url3d:fpwAllPlans[fpwCur].url,'_blank'); return; }
+          fpLbGoTo(fpwCur);
           lb.classList.add('open');
           document.body.style.overflow = 'hidden';
         };
+
+        // Close fp lightbox on Escape
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            var lb = document.getElementById('fpLightbox');
+            if (lb && lb.classList.contains('open')) {
+              lb.classList.remove('open');
+              document.body.style.overflow = '';
+            }
+          }
+        });
 
         // ── 2D/3D toggle ──
         function fpwApplyView() {
@@ -2503,6 +2511,103 @@
     </div>
   </div>
 </div>
+
+{# ─── FLOOR PLAN LIGHTBOX (separate from gallery) ─── #}
+{% with fps=property.floor_plans.all %}
+{% if fps %}
+<div class="pd-lightbox" id="fpLightbox" onclick="if(event.target===this||event.target.classList.contains('pd-lb-inner')){this.classList.remove('open');document.body.style.overflow='';}">
+  <div class="pd-lb-inner">
+    <button class="pd-lb-close" onclick="document.getElementById('fpLightbox').classList.remove('open');document.body.style.overflow=''">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="pd-lb-arrow prev" onclick="fpLbShift(-1)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="pd-lb-stage" id="fpLbStage">
+      {% for fp in fps %}
+      <div class="pd-lb-slide{% if forloop.first %} active{% endif %}" data-fp-idx="{{ forloop.counter0 }}">
+        <img src="{{ fp.image.url }}" alt="{{ fp.caption|default:'Floor Plan' }}" loading="lazy"
+             style="max-width:100%;max-height:80vh;object-fit:contain;display:block;">
+      </div>
+      {% endfor %}
+    </div>
+    <button class="pd-lb-arrow next" onclick="fpLbShift(1)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <div class="pd-lb-caption" id="fpLbCaption"></div>
+    <div class="pd-lb-thumbs" id="fpLbThumbs">
+      {% for fp in fps %}
+      <div class="pd-lb-thumb{% if forloop.first %} active{% endif %}" onclick="fpLbGoTo({{ forloop.counter0 }})">
+        <div class="pd-lb-thumb-inner"><img src="{{ fp.image.url }}" alt="{{ fp.caption|default:'Floor Plan' }}" loading="lazy"></div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="pd-lb-counter">
+      <div class="pd-lb-dots" id="fpLbDots">
+        {% for fp in fps %}
+        <div class="pd-lb-dot{% if forloop.first %} active{% endif %}" onclick="fpLbGoTo({{ forloop.counter0 }})"></div>
+        {% endfor %}
+      </div>
+      <span class="pd-lb-counter-txt" id="fpLbCounterTxt">1 / {{ fps|length }}</span>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var fpTotal = {{ fps|length }};
+  var fpCur = 0;
+  var stage = document.getElementById('fpLbStage');
+  var dotsEl = document.getElementById('fpLbDots');
+  var thumbsEl = document.getElementById('fpLbThumbs');
+  var counterEl = document.getElementById('fpLbCounterTxt');
+  var capEl = document.getElementById('fpLbCaption');
+
+  var captions = [
+    {% for fp in fps %}"{{ fp.caption|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}
+  ];
+
+  window.fpLbGoTo = function(idx) {
+    var slides  = stage.querySelectorAll('.pd-lb-slide');
+    var dots    = dotsEl.querySelectorAll('.pd-lb-dot');
+    var thumbs  = thumbsEl.querySelectorAll('.pd-lb-thumb');
+    if (slides[fpCur]) slides[fpCur].classList.remove('active');
+    if (dots[fpCur])   dots[fpCur].classList.remove('active');
+    if (thumbs[fpCur]) thumbs[fpCur].classList.remove('active');
+    fpCur = ((idx % fpTotal) + fpTotal) % fpTotal;
+    if (slides[fpCur]) slides[fpCur].classList.add('active');
+    if (dots[fpCur])   dots[fpCur].classList.add('active');
+    if (thumbs[fpCur]) thumbs[fpCur].classList.add('active');
+    if (counterEl) counterEl.textContent = (fpCur + 1) + ' / ' + fpTotal;
+    if (capEl) capEl.textContent = captions[fpCur] || '';
+    if (thumbs[fpCur]) thumbs[fpCur].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+  };
+
+  window.fpLbShift = function(dir) { fpLbGoTo(fpCur + dir); };
+
+  // Keyboard navigation when fp lightbox is open
+  document.addEventListener('keydown', function(e) {
+    var lb = document.getElementById('fpLightbox');
+    if (!lb || !lb.classList.contains('open')) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') fpLbShift(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   fpLbShift(-1);
+  });
+
+  // Touch swipe
+  var lb = document.getElementById('fpLightbox');
+  var _tx = null;
+  if (lb) {
+    lb.addEventListener('touchstart', function(e){ _tx = e.touches[0].clientX; }, {passive:true});
+    lb.addEventListener('touchend',   function(e){
+      if (_tx === null) return;
+      var dx = e.changedTouches[0].clientX - _tx;
+      if (Math.abs(dx) > 40) fpLbShift(dx < 0 ? 1 : -1);
+      _tx = null;
+    });
+  }
+})();
+</script>
+{% endif %}
+{% endwith %}
 
 <!-- Mobile sticky bottom bar -->
 <div class="pd-mobile-bar">
