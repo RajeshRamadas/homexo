@@ -228,17 +228,17 @@ def home(request):
         # Signature / ultra-premium collection (top 3)
         'signature_properties': Property.objects.filter(
             status='active', is_signature=True
-        ).prefetch_related('images').order_by('-created_at')[:3],
+        ).annotate(gb_count=Count('group_buy_participants', distinct=True)).prefetch_related('images').order_by('-created_at')[:3],
 
         # Featured slider (6 cards)
         'featured_properties': Property.objects.filter(
             status='active', is_featured=True
-        ).prefetch_related('images', 'tags').order_by('-created_at')[:6],
+        ).annotate(gb_count=Count('group_buy_participants', distinct=True)).prefetch_related('images', 'tags').order_by('-created_at')[:6],
 
         # Explore properties grid (filterable tabs — New Launch, Apartments, Plots, Villas, Luxury)
         'explore_properties': Property.objects.filter(
             status='active', show_in_explore=True
-        ).prefetch_related('images').order_by('-is_new', '-created_at')[:20],
+        ).annotate(gb_count=Count('group_buy_participants', distinct=True)).prefetch_related('images').order_by('-is_new', '-created_at')[:20],
 
         # Testimonials carousel
         'testimonials': Testimonial.objects.filter(is_active=True).order_by('order')[:6],
@@ -271,6 +271,7 @@ def home(request):
             'agents':       48,
             'years':        10,
         },
+        'joined_gb_ids': list(request.user.group_buys_joined.values_list('id', flat=True)) if request.user.is_authenticated else [],
     }
     return render(request, 'pages/home.html', context)
 
@@ -356,7 +357,8 @@ def group_buy(request):
     """Group Buy landing page."""
     from properties.models import Property
     group_buy_properties = Property.objects.filter(
-        status='active'
+        status='active',
+        has_group_buy=True
     ).prefetch_related('images').order_by('-is_featured', '-is_new', '-created_at')[:6]
 
     faqs = [

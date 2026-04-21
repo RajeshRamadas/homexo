@@ -40,7 +40,7 @@ class PropertyCreateForm(forms.ModelForm):
             'ownership_type', 'rera_approved', 'rera_number',
             'title_verified', 'is_negotiable',
             'latitude', 'longitude',
-            'tags',
+            'tags', 'has_group_buy',
         )
         widgets = {
             'description':     forms.Textarea(attrs={'rows': 5}),
