@@ -39,6 +39,9 @@ html{scroll-behavior:smooth}
   transition: color 0.2s; border-bottom: 2px solid transparent;
 }
 .hl-subnav a:hover, .hl-subnav a.active { color: #0f0e0c; border-bottom-color: #c9a84c; }
+/* Offset anchor scroll for fixed nav + sticky subnav */
+#hero-form, #how-it-works, #compare, #calculators, #why, #eligibility, #faq { scroll-margin-top: 130px; }
+@media (max-width: 768px) { #hero-form, #how-it-works, #compare, #calculators, #why, #eligibility, #faq { scroll-margin-top: 110px; } }
 
 /* ─── HERO ────────────────────────────────────── */
 .hero{margin-top:0;background:var(--ink);padding:84px 60px 0;display:grid;grid-template-columns:1fr 520px;gap:60px;align-items:end;position:relative;overflow:hidden;min-height:calc(100vh - 72px)}
@@ -1167,20 +1170,66 @@ function tFaq(btn){
 
 // ── INIT ─────────────────────────────────────────
 if(document.getElementById('slCbAmt')){ slFill(document.getElementById('slCbAmt')); slFill(document.getElementById('slCbTenure')); } runEmi();runElig();
-// ── SUBNAV SCROLL SPY ────────────────────────────
+// Scroll-spy for subnav highlight
 (function () {
-  const navLinks = document.querySelectorAll('.hl-subnav a[href^="#"]');
-  const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-  function onScroll() {
-    const offset = 100;
-    let current = sections[0];
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - offset) current = s; });
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current.id);
+  var subnav = document.querySelector('.hl-subnav');
+  if (!subnav) return;
+
+  var links = Array.prototype.slice.call(subnav.querySelectorAll('a[href^=\"#\"]'));
+  var items = links
+    .map(function (link) {
+      var href = link.getAttribute('href') || '';
+      var id = href.charAt(0) === '#' ? href.slice(1) : null;
+      var section = id ? document.getElementById(id) : null;
+      return section ? { id: id, link: link, section: section } : null;
+    })
+    .filter(function (v) { return !!v; });
+  if (!items.length) return;
+
+  function setActive(id) {
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      var on = id && (a.getAttribute('href') === ('#' + id));
+      a.classList.toggle('active', !!on);
+    }
+  }
+
+  function headerOffset() {
+    var nav = document.querySelector('nav');
+    var navH = nav ? nav.getBoundingClientRect().height : 0;
+    var subH = subnav.getBoundingClientRect().height || 0;
+    return navH + subH + 12;
+  }
+
+  function pickActiveId() {
+    var scrollPos = window.pageYOffset + headerOffset();
+    var activeId = null;
+    var activeTop = -Infinity;
+    var firstId = null;
+    var firstTop = Infinity;
+
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var top = it.section.getBoundingClientRect().top + window.pageYOffset;
+      if (top < firstTop) { firstTop = top; firstId = it.id; }
+      if (top <= scrollPos && top > activeTop) { activeTop = top; activeId = it.id; }
+    }
+
+    return activeId || firstId;
+  }
+
+  var raf = null;
+  function schedule() {
+    if (raf) return;
+    raf = window.requestAnimationFrame(function () {
+      raf = null;
+      setActive(pickActiveId());
     });
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  schedule();
 })();
 </script>
 {% endblock %}

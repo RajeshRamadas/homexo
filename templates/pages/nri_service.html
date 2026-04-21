@@ -790,14 +790,14 @@
 
 {% block content %}
 <div class="nri-v3-page">
-  <div class="hl-subnav">
-    <a href="#packages">Packages</a>
-    <a href="#process">How it Works</a>
-    <a href="#cities">Locations</a>
-    <a href="#why">Risks</a>
-    <a href="#faq">FAQ</a>
-    <a href="#hero-form" style="color:var(--gold); font-weight:600;">Get Callback</a>
-  </div>
+	  <div class="hl-subnav">
+	    <a href="#packages">Packages</a>
+	    <a href="#process">How it Works</a>
+	    <a href="#why">Risks</a>
+	    <a href="#cities">Locations</a>
+	    <a href="#faq">FAQ</a>
+	    <a href="#hero-form" style="color:var(--gold); font-weight:600;">Get Callback</a>
+	  </div>
 <section class="hero">
   <div class="hero-bg">
     <div class="hero-bg-ring"></div>
@@ -1601,19 +1601,59 @@
     });
   }
 
-  // ── SUBNAV SCROLL SPY ────────────────────────────
-  const navLinks = root.querySelectorAll('.hl-subnav a[href^="#"]');
-  const sections = Array.from(navLinks).map(a => root.querySelector(a.getAttribute('href'))).filter(Boolean);
-  function onScroll() {
-    const offset = 150;
-    let current = sections[0];
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - offset) current = s; });
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current.id);
-    });
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  // Scroll-spy for subnav highlight
+  (() => {
+    const subnav = root.querySelector('.hl-subnav');
+    if (!subnav) return;
+
+    const links = Array.from(subnav.querySelectorAll('a[href^="#"]'));
+    const items = links
+      .map((link) => {
+        const href = link.getAttribute('href') || '';
+        const id = href.startsWith('#') ? href.slice(1) : null;
+        const section = id ? document.getElementById(id) : null;
+        return section ? { id, link, section } : null;
+      })
+      .filter(Boolean);
+    if (!items.length) return;
+
+    const setActive = (id) => {
+      links.forEach(a => a.classList.toggle('active', id && a.getAttribute('href') === `#${id}`));
+    };
+
+    const headerOffset = () => {
+      const nav = document.querySelector('nav');
+      const navH = nav ? nav.getBoundingClientRect().height : 0;
+      const subH = subnav.getBoundingClientRect().height || 0;
+      return navH + subH + 12;
+    };
+
+    const pickActiveId = () => {
+      const scrollPos = window.scrollY + headerOffset();
+      let activeId = null;
+      let activeTop = -Infinity;
+
+      items.forEach(({ id, section }) => {
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        if (top <= scrollPos && top > activeTop) { activeTop = top; activeId = id; }
+      });
+
+      return activeId;
+    };
+
+    let raf = null;
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        setActive(pickActiveId());
+      });
+    };
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    schedule();
+  })();
 })();
 </script>
 {% endblock %}
