@@ -87,6 +87,9 @@
   .pd-breadcrumb-sep { color: var(--border); }
   .pd-breadcrumb-cur { color: var(--charcoal); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
 
+  /* ── Page background ── */
+  body { background: #F5F7FA; }
+
   /* ── Page layout ── */
   .pd-layout {
     max-width: 1280px; margin: 0 auto;
@@ -94,8 +97,8 @@
     display: grid; grid-template-columns: 1fr 360px;
     gap: 24px; align-items: start;
   }
-  .pd-main { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-  .pd-side { display: flex; flex-direction: column; gap: 8px; min-width: 0; max-width: 100%; }
+  .pd-main { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .pd-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; max-width: 100%; }
   .pd-sticky { position: sticky; top: 96px; max-width: 100%; }
 
   /* ── Card base ── */
@@ -131,15 +134,8 @@
   .pd-gallery-main:hover img { transform: scale(1.03); }
   .pd-gallery-cell { overflow: hidden; position: relative; cursor: pointer; background: linear-gradient(135deg,#1A3A5C,#4A90C4); }
   .pd-gallery-cell:nth-child(3) { background: linear-gradient(135deg,#0D2B4E,#2a6090); }
-  .pd-img-num {
-    position: absolute; top: 12px; left: 12px; z-index: 3;
-    width: 26px; height: 26px; border-radius: 50%;
-    background: rgba(13,27,42,.75); backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,.18);
-    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .5px;
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: none;
-  }
+  /* Photo number badges hidden — removed for cleaner look */
+  .pd-img-num { display: none; }
   .pd-gallery-cell img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; display: block; }
   .pd-gallery-cell:hover img { transform: scale(1.04); }
   /* ── Slideshow slides ── */
@@ -454,7 +450,7 @@
     margin-left: 8px;
   }
 
-  /* ── Similar Properties (Modernized) ── */
+  /* ── Similar Properties ── */
   .pd-card.pd-sim-card {
     background: #ffffff;
     box-shadow: 0 2px 16px 0 rgba(74,144,196,0.07);
@@ -487,6 +483,92 @@
     margin: 12px 0 10px 0;
     border: none;
   }
+  /* ── Similar Properties Slider ── */
+  .pd-sim-slider-wrap {
+    position: relative;
+    /* Side padding creates space for the arrow buttons */
+    padding: 4px 44px 0;
+  }
+  .pd-sim-slider {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 4px 16px;
+    scroll-behavior: smooth;
+  }
+  .pd-sim-slider::-webkit-scrollbar { display: none; }
+  .pd-sim-card-item {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+    border: 1.5px solid #e3eaf3; border-radius: 12px; overflow: hidden;
+    text-decoration: none; color: inherit; display: block;
+    transition: transform .25s, box-shadow .25s;
+    background: #fff;
+  }
+  .pd-sim-card-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(13,43,78,.1);
+  }
+  .pd-sim-card-img {
+    width: 100%; height: 110px; overflow: hidden;
+    background: linear-gradient(135deg,#1A3A5C,#4A90C4);
+    position: relative;
+  }
+  .pd-sim-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pd-sim-card-img-badge {
+    position: absolute; bottom: 7px; left: 8px;
+    background: rgba(13,27,42,.75); color: #fff; font-size: 9px; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px; backdrop-filter: blur(4px);
+    letter-spacing: .3px;
+  }
+  .pd-sim-card-body { padding: 10px 12px 12px; }
+  .pd-sim-card-price { font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.2; }
+  .pd-sim-card-name { font-size: 11px; color: var(--charcoal); font-weight: 600; margin-top: 3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pd-sim-card-loc { font-size: 10px; color: var(--warm-grey); margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: flex; align-items: center; gap: 3px; }
+  .pd-sim-card-tags { display: flex; gap: 4px; margin-top: 7px; flex-wrap: wrap; }
+  .pd-sim-card-tag { font-size: 9px; color: var(--sky); background: #eaf3fa;
+    border: 1px solid #dbeaf7; border-radius: 4px; padding: 2px 6px; font-weight: 600; }
+  /* Arrow controls — sit outside the scroll area */
+  .pd-sim-arrow {
+    position: absolute;
+    top: 50%; transform: translateY(-60%);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #fff; border: 1.5px solid #dbeaf7;
+    box-shadow: 0 2px 10px rgba(13,43,78,.12);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 5; transition: all .2s;
+    color: var(--navy); flex-shrink: 0;
+  }
+  .pd-sim-arrow:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .pd-sim-arrow:disabled { opacity: 0; pointer-events: none; }
+  /* Position arrows within the 44px padding band */
+  .pd-sim-arrow-prev { left: 4px; }
+  .pd-sim-arrow-next { right: 4px; }
+  /* Footer */
+  .pd-sim-footer {
+    border-top: 1.5px solid #e3eaf3;
+    padding: 12px 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .pd-sim-dots { display: flex; gap: 5px; align-items: center; }
+  .pd-sim-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #dbeaf7; border: none; padding: 0; cursor: pointer;
+    transition: all .3s;
+  }
+  .pd-sim-dot.active { background: var(--sky); width: 18px; border-radius: 3px; }
+  .pd-sim-view-all {
+    font-size: 12px; font-weight: 700; color: var(--sky);
+    text-decoration: none; display: flex; align-items: center; gap: 5px;
+    transition: color .2s;
+  }
+  .pd-sim-view-all:hover { color: var(--navy); }
 
   /* ── Floor plan (Modernized) ── */
   .pd-card.pd-fp-card {
@@ -550,7 +632,7 @@
   .pd-map-ctrl-btn + .pd-map-ctrl-btn { border-left: 1px solid rgba(200,216,236,.15); }
   .pd-map-ctrl-btn.active, .pd-map-ctrl-btn:hover { background: var(--navy); color: var(--white); }
 
-  /* ── Similar (sidebar list) ── */
+  /* ── Similar (legacy list — kept for compat) ── */
   .pd-sim-item {
     display: flex; gap: 14px; padding: 14px 22px; border-bottom: 1.5px dashed #e3eaf3;
     align-items: flex-start; cursor: pointer; transition: background .18s; text-decoration: none; color: inherit;
@@ -1297,7 +1379,7 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           Share
         </button>
-        <a href="https://wa.me/?text={{ property.title|urlencode }}%20-%20{{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="pd-btn pd-btn-ghost" style="color: #25D366; border-color: #25D366;">
+        <a href="https://wa.me/?text={{ property.title|urlencode }}%20-%20{{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="pd-btn pd-btn-ghost">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           WhatsApp
         </a>
@@ -2117,7 +2199,7 @@
     </script>
     {% endif %}
 
-    {# SIMILAR PROPERTIES #}
+    {# SIMILAR PROPERTIES — horizontal slider #}
     {% if similar %}
     <div class="pd-card pd-sim-card">
       <div class="pd-sim-header">
@@ -2125,28 +2207,134 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           Similar Properties
         </div>
-        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-sim-link">View All ›</a>
+        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-sim-view-all">Explore all ›</a>
       </div>
-      <div class="pd-sim-sub">Other listings you might like in {{ property.city }}</div>
+      <div class="pd-sim-sub">Other properties you might like in {{ property.city }}</div>
       <div class="pd-sim-divider"></div>
-      {% for sim in similar %}
-      <a href="{{ sim.get_absolute_url }}" class="pd-sim-item">
-        <div class="pd-sim-thumb">
-          {% if sim.primary_image %}<img src="{{ sim.primary_image.image.url }}" alt="{{ sim.title }}" loading="lazy">{% endif %}
+
+      {# Slider wrapper with arrows #}
+      <div class="pd-sim-slider-wrap" id="simSliderWrap">
+        <button class="pd-sim-arrow pd-sim-arrow-prev" id="simPrev" onclick="simSlide(-1)" aria-label="Previous">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="pd-sim-slider" id="simSlider">
+          {% for sim in similar %}
+          <a href="{{ sim.get_absolute_url }}" class="pd-sim-card-item">
+            <div class="pd-sim-card-img">
+              {% if sim.primary_image %}
+              <img src="{{ sim.primary_image.image.url }}" alt="{{ sim.title }}" loading="lazy">
+              {% endif %}
+              <span class="pd-sim-card-img-badge">{{ sim.get_listing_type_display }}</span>
+            </div>
+            <div class="pd-sim-card-body">
+              <div class="pd-sim-card-price">{{ sim.display_price }}</div>
+              <div class="pd-sim-card-name">{{ sim.title }}</div>
+              <div class="pd-sim-card-loc">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ sim.locality }}, {{ sim.city }}
+              </div>
+              <div class="pd-sim-card-tags">
+                {% if sim.bhk %}<span class="pd-sim-card-tag">{{ sim.get_bhk_display }}</span>{% endif %}
+                {% if sim.area_sqft %}<span class="pd-sim-card-tag">{{ sim.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
+              </div>
+            </div>
+          </a>
+          {% endfor %}
         </div>
-        <div style="min-width:0;flex:1;">
-          <div class="pd-sim-price">{{ sim.display_price }}</div>
-          <div class="pd-sim-name">{{ sim.title }}</div>
-          <div class="pd-sim-loc">{{ sim.locality }}, {{ sim.city }}</div>
-          <div class="pd-sim-tags">
-            {% if sim.bhk %}<span class="pd-sim-tag">{{ sim.get_bhk_display }}</span>{% endif %}
-            {% if sim.area_sqft %}<span class="pd-sim-tag">{{ sim.area_sqft|floatformat:0 }} sq.ft</span>{% endif %}
-            <span class="pd-sim-tag">{{ sim.get_listing_type_display }}</span>
-          </div>
-        </div>
-      </a>
-      {% endfor %}
+        <button class="pd-sim-arrow pd-sim-arrow-next" id="simNext" onclick="simSlide(1)" aria-label="Next">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      {# Footer: dots + View All #}
+      <div class="pd-sim-footer">
+        <div class="pd-sim-dots" id="simDots"></div>
+        <a href="{% url 'properties:list' %}?location={{ property.city }}" class="pd-sim-view-all">
+          View All in {{ property.city }}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
     </div>
+
+    <script>
+    (function(){
+      var slider = document.getElementById('simSlider');
+      var prevBtn = document.getElementById('simPrev');
+      var nextBtn = document.getElementById('simNext');
+      var dotsEl  = document.getElementById('simDots');
+      if (!slider) return;
+
+      var CARD_WIDTH = 234; // 220px card + 14px gap
+      var visibleCount = 3;
+      var totalDots = 1;
+      var curDot = 0;
+
+      function init() {
+        var cards = slider.querySelectorAll('.pd-sim-card-item');
+        if (!cards.length) return;
+        // Measure real rendered card width
+        var firstCard = cards[0];
+        CARD_WIDTH = firstCard.offsetWidth + 14;
+        visibleCount = Math.max(1, Math.floor(slider.clientWidth / CARD_WIDTH));
+        totalDots = Math.max(1, cards.length - visibleCount + 1);
+        // Build dots
+        dotsEl.innerHTML = '';
+        for (var i = 0; i < totalDots; i++) {
+          var d = document.createElement('button');
+          d.className = 'pd-sim-dot' + (i === 0 ? ' active' : '');
+          d.setAttribute('aria-label', 'Go to slide ' + (i+1));
+          d.dataset.idx = i;
+          d.addEventListener('click', function() { simGoTo(+this.dataset.idx); });
+          dotsEl.appendChild(d);
+        }
+        updateArrows();
+      }
+
+      function updateArrows() {
+        if (prevBtn) prevBtn.disabled = slider.scrollLeft < 4;
+        if (nextBtn) nextBtn.disabled = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 4;
+      }
+
+      function updateDots() {
+        if (!CARD_WIDTH) return;
+        var pos = Math.round(slider.scrollLeft / CARD_WIDTH);
+        curDot = Math.min(pos, totalDots - 1);
+        dotsEl.querySelectorAll('.pd-sim-dot').forEach(function(d, i) {
+          d.classList.toggle('active', i === curDot);
+        });
+      }
+
+      window.simSlide = function(dir) {
+        slider.scrollBy({ left: dir * CARD_WIDTH * Math.max(1, visibleCount - 1), behavior: 'smooth' });
+      };
+
+      function simGoTo(idx) {
+        slider.scrollTo({ left: idx * CARD_WIDTH, behavior: 'smooth' });
+      }
+
+      slider.addEventListener('scroll', function() {
+        updateArrows();
+        updateDots();
+      }, { passive: true });
+
+      // Touch swipe
+      var _sx = 0;
+      slider.addEventListener('touchstart', function(e) { _sx = e.touches[0].clientX; }, { passive: true });
+      slider.addEventListener('touchend', function(e) {
+        var dx = _sx - e.changedTouches[0].clientX;
+        if (Math.abs(dx) > 50) simSlide(dx > 0 ? 1 : -1);
+      }, { passive: true });
+
+      // Defer init until browser has painted and laid out
+      if (document.readyState === 'complete') {
+        requestAnimationFrame(function() { requestAnimationFrame(init); });
+      } else {
+        window.addEventListener('load', function() {
+          requestAnimationFrame(function() { requestAnimationFrame(init); });
+        });
+      }
+    })();
+    </script>
     {% endif %}
 
   </div>{# end pd-main #}
@@ -2193,14 +2381,22 @@
 
       {# GROUP BUY OPTION #}
       {% if property.has_group_buy %}
-      <div class="pd-card" style="background: linear-gradient(145deg, #fafdff, #f0f7fd); border-color: #dbeaf7;">
-        <div style="padding: 18px; text-align: center;">
-          <div style="display:flex; justify-content:center; align-items:center; margin-bottom:12px;">
-            <img src="{% static 'icons/group_buy.png' %}" alt="Group Buy" style="width:40px; height:40px;">
+      <div class="pd-card" style="background: linear-gradient(145deg, #0D2B4E, #1A4A7A); border-color: #0D2B4E;">
+        <div style="padding: 20px; text-align: center;">
+          <div style="display:flex; justify-content:center; align-items:center; margin-bottom:14px;">
+            <div style="width:58px;height:58px;border-radius:50%;background:rgba(74,144,196,.25);border:1.5px solid rgba(74,144,196,.4);display:flex;align-items:center;justify-content:center;">
+              <!-- People/group SVG icon -->
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="7" r="3"/>
+                <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                <circle cx="17" cy="7" r="2.5" stroke-opacity=".7"/>
+                <path d="M21 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke-opacity=".7"/>
+              </svg>
+            </div>
           </div>
-          <div style="font-size:16px; font-weight:700; color:var(--navy); margin-bottom:6px;">Join a Group Buy</div>
-          <div style="font-size:12px; color:var(--warm-grey); line-height:1.5; margin-bottom:14px;">Team up with other buyers to unlock exclusive bulk discounts on this property!</div>
-          <a href="{% url 'pages:group_buy' %}" class="pd-btn pd-btn-primary" style="width:100%; justify-content:center; font-size:13px; padding:10px;">Explore Group Buy</a>
+          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:6px; letter-spacing:.2px;">Join a Group Buy</div>
+          <div style="font-size:11px; color:rgba(200,216,236,.75); line-height:1.6; margin-bottom:16px;">Team up with other buyers to unlock exclusive bulk discounts on this property.</div>
+          <a href="{% url 'pages:group_buy' %}" style="display:block;width:100%;box-sizing:border-box;padding:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:background .2s;text-align:center;" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">Explore Group Buy</a>
         </div>
       </div>
       {% endif %}

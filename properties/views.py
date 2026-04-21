@@ -205,15 +205,15 @@ def property_detail(request, slug):
         status='active',
         listing_type=prop.listing_type,
         city=prop.city,
-    ).exclude(pk=prop.pk).order_by('-created_at')[:3]
+    ).exclude(pk=prop.pk).select_related('developer').prefetch_related('images').order_by('-views_count', '-created_at')[:21]
 
     similar = list(similar_qs)
-    if len(similar) < 3:
-        needed = 3 - len(similar)
+    if len(similar) < 21:
+        needed = 21 - len(similar)
         existing_ids = [p.pk for p in similar] + [prop.pk]
         fallback = Property.objects.filter(
             status='active'
-        ).exclude(pk__in=existing_ids).order_by('-views_count')[:needed]
+        ).exclude(pk__in=existing_ids).select_related('developer').prefetch_related('images').order_by('-views_count')[:needed]
         similar.extend(list(fallback))
 
     is_saved = False
