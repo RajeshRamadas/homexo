@@ -5,7 +5,7 @@
 {% block meta_description %}Compare home loan offers from leading banks, estimate EMI, and check loan eligibility with HOMEXO Finance.{% endblock %}
 
 {% block extra_head %}
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 .hl-premium,.hl-premium *,.hl-premium *::before,.hl-premium *::after{margin:0;padding:0;box-sizing:border-box}
 .hl-premium{
@@ -19,9 +19,24 @@
   --border:rgba(184,153,106,0.18);--border2:rgba(184,153,106,0.3);
   --shadow:0 4px 32px rgba(8,17,30,0.12);
   --shadow2:0 16px 64px rgba(8,17,30,0.2);
-  font-family:'Jost',sans-serif;background:var(--surface);color:var(--text);overflow-x:hidden;
+  font-family:'Jost',sans-serif;background:var(--surface);color:var(--text);
 }
 html{scroll-behavior:smooth}
+
+.hl-subnav {
+  background: #f7f4ee; border-bottom: 1px solid rgba(15,14,12,0.12);
+  padding: 0 60px; display: flex; align-items: center; gap: 0;
+  position: sticky; top: 77px; z-index: 1000;
+  overflow-x: auto; scrollbar-width: none;
+}
+.hl-subnav::-webkit-scrollbar { display: none; }
+.hl-subnav a {
+  padding: 14px 22px; font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #7a766e; text-decoration: none; white-space: nowrap;
+  transition: color 0.2s; border-bottom: 2px solid transparent;
+}
+.hl-subnav a:hover, .hl-subnav a.active { color: #0f0e0c; border-bottom-color: #c9a84c; }
 
 /* ─── HERO ────────────────────────────────────── */
 .hero{margin-top:0;background:var(--ink);padding:84px 60px 0;display:grid;grid-template-columns:1fr 520px;gap:60px;align-items:end;position:relative;overflow:hidden;min-height:calc(100vh - 72px)}
@@ -86,7 +101,7 @@ html{scroll-behavior:smooth}
 .popt:hover:not(.on){border-color:var(--gold);color:var(--text)}
 
 /* HERO FORM CARD */
-.elig-card{background:var(--white);border-top:2px solid var(--gold);padding:38px 34px;box-shadow:0 32px 80px rgba(0,0,0,0.3);position:relative;z-index:2}
+.elig-card{background:var(--white);border-top:2px solid var(--gold);padding:38px 34px;box-shadow:0 32px 80px rgba(0,0,0,0.3);position:relative;z-index:2;scroll-margin-top:130px}
 .card-badge{position:absolute;top:-1px;right:32px;background:var(--gold);color:var(--white);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;font-weight:600}
 .elig-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--ink);margin-bottom:5px;letter-spacing:.3px}
 .elig-sub{font-size:11px;color:var(--text3);margin-bottom:24px;display:flex;align-items:center;gap:8px}
@@ -341,10 +356,11 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .page-cond-note{padding:16px 28px 22px}
   .trust-strip{grid-template-columns:repeat(2,1fr)}
   .trust-item:nth-child(2){border-right:none}.trust-item:nth-child(3){border-top:1px solid var(--border)}
+  .hl-subnav { padding:0 32px; top: 69px; }
 }
 @media(max-width:768px){
   .hl-premium,.hl-premium *,.hl-premium *::before,.hl-premium *::after{box-sizing:border-box!important}
-  .hl-premium{width:100%;overflow-x:hidden}
+  .hl-premium{width:100%;overflow-x:clip}
   .hl-premium .cursor,.hl-premium .cursor-ring{display:none!important}.hl-premium{cursor:auto}.hl-premium button{cursor:pointer}
   .promo-banner{padding:10px 16px;font-size:11px}
   .hero{margin-top:0;grid-template-columns:1fr;padding:40px 16px 0;gap:32px;min-height:auto}
@@ -387,6 +403,8 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   .trust-strip{grid-template-columns:1fr 1fr}
   .trust-item:nth-child(2){border-right:none}.trust-item:nth-child(3){border-top:1px solid var(--border)}.trust-item:nth-child(4){border-top:1px solid var(--border);border-right:none}
   .trust-item{padding:20px 16px}
+  .hl-subnav { padding:0 16px; top: 65px; }
+  .hl-subnav a { padding: 12px 14px; }
 }
 @media(max-width:390px){
   .hero{padding:28px 12px 0}.sec{padding:40px 12px}
@@ -404,6 +422,15 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 
 {% block content %}
 <div class="hl-premium">
+  <div class="hl-subnav">
+    <a href="#how-it-works">How it works</a>
+    <a href="#compare">Compare Banks</a>
+    <a href="#calculators">Calculators</a>
+    <a href="#why">Why HOMEXO</a>
+    <a href="#eligibility">Eligibility</a>
+    <a href="#faq">FAQ</a>
+    <a href="#hero-form" style="color:var(--gold); font-weight:600;">Check Eligibility</a>
+  </div>
 <section class="hero">
   <div class="hero-texture"></div>
   <div class="hero-grid"></div>
@@ -462,10 +489,10 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
   </div>
 
   <!-- ELIGIBILITY FORM -->
-  <div class="elig-card">
+  <div class="elig-card" id="hero-form">
     <div class="card-badge">Instant &amp; Free</div>
     <div class="elig-title">Check Your Eligibility</div>
-    <form id="hero-form" method="POST" action="{% url 'enquiries:create' %}">
+    <form id="elig-form" method="POST" action="{% url 'enquiries:create' %}">
       {% csrf_token %}
       <input type="hidden" name="enquiry_type" value="home_loan">
       <input type="hidden" name="source" value="home_loan">
@@ -542,7 +569,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 </section>
 
 <!-- ── HOW IT WORKS ── -->
-<section class="sec sec-surface">
+<section class="sec sec-surface" id="how-it-works">
   <div class="sec-hd">
     <div>
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Simple Process</div>
@@ -629,7 +656,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 </section>
 
 <!-- ── CALCULATORS ── -->
-<section class="sec sec-surface">
+<section class="sec sec-surface" id="calculators">
   <div class="sec-hd">
     <div>
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Financial Tools</div>
@@ -706,7 +733,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 </div>
 
 <!-- ── WHY HOMEXO ── -->
-<section class="sec sec-dark">
+<section class="sec sec-dark" id="why">
   <div class="sec-hd">
     <div>
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Why Choose Us</div>
@@ -755,7 +782,7 @@ label.lbl{display:block;font-size:9px;letter-spacing:2.5px;text-transform:upperc
 </section>
 
 <!-- ── ELIGIBILITY CRITERIA ── -->
-<section class="sec sec-white">
+<section class="sec sec-white" id="eligibility">
   <div class="sec-hd">
     <div>
       <div class="eyebrow" style="color:var(--gold)"><span class="eyebrow-line"></span>Who Can Apply</div>
@@ -921,7 +948,7 @@ function pickLoanType(b){document.querySelectorAll('.ltab').forEach(x=>x.classLi
 function pickProp(b){document.querySelectorAll('.popt').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
 
 // ── HERO FORM ────────────────────────────────────
-document.getElementById('hero-form').addEventListener('submit', function(e) {
+document.getElementById('elig-form').addEventListener('submit', function(e) {
   e.preventDefault();
   
   // Compose message
@@ -1138,5 +1165,20 @@ function tFaq(btn){
 
 // ── INIT ─────────────────────────────────────────
 if(document.getElementById('slCbAmt')){ slFill(document.getElementById('slCbAmt')); slFill(document.getElementById('slCbTenure')); } runEmi();runElig();
+// ── SUBNAV SCROLL SPY ────────────────────────────
+(function () {
+  const navLinks = document.querySelectorAll('.hl-subnav a[href^="#"]');
+  const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function onScroll() {
+    const offset = 100;
+    let current = sections[0];
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - offset) current = s; });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current.id);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
 </script>
 {% endblock %}
