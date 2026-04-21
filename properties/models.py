@@ -196,6 +196,7 @@ class Property(models.Model):
     is_new         = models.BooleanField(default=True)
     is_exclusive   = models.BooleanField(default=False)
     has_group_buy  = models.BooleanField(default=True, verbose_name='Group Buy Available')
+    group_buy_participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='group_buys_joined', blank=True, verbose_name='Group Buy Participants')
 
     # ── Status & Meta ─────────────────────────────────────────────────────────
     status         = models.CharField(max_length=15, choices=Status.choices, default=Status.DRAFT)

@@ -14,6 +14,7 @@ class Enquiry(models.Model):
         LEGAL        = 'legal',        'Property Legal'
         SECURITY     = 'security',     'Security Services'
         HOME_SERVICE = 'home_service', 'Home Services'
+        GROUP_BUY    = 'group_buy',    'Group Buy'
         GENERAL      = 'general',      'General'
 
     class Status(models.TextChoices):

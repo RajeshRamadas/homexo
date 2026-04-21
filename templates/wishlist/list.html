@@ -79,8 +79,8 @@
 {% block content %}
 <div class="wishlist-hero">
   <div class="section-eyebrow">My Account</div>
-  <h1 class="section-title">Saved <em>Properties</em></h1>
-  <p>{{ items|length }} propert{{ items|length|pluralize:"y,ies" }} saved</p>
+  <h1 class="section-title">Saved & Group Buy <em>Properties</em></h1>
+  <p>{{ items|length }} saved, {{ group_buys|length }} joined</p>
 </div>
 
 <section class="section" style="background:var(--ivory);">
@@ -136,6 +136,49 @@
     <h2>No Saved Properties</h2>
     <p>Properties you save will appear here. Start exploring to find your perfect home.</p>
     <a href="{% url 'properties:list' %}" class="btn-primary">Browse Properties</a>
+  </div>
+  {% endif %}
+
+  {% if group_buys %}
+  <div style="padding: 40px 60px 20px;">
+    <h2 style="font-family:'Cormorant Garamond', serif; font-size: 32px; color: var(--navy);">Joined Group Buys</h2>
+  </div>
+  <div class="wishlist-grid" style="margin-bottom: 60px;">
+    {% for property in group_buys %}
+    <div class="property-card">
+      <div class="property-card-img">
+        {% if property.primary_image %}
+        <img src="{{ property.primary_image.image.url }}" alt="{{ property.title }}">
+        {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);"></div>
+        {% endif %}
+        <div class="property-tag featured" style="background:#0D2B4E;">Joined Group Buy</div>
+      </div>
+      <div class="property-body">
+        <div class="property-price">
+          {{ property.display_price }}
+          {% if property.price_label %}<span>{{ property.price_label }}</span>{% endif %}
+        </div>
+        <div class="property-name">
+          <a href="{{ property.get_absolute_url }}" style="text-decoration:none;color:inherit;">{{ property.title }}</a>
+        </div>
+        <div class="property-location">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          {{ property.locality }}, {{ property.city }}
+        </div>
+        <div class="property-specs">
+          <span class="spec">{{ property.bedrooms }} Beds</span>
+          <span class="spec">{{ property.bathrooms }} Baths</span>
+          {% if property.area_sqft %}
+          <span class="spec">{{ property.area_sqft|floatformat:0 }} sq.ft</span>
+          {% endif %}
+        </div>
+        <div class="wishlist-card-actions">
+          <a href="{{ property.get_absolute_url }}" class="btn-primary">View Property</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
   {% endif %}
 </section>

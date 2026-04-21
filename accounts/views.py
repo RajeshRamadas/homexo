@@ -138,10 +138,12 @@ def logout_view(request):
 def profile_view(request):
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')[:30]
     unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
+    group_buys = request.user.group_buys_joined.all().select_related('developer', 'owner').prefetch_related('images')
     return render(request, 'accounts/profile.html', {
         'user': request.user,
         'notifications': notifications,
         'unread_count': unread_count,
+        'group_buys': group_buys,
     })
 
 

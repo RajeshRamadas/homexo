@@ -1360,10 +1360,16 @@
           Enquire Now
         </button>
         {% if property.has_group_buy %}
-        <a href="{% url 'pages:group_buy' %}" class="pd-btn" style="background:#0D2B4E; color:#FFFFFF; border:1px solid #0D2B4E; text-decoration:none;">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          Join Group Buy
-        </a>
+        <button class="pd-btn {% if is_joined_group_buy %}pd-btn-primary{% endif %}" 
+                style="{% if not is_joined_group_buy %}background:#0D2B4E; color:#FFFFFF; border:1px solid #0D2B4E;{% endif %} cursor:pointer;"
+                data-prop-id="{{ property.id }}"
+                data-csrf="{{ csrf_token }}"
+                data-toggle-url="{% url 'properties:group_buy_toggle' property.id %}"
+                data-login-url="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"
+                onclick="handleGroupBuy(this)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="{% if is_joined_group_buy %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span class="gb-text" style="display:flex;align-items:center;">{% if is_joined_group_buy %}Joined Group Buy <span class="gb-badge" style="background:#75a2d6;color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">{{ property.group_buy_participants.count }}</span>{% else %}Join Group Buy <span class="gb-badge" style="background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">{{ property.group_buy_participants.count }}</span>{% endif %}</span>
+        </button>
         {% endif %}
         <button class="pd-btn {% if is_saved %}pd-btn-primary{% else %}pd-btn-outline{% endif %}"
                 id="pdSaveBtn"
@@ -2404,7 +2410,16 @@
           </div>
           <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:6px; letter-spacing:.2px;">Join a Group Buy</div>
           <div style="font-size:11px; color:rgba(200,216,236,.75); line-height:1.6; margin-bottom:16px;">Team up with other buyers to unlock exclusive bulk discounts on this property.</div>
-          <a href="{% url 'pages:group_buy' %}" style="display:block;width:100%;box-sizing:border-box;padding:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:background .2s;text-align:center;" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">Explore Group Buy</a>
+          <button class="pd-gb-second-btn" onclick="handleGroupBuy(this)" 
+                  data-prop-id="{{ property.id }}"
+                  data-csrf="{{ csrf_token }}"
+                  data-toggle-url="{% url 'properties:group_buy_toggle' property.id %}"
+                  data-login-url="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"
+                  style="display:block;width:100%;box-sizing:border-box;padding:11px;{% if is_joined_group_buy %}background:transparent;border:1px solid #75a2d6;color:#75a2d6;{% else %}background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;{% endif %}text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:background .2s;text-align:center;cursor:pointer;" 
+                  onmouseover="{% if not is_joined_group_buy %}this.style.background='rgba(255,255,255,.25)'{% endif %}" 
+                  onmouseout="{% if not is_joined_group_buy %}this.style.background='rgba(255,255,255,.15)'{% endif %}">
+            <span class="gb-text" style="display:flex;align-items:center;justify-content:center;">{% if is_joined_group_buy %}Joined Group Buy <span class="gb-badge" style="background:#75a2d6;color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">{{ property.group_buy_participants.count }}</span>{% else %}Join Group Buy <span class="gb-badge" style="background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">{{ property.group_buy_participants.count }}</span>{% endif %}</span>
+          </button>
         </div>
       </div>
       {% endif %}
@@ -2711,6 +2726,86 @@ function handleSave(btn) {
       btn.classList.replace('pd-btn-primary', 'pd-btn-outline');
       if (svg) svg.setAttribute('fill', 'none');
       btn.lastChild.textContent = 'Save';
+    }
+  })
+  .catch(function(err){
+    btn.disabled = false;
+    window.location.href = loginUrl;
+  });
+}
+
+// ── Join Group Buy ──
+function handleGroupBuy(btn) {
+  var loginUrl = btn.dataset.loginUrl;
+  var toggleUrl = btn.dataset.toggleUrl;
+  var csrf = btn.dataset.csrf;
+  if (!csrf) {
+    window.location.href = loginUrl;
+    return;
+  }
+  btn.disabled = true;
+  fetch(toggleUrl, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrf,
+      'X-Requested-With': 'XMLHttpRequest',
+    }
+  })
+  .then(function(r) {
+    if (r.redirected || !r.ok) {
+      window.location.href = loginUrl;
+      return null;
+    }
+    return r.json();
+  })
+  .then(function(data) {
+    btn.disabled = false;
+    if (!data) return;
+    
+    // Find both gb buttons (header and secondary box)
+    var headerBtn = document.querySelector('.pd-actions .pd-btn[onclick="handleGroupBuy(this)"]');
+    var secondBtn = document.querySelector('.pd-gb-second-btn');
+    
+    if (data.joined) {
+      if (headerBtn) {
+        headerBtn.classList.add('pd-btn-primary');
+        headerBtn.style.background = '';
+        headerBtn.style.color = '';
+        headerBtn.style.border = '';
+        var svg1 = headerBtn.querySelector('svg');
+        if (svg1) svg1.setAttribute('fill', 'currentColor');
+        var text1 = headerBtn.querySelector('.gb-text');
+        if (text1) text1.innerHTML = 'Joined Group Buy <span class="gb-badge" style="background:#75a2d6;color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">' + (data.count || 0) + '</span>';
+      }
+      if (secondBtn) {
+        secondBtn.style.background = 'transparent';
+        secondBtn.style.border = '1px solid #75a2d6';
+        secondBtn.style.color = '#75a2d6';
+        secondBtn.onmouseover = null;
+        secondBtn.onmouseout = null;
+        var text2 = secondBtn.querySelector('.gb-text');
+        if (text2) text2.innerHTML = 'Joined Group Buy <span class="gb-badge" style="background:#75a2d6;color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">' + (data.count || 0) + '</span>';
+      }
+    } else {
+      if (headerBtn) {
+        headerBtn.classList.remove('pd-btn-primary');
+        headerBtn.style.background = '#0D2B4E';
+        headerBtn.style.color = '#FFFFFF';
+        headerBtn.style.border = '1px solid #0D2B4E';
+        var svg1 = headerBtn.querySelector('svg');
+        if (svg1) svg1.setAttribute('fill', 'none');
+        var text1 = headerBtn.querySelector('.gb-text');
+        if (text1) text1.innerHTML = 'Join Group Buy <span class="gb-badge" style="background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">' + (data.count || 0) + '</span>';
+      }
+      if (secondBtn) {
+        secondBtn.style.background = 'rgba(255,255,255,.15)';
+        secondBtn.style.border = '1px solid rgba(255,255,255,.25)';
+        secondBtn.style.color = '#fff';
+        secondBtn.onmouseover = function() { this.style.background='rgba(255,255,255,.25)' };
+        secondBtn.onmouseout = function() { this.style.background='rgba(255,255,255,.15)' };
+        var text2 = secondBtn.querySelector('.gb-text');
+        if (text2) text2.innerHTML = 'Join Group Buy <span class="gb-badge" style="background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 6px;margin-left:6px;font-size:10px;">' + (data.count || 0) + '</span>';
+      }
     }
   })
   .catch(function() { btn.disabled = false; });
@@ -3076,6 +3171,22 @@ var pdCurrent = 0, pdLbIsOpen = false;
     document.body.appendChild(ov);
   };
   fpUpdate();
+})();
+
+// Group Buy Auto-Scroll
+(function() {
+  if (window.location.search.includes('group_buy=1')) {
+    setTimeout(function() {
+      var typeInput = document.getElementById('enqTypeInput');
+      var formSection = document.getElementById('pdContact');
+      if (typeInput && formSection) {
+        typeInput.value = 'group_buy';
+        formSection.scrollIntoView({behavior: 'smooth'});
+        formSection.classList.add('pd-shake');
+        setTimeout(function(){ formSection.classList.remove('pd-shake'); }, 400);
+      }
+    }, 600);
+  }
 })();
 </script>
 {% endblock %}

@@ -13,4 +13,5 @@ urlpatterns = [
     path('<slug:slug>/delete/',       views.property_delete,      name='delete'),
     path('featured/json/',            views.featured_properties,  name='featured_json'),
     path('<slug:slug>/report/',       views.report_property,      name='report'),
+    path('<int:property_id>/group-buy/', views.group_buy_toggle,  name='group_buy_toggle'),
 ]

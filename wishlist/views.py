@@ -16,7 +16,12 @@ def wishlist_list(request):
     items = WishlistItem.objects.filter(user=request.user).select_related(
         'property__developer'
     ).prefetch_related('property__images')
-    return render(request, 'wishlist/list.html', {'items': items})
+    
+    group_buys = request.user.group_buys_joined.select_related(
+        'developer'
+    ).prefetch_related('images')
+    
+    return render(request, 'wishlist/list.html', {'items': items, 'group_buys': group_buys})
 
 
 @login_required

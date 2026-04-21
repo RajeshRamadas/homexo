@@ -16,6 +16,7 @@
       <a href="{% url 'accounts:profile_update' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">✏️ Edit Profile</a>
       <a href="{% url 'accounts:password_change' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">🔒 Change Password</a>
       <a href="{% url 'wishlist:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">♡ Saved Properties</a>
+      <a href="#joined-group-buys" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">👥 Joined Group Buys</a>
       <a href="{% url 'properties:list' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">🏠 Browse Properties</a>
       <a href="{% url 'legal_services:dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">⚖️ Legal Orders</a>
       {% if user.role == 'advocate' %}
@@ -96,6 +97,38 @@
       </div>
       {% endif %}
       {% endwith %}
+
+      <!-- Group Buys -->
+      <div id="joined-group-buys" style="background:var(--white);padding:28px;border:1px solid var(--border);margin-top:16px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--navy);">Joined Group Buys</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          {% if group_buys %}
+          {% for prop in group_buys %}
+          <a href="{{ prop.get_absolute_url }}" style="text-decoration:none;display:flex;gap:14px;align-items:center;padding:12px;background:var(--ivory);border:1px solid var(--border);transition:border-color .2s;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="width:64px;height:48px;flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,#0D2B4E,#1A4A7A);">{% if prop.primary_image %}<img src="{{ prop.primary_image.image.url }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:500;color:var(--charcoal);">{{ prop.title }}</div>
+              <div style="font-size:12px;color:var(--warm-grey);">{{ prop.locality }}, {{ prop.city }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:10px;padding:4px 8px;background:rgba(117,162,214,0.1);color:#75a2d6;border-radius:4px;font-weight:600;display:flex;align-items:center;gap:4px;">
+                    <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    INTERESTED
+                </span>
+                <div style="font-family:'Source Sans 3',sans-serif;font-size:16px;color:var(--navy);flex-shrink:0;">{{ prop.display_price }}</div>
+            </div>
+          </a>
+          {% endfor %}
+          {% else %}
+          <div style="padding:24px;text-align:center;background:var(--ivory);border:1px dashed var(--border);color:var(--warm-grey);font-size:13px;">
+            You haven't joined any group buys yet. <br><br>
+            <a href="{% url 'properties:list' %}" style="color:var(--navy);text-decoration:none;font-weight:600;">Browse Properties to Join →</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
 
       <!-- Notifications panel -->
       {% if notifications %}

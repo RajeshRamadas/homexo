@@ -31,6 +31,42 @@ ConnectivityFormSet = inlineformset_factory(
     extra=4, can_delete=True,
 )
 
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
+@login_required
+@require_POST
+def group_buy_toggle(request, property_id):
+    """Toggle a user's participation in a property's group buy."""
+    from enquiries.models import Enquiry
+    prop = get_object_or_404(Property, pk=property_id, status='active', has_group_buy=True)
+    if request.user in prop.group_buy_participants.all():
+        prop.group_buy_participants.remove(request.user)
+        joined = False
+    else:
+        prop.group_buy_participants.add(request.user)
+        joined = True
+        # Create an enquiry for the group buy
+        Enquiry.objects.get_or_create(
+            user=request.user,
+            property=prop,
+            enquiry_type=Enquiry.EnquiryType.GROUP_BUY,
+            defaults={
+                'name': request.user.get_full_name(),
+                'email': request.user.email,
+                'phone': request.user.phone or '',
+                'source': 'Group Buy Button',
+                'priority': Enquiry.Priority.HIGH,
+                'message': f"Interested in joining the smart save / group buy for {prop.title}.",
+            }
+        )
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'joined': joined, 'count': prop.group_buy_participants.count()})
+    return redirect(prop.get_absolute_url())
+
+
+
 
 def property_list(request):
     """Main listing page with search & filters."""
@@ -172,7 +208,8 @@ def property_list(request):
         'newest':     '-created_at',
         'popular':    '-views_count',
     }
-    qs = qs.order_by(sort_options.get(sort, '-created_at'))
+    from django.db.models import Count
+    qs = qs.annotate(gb_count=Count('group_buy_participants', distinct=True)).order_by(sort_options.get(sort, '-created_at'))
 
     paginator = Paginator(qs, 12)
     page      = request.GET.get('page')
@@ -192,6 +229,7 @@ def property_list(request):
         'page_range':       page_range,
         'ELLIPSIS':         paginator.ELLIPSIS,
         'active_developer': active_developer,
+        'joined_gb_ids':    list(request.user.group_buys_joined.values_list('id', flat=True)) if request.user.is_authenticated else [],
     }
     return render(request, 'properties/list.html', context)
 
@@ -217,9 +255,11 @@ def property_detail(request, slug):
         similar.extend(list(fallback))
 
     is_saved = False
+    is_joined_group_buy = False
     if request.user.is_authenticated:
         from wishlist.models import WishlistItem
         is_saved = WishlistItem.objects.filter(user=request.user, property=prop).exists()
+        is_joined_group_buy = prop.has_group_buy and prop.group_buy_participants.filter(id=request.user.id).exists()
 
     context = {
         'property': prop,
@@ -228,6 +268,7 @@ def property_detail(request, slug):
         'features': prop.features.all(),
         'connectivity': prop.connectivity.all(),
         'is_saved': is_saved,
+        'is_joined_group_buy': is_joined_group_buy,
     }
     return render(request, 'properties/detail.html', context)
 
