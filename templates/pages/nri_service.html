@@ -7,7 +7,7 @@
 {% block extra_head %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 .nri-v3-page *, .nri-v3-page *::before, .nri-v3-page *::after { margin: 0; padding: 0; box-sizing: border-box; }
 .nri-v3-page {
@@ -34,7 +34,32 @@
   --ease: cubic-bezier(.23,1,.32,1);
 }
 .nri-v3-page { scroll-behavior: smooth; }
-.nri-v3-page { font-family: var(--font-sans); background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
+.nri-v3-page { font-family: var(--font-sans); background: var(--ivory); color: var(--charcoal); overflow-x: clip; }
+.page-body { padding-top: 74px !important; }
+.hl-subnav {
+  background: #f7f4ee; border-bottom: 1px solid rgba(15,14,12,0.12);
+  padding: 0 60px; display: flex; align-items: center; gap: 0;
+  position: sticky; top: 74px; z-index: 1000;
+  overflow-x: auto; scrollbar-width: none;
+}
+.hl-subnav::-webkit-scrollbar { display: none; }
+.hl-subnav a {
+  padding: 14px 22px; font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #7a766e; text-decoration: none; white-space: nowrap;
+  transition: color 0.2s; border-bottom: 2px solid transparent;
+}
+.hl-subnav a:hover, .hl-subnav a.active { color: #0f0e0c; border-bottom-color: #c9a84c; }
+#hero-form, #packages, #process, #why, #cities, #faq { scroll-margin-top: 130px; }
+@media (max-width: 1100px) {
+  .hl-subnav { padding: 0 32px; top: 74px; }
+}
+@media (max-width: 768px) {
+  .page-body { padding-top: 64px !important; }
+  .hl-subnav { padding: 0 16px; top: 64px; }
+  .hl-subnav a { padding: 12px 14px; }
+  #hero-form, #packages, #process, #why, #cities, #faq { scroll-margin-top: 110px; }
+}
 @supports (padding: env(safe-area-inset-left)) {
   .nri-v3-page nav { padding-left: max(64px, env(safe-area-inset-left)); padding-right: max(64px, env(safe-area-inset-right)); }
 }
@@ -763,6 +788,14 @@
 
 {% block content %}
 <div class="nri-v3-page">
+  <div class="hl-subnav">
+    <a href="#packages">Packages</a>
+    <a href="#process">How it Works</a>
+    <a href="#cities">Locations</a>
+    <a href="#why">Risks</a>
+    <a href="#faq">FAQ</a>
+    <a href="#hero-form" style="color:var(--gold); font-weight:600;">Get Callback</a>
+  </div>
 <section class="hero">
   <div class="hero-bg">
     <div class="hero-bg-ring"></div>
@@ -1565,6 +1598,20 @@
       if (messageField) messageField.value = `NRI CTA Request: ${service}`;
     });
   }
+
+  // ── SUBNAV SCROLL SPY ────────────────────────────
+  const navLinks = root.querySelectorAll('.hl-subnav a[href^="#"]');
+  const sections = Array.from(navLinks).map(a => root.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function onScroll() {
+    const offset = 150;
+    let current = sections[0];
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - offset) current = s; });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current.id);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 })();
 </script>
 {% endblock %}
