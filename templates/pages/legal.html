@@ -5,7 +5,9 @@
 {% block meta_description %}India's most transparent property legal verification service. Fixed fees, real-time status tracking, and a 1-page Go/No-Go verdict. Bangalore. From ₹4,999.{% endblock %}
 
 {% block extra_head %}
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   .lg-page {
     --ink: #0f0e0c; --cream: #f7f4ee; --warm: #e8e2d6;
@@ -15,7 +17,12 @@
     --muted: #7a766e;
     --border-lg: rgba(15,14,12,0.12);
     --border-warm: rgba(201,168,76,0.3);
-    font-family: 'DM Sans', sans-serif; color: var(--ink);
+    /* Heritage Modern font suite — mirrors NRI service page */
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans:  'DM Sans', system-ui, sans-serif;
+    --font-mono:  'DM Mono', monospace;
+    --ease: cubic-bezier(.23,1,.32,1);
+    font-family: var(--font-sans); color: var(--ink);
   }
   .lg-subnav {
     background: var(--cream); border-bottom: 1px solid var(--border-lg);
@@ -25,27 +32,33 @@
   }
   .lg-subnav::-webkit-scrollbar { display: none; }
   .lg-subnav a {
-    padding: 14px 22px; font-family: 'DM Mono', monospace;
+    padding: 14px 22px; font-family: var(--font-mono);
     font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--muted); text-decoration: none; white-space: nowrap;
     transition: color 0.2s; border-bottom: 2px solid transparent;
   }
-  .lg-subnav a:hover { color: var(--ink); border-bottom-color: var(--gold); }
+  .lg-subnav a:hover, .lg-subnav a.active { color: var(--ink); border-bottom-color: var(--gold); }
   .lg-hero { display: grid; grid-template-columns: 1fr 1fr; background: var(--cream); min-height: 90vh; }
   .lg-hero-left { padding: 80px 48px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
+  /* ── Hero typography — mirrors NRI hero-content scale ── */
   .lg-hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 28px;
+    display: inline-flex; align-items: center; gap: 16px;
+    font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+    letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 28px;
+    animation: lgFadeUp 0.8s 0.3s var(--ease) both;
   }
-  .lg-hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+  .lg-hero-eyebrow::before { content:''; width:32px; height:1px; background:var(--gold); flex-shrink:0; }
   .lg-hero-headline {
-    font-family: 'Playfair Display', serif; font-size: clamp(38px,4.5vw,60px);
-    font-weight: 700; line-height: 1.1; letter-spacing: -1px; color: var(--ink); margin-bottom: 24px;
+    font-family: var(--font-serif); font-size: clamp(42px, 4.8vw, 70px);
+    font-weight: 300; line-height: 1.07; letter-spacing: -0.5px; color: var(--ink); margin-bottom: 26px;
+    animation: lgFadeUp 0.8s 0.45s var(--ease) both;
   }
-  .lg-hero-headline em { font-style: italic; color: var(--teal); }
-  .lg-hero-sub { font-size: 16px; font-weight: 300; color: var(--muted); line-height: 1.7; max-width: 440px; margin-bottom: 44px; }
-  .lg-hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 52px; }
+  .lg-hero-headline em { font-style: italic; color: var(--teal); font-weight: 400; }
+  .lg-hero-sub {
+    font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.9; max-width: 500px; margin-bottom: 52px;
+    animation: lgFadeUp 0.8s 0.6s var(--ease) both;
+  }
+  .lg-hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 52px; animation: lgFadeUp 0.8s 0.72s var(--ease) both; }
   .lg-btn-primary {
     display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--cream);
     padding: 14px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none;
@@ -58,10 +71,21 @@
     border: 1px solid var(--border-lg); transition: border-color 0.2s, transform 0.15s;
   }
   .lg-btn-secondary:hover { border-color: var(--ink); transform: translateY(-1px); }
-  .lg-trust { padding-top: 32px; border-top: 1px solid var(--border-lg); display: flex; gap: 36px; flex-wrap: wrap; }
-  .lg-trust-item { display: flex; flex-direction: column; }
-  .lg-trust-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; }
-  .lg-trust-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .lg-trust {
+    padding-top: 32px; border-top: 1px solid var(--border-lg);
+    display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
+    animation: lgFadeUp 0.8s 0.85s var(--ease) both;
+  }
+  .lg-trust-item {
+    display: flex; flex-direction: column; gap: 5px;
+    padding-right: 32px; margin-right: 32px;
+    border-right: 1px solid rgba(201,168,76,0.2);
+  }
+  .lg-trust-item:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+  .lg-trust-num { font-family: var(--font-serif); font-size: 34px; font-weight: 400; color: var(--ink); letter-spacing: -0.5px; line-height: 1; }
+  .lg-trust-num .rupee { font-family: var(--font-sans); font-size: 20px; font-weight: 300; position: relative; top: -2px; margin-right: 1px; }
+  .lg-trust-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  @keyframes lgFadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
   .lg-hero-right { background: var(--ink); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 60px 48px; }
   .lg-hero-right::before {
     content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px;
@@ -83,37 +107,39 @@
     border-bottom: 2px solid var(--gold);
     flex-shrink: 0; text-align: center;
   }
-  .panel-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 500; color: var(--cream); margin-bottom: 6px; line-height: 1.3; }
-  .panel-sub { font-size: 13px; color: rgba(247,244,238,0.55); line-height: 1.65; }
+  .panel-title { font-family: var(--font-serif); font-size: 22px; font-weight: 500; color: var(--cream); margin-bottom: 6px; line-height: 1.3; }
+  .panel-sub { font-size: 12px; color: rgba(247,244,238,0.55); line-height: 1.65; }
   .panel-body { padding: 26px 26px; flex: 1; display: flex; flex-direction: column; gap: 0; background: var(--cream); }
   .field { margin-bottom: 14px; }
   .field label {
-    display: block; font-size: 10px; font-weight: 600; letter-spacing: 1.6px;
+    display: block; font-size: 9.5px; font-weight: 600; letter-spacing: 1.6px;
     text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
   }
   .field input, .field select {
     border-radius: 8px; width: 100%; padding: 12px 14px; border: 1px solid var(--border-lg);
-    background: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); outline: none;
-    transition: border-color 0.25s, background 0.25s;
+    background: rgba(255,255,255,0.6); font-family: var(--font-sans); font-size: 13px; color: var(--ink); outline: none;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
   }
   .field input:focus, .field select:focus {
     border-color: var(--gold); background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
   }
   .form-submit {
-    border-radius: 8px; width: 100%; padding: 14px; background: var(--ink); color: var(--cream);
-    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    border-radius: 8px; width: 100%; padding: 13px; background: var(--ink); color: var(--cream);
+    border: none; cursor: pointer; font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
     margin-top: 10px; transition: transform 0.2s, background 0.2s;
   }
   .form-submit:hover { background: var(--teal); transform: translateY(-1px); }
-  .form-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
+  .form-note { font-size: 10.5px; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.7; }
   .dash-card {
     background: rgba(247,244,238,0.06); border: 1px solid rgba(247,244,238,0.1);
     border-radius: 16px; padding: 28px; width: 100%; max-width: 420px;
     position: relative; z-index: 2; backdrop-filter: blur(4px);
   }
   .dash-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
-  .dash-hdr-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); }
-  .dash-hdr-order { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:0.05em; }
+  .dash-hdr-title { font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); }
+  .dash-hdr-order { font-family:var(--font-mono); font-size:10px; color:var(--gold); letter-spacing:0.05em; }
   .dash-prop { background:rgba(247,244,238,0.05); border-radius:10px; padding:16px; margin-bottom:20px; border:1px solid rgba(247,244,238,0.08); }
   .dash-prop-lbl { font-size:10px; color:rgba(247,244,238,0.4); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.08em; }
   .dash-prop-name { font-size:13px; color:rgba(247,244,238,0.9); font-weight:500; margin-bottom:2px; }
@@ -135,15 +161,15 @@
   .step-detail.active-msg { color:var(--gold-light); }
   .dash-verdict { margin-top:20px; background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:14px; display:flex; align-items:center; gap:12px; }
   .vd-dot { width:32px; height:32px; border-radius:50%; background:#1a5c52; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-  .vd-text { font-family:'Playfair Display',serif; font-size:13px; color:var(--gold); font-weight:600; margin-bottom:2px; }
+  .vd-text { font-family:var(--font-serif); font-size:13px; color:var(--gold); font-weight:500; margin-bottom:2px; }
   .vd-sub { font-size:10px; color:rgba(247,244,238,0.4); }
   .lg-section { padding: 96px 60px; }
   .lg-section-label { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-  .lg-s-label { font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); font-weight:500; }
-  .lg-s-line { height:1px; width:40px; background:var(--gold-light); }
-  .lg-heading { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:700; line-height:1.15; letter-spacing:-0.5px; color:var(--ink); margin-bottom:16px; }
-  .lg-heading em { font-style:italic; color:var(--teal); }
-  .lg-sub-text { font-size:15px; color:var(--muted); max-width:520px; line-height:1.7; }
+  .lg-s-label { font-family:var(--font-mono); font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); font-weight:500; }
+  .lg-s-line { height:1px; width:28px; background:var(--gold); }
+  .lg-heading { font-family:var(--font-serif); font-size:clamp(28px,3.5vw,48px); font-weight:300; line-height:1.1; letter-spacing:-0.5px; color:var(--ink); margin-bottom:14px; }
+  .lg-heading em { font-style:italic; color:var(--teal); font-weight:400; }
+  .lg-sub-text { font-size:15px; color:var(--muted); max-width:520px; line-height:1.85; font-weight:300; }
   .lg-packages { background:var(--ink); padding:96px 60px; }
   .lg-packages .lg-heading { color:var(--cream); }
   .lg-packages .lg-sub-text { color:rgba(247,244,238,0.5); }
@@ -152,16 +178,16 @@
   .pkg-card:hover { border-color:rgba(201,168,76,0.4); transform:translateY(-4px); }
   .pkg-card.featured { border-color:var(--gold); background:rgba(201,168,76,0.06); }
   .pkg-badge { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--ink); font-size:10px; font-weight:600; padding:4px 14px; border-radius:99px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
-  .pkg-tier { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:10px; }
-  .pkg-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--cream); margin-bottom:6px; }
-  .pkg-price { font-size:36px; font-weight:300; color:var(--cream); letter-spacing:-1px; margin-bottom:4px; }
-  .pkg-price sup { font-size:18px; font-weight:400; vertical-align:super; }
-  .pkg-timeline { font-family:'DM Mono',monospace; font-size:10.5px; color:var(--gold); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(247,244,238,0.08); }
+  .pkg-tier { font-family:var(--font-mono); font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:10px; }
+  .pkg-name { font-family:var(--font-serif); font-size:24px; font-weight: 400; color:var(--cream); margin-bottom:6px; }
+  .pkg-price { font-family:var(--font-serif); font-size:38px; font-weight:300; color:var(--cream); letter-spacing:-1px; margin-bottom:4px; }
+  .pkg-price .rupee { font-family: var(--font-sans); font-size: 22px; font-weight: 300; position: relative; top: -2px; margin-right: 1px; }
+  .pkg-timeline { font-family:var(--font-mono); font-size:10px; color:var(--gold); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(247,244,238,0.08); }
   .pkg-features { list-style:none; display:flex; flex-direction:column; gap:10px; }
-  .pkg-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:rgba(247,244,238,0.7); line-height:1.4; }
+  .pkg-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:rgba(247,244,238,0.7); line-height:1.55; font-weight:300; }
   .feat-yes { color:#4db89a; font-size:12px; margin-top:1px; flex-shrink:0; }
   .feat-no  { color:rgba(247,244,238,0.2); font-size:12px; margin-top:1px; flex-shrink:0; }
-  .pkg-cta { display:block; width:100%; margin-top:28px; padding:13px; border-radius:8px; font-size:13px; font-weight:500; text-align:center; transition:all 0.2s; text-decoration:none; border:none; cursor:pointer; }
+  .pkg-cta { display:block; width:100%; margin-top:28px; padding:13px; border-radius:8px; font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; text-align:center; transition:all 0.2s; text-decoration:none; border:none; cursor:pointer; }
   .pkg-cta-outline { background:transparent; border:1px solid rgba(247,244,238,0.2); color:var(--cream); }
   .pkg-cta-outline:hover { border-color:var(--gold); color:var(--gold); }
   .pkg-cta-gold { background:var(--gold); color:var(--ink); font-weight:600; }
@@ -171,10 +197,10 @@
   .proc-steps { display:flex; flex-direction:column; }
   .proc-step { display:flex; gap:20px; padding:16px; margin:0 -16px; border-radius:8px; transition:background 0.15s; cursor:default; }
   .proc-step:hover { background:rgba(201,168,76,0.04); }
-  .proc-num { font-family:'Playfair Display',serif; font-size:34px; font-weight:700; color:var(--gold-light); line-height:1; min-width:44px; letter-spacing:-1px; }
-  .proc-state { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--gold); margin-bottom:4px; }
-  .proc-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:5px; }
-  .proc-desc { font-size:13px; color:var(--muted); line-height:1.6; }
+  .proc-num { font-family:var(--font-serif); font-size:36px; font-weight:300; color:var(--gold-light); line-height:1; min-width:44px; letter-spacing:-0.5px; }
+  .proc-state { font-family:var(--font-mono); font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+  .proc-title { font-family:var(--font-serif); font-size:18px; font-weight:400; color:var(--ink); margin-bottom:5px; }
+  .proc-desc { font-family:var(--font-sans); font-size:13px; color:var(--muted); line-height:1.7; font-weight:300; }
   .wa-msg { margin-top:8px; display:inline-flex; align-items:flex-start; gap:6px; background:#e8f5e2; border-radius:6px; padding:7px 10px; font-size:11.5px; color:#1a5c1a; line-height:1.4; max-width:400px; }
   .wa-icon { font-size:13px; flex-shrink:0; }
   .video-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
@@ -182,11 +208,11 @@
   @media (max-width: 768px) { .video-card { padding: 28px 20px; } }
   .proc-visual { position:sticky; top:100px; }
   .verdict-display { background:var(--ink); border-radius:20px; padding:36px; margin-bottom:20px; }
-  .verdict-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
+  .verdict-head { font-family:var(--font-mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
   .verdict-stamp { font-size:10px; background:rgba(74,189,158,0.15); color:#4abd9e; padding:3px 10px; border-radius:99px; }
   .verdict-main { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
   .big-dot { width:52px; height:52px; border-radius:50%; background:#1a5c52; border:2px solid rgba(74,189,158,0.4); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-  .verdict-title-big { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:#4abd9e; line-height:1.1; }
+  .verdict-title-big { font-family:var(--font-serif); font-size:28px; font-weight:400; color:#4abd9e; line-height:1.1; }
   .verdict-sub-big { font-size:12px; color:rgba(247,244,238,0.4); margin-top:4px; }
   .verdict-checks { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .v-check { display:flex; align-items:center; gap:7px; font-size:11.5px; color:rgba(247,244,238,0.6); background:rgba(247,244,238,0.04); padding:8px 10px; border-radius:6px; }
@@ -196,17 +222,17 @@
   .adv-avatar { width:36px; height:36px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:var(--teal-light); flex-shrink:0; }
   .adv-name { font-size:12px; font-weight:500; color:rgba(247,244,238,0.8); }
   .adv-role { font-size:10.5px; color:rgba(247,244,238,0.35); }
-  .adv-certified { font-family:'DM Mono',monospace; font-size:9.5px; color:var(--gold); letter-spacing:0.06em; }
+  .adv-certified { font-family:var(--font-mono); font-size:9px; color:var(--gold); letter-spacing:3px; text-transform:uppercase; }
   .lg-services { background:var(--warm); padding:96px 60px; }
   .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-lg); border:1px solid var(--border-lg); border-radius:16px; overflow:hidden; margin-top:52px; }
   .svc-cell { background:var(--warm); padding:32px 28px; transition:background 0.2s; }
   .svc-cell:hover { background:var(--cream); }
-  .svc-num { font-family:'Playfair Display',serif; font-size:13px; font-style:italic; color:var(--gold); margin-bottom:14px; }
+  .svc-num { font-family:var(--font-mono); font-size:9px; font-style:normal; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
   .svc-icon { width:40px; height:40px; border-radius:10px; background:var(--cream); border:1px solid var(--border-lg); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:16px; }
-  .svc-name { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:8px; line-height:1.25; }
-  .svc-body { font-size:13px; color:var(--muted); line-height:1.6; }
+  .svc-name { font-family:var(--font-serif); font-size:18px; font-weight:400; color:var(--ink); margin-bottom:8px; line-height:1.25; }
+  .svc-body { font-family:var(--font-sans); font-size:13px; color:var(--muted); line-height:1.7; font-weight:300; }
   .svc-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:14px; }
-  .svc-tag { font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:0.06em; color:var(--muted); background:var(--cream); border:1px solid var(--border-lg); padding:3px 8px; border-radius:4px; }
+  .svc-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:0.06em; color:var(--muted); background:var(--cream); border:1px solid var(--border-lg); padding:3px 8px; border-radius:4px; }
   .lg-why { background:var(--cream); padding:96px 60px; }
   .why-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; margin-top:52px; align-items:center; }
   .why-list { display:flex; flex-direction:column; gap:28px; }
@@ -215,9 +241,9 @@
   .why-title { font-size:15px; font-weight:500; color:var(--ink); margin-bottom:4px; }
   .why-desc { font-size:13px; color:var(--muted); line-height:1.6; }
   .comp-wrap { background:var(--ink); border-radius:20px; padding:32px; overflow:hidden; }
-  .comp-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; }
+  .comp-title { font-family:var(--font-mono); font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:20px; }
   .comp-table { width:100%; border-collapse:collapse; font-size:12px; }
-  .comp-table th { text-align:left; padding:8px 12px; font-size:10px; font-weight:500; color:rgba(247,244,238,0.4); border-bottom:1px solid rgba(247,244,238,0.07); font-family:'DM Mono',monospace; letter-spacing:0.06em; }
+  .comp-table th { text-align:left; padding:8px 12px; font-size:9px; font-weight:500; color:rgba(247,244,238,0.4); border-bottom:1px solid rgba(247,244,238,0.07); font-family:var(--font-mono); letter-spacing:0.06em; }
   .comp-table td { padding:9px 12px; font-size:12px; color:rgba(247,244,238,0.65); border-bottom:1px solid rgba(247,244,238,0.05); }
   .comp-table tr:last-child td { border-bottom:none; }
   .comp-table tr.hl-row td { color:var(--gold); font-weight:500; background:rgba(201,168,76,0.07); }
@@ -227,8 +253,8 @@
   .testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:52px; }
   .testi-card { background:var(--cream); border:1px solid var(--border-lg); border-radius:16px; padding:28px; transition:transform 0.2s; }
   .testi-card:hover { transform:translateY(-3px); }
-  .testi-quote { font-family:'Playfair Display',serif; font-size:36px; color:var(--gold-light); line-height:1; margin-bottom:12px; }
-  .testi-text { font-size:14px; color:var(--ink); line-height:1.7; margin-bottom:20px; font-style:italic; font-family:'Playfair Display',serif; }
+  .testi-quote { font-family:var(--font-serif); font-size:60px; color:var(--gold-light); line-height:1; margin-bottom:12px; }
+  .testi-text { font-size:14px; color:var(--ink); line-height:1.85; margin-bottom:20px; font-style:italic; font-family:var(--font-serif); font-weight:300; }
   .testi-author { display:flex; align-items:center; gap:12px; padding-top:16px; border-top:1px solid var(--border-lg); }
   .testi-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; }
   .testi-name { font-size:13px; font-weight:500; color:var(--ink); }
@@ -276,6 +302,14 @@
     .lg-subnav { padding:0 16px; }
   }
   .fab-wrap:has(.fab-emi) { display: none !important; }
+
+  /* ── CTA banner font overrides: replace base.html Source Sans 3 with Heritage Modern ── */
+  .cta-bg-text { font-family: 'Cormorant Garamond', Georgia, serif !important; }
+  .cta-title   { font-family: 'Cormorant Garamond', Georgia, serif !important; }
+  .cta-title em { font-style: italic; color: var(--gold, #c9a84c); }
+  .cta-form input,
+  .cta-form select { font-family: 'DM Sans', system-ui, sans-serif !important; }
+  .cta-submit  { font-family: 'DM Sans', system-ui, sans-serif !important; letter-spacing: 2px; }
 </style>
 {% endblock %}
 
@@ -308,7 +342,7 @@
         {% endif %}
       </div>
       <div class="lg-trust">
-        <div class="lg-trust-item"><span class="lg-trust-num">&#8377;300Cr+</span><span class="lg-trust-label">Bad investments prevented</span></div>
+        <div class="lg-trust-item"><span class="lg-trust-num"><span class="rupee">&#8377;</span>300Cr+</span><span class="lg-trust-label">Bad investments prevented</span></div>
         <div class="lg-trust-item"><span class="lg-trust-num">5&ndash;7 days</span><span class="lg-trust-label">Full verification turnaround</span></div>
         <div class="lg-trust-item"><span class="lg-trust-num">Fixed fee</span><span class="lg-trust-label">No hidden charges, ever</span></div>
       </div>
@@ -364,7 +398,7 @@
       <div class="pkg-card fade-up">
         <div class="pkg-tier">Tier 01</div>
         <div class="pkg-name">Shield Starter</div>
-        <div class="pkg-price"><sup>&#8377;</sup>4,999</div>
+        <div class="pkg-price"><span class="rupee">&#8377;</span>4,999</div>
         <div class="pkg-timeline">&#9201; Delivery in 48&ndash;72 hours</div>
         <ul class="pkg-features">
           <li><span class="feat-yes">&#10003;</span> Title deed verification</li>
@@ -384,7 +418,7 @@
         <div class="pkg-badge">Most popular</div>
         <div class="pkg-tier">Tier 02</div>
         <div class="pkg-name">Shield Pro</div>
-        <div class="pkg-price"><sup>&#8377;</sup>9,999</div>
+        <div class="pkg-price"><span class="rupee">&#8377;</span>9,999</div>
         <div class="pkg-timeline">&#9201; Delivery in 5&ndash;7 working days</div>
         <ul class="pkg-features">
           <li><span class="feat-yes">&#10003;</span> Everything in Starter</li>
@@ -403,7 +437,7 @@
       <div class="pkg-card fade-up">
         <div class="pkg-tier">Tier 03</div>
         <div class="pkg-name">Shield Complete</div>
-        <div class="pkg-price"><sup>&#8377;</sup>18,999</div>
+        <div class="pkg-price"><span class="rupee">&#8377;</span>18,999</div>
         <div class="pkg-timeline">&#9201; 7&ndash;10 days + 30&ndash;60 day post-purchase</div>
         <ul class="pkg-features">
           <li><span class="feat-yes">&#10003;</span> Everything in Pro</li>
@@ -438,10 +472,10 @@
         <div style="position:relative; z-index:2;">
           <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.25); border-radius:99px; padding:6px 14px; margin-bottom:24px;">
             <span style="font-size:16px;">🎥</span>
-            <span style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);">Video Consultation</span>
+            <span style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold);">Video Consultation</span>
           </div>
-          <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--cream); margin-bottom:6px;">₹999 <span style="font-size:18px; font-weight:300; color:rgba(247,244,238,0.5);">/ session</span></div>
-          <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); margin-bottom:28px;">⏱ 30 minutes · 1-on-1 with advocate</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:300; color:var(--cream); margin-bottom:6px;">₹999 <span style="font-size:18px; font-weight:300; color:rgba(247,244,238,0.5);">/ session</span></div>
+          <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:28px;">⏱ 30 minutes · 1-on-1 with advocate</div>
           <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:32px;">
             <li style="display:flex; align-items:flex-start; gap:10px; font-size:14px; color:rgba(247,244,238,0.75);">
               <span style="color:#4abd9e; flex-shrink:0; margin-top:1px;">✓</span> Live 1-on-1 video call with a senior property advocate
