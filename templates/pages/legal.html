@@ -7,7 +7,7 @@
 {% block extra_head %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Noto+Serif:opsz,wght@8..144,300;8..144,400;8..144,500&display=swap" rel="stylesheet">
 <style>
   .lg-page {
     --ink: #0f0e0c; --cream: #f7f4ee; --warm: #e8e2d6;
@@ -38,6 +38,8 @@
     transition: color 0.2s; border-bottom: 2px solid transparent;
   }
   .lg-subnav a:hover, .lg-subnav a.active { color: var(--ink); border-bottom-color: var(--gold); }
+  /* Offset anchor scroll for fixed nav + sticky subnav */
+  #hero-panel, #lg-services, #lg-packages, #lg-video-call, #lg-process, #lg-why, #lg-get-started { scroll-margin-top: 140px; }
   .lg-hero { display: grid; grid-template-columns: 1fr 1fr; background: var(--cream); min-height: 90vh; }
   .lg-hero-left { padding: 80px 48px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
   /* ── Hero typography — mirrors NRI hero-content scale ── */
@@ -83,7 +85,8 @@
   }
   .lg-trust-item:last-child { border-right: none; padding-right: 0; margin-right: 0; }
   .lg-trust-num { font-family: var(--font-serif); font-size: 34px; font-weight: 400; color: var(--ink); letter-spacing: -0.5px; line-height: 1; }
-  .lg-trust-num .rupee { font-family: var(--font-serif); font-size: 30px; font-weight: 300; position: relative; top: -1px; margin-right: 1px; }
+  .lg-rupee { font-family: 'Noto Serif', var(--font-serif); font-weight: inherit; line-height: 1; display: inline-block; margin-right: 0.06em; vertical-align: -0.08em; }
+  .lg-trust-num .lg-rupee { font-size: 0.88em; }
   .lg-trust-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
   @keyframes lgFadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
   .lg-hero-right { background: var(--ink); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 60px 48px; }
@@ -181,7 +184,7 @@
   .pkg-tier { font-family:var(--font-mono); font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(247,244,238,0.4); margin-bottom:10px; }
   .pkg-name { font-family:var(--font-serif); font-size:24px; font-weight: 400; color:var(--cream); margin-bottom:6px; }
   .pkg-price { font-family:var(--font-serif); font-size:38px; font-weight:300; color:var(--cream); letter-spacing:-1px; margin-bottom:4px; }
-  .pkg-price .rupee { font-family: var(--font-serif); font-size: 32px; font-weight: 300; position: relative; top: -1px; margin-right: 1px; }
+  .pkg-price .lg-rupee { font-size: 0.86em; }
   .pkg-timeline { font-family:var(--font-mono); font-size:10px; color:var(--gold); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(247,244,238,0.08); }
   .pkg-features { list-style:none; display:flex; flex-direction:column; gap:10px; }
   .pkg-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:rgba(247,244,238,0.7); line-height:1.55; font-weight:300; }
@@ -316,14 +319,14 @@
 {% block content %}
 <div class="lg-page">
 
-  <div class="lg-subnav">
-    <a href="#lg-services">Services</a>
-    <a href="#lg-packages">Packages</a>
-    <a href="#lg-video-call">Video Consultation</a>
-    <a href="#lg-process">How it works</a>
-    <a href="#lg-why">Why HOMEXO</a>
-    <a href="#hero-form">Get Started</a>
-  </div>
+		  <div class="lg-subnav">
+		    <a href="#lg-services">Services</a>
+		    <a href="#lg-packages">Packages</a>
+		    <a href="#lg-video-call">Video Consultation</a>
+		    <a href="#lg-process">How it works</a>
+		    <a href="#lg-why">Why HOMEXO</a>
+		    <a href="#hero-panel">Get Started</a>
+		  </div>
 
   <!-- HERO -->
   <div class="lg-hero">
@@ -342,17 +345,17 @@
         {% endif %}
       </div>
       <div class="lg-trust">
-        <div class="lg-trust-item"><span class="lg-trust-num"><span class="rupee">&#8377;</span>300Cr+</span><span class="lg-trust-label">Bad investments prevented</span></div>
+        <div class="lg-trust-item"><span class="lg-trust-num"><span class="lg-rupee">₹</span>300Cr+</span><span class="lg-trust-label">Bad investments prevented</span></div>
         <div class="lg-trust-item"><span class="lg-trust-num">5&ndash;7 days</span><span class="lg-trust-label">Full verification turnaround</span></div>
         <div class="lg-trust-item"><span class="lg-trust-num">Fixed fee</span><span class="lg-trust-label">No hidden charges, ever</span></div>
       </div>
     </div>
-    <div class="lg-hero-right">
-      <div class="hero-panel">
-        <div class="panel-head">
-          <div class="panel-title">Get Free Expert Callback</div>
-          <div class="panel-sub">Our legal specialist will call you within 2 hours to discuss your property verification needs.</div>
-        </div>
+	    <div class="lg-hero-right">
+	      <div class="hero-panel" id="hero-panel">
+	        <div class="panel-head">
+	          <div class="panel-title">Get Free Expert Callback</div>
+	          <div class="panel-sub">Our legal specialist will call you within 2 hours to discuss your property verification needs.</div>
+	        </div>
         
 <form class="panel-body" id="hero-form" method="post" action="{% url 'enquiries:create' %}">
           {% csrf_token %}
@@ -398,7 +401,7 @@
       <div class="pkg-card fade-up">
         <div class="pkg-tier">Tier 01</div>
         <div class="pkg-name">Shield Starter</div>
-        <div class="pkg-price"><span class="rupee">&#8377;</span>4,999</div>
+        <div class="pkg-price"><span class="lg-rupee">₹</span>4,999</div>
         <div class="pkg-timeline">&#9201; Delivery in 48&ndash;72 hours</div>
         <ul class="pkg-features">
           <li><span class="feat-yes">&#10003;</span> Title deed verification</li>
@@ -418,7 +421,7 @@
         <div class="pkg-badge">Most popular</div>
         <div class="pkg-tier">Tier 02</div>
         <div class="pkg-name">Shield Pro</div>
-        <div class="pkg-price"><span class="rupee">&#8377;</span>9,999</div>
+        <div class="pkg-price"><span class="lg-rupee">₹</span>9,999</div>
         <div class="pkg-timeline">&#9201; Delivery in 5&ndash;7 working days</div>
         <ul class="pkg-features">
           <li><span class="feat-yes">&#10003;</span> Everything in Starter</li>
@@ -437,7 +440,7 @@
       <div class="pkg-card fade-up">
         <div class="pkg-tier">Tier 03</div>
         <div class="pkg-name">Shield Complete</div>
-        <div class="pkg-price"><span class="rupee">&#8377;</span>18,999</div>
+        <div class="pkg-price"><span class="lg-rupee">₹</span>18,999</div>
         <div class="pkg-timeline">&#9201; 7&ndash;10 days + 30&ndash;60 day post-purchase</div>
         <ul class="pkg-features">
           <li><span class="feat-yes">&#10003;</span> Everything in Pro</li>
@@ -498,10 +501,10 @@
               style="flex:1; min-width:180px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 20px; background:var(--gold); color:var(--ink); font-size:14px; font-weight:600; border-radius:8px; text-decoration:none; transition:all 0.2s;">
               📅 Book via WhatsApp
             </a>
-            <a href="#hero-form"
-              style="flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 20px; background:transparent; color:var(--cream); font-size:14px; font-weight:400; border-radius:8px; text-decoration:none; border:1px solid rgba(247,244,238,0.2); transition:all 0.2s;">
-              Send Enquiry
-            </a>
+	            <a href="#hero-panel"
+	              style="flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 20px; background:transparent; color:var(--cream); font-size:14px; font-weight:400; border-radius:8px; text-decoration:none; border:1px solid rgba(247,244,238,0.2); transition:all 0.2s;">
+	              Send Enquiry
+	            </a>
           </div>
         </div>
       </div>
@@ -778,7 +781,7 @@
 {% endblock %}
 
 {% block pre_footer %}
-<div class="cta-banner">
+<div class="cta-banner" id="lg-get-started">
   <div class="cta-bg-text">LEGAL</div>
   <div>
     <h2 class="cta-title">Need a Final <em>Legal</em><br>Go / No-Go Check?</h2>
@@ -838,5 +841,90 @@ if (steps.length) {
     if (cur === 0) cur = 1;
   }, 2500);
 }
+
+// Scroll-spy for subnav highlight
+(() => {
+  const subnav = document.querySelector('.lg-subnav');
+  if (!subnav) return;
+
+  const links = Array.from(subnav.querySelectorAll('a[href^="#"]'));
+  const items = links
+    .map((link) => {
+      const href = link.getAttribute('href') || '';
+      const id = href.startsWith('#') ? href.slice(1) : null;
+      const section = id ? document.getElementById(id) : null;
+      return section ? { id, link, section } : null;
+    })
+    .filter(Boolean);
+  if (!items.length) return;
+
+	  const setActive = (id) => {
+	    links.forEach(a => a.classList.toggle('active', id && a.getAttribute('href') === `#${id}`));
+	  };
+
+  const headerOffset = () => {
+    const nav = document.querySelector('nav');
+    const navH = nav ? nav.getBoundingClientRect().height : 0;
+    const subH = subnav.getBoundingClientRect().height || 0;
+    return navH + subH + 12;
+  };
+
+	  const pickActiveId = () => {
+	    const scrollPos = window.scrollY + headerOffset();
+	    let activeId = null;
+	    let activeTop = -Infinity;
+
+	    items.forEach(({ id, section }) => {
+	      const top = section.getBoundingClientRect().top + window.scrollY;
+	      if (top <= scrollPos && top > activeTop) { activeTop = top; activeId = id; }
+	    });
+
+	    return activeId;
+	  };
+
+  let raf = null;
+  const schedule = () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = null;
+      setActive(pickActiveId());
+    });
+  };
+
+	  window.addEventListener('scroll', schedule, { passive: true });
+	  window.addEventListener('resize', schedule);
+	  schedule();
+
+	  const scrollToId = (id, behavior = 'smooth') => {
+	    const target = document.getElementById(id);
+	    if (!target) return;
+	    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset();
+	    window.scrollTo({ top: Math.max(0, top), behavior });
+	  };
+
+	  const idSet = new Set(items.map(({ id }) => id));
+	  document.addEventListener('click', (ev) => {
+	    const link = ev.target.closest?.('a[href^="#"]');
+	    if (!link) return;
+	    const href = link.getAttribute('href') || '';
+	    if (!href.startsWith('#')) return;
+	    if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+	    const id = href.slice(1);
+	    if (!id || !idSet.has(id)) return;
+	    if (!document.getElementById(id)) return;
+	    ev.preventDefault();
+	    setActive(id);
+	    scrollToId(id);
+	    history.pushState(null, '', href);
+	  });
+
+	  const hashId = decodeURIComponent((location.hash || '').replace('#', ''));
+	  if (hashId && items.some(({ id }) => id === hashId)) {
+	    requestAnimationFrame(() => {
+	      scrollToId(hashId, 'auto');
+	      setActive(hashId);
+	    });
+	  }
+	})();
 </script>
 {% endblock %}
