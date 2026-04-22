@@ -119,6 +119,12 @@
       <textarea name="description" rows="5" placeholder="Describe the property — location highlights, features, surroundings...">{{ form.description.value|default:'' }}</textarea>
     </div>
 
+    <div class="form-group" style="margin-top:16px;">
+      <label>Video Tour URL <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional)</span></label>
+      <input type="url" name="video_url" value="{{ form.video_url.value|default:'' }}" placeholder="e.g. https://www.youtube.com/watch?v=...">
+      {% if form.video_url.errors %}<div class="form-error">{{ form.video_url.errors.0 }}</div>{% endif %}
+    </div>
+
     <div class="pf-grid-2" style="margin-top:16px;">
       <div class="form-group">
         <label>Developer / Builder <span style="font-size:11px;font-weight:400;color:var(--warm-grey);">(optional)</span></label>

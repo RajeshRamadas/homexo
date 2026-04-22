@@ -30,7 +30,7 @@ class PropertyCreateForm(forms.ModelForm):
     class Meta:
         model  = Property
         fields = (
-            'title', 'listing_type', 'property_type', 'description',
+            'title', 'listing_type', 'property_type', 'description', 'video_url',
             'price', 'price_label', 'price_on_req',
             'bhk', 'bedrooms', 'bathrooms', 'area_sqft', 'carpet_area',
             'address', 'locality', 'city', 'state', 'pincode',

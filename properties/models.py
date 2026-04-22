@@ -145,6 +145,7 @@ class Property(models.Model):
                                        related_name='properties', verbose_name='Developer / Builder')
     description    = models.TextField(blank=True)
     bhk            = models.CharField(max_length=10, choices=BHK.choices, blank=True)
+    video_url      = models.URLField(blank=True, verbose_name='Video Tour URL', help_text='YouTube or Vimeo URL for the property tour')
 
     # ── Price ─────────────────────────────────────────────────────────────────
     price          = models.DecimalField(max_digits=14, decimal_places=2)
@@ -285,6 +286,16 @@ class Property(models.Model):
 
     def increment_views(self):
         Property.objects.filter(pk=self.pk).update(views_count=models.F('views_count') + 1)
+
+    @property
+    def youtube_id(self):
+        """Extract the YouTube video ID from standard or share URLs."""
+        if not self.video_url:
+            return None
+        import re
+        # handle youtube.com/watch?v=ID and youtu.be/ID
+        match = re.search(r'(?:v=|youtu\.be/|embed/)([^&?]+)', self.video_url)
+        return match.group(1) if match else None
 
 
 class PropertyImage(models.Model):

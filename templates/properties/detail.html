@@ -746,6 +746,39 @@
   .pd-lb-thumb-inner { width: 100%; height: 100%; }
   .pd-lb-thumb-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+  /* ── Video Modal & Play Button ── */
+  .pd-play-btn {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(13,43,78,0.85); color: #fff;
+    padding: 14px 28px; border-radius: 40px; cursor: pointer;
+    display: flex; align-items: center; gap: 12px;
+    backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15);
+    transition: all .3s cubic-bezier(.23,1,.32,1);
+    z-index: 5; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .pd-play-btn:hover { background: #E82C2C; transform: translate(-50%, -55%); box-shadow: 0 15px 35px rgba(232,44,44,0.4); border-color: rgba(255,255,255,0.3); }
+
+  .pd-video-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(7,25,41,0.96); z-index: 9999;
+    backdrop-filter: blur(12px);
+  }
+  .pd-video-modal.open { display: flex; align-items: center; justify-content: center; }
+  .pd-video-close {
+    position: absolute; top: 30px; right: 30px; width: 44px; height: 44px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .3s; z-index: 10000;
+  }
+  .pd-video-close:hover { background: #E82C2C; border-color: #E82C2C; }
+  .pd-video-frame-wrapper {
+    width: 90%; max-width: 1000px; aspect-ratio: 16/9;
+    background: #000; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border-radius: 12px; overflow: hidden;
+  }
+  .pd-video-frame-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 1200px) {
     .pd-layout { padding: 22px 40px 48px; }
@@ -1244,10 +1277,19 @@
           <img src="{{ first_img.image.url }}" alt="{{ property.title }}">
           {% endif %}
           {% endwith %}
+
           <span class="pd-img-num">1</span>
-          <div class="pd-photo-count" onclick="pdOpenLightbox(0);event.stopPropagation()">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            View All {{ images.count }} Photo{{ images.count|pluralize }}
+          <div style="position:absolute; bottom:14px; right:14px; display:flex; gap:10px; z-index:2;">
+            {% if property.youtube_id %}
+            <div class="pd-photo-count" style="position:static; background:#E82C2C; border-color:rgba(255,255,255,0.2); color:#fff;" onclick="openVideoModal();event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Watch Video Tour
+            </div>
+            {% endif %}
+            <div class="pd-photo-count" style="position:static;" onclick="pdOpenLightbox(0);event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              View All {{ images.count }} Photo{{ images.count|pluralize }}
+            </div>
           </div>
         </div>
         {# Thumbnail cells — slots 2 & 3 only #}
@@ -1255,6 +1297,7 @@
           {% if not forloop.first and forloop.counter0 <= 2 %}
           <div class="pd-gallery-cell" onclick="pdOpenLightbox({{ forloop.counter0 }})">
             <img src="{{ img.image.url }}" alt="Photo {{ forloop.counter }}">
+
             <span class="pd-img-num">{{ forloop.counter }}</span>
           </div>
           {% endif %}
@@ -1271,6 +1314,7 @@
                onclick="pdOpenLightbox({{ forloop.counter0 }})">
             <img src="{{ img.image.url }}" alt="{{ img.caption|default:property.title }}" loading="lazy"
                  style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+
             {% if img.caption %}
             <div style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); background:rgba(7,25,41,.7); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,.1); box-shadow:0 4px 12px rgba(0,0,0,.2); color:#fff; font-size:13px; font-weight:500; padding:6px 14px; border-radius:24px; pointer-events:none; z-index:2; max-width:85%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
               {{ img.caption }}
@@ -2508,6 +2552,12 @@
 {# ─── LIGHTBOX ─── #}
 <div class="pd-lightbox" id="pdLightbox" onclick="pdHandleBackdrop(event)">
   <div class="pd-lb-inner">
+    {% if property.youtube_id %}
+    <button class="pd-lb-video-btn" onclick="openVideoModal()" style="position:absolute; top:30px; right:100px; background:rgba(232,44,44,0.85); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:40px; padding:12px 24px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; z-index:10000; backdrop-filter:blur(8px); transition:all .3s;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Watch Video Tour
+    </button>
+    {% endif %}
     <button class="pd-lb-close" onclick="pdCloseLightbox()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
@@ -3189,4 +3239,32 @@ var pdCurrent = 0, pdLbIsOpen = false;
   }
 })();
 </script>
+
+{# VIDEO MODAL #}
+{% if property.youtube_id %}
+<div id="videoModal" class="pd-video-modal" onclick="closeVideo(event)">
+  <button class="pd-video-close" onclick="closeVideo(event)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="pd-video-frame-wrapper">
+    <iframe id="videoFrame" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+</div>
+<script>
+  function openVideoModal() {
+    document.getElementById("videoModal").classList.add("open");
+    // Ensure scrolling prevention and autoplay injection properly configured
+    document.body.style.overflow = "hidden";
+    var videoSrc = "https://www.youtube.com/embed/{{ property.youtube_id }}?autoplay=1&rel=0&modestbranding=1";
+    document.getElementById("videoFrame").src = videoSrc;
+  }
+  function closeVideo(event) {
+    if (event && event.target.id === 'videoFrame') return; // Don't close if clicking inside iframe
+    document.getElementById("videoModal").classList.remove("open");
+    document.body.style.overflow = "";
+    document.getElementById("videoFrame").src = "";
+  }
+</script>
+{% endif %}
+
 {% endblock %}
