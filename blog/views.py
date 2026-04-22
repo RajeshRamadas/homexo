@@ -9,9 +9,10 @@ from .models import Post, Category
 from .forms import PostEditorForm
 
 
-def post_list(request):
+def post_list(request, category_slug=None):
     posts = Post.objects.filter(status='published').select_related('author').prefetch_related('categories')
-    category_slug = request.GET.get('category', '').strip()
+    if not category_slug:
+        category_slug = request.GET.get('category', '').strip()
     query = request.GET.get('q', '').strip()
     if category_slug:
         posts = posts.filter(categories__slug=category_slug).distinct()

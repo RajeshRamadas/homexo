@@ -225,7 +225,7 @@
       <a href="{% url 'blog:list' %}{% if query %}?q={{ query }}{% endif %}"
          class="bl-pill{% if not category_slug %} active{% endif %}">All</a>
       {% for cat in categories %}
-      <a href="?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}"
+      <a href="{% url 'blog:category_list' cat.slug %}{% if query %}?q={{ query }}{% endif %}"
          class="bl-pill{% if category_slug == cat.slug %} active{% endif %}">{{ cat.name }}</a>
       {% endfor %}
     </div>
@@ -334,7 +334,7 @@
       <h4 class="bl-widget-title">Browse Topics</h4>
       <div class="bl-tags">
         {% for cat in categories %}
-        <a href="?category={{ cat.slug }}"
+        <a href="{% url 'blog:category_list' cat.slug %}"
            class="bl-tag{% if category_slug == cat.slug %} active{% endif %}">{{ cat.name }}</a>
         {% endfor %}
       </div>
