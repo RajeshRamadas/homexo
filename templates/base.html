@@ -173,8 +173,9 @@
   /* ── FOOTER ── */
   footer { background: var(--charcoal); padding: 50px 60px 30px; }
   .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 50px; }
-  .footer-brand p { font-size: 14px; line-height: 1.8; color: rgba(245,240,232,0.4); max-width: 280px; margin: 20px 0 28px; }
-  .footer-social { display: flex; gap: 12px; }
+  .footer-brand { display: flex; flex-direction: column; align-items: flex-start; }
+  .footer-brand p { font-size: 14px; line-height: 1.8; color: rgba(245,240,232,0.4); max-width: 280px; margin: 0 0 16px; }
+  .footer-social { display: flex; gap: 12px; align-items: center; }
   .footer-social-btn { width: 40px; height: 40px; border: 1px solid rgba(10,46,92,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .3s; text-decoration: none; }
   .footer-social-btn:hover { border-color: var(--sky); background: var(--navy); }
   .footer-col h5 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 24px; }
@@ -621,12 +622,11 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="{% url 'pages:home' %}" class="nav-logo" style="margin-bottom:0;display:inline-flex;">
+      <a href="{% url 'pages:home' %}" class="nav-logo" style="margin-left:-6px; margin-bottom:0; display:inline-flex;">
         <svg viewBox="0 0 80 70" fill="none" style="height:40px;"><polyline points="8,54 40,10 72,54" stroke="#4A90C4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="25" y1="64" x2="55" y2="64" stroke="#4A90C4" stroke-width="4" stroke-linecap="round"/></svg>
         <span style="font-family:'Source Sans 3',sans-serif;font-size:18px;font-weight:500;letter-spacing:5px;color:#C8D8EC;">HOME<span style="background-color: #0D2B4E; color: #FFFFFF; padding: 1px 4px; border-radius: 2px; margin-left: 0; letter-spacing: 0;">XO</span></span>
       </a>
-      <div style="width:100%; display:block;"></div>
-      <p style="margin-top:0;margin-bottom:0;margin-left:11px;">Home Search, Simplified</p>
+      <p style="margin:4px 0 24px;">Home Search, Simplified</p>
       <div class="footer-social">
         <a href="https://www.facebook.com/profile.php?id=61574700420547" class="footer-social-btn" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
         <a href="https://www.instagram.com/homexoproperties/" class="footer-social-btn" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8D8EC" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#C8D8EC"/></svg></a>
