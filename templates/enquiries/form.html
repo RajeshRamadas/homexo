@@ -35,7 +35,6 @@
         <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:18px;">Our Services</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Buy Property</div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Rent Property</div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Sell / List Property</div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Home Loan Assistance</div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-brown);"><span style="color:var(--sky);">→</span> Property Legal Help</div>
@@ -76,7 +75,6 @@
             <select name="enquiry_type">
               <option value="general"    {% if not qtype and not svc %}selected{% endif %}>General</option>
               <option value="buy"        {% if qtype == 'buy' %}selected{% endif %}>Buy Property</option>
-              <option value="rent"       {% if qtype == 'rent' %}selected{% endif %}>Rent Property</option>
               <option value="sell"       {% if qtype == 'sell' %}selected{% endif %}>Sell / List Property</option>
               <option value="home_loan"  {% if qtype == 'home_loan' or svc == 'home_loan' %}selected{% endif %}>Home Loan</option>
               <option value="legal"      {% if qtype == 'legal' or svc == 'legal' or svc == 'legal_homeloan' %}selected{% endif %}>Property Legal</option>

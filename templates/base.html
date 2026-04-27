@@ -570,7 +570,6 @@
             <select id="pc_listing" name="preferred_listing_type">
               <option value="">Select&hellip;</option>
               <option value="buy"{% if user.preferred_listing_type == 'buy' %} selected{% endif %}>Buy</option>
-              <option value="rent"{% if user.preferred_listing_type == 'rent' %} selected{% endif %}>Rent</option>
               <option value="new_project"{% if user.preferred_listing_type == 'new_project' %} selected{% endif %}>New Project</option>
             </select>
           </div>
@@ -729,7 +728,6 @@
       <select name="enquiry_type">
         <option value="">I'm Looking To&hellip;</option>
         <option value="buy">Buy a Property</option>
-        <option value="rent">Rent a Property</option>
         <option value="sell">Sell My Property</option>
         <option value="general">Real Estate Investment</option>
       </select>
@@ -758,7 +756,6 @@
       <h5>Properties</h5>
       <ul>
         <li><a href="{% url 'properties:list' %}?type=buy">Buy</a></li>
-        <li><a href="{% url 'properties:list' %}?type=rent">Rent</a></li>
         <li><a href="{% url 'properties:list' %}">New Projects</a></li>
         <li><a href="{% url 'properties:list' %}?type=buy&property_type=plot">Plots &amp; Land</a></li>
       </ul>
