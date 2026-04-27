@@ -226,10 +226,11 @@ function getCookie(name) {
 window.addEventListener('load', () => {
     appendMessage('assistant',
         '👋 Hi! I\'m Urvashi, your personal property consultant at Homexo.\n\n' +
-        'I can help you find your dream home in Bangalore. Tell me:\n' +
+        'I can help you find your dream home. Tell me:\n' +
         '• What area are you looking in?\n' +
         '• What\'s your budget?\n' +
-        '• How many BHKs do you need?\n\n' +
+        '• How many BHKs do you need?\n' +
+        '• Or are you looking for Premium Services, Group Buy, Home Loans, or Legal Services?\n\n' +
         'Let\'s find your perfect home! 🏡'
     );
 });
