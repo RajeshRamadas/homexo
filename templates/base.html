@@ -68,8 +68,8 @@
     --navy: #0D2B4E; --navy-mid: #1A4A7A; --sky: #4A90C4;
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Source Sans 3', sans-serif; background: var(--ivory); color: var(--charcoal); overflow-x: hidden; }
+  html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--ivory); color: var(--charcoal); overflow-x: hidden; max-width: 100%; position: relative; }
 
   /* ── NAV ── */
   nav {
