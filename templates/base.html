@@ -151,14 +151,127 @@
 
   /* ── GLOBAL FLOATING ACTIONS ── */
   .floating-actions { position:fixed; right:20px; bottom:32px; z-index:1000; display:flex; flex-direction:column; gap:12px; align-items:flex-end; }
-  .fab { width:52px; height:52px; border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.2); transition:all .3s cubic-bezier(.23,1,.32,1); text-decoration:none; }
-  .fab:hover { transform:scale(1.1) translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.28); }
+  
+  /* ── URVASHI FAB EXTREME ANIMATIONS ── */
+  @keyframes urvashi-ripple-1 {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  @keyframes urvashi-ripple-2 {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes urvashi-ripple-3 {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2.8); opacity: 0; }
+  }
+  @keyframes urvashi-extreme-heartbeat {
+    0%, 100% { transform: scale(1); }
+    10% { transform: scale(1.015); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.025); }
+    45% { transform: scale(1); }
+  }
+  @keyframes urvashi-intense-pulse {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 1; }
+  }
+  @keyframes notification-badge-pop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  @keyframes tooltip-fadeOut {
+    to { opacity: 0; pointer-events: none; }
+  }
+  
+  /* ── Base FAB Styles (No Animation) ── */
+  .fab { 
+    position: relative;
+    width:52px; height:52px; border-radius:50%; border:none; cursor:pointer; 
+    display:flex; align-items:center; justify-content:center; 
+    box-shadow:0 4px 20px rgba(0,0,0,.2); 
+    transition:all .3s cubic-bezier(.23,1,.32,1); 
+    text-decoration:none;
+    z-index: 10;
+  }
+  .fab:hover { 
+    transform:scale(1.1) translateY(-2px); 
+    box-shadow:0 8px 28px rgba(0,0,0,.28);
+  }
   .fab-emi { background:var(--navy); color:var(--white); }
   .fab-wa { background:#25D366; color:var(--white); }
+  
+  /* ── URVASHI FAB - EXTREME ANIMATIONS ONLY ── */
+  .fab-urvashi {
+    width: 44px !important;
+    height: 44px !important;
+    animation: none !important;
+  }
+  
+  /* Keep image inside fixed and never animate */
+  .fab-urvashi img {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  /* Ripple Ring Layers for Urvashi Only */
+  .fab-urvashi::before, .fab-urvashi::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0;
+  }
+  .fab-urvashi::before {
+    animation: urvashi-ripple-1 2s ease-out infinite;
+    animation-delay: 0s;
+  }
+  .fab-urvashi::after {
+    animation: urvashi-ripple-2 2s ease-out infinite;
+    animation-delay: 0.4s;
+  }
+  
+  /* Secondary ripple for Urvashi */
+  .fab-urvashi {
+    box-shadow: 
+      0 4px 20px rgba(0,0,0,.2),
+      0 0 0 0 rgba(255,255,255,.4);
+    animation: urvashi-ripple-3 2s ease-out infinite 0.8s;
+  }
+  
+  .fab-urvashi:hover { 
+    animation-play-state: paused;
+  }
+  
+  /* ── Notification Badge/Dot ── */
+  .fab-notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    background: #FF3B30;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
+    animation: notification-badge-pop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+    z-index: 20;
+  }
+  
   @media (min-width: 1025px) { .fab-wrap:has(.fab-wa) { display: none; } }
   .fab-label { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--white); background:var(--charcoal); padding:5px 12px; border-radius:4px; opacity:0; transform:translateX(8px); transition:all .25s; pointer-events:none; white-space:nowrap; }
   .fab-wrap { display:flex; align-items:center; gap:10px; }
   .fab-wrap:hover .fab-label { opacity:1; transform:translateX(0); }
+  .fab-wrap:has(.fab-urvashi) .fab-label { display: none !important; }
+  .fab-wrap:has(.fab-emi) .fab-label { display: none !important; }
 
   /* ── MESSAGES ── */
   .messages-container { position: fixed; top: 90px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; max-width: 360px; }
@@ -580,6 +693,13 @@
     </a>
   </div>
   <div class="fab-wrap">
+    <div class="fab-label">Ask Urvashi</div>
+    <button onclick="toggleUrvashi()" class="fab fab-urvashi" title="Ask Urvashi" aria-label="Chat with Urvashi, AI Property Consultant" id="urvashi-fab">
+      <img src="{% static 'images/urvashi.png' %}" alt="Urvashi" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.35);">
+      <span class="fab-notification-badge">✨</span>
+    </button>
+  </div>
+  <div class="fab-wrap">
     <div class="fab-label">Chat on WhatsApp</div>
     <a href="https://wa.me/919999999999?text=Hi%2C%20I%20am%20interested%20in%20a%20property%20from%20Homexo." target="_blank" rel="noopener" class="fab fab-wa" title="WhatsApp" aria-label="Chat on WhatsApp">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -776,5 +896,170 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 End of Tawk.to Script-->
+
+<!-- ── Urvashi Chat Widget ────────────────────────────────────────────────── -->
+<style>
+  /* ── Urvashi FAB (lives inside .floating-actions) ── */
+  .fab-urvashi { background: #0D2B4E; color: #fff; }
+  .fab-urvashi:hover { background: #1A4A7A !important; }
+
+  /* ── Chat panel ── */
+  #urvashi-container {
+    position: fixed; bottom: 100px; right: 20px;
+    width: 400px; height: 600px;
+    max-height: calc(100vh - 130px);
+    display: flex; flex-direction: column;
+    background: #fff; border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(13,43,78,.2);
+    transition: all .3s cubic-bezier(.25,.8,.25,1);
+    z-index: 1002;
+  }
+  #urvashi-container.urvashi-hidden {
+    opacity: 0; pointer-events: none;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  /* ── Header ── */
+  .urvashi-header {
+    background: #0D2B4E; color: #fff;
+    padding: 14px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+  }
+  .urvashi-header-left { display: flex; align-items: center; gap: 12px; }
+  .urvashi-header-left img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,.2); }
+  .urvashi-header-info h3 { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .urvashi-header-info p  { font-size: 11px; opacity: .7; margin: 0; }
+  .urvashi-close { background: none; border: none; color: rgba(255,255,255,.6); font-size: 26px; cursor: pointer; line-height: 1; transition: color .2s; }
+  .urvashi-close:hover { color: #fff; }
+
+  /* ── Chat window ── */
+  #urvashi-chat-window {
+    flex: 1; overflow-y: auto;
+    padding: 18px; display: flex; flex-direction: column; gap: 14px;
+    background: #f9fafb;
+  }
+  .urvashi-message { display: flex; align-items: flex-end; gap: 8px; animation: urvashiSlide .3s ease-out; }
+  @keyframes urvashiSlide { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .urvashi-message.user  { justify-content: flex-end; }
+  .urvashi-message.assistant { justify-content: flex-start; }
+  .urvashi-msg-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+  .urvashi-bubble {
+    max-width: 88%; padding: 13px 16px; border-radius: 14px;
+    word-wrap: break-word; font-size: 14px; line-height: 1.5;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .urvashi-bubble p { margin-bottom: 6px; }
+  .urvashi-bubble p:last-child { margin-bottom: 0; }
+  .urvashi-message.user .urvashi-bubble { background: #0D2B4E; color: #fff; border-bottom-right-radius: 4px; }
+  .urvashi-message.assistant .urvashi-bubble { background: #fff; color: #1f2937; border-bottom-left-radius: 4px; border: 1px solid #e5e7eb; }
+
+  /* ── Typing indicator ── */
+  .urvashi-typing { display: flex; align-items: center; gap: 5px; padding: 14px 18px !important; }
+  .urvashi-typing span { width: 7px; height: 7px; border-radius: 50%; background: #9ca3af; animation: urvashiBounce 1.2s infinite; }
+  .urvashi-typing span:nth-child(2) { animation-delay: .2s; }
+  .urvashi-typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes urvashiBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  /* ── Input bar ── */
+  .urvashi-input-bar {
+    padding: 12px 16px; background: #fff;
+    border-top: 1px solid #e5e7eb; display: flex; gap: 10px; flex-shrink: 0;
+  }
+  #urvashi-input {
+    flex: 1; padding: 10px 14px; border: 1px solid #e5e7eb;
+    border-radius: 10px; font-size: 14px; resize: none;
+    font-family: 'Source Sans 3', sans-serif; line-height: 1.4;
+    transition: border-color .3s; height: 42px;
+  }
+  #urvashi-input:focus { outline: none; border-color: #0D2B4E; box-shadow: 0 0 0 3px rgba(13,43,78,.1); }
+  #urvashi-send-btn {
+    padding: 10px 18px; background: #0D2B4E; color: #fff;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-size: 14px; font-weight: 600; transition: background .3s;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  #urvashi-send-btn:hover { background: #1A4A7A; }
+  #urvashi-send-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ── Inline property cards ── */
+  .urvashi-cards-container {
+    display: flex; overflow-x: auto; gap: 10px;
+    padding: 12px 4px; margin-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin; scrollbar-color: rgba(13,43,78,.3) transparent;
+  }
+  .urvashi-property-card {
+    flex: 0 0 190px; scroll-snap-align: start;
+    background: #fff; border: 1px solid #e5e7eb;
+    border-radius: 10px; overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: all .3s; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+  .urvashi-property-card:hover { box-shadow: 0 8px 24px rgba(13,43,78,.15); transform: translateY(-3px); border-color: #0D2B4E; }
+  .urvashi-property-card img { width: 100%; height: 120px; object-fit: cover; }
+  .urvashi-card-body { padding: 12px; display: flex; flex-direction: column; flex: 1; }
+  .urvashi-card-body h4 { font-size: 13px; font-weight: 600; margin: 0 0 5px; color: #1f2937; line-height: 1.3; }
+  .urvashi-price { font-size: 15px; font-weight: 700; color: #059669; margin-bottom: 5px; }
+  .urvashi-location { font-size: 11px; color: #6b7280; margin-bottom: 10px; }
+  .urvashi-card-btns { margin-top: auto; }
+  .urvashi-btn {
+    display: block; text-align: center; padding: 7px;
+    background: #0D2B4E; color: #fff; border-radius: 6px;
+    font-size: 11px; font-weight: 600; text-decoration: none;
+    transition: background .3s;
+  }
+  .urvashi-btn:hover { background: #1A4A7A; }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    #urvashi-container { width: calc(100% - 24px); right: 12px; bottom: 90px; }
+  }
+</style>
+
+
+<!-- Chat panel -->
+<div id="urvashi-container" class="urvashi-hidden" role="dialog" aria-label="Urvashi Property Chatbot">
+  <div class="urvashi-header">
+    <div class="urvashi-header-left">
+      <img src="{% static 'images/urvashi.png' %}" alt="Urvashi Avatar">
+      <div class="urvashi-header-info">
+        <h3>Urvashi</h3>
+        <p>AI Property Consultant · Online</p>
+      </div>
+    </div>
+    <button class="urvashi-close" onclick="toggleUrvashi()" aria-label="Close chat">×</button>
+  </div>
+  <div id="urvashi-chat-window" role="log" aria-live="polite"></div>
+  <div class="urvashi-input-bar">
+    <textarea id="urvashi-input" rows="1"
+      placeholder="Ask about properties, locations, budget…"
+      aria-label="Type your message"></textarea>
+    <button id="urvashi-send-btn" aria-label="Send message">Send</button>
+  </div>
+</div>
+<!-- ── /Urvashi Chat Widget ── -->
+
+<script src="{% static 'chatbot/urvashi.js' %}"></script>
+
+<script>
+// ── Urvashi FAB Animation Management ──
+document.addEventListener('DOMContentLoaded', function() {
+  const urvashiFab = document.getElementById('urvashi-fab');
+  
+  if (urvashiFab) {
+    // Pause animation on click for smooth feedback (Urvashi only)
+    urvashiFab.addEventListener('click', function() {
+      this.style.animationPlayState = 'paused';
+      setTimeout(() => {
+        this.style.animationPlayState = 'running';
+      }, 300);
+    });
+  }
+});
+</script>
+
 </body>
 </html>

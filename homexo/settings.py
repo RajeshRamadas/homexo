@@ -7,6 +7,13 @@ from pathlib import Path
 import os
 import logging
 
+# Load .env file automatically (python-dotenv is already installed via requirements)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / '.env')
+except ImportError:
+    pass  # dotenv not installed — rely on shell environment variables
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-homexo-change-this-in-production-use-env-variable')
@@ -43,6 +50,7 @@ LOCAL_APPS = [
     'wishlist',
     'pages',
     'legal_services',
+    'chatbot',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -91,15 +99,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'homexo.wsgi.application'
 
 # ─── DATABASE ─────────────────────────────────────────────────────────────────
-# Reads from environment: uses PostgreSQL if DB_ENGINE is set, otherwise SQLite.
+# PostgreSQL with pgvector for both website & RAG chatbot.
+# Set DB_ENGINE=django.db.backends.postgresql in .env for production.
+_DB_ENGINE = os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3')
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'ENGINE': _DB_ENGINE,
         'NAME': os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3'),
         'USER': os.environ.get('DB_USER', ''),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
+        # Enable pgvector extension on first migrate (PostgreSQL only)
+        **({
+            'OPTIONS': {
+                'options': '-c search_path=public',
+            }
+        } if _DB_ENGINE == 'django.db.backends.postgresql' else {}),
     }
 }
 
@@ -200,6 +216,15 @@ EMAIL_HOST_USER       = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD   = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL    = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@homexo.in')
 ENQUIRY_NOTIFICATION_EMAIL = os.environ.get('ENQUIRY_NOTIFICATION_EMAIL', 'enquiries@homexo.in')
+
+# ─── AI / RAG (Urvashi Chatbot) ──────────────────────────────────────────────
+# Claude via Anthropic API + local sentence-transformers embeddings
+LLM_API_KEY          = os.environ.get('LLM_API_KEY', '')
+LLM_MODEL            = os.environ.get('LLM_MODEL', 'claude-haiku-4-5-20251001')
+EMBEDDING_MODEL      = os.environ.get('EMBEDDING_MODEL', 'all-MiniLM-L6-v2')
+EMBEDDING_DIM        = int(os.environ.get('EMBEDDING_DIM', 384))
+RAG_TOP_K            = int(os.environ.get('TOP_K', 5))
+RAG_SIMILARITY_THRESHOLD = float(os.environ.get('SIMILARITY_THRESHOLD', 0.35))
 
 # ─── TWILIO (Phone OTP) ───────────────────────────────────────────────────────
 # Sign up at https://www.twilio.com and get a trial phone number.

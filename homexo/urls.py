@@ -44,6 +44,9 @@ urlpatterns = [
 
     # REST API (v1)
     path('api/v1/',        include('homexo.api_urls',   namespace='api')),
+
+    # AI Chatbot (Urvashi RAG)
+    path('api/v1/',        include('chatbot.urls',       namespace='chatbot')),
 ]
 
 # Serve media files during development

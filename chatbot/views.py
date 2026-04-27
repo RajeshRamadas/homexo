@@ -1,0 +1,198 @@
+"""
+chatbot/views.py
+─────────────────
+Endpoints:
+  POST /api/v1/chat/                — main RAG pipeline
+  POST /api/v1/chat/preferences/   — update session preferences
+"""
+
+import json
+import logging
+import re
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
+from .models import ChatSession, ChatMessage, UserProfile
+from .rag.retriever import retrieve, _parse_query_filters, _CR, _LAKH
+from .rag.prompt_builder import build_prompt
+from .rag.llm_client import call_llm
+
+logger = logging.getLogger(__name__)
+
+
+# ── Price → URL bucket mapping ────────────────────────────────────────────────
+_PRICE_BUCKETS = [
+    (0,           50 * _LAKH,      'under50l'),
+    (50 * _LAKH,  1  * _CR,        '50l-1cr'),
+    (1  * _CR,    3  * _CR,        '1cr-3cr'),
+    (3  * _CR,    10 * _CR,        '3cr-10cr'),
+    (10 * _CR,    None,            'above10cr'),
+]
+
+def _build_search_url(query: str, user_profile=None) -> str:
+    """
+    Build a /properties/ search URL from filters extracted from the chat query.
+    Maps budget → the closest PRICE_RANGES bucket accepted by property_list view.
+    """
+    filters = _parse_query_filters(query)
+
+    # Merge with saved profile preferences (query takes priority)
+    budget_max = filters.get('budget_max')
+    budget_min = filters.get('budget_min')
+    bhk        = filters.get('bhk')
+    location   = None
+
+    if budget_max is None and user_profile and user_profile.budget_max:
+        budget_max = float(user_profile.budget_max)
+    if budget_min is None and user_profile and user_profile.budget_min:
+        budget_min = float(user_profile.budget_min)
+    if user_profile and user_profile.preferred_locations:
+        location = user_profile.preferred_locations[0]
+
+    # Extract location from query ("in Whitefield", "whitefield area", etc.)
+    loc_match = re.search(
+        r'\bin\s+([A-Za-z][A-Za-z\s]{2,20}?)(?:\s+area|\s+locality|\s+bangalore|\s+bengaluru|$)',
+        query, re.IGNORECASE
+    )
+    if loc_match:
+        location = loc_match.group(1).strip()
+
+    params = {}
+
+    # Pick the best matching price bucket
+    price_key = None
+    if budget_max is not None:
+        for low, high, key in _PRICE_BUCKETS:
+            if high is None or budget_max <= high:
+                price_key = key
+                break
+    elif budget_min is not None:
+        for low, high, key in _PRICE_BUCKETS:
+            if budget_min >= low:
+                price_key = key   # keep overwriting — get the highest matching bucket
+    if price_key:
+        params['price'] = price_key
+
+    if bhk:
+        params['bhk'] = f'{bhk}bhk'
+    if location:
+        params['location'] = location
+
+    if not params:
+        return '/properties/'
+
+    from urllib.parse import urlencode
+    return f'/properties/?{urlencode(params)}'
+
+
+def _property_card(prop) -> dict:
+    """Serialize a Property to the card format expected by the frontend."""
+    primary_img = prop.primary_image
+    return {
+        'id':           prop.id,
+        'title':        prop.title,
+        'location':     f'{prop.locality}, {prop.city}',
+        'price':        str(prop.price),
+        'display_price': prop.display_price,
+        'bedrooms':     prop.bedrooms,
+        'bathrooms':    prop.bathrooms,
+        'area_sqft':    prop.area_sqft,
+        'bhk':          prop.get_bhk_display() if prop.bhk else '',
+        'amenities':    ', '.join(prop.features.values_list('name', flat=True)[:8]),
+        'image_url':    (primary_img.image.url if primary_img and primary_img.image else ''),
+        'url':          prop.get_absolute_url(),
+        'is_featured':  prop.is_featured,
+        'is_signature': prop.is_signature,
+        'slug':         prop.slug,
+    }
+
+
+@csrf_exempt
+@require_POST
+def chat_view(request):
+    """
+    Full RAG pipeline:
+    1. Resolve session + user profile
+    2. Retrieve relevant properties (pgvector)
+    3. Build grounded prompt
+    4. Call Claude
+    5. Persist conversation
+    6. Return { ai_text, properties, session_id }
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    user_message = data.get('message', '').strip()
+    if not user_message:
+        return JsonResponse({'error': 'message is required'}, status=400)
+
+    # ── Session ────────────────────────────────────────────────────────────────
+    session_key = data.get('session_id') or data.get('session_key')
+    if not session_key:
+        if not request.session.session_key:
+            request.session.create()
+        session_key = request.session.session_key
+
+    session, _ = ChatSession.objects.get_or_create(
+        session_key=session_key,
+        defaults={'user': request.user if request.user.is_authenticated else None},
+    )
+
+    # ── User profile (preferences) ─────────────────────────────────────────────
+    profile, _ = UserProfile.objects.get_or_create(session_key=session_key)
+
+    # ── RAG pipeline ──────────────────────────────────────────────────────────
+    try:
+        properties       = retrieve(user_message, profile)
+        system, messages = build_prompt(user_message, properties, session_key, profile)
+        ai_text          = call_llm(system, messages)
+    except Exception as e:
+        logger.error(f'RAG pipeline error: {e}', exc_info=True)
+        return JsonResponse({
+            'ai_text':    'I\'m sorry, something went wrong on my end. Please try again!',
+            'properties': [],
+            'session_id': session_key,
+        })
+
+    # ── Persist ────────────────────────────────────────────────────────────────
+    ChatMessage.objects.create(session=session, role='user',      content=user_message)
+    ChatMessage.objects.create(session=session, role='assistant', content=ai_text)
+
+    # ── Respond ────────────────────────────────────────────────────────────────
+    search_url = _build_search_url(user_message, profile)
+
+    return JsonResponse({
+        'ai_text':    ai_text,
+        'properties': [_property_card(p) for p in properties],
+        'session_id': session_key,
+        'search_url': search_url,   # link to full filtered search page
+    })
+
+
+@csrf_exempt
+@require_POST
+def update_preferences_view(request):
+    """Update session-level search preferences."""
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    session_key = data.get('session_id') or data.get('session_key', 'anonymous')
+    profile, _  = UserProfile.objects.get_or_create(session_key=session_key)
+
+    if 'budget_max' in data:
+        profile.budget_max = data['budget_max']
+    if 'budget_min' in data:
+        profile.budget_min = data['budget_min']
+    if 'preferred_locations' in data:
+        profile.preferred_locations = data['preferred_locations']
+    if 'property_type' in data:
+        profile.property_type = data['property_type']
+
+    profile.save()
+    return JsonResponse({'success': True, 'message': 'Preferences updated'})
