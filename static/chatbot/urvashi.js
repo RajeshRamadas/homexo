@@ -313,11 +313,11 @@ function removeTypingIndicator(id) {
 
 // ── Inline property cards ──────────────────────────────────────────────────────
 function renderInlinePropertyCards(messageDiv, cards) {
+    console.log('[Urvashi] renderInlinePropertyCards called, cards:', cards ? cards.length : 'null');
     if (!cards || cards.length === 0) return;
 
     const container = document.createElement('div');
     container.className = 'urvashi-cards-container';
-    container.style.cssText = 'width:100%;';
 
     cards.forEach(p => {
         const card = document.createElement('div');
@@ -338,8 +338,8 @@ function renderInlinePropertyCards(messageDiv, cards) {
         container.appendChild(card);
     });
 
-    // Append cards as a sibling row inside the message wrapper (full-width)
-    messageDiv.appendChild(container);
+    // Append directly to chatWindow as full-width row (not inside flex message)
+    chatWindow.appendChild(container);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
@@ -367,7 +367,7 @@ function renderSearchLink(messageDiv, url, cardCount) {
     link.addEventListener('mouseleave', () => { link.style.background = 'transparent'; link.style.color = '#0D2B4E'; });
 
     wrapper.appendChild(link);
-    bubble.appendChild(wrapper);
+    chatWindow.appendChild(wrapper);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 

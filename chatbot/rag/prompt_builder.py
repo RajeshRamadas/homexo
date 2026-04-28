@@ -65,7 +65,7 @@ def build_prompt(query: str, properties: list, session_key: str,
         '   - Security systems → [security & surveillance](/services/security/)\n'
         '   - NRI investment → [NRI services](/services/nri-service/)\n'
         '   - Group purchase → [Group Buy](/group-buy/)\n'
-        '   - New developers → [Builder Projects](/developers/)\n'
+        '   - New developers → [Builder Projects](/properties/)\n'
         '   - Home services → [Premium Home Services](/services/home-service/)\n'
         '7. PROACTIVE: If a buyer mentions buying, gently ask if they\'ve sorted their home loan. '
         'If they mention a new flat, ask if they need legal vetting. Be a helpful advisor, not just a search engine.\n\n'
