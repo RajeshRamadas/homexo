@@ -42,19 +42,20 @@ if (messageInput) messageInput.addEventListener('keydown', (e) => {
 });
 
 // ── Send message ───────────────────────────────────────────────────────────────
-async function sendMessage() {
-    const text = messageInput.value.trim();
+async function sendMessage(forceText) {
+    // forceText is passed by quick-reply chips to bypass the textarea
+    const text = (forceText || messageInput.value).trim();
     if (!text) return;
 
-    // Route through onboarding first
-    if (onboardingState !== 'chat') {
+    // Route through onboarding only when user is typing (not a chip)
+    if (!forceText && onboardingState !== 'chat') {
         handleOnboardingInput(text);
         return;
     }
 
-    appendMessage('user', text);
     messageInput.value = '';
     sendBtn.disabled = true;
+    appendMessage('user', text);
 
     // Typing indicator
     const typingId = appendTypingIndicator();
@@ -191,14 +192,63 @@ function finishOnboarding(preference) {
     onboardingState = 'chat';
     messageInput.placeholder = 'Ask me anything…';
 
-    let reply = '';
-    if (preference === 'property' || preference.toLowerCase().includes('prop')) {
-        reply = `Great! Let's find you the perfect property. 🏡\n\nTell me:\n• Which area or locality are you looking in?\n• What's your budget range?\n• How many BHKs do you need?`;
-    } else {
-        reply = `Wonderful! We offer a range of services to make your real estate journey smooth. 🛠️\n\nAre you interested in:\n• 🏦 Home Loan assistance\n• ⚖️ Legal Services\n• 🔐 Security & Surveillance\n• 👥 Group Buy\n• 🌍 NRI Services\n• 🏗️ Builder Projects\n\nJust ask and I'll guide you!`;
-    }
+    // Reveal the topic switch bar now that onboarding is done
+    showTopicBar();
 
-    setTimeout(() => appendMessage('assistant', reply), 400);
+    if (preference === 'property' || preference.toLowerCase().includes('prop')) {
+        setTimeout(() => {
+            appendMessage('assistant', 'Great! Let\'s find you the perfect property. 🏡\nWhat are you looking for?');
+            appendQuickReplies([
+                '🏙️ Properties in Bangalore',
+                '🏙️ Properties in Mumbai',
+                '🏙️ Properties in Hyderabad',
+                '🏙️ Properties in Pune',
+                '💰 Budget under ₹50 Lakhs',
+                '💰 Budget under ₹1 Crore',
+                '🏠 2 BHK Apartments',
+                '🏠 3 BHK Apartments',
+                '🏁 New Launched Projects',
+                '🔖 Upcoming Projects',
+            ]);
+        }, 400);
+    } else {
+        setTimeout(() => {
+            appendMessage('assistant', 'Wonderful! Which service can I help you with today? 🛠️');
+            appendQuickReplies([
+                '🏦 Home Loan',
+                '⚖️ Legal Services',
+                '🔐 Security & Surveillance',
+                '👥 Group Buy',
+                '🌍 NRI Services',
+                '🏗️ Builder Projects',
+            ]);
+        }, 400);
+    }
+}
+
+// ── Quick-reply chips ──────────────────────────────────────────────────────────────
+function appendQuickReplies(chips) {
+    // Remove any existing quick-reply rows first
+    document.querySelectorAll('.urvashi-quick-replies').forEach(el => el.remove());
+
+    const row = document.createElement('div');
+    row.className = 'urvashi-quick-replies';
+
+    chips.forEach(label => {
+        const btn = document.createElement('button');
+        btn.className = 'urvashi-qr-chip';
+        btn.textContent = label;
+        btn.addEventListener('click', () => {
+            // Remove all chips (single use)
+            document.querySelectorAll('.urvashi-quick-replies').forEach(el => el.remove());
+            // Send text directly — bypasses textarea entirely
+            sendMessage(label);
+        });
+        row.appendChild(btn);
+    });
+
+    chatWindow.appendChild(row);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 // ── Append message ─────────────────────────────────────────────────────────────
@@ -344,10 +394,11 @@ function getCookie(name) {
 // ── Welcome message on load ───────────────────────────────────────────────────
 window.addEventListener('load', () => {
     if (onboardingState === 'chat') {
-        // Returning user — skip onboarding
+        // Returning user — skip onboarding, show topic bar immediately
         appendMessage('assistant',
             `👋 Welcome back, ${userProfile.name || 'there'}! How can I help you today? 😊`
         );
+        showTopicBar();
     } else {
         // Fresh session — start onboarding
         messageInput.placeholder = 'Type your name…';
@@ -357,3 +408,67 @@ window.addEventListener('load', () => {
         );
     }
 });
+
+// ── Show/hide topic bar ───────────────────────────────────────────────────────
+function showTopicBar() {
+    const bar = document.getElementById('urvashi-topic-bar');
+    if (bar) bar.style.display = 'flex';
+    updateTopicChips();
+}
+
+// ── Topic chip highlight (uses CSS classes) ───────────────────────────────────
+function updateTopicChips() {
+    const pref    = localStorage.getItem('urvashi_preference') || '';
+    const btnProp = document.getElementById('topic-btn-property');
+    const btnSvc  = document.getElementById('topic-btn-services');
+    if (!btnProp || !btnSvc) return;
+
+    btnProp.classList.toggle('active', pref === 'property');
+    btnSvc.classList.toggle('active',  pref === 'services');
+}
+
+// ── Switch topic (Property ↔ Services) ────────────────────────────────────────
+window.switchTopic = function(newPreference) {
+    const current = localStorage.getItem('urvashi_preference') || '';
+    if (current === newPreference) return;   // already on this topic
+
+    userProfile.preference = newPreference;
+    localStorage.setItem('urvashi_preference', newPreference);
+    updateTopicChips();
+
+    // Remove any lingering quick-reply chips
+    document.querySelectorAll('.urvashi-quick-replies').forEach(el => el.remove());
+
+    const label = newPreference === 'property' ? '🏠 Property' : '🛠️ Services';
+    appendMessage('user', `Switch to ${label}`);
+
+    if (newPreference === 'property') {
+        setTimeout(() => {
+            appendMessage('assistant', 'Of course! What kind of property are you looking for? 🏡');
+            appendQuickReplies([
+                '🏙️ Properties in Bangalore',
+                '🏙️ Properties in Mumbai',
+                '🏙️ Properties in Hyderabad',
+                '🏙️ Properties in Pune',
+                '💰 Budget under ₹50 Lakhs',
+                '💰 Budget under ₹1 Crore',
+                '🏠 2 BHK Apartments',
+                '🏠 3 BHK Apartments',
+                '🏁 New Launched Projects',
+                '🔖 Upcoming Projects',
+            ]);
+        }, 400);
+    } else {
+        setTimeout(() => {
+            appendMessage('assistant', 'Sure! Which service can I help you with? 🛠️');
+            appendQuickReplies([
+                '🏦 Home Loan',
+                '⚖️ Legal Services',
+                '🔐 Security & Surveillance',
+                '👥 Group Buy',
+                '🌍 NRI Services',
+                '🏗️ Builder Projects',
+            ]);
+        }, 400);
+    }
+};
