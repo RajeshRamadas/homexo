@@ -362,8 +362,16 @@ def enquiry_dashboard(request):
         role__in=['customer_support', 'admin']
     ).order_by('first_name')
 
+    from chatbot.models import ChatSession
+    chat_leads = (
+        ChatSession.objects
+        .filter(visitor_name__gt='')
+        .order_by('-updated_at')[:50]
+    )
+    chat_leads_count = ChatSession.objects.filter(visitor_name__gt='').count()
+
     context = {
-        'enquiries':         page_obj,          # backward compat for {% if enquiries %}
+        'enquiries':         page_obj,
         'page_obj':          page_obj,
         'status_filter':     status_filter,
         'type_filter':       type_filter,
@@ -379,6 +387,8 @@ def enquiry_dashboard(request):
         'type_choices':      Enquiry.EnquiryType.choices,
         'priority_choices':  Enquiry.Priority.choices,
         'support_users':     support_users,
+        'chat_leads':        chat_leads,
+        'chat_leads_count':  chat_leads_count,
         'stats': {
             'total':     total,
             'new':       new_count,

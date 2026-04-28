@@ -6,3 +6,6 @@ class ChatbotConfig(AppConfig):
     name  = 'chatbot'
     label = 'chatbot'
     verbose_name = 'AI Chatbot'
+
+    def ready(self):
+        import chatbot.signals  # noqa: F401 — registers post_save/post_delete signals

@@ -139,11 +139,24 @@ def profile_view(request):
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')[:30]
     unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
     group_buys = request.user.group_buys_joined.all().select_related('developer', 'owner').prefetch_related('images')
+
+    # Chat leads — visible to superusers, admins, and customer support
+    chat_leads = []
+    _lead_roles = {'admin', 'customer_support'}
+    if request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') in _lead_roles:
+        from chatbot.models import ChatSession
+        chat_leads = (
+            ChatSession.objects
+            .filter(visitor_name__gt='')   # only sessions with a name captured
+            .order_by('-updated_at')[:50]
+        )
+
     return render(request, 'accounts/profile.html', {
         'user': request.user,
         'notifications': notifications,
         'unread_count': unread_count,
         'group_buys': group_buys,
+        'chat_leads': chat_leads,
     })
 
 

@@ -130,6 +130,11 @@ def chat_view(request):
     if not user_message:
         return JsonResponse({'error': 'message is required'}, status=400)
 
+    # ── Lead contact details (sent from onboarding flow) ───────────────────────
+    user_name  = data.get('user_name',  '').strip()
+    user_phone = data.get('user_phone', '').strip()
+    preference = data.get('preference', '').strip()
+
     # ── Session ────────────────────────────────────────────────────────────────
     session_key = data.get('session_id') or data.get('session_key')
     if not session_key:
@@ -141,6 +146,20 @@ def chat_view(request):
         session_key=session_key,
         defaults={'user': request.user if request.user.is_authenticated else None},
     )
+
+    # Persist lead details on first message (never overwrite once set)
+    dirty = []
+    if user_name and not session.visitor_name:
+        session.visitor_name = user_name
+        dirty.append('visitor_name')
+    if user_phone and not session.phone:
+        session.phone = user_phone
+        dirty.append('phone')
+    if preference and not session.preference:
+        session.preference = preference
+        dirty.append('preference')
+    if dirty:
+        session.save(update_fields=dirty)
 
     # ── User profile (preferences) ─────────────────────────────────────────────
     profile, _ = UserProfile.objects.get_or_create(session_key=session_key)

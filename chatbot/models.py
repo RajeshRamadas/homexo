@@ -37,15 +37,24 @@ class PropertyEmbedding(models.Model):
 
 class ChatSession(models.Model):
     """Groups chat messages belonging to one browser session."""
-    session_key = models.CharField(max_length=128, db_index=True, unique=True)
-    user        = models.ForeignKey(
+    session_key  = models.CharField(max_length=128, db_index=True, unique=True)
+    user         = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name='chat_sessions',
     )
-    created_at  = models.DateTimeField(auto_now_add=True)
-    updated_at  = models.DateTimeField(auto_now=True)
+    # ── Lead / contact fields ──────────────────────────────────────────────────
+    visitor_name = models.CharField(max_length=128, blank=True, help_text='Name provided during onboarding')
+    phone        = models.CharField(max_length=30,  blank=True, help_text='Phone number with country code')
+    preference   = models.CharField(
+        max_length=32, blank=True,
+        choices=[('property', 'Property'), ('services', 'Services')],
+        help_text='What the visitor is looking for',
+    )
+    # ──────────────────────────────────────────────────────────────────────────
+    created_at   = models.DateTimeField(auto_now_add=True)
+    updated_at   = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name        = 'Chat Session'
@@ -53,7 +62,8 @@ class ChatSession(models.Model):
         ordering            = ['-updated_at']
 
     def __str__(self):
-        return f'Session {self.session_key[:12]}'
+        label = self.visitor_name or self.session_key[:12]
+        return f'Session — {label}'
 
 
 class ChatMessage(models.Model):

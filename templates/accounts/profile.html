@@ -35,6 +35,9 @@
       {% if user.is_superuser or user.role == 'admin' or user.role == 'approver' %}
       <a href="{% url 'properties:approval_dashboard' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);background:var(--navy);transition:all .2s;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--navy)'">✅ Property Approvals</a>
       {% endif %}
+      {% if user.is_superuser or user.is_staff or user.role == 'admin' or user.role == 'customer_support' %}
+      <a href="#chat-leads" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);background:#1a4f3a;transition:all .2s;" onmouseover="this.style.background='#256648'" onmouseout="this.style.background='#1a4f3a'">💬 Chat Leads</a>
+      {% endif %}
       <a href="{% url 'properties:create' %}" style="display:flex;align-items:center;gap:12px;padding:16px 20px;text-decoration:none;color:var(--soft-brown);font-size:13px;border-bottom:1px solid var(--border);transition:all .2s;" onmouseover="this.style.background='var(--ivory)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--soft-brown)'">+ List Property</a>
       <form action="{% url 'accounts:logout' %}" method="POST" style="padding:0;">
         {% csrf_token %}
@@ -168,6 +171,70 @@
         </div>
       </div>
       {% endif %}
+
+      <!-- ── Chat Leads (staff/superuser only) ────────────────────────────── -->
+      {% if chat_leads %}
+      <div id="chat-leads" style="background:var(--white);padding:28px;border:1px solid var(--border);margin-top:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#1a4f3a;font-weight:700;">💬 Chat Leads</div>
+          <span style="font-size:11px;background:#e8f5e9;color:#1a4f3a;padding:3px 10px;border-radius:12px;font-weight:600;">{{ chat_leads|length }} lead{{ chat_leads|length|pluralize }}</span>
+        </div>
+
+        <!-- Column headers -->
+        <div style="display:grid;grid-template-columns:1fr 140px 100px 60px 90px;gap:8px;padding:8px 12px;background:var(--ivory);border:1px solid var(--border);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-grey);margin-bottom:4px;">
+          <div>Name</div>
+          <div>Phone</div>
+          <div>Looking for</div>
+          <div style="text-align:center;">Msgs</div>
+          <div>Date</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          {% for lead in chat_leads %}
+          <div style="display:grid;grid-template-columns:1fr 140px 100px 60px 90px;gap:8px;padding:12px;border:1px solid var(--border);background:var(--ivory);align-items:center;"
+               onmouseover="this.style.borderColor='#1a4f3a'" onmouseout="this.style.borderColor='var(--border)'">
+
+            <!-- Name -->
+            <div style="font-size:13px;font-weight:500;color:var(--charcoal);">{{ lead.visitor_name }}</div>
+
+            <!-- Phone (clickable tel link) -->
+            <div>
+              {% if lead.phone %}
+              <a href="tel:{{ lead.phone }}" style="font-size:13px;color:var(--navy);text-decoration:none;" title="Call {{ lead.visitor_name }}">📞 {{ lead.phone }}</a>
+              {% else %}
+              <span style="font-size:12px;color:var(--warm-grey);">—</span>
+              {% endif %}
+            </div>
+
+            <!-- Preference badge -->
+            <div>
+              {% if lead.preference == 'property' %}
+              <span style="font-size:10px;padding:3px 10px;background:#e3f2fd;color:#1565c0;border-radius:12px;font-weight:600;">🏠 Property</span>
+              {% elif lead.preference == 'services' %}
+              <span style="font-size:10px;padding:3px 10px;background:#fff3e0;color:#e65100;border-radius:12px;font-weight:600;">🛠️ Services</span>
+              {% else %}
+              <span style="font-size:10px;color:var(--warm-grey);">—</span>
+              {% endif %}
+            </div>
+
+            <!-- Message count -->
+            <div style="text-align:center;font-size:13px;color:var(--charcoal);font-weight:600;">{{ lead.messages.count }}</div>
+
+            <!-- Date -->
+            <div style="font-size:11px;color:var(--warm-grey);">{{ lead.updated_at|date:"d M Y" }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% elif user.is_superuser or user.is_staff or user.role == 'admin' or user.role == 'customer_support' %}
+      <div id="chat-leads" style="background:var(--white);padding:28px;border:1px solid var(--border);margin-top:16px;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#1a4f3a;font-weight:700;margin-bottom:16px;">💬 Chat Leads</div>
+        <div style="padding:24px;text-align:center;background:var(--ivory);border:1px dashed var(--border);color:var(--warm-grey);font-size:13px;">
+          No chat leads captured yet. Leads will appear here once visitors complete the onboarding flow.
+        </div>
+      </div>
+      {% endif %}
+
     </div>
   </div>
 </section>

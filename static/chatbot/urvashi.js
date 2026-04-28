@@ -6,13 +6,25 @@
 
 // ── Session management ────────────────────────────────────────────────────────
 const SESSION_ID = (() => {
-    let id = sessionStorage.getItem('urvashi_session_id');
+    let id = localStorage.getItem('urvashi_session_id');
     if (!id) {
         id = crypto.randomUUID();
-        sessionStorage.setItem('urvashi_session_id', id);
+        localStorage.setItem('urvashi_session_id', id);
     }
     return id;
 })();
+
+// ── Onboarding state machine ──────────────────────────────────────────────────
+// States: 'name' → 'phone' → 'preference' → 'chat'
+let onboardingState = localStorage.getItem('urvashi_onboarding_done') === 'true'
+    ? 'chat'
+    : 'name';
+
+const userProfile = {
+    name:       localStorage.getItem('urvashi_user_name')  || '',
+    phone:      localStorage.getItem('urvashi_user_phone') || '',
+    preference: localStorage.getItem('urvashi_preference') || '',
+};
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
 const chatbotContainer = document.getElementById('urvashi-container');
@@ -34,6 +46,12 @@ async function sendMessage() {
     const text = messageInput.value.trim();
     if (!text) return;
 
+    // Route through onboarding first
+    if (onboardingState !== 'chat') {
+        handleOnboardingInput(text);
+        return;
+    }
+
     appendMessage('user', text);
     messageInput.value = '';
     sendBtn.disabled = true;
@@ -48,7 +66,13 @@ async function sendMessage() {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
-            body: JSON.stringify({ message: text, session_id: SESSION_ID }),
+            body: JSON.stringify({
+                message: text,
+                session_id: SESSION_ID,
+                user_name: userProfile.name,
+                user_phone: userProfile.phone,
+                preference: userProfile.preference,
+            }),
         });
 
         removeTypingIndicator(typingId);
@@ -60,10 +84,10 @@ async function sendMessage() {
         }
 
         const data = await response.json();
-        
+
         // Append assistant response and capture the bubble element
         const assistantBubble = appendMessage('assistant', data.ai_text);
-        
+
         // Render inline property cards
         renderInlinePropertyCards(assistantBubble, data.properties);
 
@@ -80,6 +104,101 @@ async function sendMessage() {
         sendBtn.disabled = false;
         messageInput.focus();
     }
+}
+
+// ── Onboarding input handler ──────────────────────────────────────────────────
+function handleOnboardingInput(text) {
+    appendMessage('user', text);
+    messageInput.value = '';
+
+    if (onboardingState === 'name') {
+        userProfile.name = text;
+        localStorage.setItem('urvashi_user_name', text);
+        onboardingState = 'phone';
+        setTimeout(() => {
+            appendMessage('assistant',
+                `Nice to meet you, ${text}! 😊 Could you please share your phone number (with country code) so we can reach you? 📞\n\nFor example: +91 98765 43210 for India, +1 202 555 0123 for USA.`
+            );
+        }, 400);
+
+    } else if (onboardingState === 'phone') {
+        // Basic phone validation (at least 7 digits)
+        const digits = text.replace(/\D/g, '');
+        if (digits.length < 7) {
+            appendMessage('assistant', 'Please enter a valid phone number so we can reach you. 📞');
+            return;
+        }
+        userProfile.phone = text;
+        localStorage.setItem('urvashi_user_phone', text);
+        onboardingState = 'preference';
+        setTimeout(() => {
+            const bubble = appendMessage('assistant',
+                `Perfect! Thank you, ${userProfile.name}. 🙏\n\nWhat are you looking for today?`
+            );
+            renderPreferenceButtons(bubble);
+        }, 400);
+
+    } else if (onboardingState === 'preference') {
+        // Free-typed preference (fallback if buttons not clicked)
+        finishOnboarding(text);
+    }
+}
+
+// ── Preference quick-reply buttons ────────────────────────────────────────────
+function renderPreferenceButtons(bubble) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;';
+
+    const options = [
+        { label: '🏠 Property',  value: 'property' },
+        { label: '🛠️ Services',  value: 'services' },
+    ];
+
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt.label;
+        btn.style.cssText = [
+            'padding:8px 18px', 'border-radius:20px',
+            'border:1.5px solid #0D2B4E', 'background:transparent',
+            'color:#0D2B4E', 'font-size:13px', 'font-weight:600',
+            'cursor:pointer', 'transition:all 0.2s',
+        ].join(';');
+        btn.addEventListener('mouseenter', () => { btn.style.background = '#0D2B4E'; btn.style.color = '#fff'; });
+        btn.addEventListener('mouseleave', () => { btn.style.background = 'transparent'; btn.style.color = '#0D2B4E'; });
+        btn.addEventListener('click', () => {
+            // Disable all buttons after selection
+            wrap.querySelectorAll('button').forEach(b => b.disabled = true);
+            btn.style.background = '#0D2B4E';
+            btn.style.color = '#fff';
+            appendMessage('user', opt.label);
+            finishOnboarding(opt.value);
+        });
+        wrap.appendChild(btn);
+    });
+
+    bubble.appendChild(wrap);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // Also update input placeholder to nudge free-typing
+    messageInput.placeholder = 'Or type your preference…';
+}
+
+// ── Complete onboarding and enter chat mode ────────────────────────────────────
+function finishOnboarding(preference) {
+    userProfile.preference = preference;
+    localStorage.setItem('urvashi_preference', preference);
+    localStorage.setItem('urvashi_onboarding_done', 'true');
+    onboardingState = 'chat';
+    messageInput.placeholder = 'Ask me anything…';
+
+    let reply = '';
+    if (preference === 'property' || preference.toLowerCase().includes('prop')) {
+        reply = `Great! Let's find you the perfect property. 🏡\n\nTell me:\n• Which area or locality are you looking in?\n• What's your budget range?\n• How many BHKs do you need?`;
+    } else {
+        reply = `Wonderful! We offer a range of services to make your real estate journey smooth. 🛠️\n\nAre you interested in:\n• 🏦 Home Loan assistance\n• ⚖️ Legal Services\n• 🔐 Security & Surveillance\n• 👥 Group Buy\n• 🌍 NRI Services\n• 🏗️ Builder Projects\n\nJust ask and I'll guide you!`;
+    }
+
+    setTimeout(() => appendMessage('assistant', reply), 400);
 }
 
 // ── Append message ─────────────────────────────────────────────────────────────
@@ -224,13 +343,17 @@ function getCookie(name) {
 
 // ── Welcome message on load ───────────────────────────────────────────────────
 window.addEventListener('load', () => {
-    appendMessage('assistant',
-        '👋 Hi! I\'m Urvashi, your personal property consultant at Homexo.\n\n' +
-        'I can help you find your dream home. Tell me:\n' +
-        '• What area are you looking in?\n' +
-        '• What\'s your budget?\n' +
-        '• How many BHKs do you need?\n' +
-        '• Or are you looking for Premium Services, Group Buy, Home Loans, or Legal Services?\n\n' +
-        'Let\'s find your perfect home! 🏡'
-    );
+    if (onboardingState === 'chat') {
+        // Returning user — skip onboarding
+        appendMessage('assistant',
+            `👋 Welcome back, ${userProfile.name || 'there'}! How can I help you today? 😊`
+        );
+    } else {
+        // Fresh session — start onboarding
+        messageInput.placeholder = 'Type your name…';
+        appendMessage('assistant',
+            '👋 Hello! Welcome to Homexo. I\'m Urvashi, your dedicated property consultant. 🏡\n\n' +
+            'It\'s wonderful to have you here! May I kindly know your good name?'
+        );
+    }
 });
