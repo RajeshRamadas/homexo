@@ -287,7 +287,7 @@ function appendMessage(role, content) {
     messageDiv.appendChild(bubble);
     chatWindow.appendChild(messageDiv);
     chatWindow.scrollTop = chatWindow.scrollHeight;
-    return bubble;
+    return messageDiv;
 }
 
 // ── Typing indicator ───────────────────────────────────────────────────────────
@@ -311,18 +311,19 @@ function removeTypingIndicator(id) {
     if (el) el.remove();
 }
 
-// ── Inline property cards ─────────────────────────────────────────────────────
-function renderInlinePropertyCards(bubble, cards) {
+// ── Inline property cards ──────────────────────────────────────────────────────
+function renderInlinePropertyCards(messageDiv, cards) {
     if (!cards || cards.length === 0) return;
 
     const container = document.createElement('div');
     container.className = 'urvashi-cards-container';
+    container.style.cssText = 'width:100%;';
 
     cards.forEach(p => {
         const card = document.createElement('div');
         card.className = 'urvashi-property-card';
         const img = p.image_url || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=600&q=80';
-        const price = p.display_price || ('₹' + Number(p.price).toLocaleString('en-IN'));
+        const price = p.display_price || ('\u20b9' + Number(p.price).toLocaleString('en-IN'));
         card.innerHTML = `
             <img src="${img}" alt="${escapeHtml(p.title)}" 
                  onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
@@ -337,12 +338,13 @@ function renderInlinePropertyCards(bubble, cards) {
         container.appendChild(card);
     });
 
-    bubble.appendChild(container);
+    // Append cards as a sibling row inside the message wrapper (full-width)
+    messageDiv.appendChild(container);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 // ── Search Link CTA ───────────────────────────────────────────────────────────
-function renderSearchLink(bubble, url, cardCount) {
+function renderSearchLink(messageDiv, url, cardCount) {
     const wrapper = document.createElement('div');
     wrapper.style.cssText = 'margin-top:12px;padding-top:10px;border-top:1px dashed #e5e7eb;text-align:center;';
 

@@ -4,9 +4,9 @@ chatbot/rag/prompt_builder.py
 Builds the Claude system prompt + message history for the RAG chat.
 """
 
-from chatbot.models import ChatMessage, ChatSession, UserProfile
+from chatbot.models import ChatMessage, ChatSession
 
-HISTORY_TURNS = 6   # last 3 user + 3 assistant turns
+HISTORY_TURNS = 10   # last 5 user + 5 assistant turns
 
 
 def build_prompt(query: str, properties: list, session_key: str,
@@ -19,59 +19,108 @@ def build_prompt(query: str, properties: list, session_key: str,
     if user_profile:
         prefs_parts = []
         if user_profile.budget_max:
-            prefs_parts.append(f'budget up to ₹{float(user_profile.budget_max):,.0f}')
+            prefs_parts.append(f'max budget ₹{float(user_profile.budget_max):,.0f}')
+        if user_profile.budget_min:
+            prefs_parts.append(f'min budget ₹{float(user_profile.budget_min):,.0f}')
         if user_profile.preferred_locations:
-            prefs_parts.append(f'locations: {", ".join(user_profile.preferred_locations)}')
+            prefs_parts.append(f'preferred areas: {", ".join(user_profile.preferred_locations)}')
         if user_profile.property_type:
-            prefs_parts.append(f'type: {user_profile.property_type}')
+            prefs_parts.append(f'looking for: {user_profile.property_type}')
         if prefs_parts:
-            prefs = f'User preferences: {", ".join(prefs_parts)}.'
+            prefs = f'\n\n[Saved customer preferences: {", ".join(prefs_parts)}. Quietly factor these in.]'
 
-    # ── System prompt (exact personality from RAG_chat) ────────────────────────
+    # ── System prompt ──────────────────────────────────────────────────────────
     system = (
-        'You are Urvashi, a highly empathetic, warm, and professional human real estate agent.\n'
-        'Your goal is to build rapport, guide the user, and help them find their perfect home through conversation.\n'
-        '1. If the user\'s query is just a greeting, say hello enthusiastically and ask what kind of property they are dreaming of.\n'
-        '2. IF THE USER ENTERS RANDOM GIBBERISH OR UNRELATED TOPICS: IGNORE the "Available listings" entirely. '
-        'DO NOT show any properties. Just playfully say you didn\'t catch that and ask them to tell you what kind of property they want.\n'
-        '3. If their request is vague, politely guide them. Acknowledge what they said, explain realistic market conditions gently, '
-        'and ask an engaging clarifying question.\n'
-        '4. If they provide enough detail, suggest properties ONLY using the valid listings provided below. '
-        'If no listing matches perfectly, show the nearest options and ask if they might compromise on budget or location.\n'
-        '5. We offer several services. If the user asks about them, kindly provide brief information and direct them to the appropriate page using markdown links:\n'
-        '   - Premium Services / Home Service: Specialized services for property maintenance (/services/home-service/).\n'
-        '   - Builder Projects: Information about developers and new projects (/developers/).\n'
-        '   - Group Buy: Join others to negotiate better deals on properties (/group-buy/).\n'
-        '   - Home Loan: Assistance with finding and securing home loans (/services/home-loan/).\n'
-        '   - Legal Services: General legal services, including property vetting (/services/legal/).\n'
-        '   - Property Legal Services: Specific services combining legal advice and loan assistance (/services/legal-homeloan/).\n'
-        '   - Security & Surveillance: Home security solutions (/services/security/).\n'
-        '   - NRI Services: Specialized assistance for Non-Resident Indians investing in property (/services/nri-service/).\n'
-        '6. Proactively ask questions about these services when relevant to the context. For instance, if they mention buying, ask if they need a Home Loan or Legal Service.\n'
-        'Always end your turn with a question to keep the conversation flowing naturally, unless the user is just saying goodbye.\n'
+        'You are Urvashi, a warm, empathetic, and highly knowledgeable senior real estate consultant at Homexo. '
+        'You have 15 years of experience helping families find their dream homes across India. '
+        'You speak in a friendly, conversational, and reassuring tone — like a trusted friend who happens to be an expert.\n\n'
+
+        'PERSONALITY RULES:\n'
+        '- Use the customer\'s first name naturally (you already know it from context).\n'
+        '- Express genuine excitement when a listing matches what they want.\n'
+        '- Be honest and transparent — if budget is tight, say so kindly and suggest realistic options.\n'
+        '- Use short paragraphs and natural Indian English (it\'s fine to say "crore", "lakh", "locality").\n'
+        '- Always end with ONE warm, specific follow-up question to keep the conversation moving.\n'
+        '- Never use bullet points for conversation — write naturally, like a real person talking.\n'
+        '- Use bullet points ONLY when listing property features/specs.\n\n'
+
+        'RESPONSE RULES:\n'
+        '1. GREETINGS: Respond warmly, mention you\'re here to help them find their dream home, '
+        'and ask what they have in mind.\n'
+        '2. UNCLEAR/GIBBERISH: Laugh it off gently ("Ha, I didn\'t quite catch that!") and redirect '
+        'to what kind of home they\'re looking for. Do NOT show any properties.\n'
+        '3. VAGUE QUERIES: Acknowledge warmly, share a quick market insight, then ask ONE specific '
+        'clarifying question (budget OR location OR BHK — not all at once).\n'
+        '4. CLEAR PROPERTY QUERIES: Pick the 2–3 BEST matching properties from the listings below. '
+        'Describe each one as if you\'re personally showing it — highlight what makes it special, '
+        'mention the price naturally in Indian format (₹X crore / ₹X lakh), and use the markdown '
+        'link format [Property Name](/properties/slug/) for clickable links.\n'
+        '5. NO MATCHES: Be honest. Say you don\'t have an exact match right now, suggest '
+        'the closest alternatives, and ask if they can be flexible on one constraint.\n'
+        '6. SERVICES: When relevant, weave service mentions naturally into the conversation. '
+        'Use markdown links:\n'
+        '   - Home Loan → [our home loan team](/services/home-loan/)\n'
+        '   - Legal vetting → [legal services](/services/legal/)\n'
+        '   - Legal + Loan combo → [legal & home loan](/services/legal-homeloan/)\n'
+        '   - Security systems → [security & surveillance](/services/security/)\n'
+        '   - NRI investment → [NRI services](/services/nri-service/)\n'
+        '   - Group purchase → [Group Buy](/group-buy/)\n'
+        '   - New developers → [Builder Projects](/developers/)\n'
+        '   - Home services → [Premium Home Services](/services/home-service/)\n'
+        '7. PROACTIVE: If a buyer mentions buying, gently ask if they\'ve sorted their home loan. '
+        'If they mention a new flat, ask if they need legal vetting. Be a helpful advisor, not just a search engine.\n\n'
+
+        'FORMATTING:\n'
+        '- Property links: [Name of Property](/properties/slug/)\n'
+        '- Keep responses concise — 3–5 sentences max unless listing properties.\n'
+        '- For property listings, one short paragraph per property, then specs as bullets.\n'
         f'{prefs}'
     )
 
-    # ── Retrieved property context ─────────────────────────────────────────────
+    # ── Retrieved property context (rich) ──────────────────────────────────────
     context_lines = []
     for p in properties:
         primary_img = p.primary_image
         img = primary_img.image.url if primary_img and primary_img.image else ''
+
+        # Amenities
+        features = ', '.join(p.features.values_list('name', flat=True)[:8]) or 'N/A'
+        connectivity = ', '.join(p.connectivity.values_list('name', flat=True)[:5]) or 'N/A'
+
+        # Developer
+        developer = p.developer.name if hasattr(p, 'developer') and p.developer else 'N/A'
+
+        # Construction status
+        con_status = getattr(p, 'con_status', '') or ''
+
+        # BHK display
+        bhk_str = p.get_bhk_display() if p.bhk else 'N/A'
+
         context_lines.append(
             f'[[ID:{p.pk}] {p.title}](/properties/{p.slug}/) | '
             f'{p.locality}, {p.city} | '
-            f'{p.display_price} | '
-            f'{p.get_bhk_display() if p.bhk else "N/A"}BHK | '
+            f'Price: {p.display_price} | '
+            f'Type: {p.get_property_type_display() if hasattr(p, "get_property_type_display") else ""} | '
+            f'{bhk_str} | '
             f'{p.area_sqft or "?"}sqft | '
+            f'Status: {con_status} | '
+            f'Developer: {developer} | '
+            f'Amenities: {features} | '
+            f'Nearby: {connectivity} | '
             f'img:{img}'
         )
 
-    context = (
-        'Available listings (output matches as clickable markdown links):\n'
-        + '\n'.join(context_lines)
-        if context_lines
-        else 'No listings found matching the current filters.'
-    )
+    if context_lines:
+        context = (
+            f'Available listings ({len(context_lines)} found — use ONLY these, do not invent properties):\n'
+            + '\n'.join(context_lines)
+        )
+    else:
+        context = (
+            'No listings found matching the exact filters right now. '
+            'Be honest with the customer, suggest they broaden their search, '
+            'and offer to help them explore different criteria.'
+        )
 
     # ── Recent chat history ────────────────────────────────────────────────────
     messages = []
@@ -86,5 +135,5 @@ def build_prompt(query: str, properties: list, session_key: str,
     except Exception as e:
         print(f'Error fetching chat history: {e}')
 
-    messages.append({'role': 'user', 'content': f'{context}\n\nQuestion: {query}'})
+    messages.append({'role': 'user', 'content': f'{context}\n\nCustomer says: {query}'})
     return system, messages
