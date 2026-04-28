@@ -11,6 +11,7 @@ Improvements:
   - BHK and bedrooms correctly mapped to the 'bedrooms' DB column
 """
 
+import difflib
 import os
 import re
 from django.db import connection
@@ -55,24 +56,71 @@ _RANGE_PAT = re.compile(
 _BHK_RE = re.compile(r'(\d)\s*bhk', re.IGNORECASE)
 
 # Common Indian cities / localities for soft location matching
+# Add any new locality your project covers to this list
 _KNOWN_LOCATIONS = [
+    # Major cities
     'bangalore', 'bengaluru', 'mumbai', 'hyderabad', 'pune', 'chennai',
     'delhi', 'noida', 'gurgaon', 'gurugram', 'kolkata', 'ahmedabad',
     'surat', 'jaipur', 'lucknow', 'kochi', 'coimbatore', 'nagpur',
     'indore', 'bhopal', 'vizag', 'visakhapatnam', 'mysore', 'mysuru',
-    # Common micro-markets / localities
+    # Bangalore micro-markets
     'whitefield', 'koramangala', 'hsr layout', 'electronic city',
     'sarjapur', 'hebbal', 'yelahanka', 'jp nagar', 'marathahalli',
+    'indiranagar', 'jayanagar', 'banashankari', 'btm layout', 'bellandur',
+    'domlur', 'old airport road', 'rajarajeshwari nagar', 'nagarbhavi',
+    # Mumbai
     'bandra', 'andheri', 'powai', 'thane', 'kharghar', 'navi mumbai',
-    'hinjewadi', 'baner', 'kharadi', 'wakad', 'hadapsar',
+    'malad', 'goregaon', 'kandivali', 'borivali', 'dahisar', 'mira road',
+    # Pune
+    'hinjewadi', 'baner', 'kharadi', 'wakad', 'hadapsar', 'viman nagar',
+    'aundh', 'pimple saudagar', 'nibm', 'magarpatta',
+    # Hyderabad
     'gachibowli', 'hitech city', 'kondapur', 'miyapur', 'kukatpally',
+    'madhapur', 'manikonda', 'nallagandla', 'kokapet',
 ]
+
+
+def _fuzzy_match_location(query: str) -> str | None:
+    """
+    Two-tier location detection:
+    1. Exact substring match (fastest, handles correct spelling)
+    2. Per-word fuzzy match using difflib (handles typos like 'whitefieldd')
+
+    Returns the corrected canonical location name, or None.
+    """
+    q_lower = query.lower()
+
+    # Tier 1: exact substring (handles multi-word like "hsr layout")
+    for loc in _KNOWN_LOCATIONS:
+        if loc in q_lower:
+            return loc
+
+    # Tier 2: fuzzy per-word match — split query into words and
+    # check each word (and 2-word combos) against known locations
+    words = re.findall(r'[a-z]+', q_lower)
+
+    # Single-word fuzzy
+    for word in words:
+        if len(word) < 4:          # skip short words like "in", "at", "a"
+            continue
+        matches = difflib.get_close_matches(word, _KNOWN_LOCATIONS, n=1, cutoff=0.82)
+        if matches:
+            return matches[0]
+
+    # Two-word fuzzy (e.g. "whitefield bangalore" → "whitefield")
+    for i in range(len(words) - 1):
+        phrase = f'{words[i]} {words[i+1]}'
+        matches = difflib.get_close_matches(phrase, _KNOWN_LOCATIONS, n=1, cutoff=0.80)
+        if matches:
+            return matches[0]
+
+    return None
 
 
 def _parse_query_filters(query: str) -> dict:
     """
     Extract hard budget / BHK constraints and soft location hints
-    from a natural-language query.
+    from a natural-language query. Handles typos in location names.
     """
     result = {}
     q = query.lower()
@@ -101,13 +149,13 @@ def _parse_query_filters(query: str) -> dict:
     if bhk_match:
         result['bhk'] = int(bhk_match.group(1))
 
-    # ── Location (soft match) ──────────────────────────────────────────────────
-    for loc in _KNOWN_LOCATIONS:
-        if loc in q:
-            result['location'] = loc
-            break
+    # ── Location (fuzzy match handles typos) ───────────────────────────────────
+    loc = _fuzzy_match_location(query)
+    if loc:
+        result['location'] = loc
 
     return result
+
 
 
 # ── Main retriever ─────────────────────────────────────────────────────────────

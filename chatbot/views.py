@@ -34,7 +34,8 @@ _PRICE_BUCKETS = [
 def _build_search_url(query: str, user_profile=None) -> str:
     """
     Build a /properties/ search URL from filters extracted from the chat query.
-    Maps budget → the closest PRICE_RANGES bucket accepted by property_list view.
+    Uses the same fuzzy-corrected _parse_query_filters as the retriever so
+    typos like 'whitefieldd' resolve to 'whitefield' in the URL too.
     """
     filters = _parse_query_filters(query)
 
@@ -42,22 +43,18 @@ def _build_search_url(query: str, user_profile=None) -> str:
     budget_max = filters.get('budget_max')
     budget_min = filters.get('budget_min')
     bhk        = filters.get('bhk')
-    location   = None
+
+    # Fuzzy-corrected location from query (already resolved by _parse_query_filters)
+    location = filters.get('location')
+
+    # Fall back to saved profile if query had no location
+    if not location and user_profile and user_profile.preferred_locations:
+        location = user_profile.preferred_locations[0]
 
     if budget_max is None and user_profile and user_profile.budget_max:
         budget_max = float(user_profile.budget_max)
     if budget_min is None and user_profile and user_profile.budget_min:
         budget_min = float(user_profile.budget_min)
-    if user_profile and user_profile.preferred_locations:
-        location = user_profile.preferred_locations[0]
-
-    # Extract location from query ("in Whitefield", "whitefield area", etc.)
-    loc_match = re.search(
-        r'\bin\s+([A-Za-z][A-Za-z\s]{2,20}?)(?:\s+area|\s+locality|\s+bangalore|\s+bengaluru|$)',
-        query, re.IGNORECASE
-    )
-    if loc_match:
-        location = loc_match.group(1).strip()
 
     params = {}
 
