@@ -4,6 +4,7 @@ chatbot/views.py
 Endpoints:
   POST /api/v1/chat/                — main RAG pipeline
   POST /api/v1/chat/preferences/   — update session preferences
+  GET  /api/v1/chat/history/       — fetch conversation history for a session
 """
 
 import json
@@ -11,7 +12,7 @@ import logging
 import re
 
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse
 
 from .models import ChatSession, ChatMessage, UserProfile
@@ -234,3 +235,50 @@ def update_preferences_view(request):
 
     profile.save()
     return JsonResponse({'success': True, 'message': 'Preferences updated'})
+
+
+@require_GET
+def history_view(request):
+    """
+    GET /api/v1/chat/history/?session_id=<id>[&limit=40]
+
+    Returns the stored conversation history for the given session so the
+    frontend can replay it into the chat window after a page reload.
+    Response shape:
+      {
+        "messages": [
+          {"role": "user"|"assistant", "content": "...", "ts": "ISO-8601"},
+          ...
+        ],
+        "visitor_name": "...",
+        "preference": "property"|"services"|""  
+      }
+    """
+    session_key = request.GET.get('session_id', '').strip()
+    if not session_key:
+        return JsonResponse({'error': 'session_id is required'}, status=400)
+
+    limit = min(int(request.GET.get('limit', 40)), 100)  # cap at 100
+
+    try:
+        session = ChatSession.objects.filter(session_key=session_key).first()
+        if not session:
+            return JsonResponse({'messages': [], 'visitor_name': '', 'preference': ''})
+
+        messages = list(
+            session.messages
+            .order_by('created_at')
+            .values('role', 'content', 'created_at')
+        )
+        # Return only the last `limit` messages
+        messages = messages[-limit:]
+
+        return JsonResponse({
+            'messages':     [{'role': m['role'], 'content': m['content'],
+                              'ts': m['created_at'].isoformat()} for m in messages],
+            'visitor_name': session.visitor_name or '',
+            'preference':   session.preference   or '',
+        })
+    except Exception as e:
+        logger.error(f'history_view error: {e}', exc_info=True)
+        return JsonResponse({'messages': [], 'visitor_name': '', 'preference': ''})

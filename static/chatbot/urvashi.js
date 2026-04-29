@@ -421,23 +421,100 @@ function getCookie(name) {
     return match ? match[2] : '';
 }
 
-// ── Welcome message on load ───────────────────────────────────────────────────
-window.addEventListener('load', () => {
-    if (onboardingState === 'chat') {
-        // Returning user — skip onboarding, show topic bar immediately
-        appendMessage('assistant',
-            `👋 Welcome back, ${userProfile.name || 'there'}! How can I help you today? 😊`
-        );
-        showTopicBar();
-    } else {
-        // Fresh session — start onboarding
+// ── Chat history constants ───────────────────────────────────────────────────
+const HISTORY_LIMIT = 40;   // messages to load on restore
+
+// ── Load & restore persistent chat history ───────────────────────────────────
+async function loadChatHistory() {
+    // Fresh session — no history to fetch, start onboarding
+    if (onboardingState !== 'chat') {
         messageInput.placeholder = 'Type your name…';
         appendMessage('assistant',
-            '👋 Hello! Welcome to Homexo. I\'m Urvashi, your dedicated property consultant. 🏡\n\n' +
+            '\ud83d\udc4b Hello! Welcome to Homexo. I\'m Urvashi, your dedicated property consultant. \ud83c\udfe1\n\n' +
             'It\'s wonderful to have you here! May I kindly know your good name?'
         );
+        return;
     }
-});
+
+    // Show a loading shimmer while we fetch
+    const loadingId = 'history-loading-' + Date.now();
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = loadingId;
+    loadingDiv.style.cssText = 'text-align:center;padding:12px;color:#94a3b8;font-size:12px;';
+    loadingDiv.textContent = 'Restoring your conversation…';
+    chatWindow.appendChild(loadingDiv);
+
+    try {
+        const res = await fetch(`/api/v1/chat/history/?session_id=${encodeURIComponent(SESSION_ID)}&limit=${HISTORY_LIMIT}`);
+        const data = await res.json();
+        const msgs = data.messages || [];
+
+        // Remove shimmer
+        document.getElementById(loadingId)?.remove();
+
+        if (msgs.length === 0) {
+            // No history yet — returning user who hasn't chatted
+            appendMessage('assistant',
+                `\ud83d\udc4b Welcome back, ${userProfile.name || 'there'}! How can I help you today? \ud83d\ude0a`
+            );
+        } else {
+            // Render a timestamp divider at the top
+            renderHistoryDivider(msgs[0].ts);
+
+            // Replay every stored turn
+            msgs.forEach(m => appendMessage(m.role, m.content));
+
+            // Friendly continuation prompt
+            const continueDiv = document.createElement('div');
+            continueDiv.style.cssText = 'text-align:center;margin:10px 0 4px;';
+            continueDiv.innerHTML = `
+                <span style="font-size:11px;color:#94a3b8;background:#f8fafc;
+                    padding:3px 12px;border-radius:20px;border:1px solid #e2e8f0;">
+                    \ud83d\udcac Continuing your conversation
+                </span>`;
+            chatWindow.appendChild(continueDiv);
+        }
+
+        showTopicBar();
+    } catch (err) {
+        console.warn('[Urvashi] History fetch failed:', err);
+        document.getElementById(loadingId)?.remove();
+        appendMessage('assistant',
+            `\ud83d\udc4b Welcome back, ${userProfile.name || 'there'}! How can I help you today? \ud83d\ude0a`
+        );
+        showTopicBar();
+    }
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function renderHistoryDivider(isoTs) {
+    try {
+        const d = new Date(isoTs);
+        const label = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const div = document.createElement('div');
+        div.style.cssText = 'text-align:center;margin:8px 0 12px;';
+        div.innerHTML = `<span style="font-size:11px;color:#94a3b8;background:#f8fafc;
+            padding:3px 12px;border-radius:20px;border:1px solid #e2e8f0;">
+            \ud83d\udcc5 Chat from ${label}
+        </span>`;
+        chatWindow.appendChild(div);
+    } catch (_) {}
+}
+
+// ── Clear history / start new conversation ────────────────────────────────────
+window.clearChatHistory = function() {
+    // Wipe localStorage flags so onboarding restarts
+    localStorage.removeItem('urvashi_onboarding_done');
+    localStorage.removeItem('urvashi_user_name');
+    localStorage.removeItem('urvashi_user_phone');
+    localStorage.removeItem('urvashi_preference');
+    localStorage.removeItem('urvashi_session_id');
+    // Hard reload so a fresh session starts cleanly
+    location.reload();
+};
+
+window.addEventListener('load', loadChatHistory);
 
 // ── Show/hide topic bar ───────────────────────────────────────────────────────
 function showTopicBar() {

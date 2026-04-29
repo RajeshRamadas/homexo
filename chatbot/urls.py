@@ -6,4 +6,5 @@ app_name = 'chatbot'
 urlpatterns = [
     path('chat/',               views.chat_view,               name='chat'),
     path('chat/preferences/',   views.update_preferences_view, name='preferences'),
+    path('chat/history/',       views.history_view,            name='history'),
 ]
