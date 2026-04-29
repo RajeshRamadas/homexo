@@ -106,6 +106,25 @@ def _property_card(prop) -> dict:
     }
 
 
+def _sanitize_ai_text(text: str) -> str:
+    """
+    Backend safety net: strip absolute dev-server URLs and /developers/ links
+    from LLM output before sending to the frontend.
+    """
+    if not text:
+        return text
+    # Convert absolute localhost / 127.0.0.1 URLs → relative paths
+    text = re.sub(
+        r'https?://(127\.0\.0\.1|localhost)(:\d+)?(/\S*)',
+        r'\3',
+        text,
+    )
+    # Remove markdown links pointing to /developers/ (internal admin page)
+    text = re.sub(r'\[[^\]]*\]\(/developers/[^)]*\)', '', text)
+    return text
+
+
+
 @csrf_exempt
 @require_POST
 def chat_view(request):
@@ -177,6 +196,9 @@ def chat_view(request):
     # ── Persist ────────────────────────────────────────────────────────────────
     ChatMessage.objects.create(session=session, role='user',      content=user_message)
     ChatMessage.objects.create(session=session, role='assistant', content=ai_text)
+
+    # ── Sanitise ai_text (strip dev-server URLs / internal links) ─────────────
+    ai_text = _sanitize_ai_text(ai_text)
 
     # ── Respond ────────────────────────────────────────────────────────────────
     search_url = _build_search_url(user_message, profile)

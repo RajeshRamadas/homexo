@@ -4,11 +4,16 @@ chatbot/rag/retriever.py
 pgvector cosine similarity search with natural-language budget, BHK,
 and location parsing.
 
-Improvements:
-  - Location / city extracted from query text as a soft SQL ILIKE filter
-  - TOP_K increased to 8 for richer context
-  - Threshold lowered with smarter fallback
-  - BHK and bedrooms correctly mapped to the 'bedrooms' DB column
+KEY FIX (2026-04-29):
+  psycopg2 + pgvector returns 0 rows when %s::vector is bound *alongside*
+  integer/float params in the same positional query. Fixed by using a
+  subquery that binds vec_str exactly ONCE in SELECT, letting the outer
+  query do ORDER + LIMIT with no additional vector binding.
+
+Other improvements:
+  - bangalore ↔ bengaluru alias (DB stores 'Bengaluru')
+  - BHK is now a soft filter with 4-tier progressive fallback
+  - Location fuzzy matching handles typos
 """
 
 import difflib
@@ -17,7 +22,7 @@ import re
 from django.db import connection
 from .embedder import embed_query
 
-TOP_K     = int(os.environ.get('TOP_K', 8))           # more candidates = better context
+TOP_K     = int(os.environ.get('TOP_K', 8))
 THRESHOLD = float(os.environ.get('SIMILARITY_THRESHOLD', 0.18))
 
 # ── Indian price parsing ───────────────────────────────────────────────────────
@@ -56,9 +61,8 @@ _RANGE_PAT = re.compile(
 _BHK_RE = re.compile(r'(\d)\s*bhk', re.IGNORECASE)
 
 # Common Indian cities / localities for soft location matching
-# Add any new locality your project covers to this list
 _KNOWN_LOCATIONS = [
-    # Major cities
+    # Major cities — include both spellings of Bangalore/Bengaluru
     'bangalore', 'bengaluru', 'mumbai', 'hyderabad', 'pune', 'chennai',
     'delhi', 'noida', 'gurgaon', 'gurugram', 'kolkata', 'ahmedabad',
     'surat', 'jaipur', 'lucknow', 'kochi', 'coimbatore', 'nagpur',
@@ -68,6 +72,7 @@ _KNOWN_LOCATIONS = [
     'sarjapur', 'hebbal', 'yelahanka', 'jp nagar', 'marathahalli',
     'indiranagar', 'jayanagar', 'banashankari', 'btm layout', 'bellandur',
     'domlur', 'old airport road', 'rajarajeshwari nagar', 'nagarbhavi',
+    'sadashivanagar', 'devanahalli', 'outer ring road', 'sarjapur road',
     # Mumbai
     'bandra', 'andheri', 'powai', 'thane', 'kharghar', 'navi mumbai',
     'malad', 'goregaon', 'kandivali', 'borivali', 'dahisar', 'mira road',
@@ -79,35 +84,38 @@ _KNOWN_LOCATIONS = [
     'madhapur', 'manikonda', 'nallagandla', 'kokapet',
 ]
 
+# bangalore ↔ bengaluru: both spellings must match the DB's 'Bengaluru'
+_CITY_ALIASES = {
+    'bangalore': ['bangalore', 'bengaluru'],
+    'bengaluru': ['bangalore', 'bengaluru'],
+}
+
 
 def _fuzzy_match_location(query: str) -> str | None:
     """
     Two-tier location detection:
-    1. Exact substring match (fastest, handles correct spelling)
-    2. Per-word fuzzy match using difflib (handles typos like 'whitefieldd')
+    1. Exact substring match (handles correct spelling and multi-word)
+    2. Per-word fuzzy match using difflib (handles typos)
 
     Returns the corrected canonical location name, or None.
     """
     q_lower = query.lower()
 
-    # Tier 1: exact substring (handles multi-word like "hsr layout")
+    # Tier 1: exact substring
     for loc in _KNOWN_LOCATIONS:
         if loc in q_lower:
             return loc
 
-    # Tier 2: fuzzy per-word match — split query into words and
-    # check each word (and 2-word combos) against known locations
+    # Tier 2: fuzzy per-word match
     words = re.findall(r'[a-z]+', q_lower)
 
-    # Single-word fuzzy
     for word in words:
-        if len(word) < 4:          # skip short words like "in", "at", "a"
+        if len(word) < 4:
             continue
         matches = difflib.get_close_matches(word, _KNOWN_LOCATIONS, n=1, cutoff=0.82)
         if matches:
             return matches[0]
 
-    # Two-word fuzzy (e.g. "whitefield bangalore" → "whitefield")
     for i in range(len(words) - 1):
         phrase = f'{words[i]} {words[i+1]}'
         matches = difflib.get_close_matches(phrase, _KNOWN_LOCATIONS, n=1, cutoff=0.80)
@@ -119,8 +127,7 @@ def _fuzzy_match_location(query: str) -> str | None:
 
 def _parse_query_filters(query: str) -> dict:
     """
-    Extract hard budget / BHK constraints and soft location hints
-    from a natural-language query. Handles typos in location names.
+    Extract budget / BHK / location constraints from a natural-language query.
     """
     result = {}
     q = query.lower()
@@ -130,7 +137,6 @@ def _parse_query_filters(query: str) -> dict:
         '', q, flags=re.IGNORECASE
     )
 
-    # ── Range first ────────────────────────────────────────────────────────────
     m = _RANGE_PAT.search(q)
     if m:
         n1, u1, n2, u2 = m.group(1), m.group(2) or m.group(4), m.group(3), m.group(4)
@@ -144,18 +150,15 @@ def _parse_query_filters(query: str) -> dict:
         if m:
             result['budget_min'] = _to_rupees(float(m.group(1)), m.group(2))
 
-    # ── BHK ────────────────────────────────────────────────────────────────────
     bhk_match = _BHK_RE.search(q)
     if bhk_match:
         result['bhk'] = int(bhk_match.group(1))
 
-    # ── Location (fuzzy match handles typos) ───────────────────────────────────
     loc = _fuzzy_match_location(query)
     if loc:
         result['location'] = loc
 
     return result
-
 
 
 # ── Main retriever ─────────────────────────────────────────────────────────────
@@ -164,16 +167,13 @@ def retrieve(query: str, user_profile=None) -> list:
     """
     Embed the query and find the top-k most similar active properties.
 
-    Hard SQL filters:
-      - Status = active
-      - Budget (max / min)
-      - BHK / bedrooms
+    Hard SQL filters  : status=active, price budget
+    Soft SQL filters  : location/city (bangalore↔bengaluru aliased), BHK
+    Fallback strategy : loc+bhk → bhk-only → loc-only → no soft filters
 
-    Soft SQL filters (ILIKE — won't exclude if no match):
-      - Location / city extracted from query text
-
-    Returns:
-        List of properties.models.Property objects ordered by similarity.
+    KEY FIX: psycopg2 + pgvector returns 0 rows when %s::vector is bound
+    alongside integer/float params in the same positional query. Fixed by
+    using a subquery that binds vec_str exactly ONCE in the SELECT clause.
     """
     from properties.models import Property
 
@@ -182,9 +182,9 @@ def retrieve(query: str, user_profile=None) -> list:
 
     query_filters = _parse_query_filters(query)
 
-    # ── Hard filters (will exclude non-matching rows) ──────────────────────────
-    hard_filters = ["p.status = 'active'"]
-    params = []
+    # ── Hard budget filters (price must be within range) ─────────────────────
+    hard_filters  = ["p.status = 'active'"]
+    budget_params = []   # only price params — no integers that confuse pgvector
 
     budget_max = query_filters.get('budget_max')
     budget_min = query_filters.get('budget_min')
@@ -196,50 +196,90 @@ def retrieve(query: str, user_profile=None) -> list:
 
     if budget_max is not None:
         hard_filters.append('p.price <= %s')
-        params.append(budget_max)
+        budget_params.append(budget_max)
     if budget_min is not None:
         hard_filters.append('p.price >= %s')
-        params.append(budget_min)
+        budget_params.append(budget_min)
 
-    if query_filters.get('bhk'):
-        hard_filters.append('p.bedrooms = %s')
-        params.append(query_filters['bhk'])
-
-    # ── Soft location hint (added to WHERE, falls back gracefully) ─────────────
+    # ── Soft filters ─────────────────────────────────────────────────────────
+    bhk      = query_filters.get('bhk')
     location = query_filters.get('location')
+
     if not location and user_profile and user_profile.preferred_locations:
         location = user_profile.preferred_locations[0].lower()
 
+    # Expand to alias variants (bangalore ↔ bengaluru)
+    loc_variants = _CITY_ALIASES.get(location, [location]) if location else []
+
+    # ── Helpers ───────────────────────────────────────────────────────────────
+    def _build_loc_clause(variants):
+        """Build an OR clause for locality/city ILIKE matching."""
+        if not variants:
+            return None, []
+        parts, p = [], []
+        for v in variants:
+            parts.append('(LOWER(p.locality) LIKE %s OR LOWER(p.city) LIKE %s)')
+            p += [f'%{v}%', f'%{v}%']
+        return '(' + ' OR '.join(parts) + ')', p
+
     def _run_query(extra_filters, extra_params):
-        """Execute the vector similarity query with given filters."""
-        all_filters = hard_filters + extra_filters
-        where = 'WHERE ' + ' AND '.join(all_filters)
+        """
+        Run vector similarity query.
+
+        Binds vec_str ONCE (in subquery SELECT) — avoids psycopg2+pgvector
+        zero-row bug that occurs when vector params are mixed with integer params.
+
+        Param layout: [vec_str, *budget_params, *extra_params, TOP_K]
+        """
+        all_filters  = hard_filters + extra_filters
+        where_clause = 'WHERE ' + ' AND '.join(all_filters)
+
         sql = f'''
-            SELECT e.property_id,
-                   1 - (e.embedding <=> %s::vector) AS score
-            FROM   chatbot_propertyembedding e
-            JOIN   properties_property p ON p.id = e.property_id
-            {where}
-            ORDER BY e.embedding <=> %s::vector
+            SELECT sub.property_id, sub.score
+            FROM (
+                SELECT e.property_id,
+                       (1 - (e.embedding <=> %s::vector)) AS score
+                FROM   chatbot_propertyembedding e
+                JOIN   properties_property p ON p.id = e.property_id
+                {where_clause}
+            ) sub
+            ORDER BY sub.score DESC
             LIMIT %s
         '''
-        all_params = [vec_str] + params + extra_params + [vec_str, TOP_K]
+        # vec_str is the first param (subquery), budget/extra params go to WHERE,
+        # TOP_K is the last param (LIMIT). No second vector binding needed.
+        all_params = [vec_str] + budget_params + extra_params + [TOP_K]
         with connection.cursor() as cur:
             cur.execute(sql, all_params)
             return cur.fetchall()
 
-    # First pass: with location filter
+    def _attempt(with_loc, with_bhk):
+        extra_f, extra_p = [], []
+        loc_clause, lp = _build_loc_clause(loc_variants)
+        if with_loc and loc_clause:
+            extra_f.append(loc_clause)
+            extra_p += lp
+        if with_bhk and bhk:
+            extra_f.append('p.bedrooms = %s')
+            extra_p.append(bhk)
+        return _run_query(extra_f, extra_p)
+
+    # ── 4-tier progressive fallback ───────────────────────────────────────────
     rows = []
-    if location:
-        loc_filter  = '(LOWER(p.locality) LIKE %s OR LOWER(p.city) LIKE %s)'
-        loc_params  = [f'%{location}%', f'%{location}%']
-        rows = _run_query([loc_filter], loc_params)
 
-    # Second pass: without location (if first returned nothing)
+    if location and bhk:
+        rows = _attempt(with_loc=True, with_bhk=True)
+
+    if not rows and bhk:
+        rows = _attempt(with_loc=False, with_bhk=True)
+
+    if not rows and location:
+        rows = _attempt(with_loc=True, with_bhk=False)
+
     if not rows:
-        rows = _run_query([], [])
+        rows = _attempt(with_loc=False, with_bhk=False)
 
-    # ── Filter by threshold, with fallback to top-3 ───────────────────────────
+    # ── Threshold filter with top-3 fallback ─────────────────────────────────
     ids = [r[0] for r in rows if r[1] >= THRESHOLD]
     if not ids and rows:
         ids = [r[0] for r in rows[:3]]
@@ -251,4 +291,3 @@ def retrieve(query: str, user_profile=None) -> list:
         .select_related('developer')
         .order_by('-is_featured', '-created_at')
     ) if ids else []
-
