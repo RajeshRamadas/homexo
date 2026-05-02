@@ -235,6 +235,17 @@
   .prop-badge.badge-new    { background: var(--sky); }
   .prop-badge.premium  { background: #2E5C8A; }
   .prop-badge.sold     { background: #778899; }
+
+  /* SEGMENT TAG BADGES on property card body */
+  .prop-seg-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .prop-seg-tag {
+    font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 2px; line-height: 1.4;
+  }
+  .prop-seg-tag.luxury  { background: #FFF8E7; color: #9A6F0A; border: 1px solid #E8C56A; }
+  .prop-seg-tag.premium { background: #EFF3FC; color: #2E5C8A; border: 1px solid #A8C4E8; }
+  .prop-seg-tag.budget  { background: #EEF9F0; color: #276C43; border: 1px solid #8FD4A7; }
+  .prop-seg-tag.default { background: rgba(74,144,196,0.08); color: var(--sky); border: 1px solid rgba(74,144,196,0.25); }
   .prop-fav {
     position: absolute; top: 12px; right: 12px; z-index: 3;
     width: 32px; height: 32px; border-radius: 50%;
@@ -494,6 +505,11 @@
   <input type="hidden" name="with_photo"    id="iWithPhoto"    value="{{ request.GET.with_photo }}">
   <input type="hidden" name="is_new"        id="iIsNew"        value="{{ request.GET.is_new }}">
   <input type="hidden" name="parking"       id="iParking"      value="{{ request.GET.parking }}">
+  <div id="hiddenTagsContainer">
+    {% for atag in active_tags %}
+    <input type="hidden" name="tag" value="{{ atag.slug }}">
+    {% endfor %}
+  </div>
 
   {# FILTER BAR (desktop) #}
   <div class="lx-filter-bar">
@@ -715,6 +731,17 @@
         </div>
       </div>
 
+      {# ── Segment / Category filter ── #}
+      <div class="lx-filter-section">
+        <div class="lx-filter-section-title">Segment</div>
+        <div class="lx-chips">
+          <button type="button" class="lx-chip {% if not active_tags %}active{% endif %}" onclick="clearTags()">All</button>
+          {% for tag in tags %}
+          <button type="button" class="lx-chip {% if tag in active_tags %}active{% endif %}" onclick="toggleTagChip('{{ tag.slug }}', {% if tag in active_tags %}false{% else %}true{% endif %})">{{ tag.name }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
       <button type="submit" class="lx-apply-btn">Search Properties</button>
       <a href="{% url 'properties:list' %}" class="lx-clear-btn">Clear All Filters</a>
 
@@ -826,6 +853,12 @@
             <a href="?{% for k,v in request.GET.items %}{% if k != 'is_new' and k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}" title="Remove">&#215;</a>
           </div>
           {% endif %}
+          {% for atag in active_tags %}
+          <div class="lx-filter-tag" style="background:{% if atag.slug == 'luxury' %}#FFF8E7{% elif atag.slug == 'premium' %}#EFF3FC{% elif atag.slug == 'budget' %}#EEF9F0{% else %}rgba(74,144,196,0.08){% endif %};border-color:{% if atag.slug == 'luxury' %}#E8C56A{% elif atag.slug == 'premium' %}#A8C4E8{% elif atag.slug == 'budget' %}#8FD4A7{% else %}rgba(74,144,196,0.25){% endif %};color:{% if atag.slug == 'luxury' %}#9A6F0A{% elif atag.slug == 'premium' %}#2E5C8A{% elif atag.slug == 'budget' %}#276C43{% else %}var(--sky){% endif %};">
+            {{ atag.name }}
+            <a href="javascript:void(0)" onclick="toggleTagChip('{{ atag.slug }}', false)" title="Remove" style="color:inherit;">&#215;</a>
+          </div>
+          {% endfor %}
         </div>
       </div>
 
@@ -871,6 +904,13 @@
           </div>
 
           <div class="prop-body">
+            {% if prop.tags.all %}
+            <div class="prop-seg-tags">
+              {% for tag in prop.tags.all %}
+              <span class="prop-seg-tag {% if tag.slug == 'luxury' %}luxury{% elif tag.slug == 'premium' %}premium{% elif tag.slug == 'budget' %}budget{% else %}default{% endif %}">{{ tag.name }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
             <div class="prop-name">{{ prop.title }}</div>
             <div class="prop-location">
               <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
@@ -996,6 +1036,31 @@ function setChip(inputId, value, btn) {
   const group = btn.closest('.lx-chips');
   if (group) group.querySelectorAll('.lx-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
+  document.getElementById('filterForm').submit();
+}
+
+// Multi-select for tags
+function toggleTagChip(slug, add) {
+  const container = document.getElementById('hiddenTagsContainer');
+  if (add) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'tag';
+    input.value = slug;
+    container.appendChild(input);
+  } else {
+    const inputs = container.querySelectorAll('input[name="tag"]');
+    inputs.forEach(inp => {
+      if (inp.value === slug) {
+        inp.remove();
+      }
+    });
+  }
+  document.getElementById('filterForm').submit();
+}
+
+function clearTags() {
+  document.getElementById('hiddenTagsContainer').innerHTML = '';
   document.getElementById('filterForm').submit();
 }
 

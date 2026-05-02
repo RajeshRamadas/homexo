@@ -80,6 +80,7 @@ def property_list(request):
     prop_type    = request.GET.get('property_type', '')
     bhk          = request.GET.get('bhk', '')
     price_range  = request.GET.get('price', '')
+    tag_slugs    = [t.strip() for t in request.GET.getlist('tag') if t.strip()]
 
     if listing_type:
         qs = qs.filter(listing_type=listing_type)
@@ -190,6 +191,13 @@ def property_list(request):
     elif parking == '4w':
         qs = qs.filter(four_wheeler_parking=True)
 
+    # ── Tag filter (Luxury / Premium / Budget) ───────────────────────────────
+    active_tags = []
+    if tag_slugs:
+        active_tags = list(PropertyTag.objects.filter(slug__in=tag_slugs))
+        if active_tags:
+            qs = qs.filter(tags__in=active_tags).distinct()
+
     # ── Developer filter (from developer profile page link) ───────────────────
     developer_slug = request.GET.get('developer', '').strip()
     active_developer = None
@@ -226,6 +234,7 @@ def property_list(request):
         'listing_type':     listing_type,
         'current_sort':     sort,
         'tags':             PropertyTag.objects.all(),
+        'active_tags':      active_tags,
         'page_range':       page_range,
         'ELLIPSIS':         paginator.ELLIPSIS,
         'active_developer': active_developer,

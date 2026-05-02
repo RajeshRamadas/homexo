@@ -515,24 +515,65 @@
     </button>
   </div>
 
-  {# ── Section 10: Tags ── #}
+  {# ── Section 10: Tags & Segment ── #}
   {% if form.fields.tags.choices %}
   <div class="pf-section">
-    <div class="pf-section-title">Tags</div>
-    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:16px;">Select tags that best describe this property.</p>
+    <div class="pf-section-title">Segment &amp; Tags</div>
+    <p style="font-size:12px;color:var(--warm-grey);margin-bottom:20px;">Choose a segment to help buyers filter by budget category, then add any other relevant tags.</p>
+
+    {# ── Segment chips (Luxury / Premium / Budget) ── #}
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--charcoal);margin-bottom:10px;">Segment</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+      {% for val, lbl in form.fields.tags.choices %}
+        {% if lbl == 'Luxury' or lbl == 'Premium' or lbl == 'Budget' %}
+        <label class="pf-seg-label pf-seg-{{ lbl|lower }}" style="cursor:pointer;">
+          <input type="checkbox" name="tags" value="{{ val }}" class="pf-seg-cb" style="display:none;"
+                 {% if val in form.tags.value %}checked{% endif %}>
+          <span class="pf-seg-pill pf-seg-pill-{{ lbl|lower }}">
+            {% if lbl == 'Luxury' %}&#10022;{% elif lbl == 'Premium' %}&#9672;{% else %}&#11041;{% endif %}
+            {{ lbl }}
+          </span>
+        </label>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {# ── Other Tags ── #}
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--charcoal);margin-bottom:10px;">Other Tags</div>
     <div style="display:flex;flex-wrap:wrap;gap:10px;">
       {% for val, lbl in form.fields.tags.choices %}
-      <label style="display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;background:var(--ivory);transition:all .2s;"
-             onmouseover="this.style.borderColor='var(--sky)'"
-             onmouseout="this.style.borderColor='var(--border)'">
-        <input type="checkbox" name="tags" value="{{ val }}" style="width:auto;margin:0;"
-               {% if val in form.tags.value %}checked{% endif %}>
-        {{ lbl }}
-      </label>
+        {% if lbl != 'Luxury' and lbl != 'Premium' and lbl != 'Budget' %}
+        <label style="display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;background:var(--ivory);transition:all .2s;"
+               onmouseover="this.style.borderColor='var(--sky)'"
+               onmouseout="this.style.borderColor='var(--border)'">
+          <input type="checkbox" name="tags" value="{{ val }}" style="width:auto;margin:0;"
+                 {% if val in form.tags.value %}checked{% endif %}>
+          {{ lbl }}
+        </label>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
+
+  <style>
+    .pf-seg-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 20px; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.5px; border-radius: 3px; transition: all .2s;
+      border: 1.5px solid transparent; user-select: none;
+    }
+    .pf-seg-pill-luxury  { background: #FFF8E7; color: #9A6F0A; border-color: #E8C56A; }
+    .pf-seg-pill-premium { background: #EFF3FC; color: #2E5C8A; border-color: #A8C4E8; }
+    .pf-seg-pill-budget  { background: #EEF9F0; color: #276C43; border-color: #8FD4A7; }
+    .pf-seg-label input:checked ~ .pf-seg-pill-luxury  { background: #9A6F0A; color: #fff; border-color: #9A6F0A; box-shadow: 0 2px 10px rgba(154,111,10,.3); }
+    .pf-seg-label input:checked ~ .pf-seg-pill-premium { background: #2E5C8A; color: #fff; border-color: #2E5C8A; box-shadow: 0 2px 10px rgba(46,92,138,.3); }
+    .pf-seg-label input:checked ~ .pf-seg-pill-budget  { background: #276C43; color: #fff; border-color: #276C43; box-shadow: 0 2px 10px rgba(39,108,67,.3); }
+    .pf-seg-label:hover .pf-seg-pill-luxury  { box-shadow: 0 2px 10px rgba(154,111,10,.2); }
+    .pf-seg-label:hover .pf-seg-pill-premium { box-shadow: 0 2px 10px rgba(46,92,138,.2); }
+    .pf-seg-label:hover .pf-seg-pill-budget  { box-shadow: 0 2px 10px rgba(39,108,67,.2); }
+  </style>
   {% endif %}
+
 
   {# ── Submit ── #}
   <div class="pf-section" style="display:flex;gap:16px;justify-content:flex-end;align-items:center;">
