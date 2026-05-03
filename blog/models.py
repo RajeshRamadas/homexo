@@ -45,6 +45,8 @@ class Post(models.Model):
         help_text='One takeaway per line. Displayed as a bullet list at the start of the article.'
     )
     status      = models.CharField(max_length=15, choices=Status.choices, default=Status.DRAFT)
+    meta_title  = models.CharField(max_length=60, blank=True, help_text="Override the title used for SEO (max 60 chars).")
+    meta_description = models.CharField(max_length=160, blank=True, help_text="Override the excerpt used for SEO description (max 160 chars).")
     is_featured = models.BooleanField(default=False)
     views_count = models.PositiveIntegerField(default=0, editable=False)
     published_at = models.DateTimeField(null=True, blank=True)

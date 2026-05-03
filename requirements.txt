@@ -7,9 +7,7 @@ python-dotenv>=1.0          # Auto-loads .env into os.environ
 social-auth-app-django>=5.4
 twilio>=8.0          # Phone OTP (SMS)
 
-# Development
-django-extensions>=3.2
-ipython>=8.0
+# Development dependencies have been moved to requirements-dev.txt
 
 # Production
 gunicorn>=21.0

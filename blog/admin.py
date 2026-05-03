@@ -27,6 +27,7 @@ class PostAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Content', {'fields': ('editor_link', 'title', 'slug', 'author', 'categories', 'excerpt', 'key_takeaways', 'body', 'cover_image')}),
         ('Publishing', {'fields': ('status', 'is_featured', 'published_at')}),
+        ('SEO Metadata', {'fields': ('meta_title', 'meta_description'), 'classes': ('collapse',)}),
         ('Stats', {'fields': ('views_count', 'created_at', 'updated_at'), 'classes': ('collapse',)}),
     )
 

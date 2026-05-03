@@ -204,6 +204,11 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 ]
+# In production, allow the domains from ALLOWED_HOSTS
+if not DEBUG:
+    CORS_ALLOWED_ORIGINS += [
+        f'https://{host}' for host in ALLOWED_HOSTS if host not in ('', '*')
+    ]
 
 # ─── EMAIL ────────────────────────────────────────────────────────────────────
 # Set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend in .env for real mail.

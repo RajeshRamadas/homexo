@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
-{% block title %}{{ post.title }} — HOMEXO Insights{% endblock %}
-{% block meta_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block title %}{{ post.meta_title|default:post.title }} — HOMEXO Insights{% endblock %}
+{% block meta_description %}{{ post.meta_description|default:post.excerpt|default:post.title }}{% endblock %}
 {% block og_type %}article{% endblock %}
-{% block og_title %}{{ post.title }}{% endblock %}
-{% block og_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block og_title %}{{ post.meta_title|default:post.title }}{% endblock %}
+{% block og_description %}{{ post.meta_description|default:post.excerpt|default:post.title }}{% endblock %}
 {% block og_image %}{% if post.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}{% endif %}{% endblock %}
-{% block twitter_title %}{{ post.title }}{% endblock %}
-{% block twitter_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+{% block twitter_title %}{{ post.meta_title|default:post.title }}{% endblock %}
+{% block twitter_description %}{{ post.meta_description|default:post.excerpt|default:post.title }}{% endblock %}
 
 {% block json_ld %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "{{ post.title|escapejs }}",
-  "description": "{{ post.excerpt|default:post.title|escapejs }}",
+  "headline": "{{ post.meta_title|default:post.title|escapejs }}",
+  "description": "{{ post.meta_description|default:post.excerpt|default:post.title|escapejs }}",
   "url": "{{ request.build_absolute_uri }}",
   {% if post.cover_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}",{% endif %}
   {% if post.published_at %}"datePublished": "{{ post.published_at|date:'c' }}",{% endif %}
