@@ -181,6 +181,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Limit in-memory file upload size (Nginx already enforces 20MB via client_max_body_size)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024   # 20 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024   # 20 MB
+
+# Sessions expire after 7 days of inactivity
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 days
+
 # ─── DJANGO REST FRAMEWORK ────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -294,3 +301,6 @@ if not DEBUG:
 
     # Reuse DB connections across requests (seconds)
     DATABASES['default']['CONN_MAX_AGE'] = 60
+    # Validate pooled connections before use — prevents stale connection errors
+    # when Postgres restarts while Gunicorn workers are running.
+    DATABASES['default']['CONN_HEALTH_CHECKS'] = True
