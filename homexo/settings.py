@@ -217,16 +217,19 @@ if not DEBUG:
         f'https://{host}' for host in ALLOWED_HOSTS if host not in ('', '*')
     ]
 
-# ─── EMAIL ────────────────────────────────────────────────────────────────────
-# Set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend in .env for real mail.
-# Leave as console backend in development to print emails to terminal.
-EMAIL_BACKEND         = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST            = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT            = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_USE_TLS         = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER       = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD   = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL    = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@homexo.in')
+# ─── EMAIL — Zoho Mail (–smtp.zoho.in) ───────────────────────────────────────────────
+# Zoho SMTP: host=smtp.zoho.in, port=587 (TLS) or port=465 (SSL).
+# Use an App Password from Zoho Mail → Settings → Security → App Passwords.
+# DEFAULT_FROM_EMAIL must exactly match EMAIL_HOST_USER in Zoho.
+# In dev, set EMAIL_BACKEND=console to print emails to terminal instead of sending.
+EMAIL_BACKEND       = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST          = os.environ.get('EMAIL_HOST', 'smtp.zoho.in')
+EMAIL_PORT          = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS       = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_USE_SSL       = os.environ.get('EMAIL_USE_SSL', 'False') == 'True'   # use port 465 + SSL instead of TLS
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')            # Zoho App Password
+DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@homexo.in')  # must match EMAIL_HOST_USER
 ENQUIRY_NOTIFICATION_EMAIL = os.environ.get('ENQUIRY_NOTIFICATION_EMAIL', 'enquiries@homexo.in')
 
 # ─── AI / RAG (Urvashi Chatbot) ──────────────────────────────────────────────
