@@ -13,9 +13,9 @@ urlpatterns = [
     path('profile/complete/',  views.profile_complete_view, name='profile_complete'),
     path('notifications/mark-read/', views.mark_notifications_read, name='mark_notifications_read'),
 
-    # ── Phone OTP Login ───────────────────────────────────────────────────────
-    path('phone-login/',        views.phone_login_request_view, name='phone_login'),
-    path('phone-login/verify/', views.phone_login_verify_view,  name='phone_login_verify'),
+    # ── Phone OTP Login ── disabled for launch v1 ─────────────────────────────
+    # path('phone-login/',        views.phone_login_request_view, name='phone_login'),
+    # path('phone-login/verify/', views.phone_login_verify_view,  name='phone_login_verify'),
 
     # ── Email Confirmation ────────────────────────────────────────────────────
     path('email-confirm/sent/',     views.email_confirm_sent_view,   name='email_confirm_sent'),

@@ -72,7 +72,7 @@ ROOT_URLCONF = 'homexo.urls'
 # ─── AUTHENTICATION BACKENDS ─────────────────────────────────────────────────
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
+    # 'social_core.backends.facebook.FacebookOAuth2',  # ── Disabled (launch v1) ──
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -133,17 +133,17 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# ─── SOCIAL AUTH (Google & Facebook OAuth) ───────────────────────────────────
+# ─── SOCIAL AUTH (Google OAuth only — Facebook disabled for launch v1) ────────
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_OAUTH2_KEY', '')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OAUTH2_SECRET', '')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE  = ['openid', 'email', 'profile']
 
-SOCIAL_AUTH_FACEBOOK_KEY    = os.environ.get('FACEBOOK_APP_ID', '')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET', '')
-SOCIAL_AUTH_FACEBOOK_SCOPE  = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id,email,first_name,last_name',
-}
+# Facebook OAuth ── disabled for launch v1
+# Re-enable: uncomment below + add FacebookOAuth2 back to AUTHENTICATION_BACKENDS
+# SOCIAL_AUTH_FACEBOOK_KEY    = os.environ.get('FACEBOOK_APP_ID', '')
+# SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET', '')
+# SOCIAL_AUTH_FACEBOOK_SCOPE  = ['email']
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'id,email,first_name,last_name'}
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL      = '/accounts/profile/'
 SOCIAL_AUTH_LOGIN_ERROR_URL         = '/accounts/login/'
@@ -162,8 +162,12 @@ SOCIAL_AUTH_PIPELINE = (
     'accounts.pipeline.save_profile_data',           # custom: sync name fields
 )
 
-# Raise an error if GOOGLE/FB keys are missing in production (fail fast on misconfiguration)
+# Raise an error if Google key is missing in production
 SOCIAL_AUTH_RAISE_EXCEPTIONS = not DEBUG
+
+# ─── FEATURE FLAGS ────────────────────────────────────────────────────────────
+PHONE_OTP_ENABLED    = False   # Twilio phone OTP login ── disabled for launch v1
+FACEBOOK_LOGIN_ENABLED = False   # Facebook OAuth ── disabled for launch v1
 
 # ─── INTERNATIONALISATION ─────────────────────────────────────────────────────
 LANGUAGE_CODE = 'en-us'
