@@ -5,12 +5,25 @@ services:
   db:
     image: postgres:16-alpine
     restart: always
+    # ── Memory tuning ─────────────────────────────────────────────────────────
+    # $8  plan (1 GB): shared_buffers=32MB  max_connections=20
+    # $16 plan (2 GB): shared_buffers=64MB  max_connections=50
+    command: >
+      postgres
+      -c shared_buffers=${PG_SHARED_BUFFERS:-32MB}
+      -c effective_cache_size=${PG_EFFECTIVE_CACHE:-96MB}
+      -c work_mem=${PG_WORK_MEM:-2MB}
+      -c maintenance_work_mem=${PG_MAINT_MEM:-16MB}
+      -c max_connections=${PG_MAX_CONN:-20}
+      -c wal_buffers=4MB
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    mem_limit: ${DB_MEM_LIMIT:-128m}
+    memswap_limit: ${DB_MEMSWAP_LIMIT:-256m}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s
@@ -23,6 +36,8 @@ services:
       context: .
       target: runtime
     restart: always
+    mem_limit: ${WEB_MEM_LIMIT:-256m}
+    memswap_limit: ${WEB_MEMSWAP_LIMIT:-512m}
     volumes:
       - media_data:/app/media
       - static_data:/app/staticfiles
@@ -33,6 +48,14 @@ services:
       DB_HOST: db
       DB_PORT: "5432"
       DEBUG: "False"
+      # ── Gunicorn tuning (override in .env) ──────────────────────────────────
+      # $8  plan (1 GB): WORKERS=1 THREADS=2 MAX_REQUESTS=500
+      # $16 plan (2 GB): WORKERS=2 THREADS=4 MAX_REQUESTS=1000
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-1}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-2}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
+      GUNICORN_MAX_REQUESTS: ${GUNICORN_MAX_REQUESTS:-500}
+      GUNICORN_LOG_LEVEL: ${GUNICORN_LOG_LEVEL:-info}
     depends_on:
       db:
         condition: service_healthy
@@ -42,6 +65,8 @@ services:
   nginx:
     image: nginx:1.27-alpine
     restart: always
+    mem_limit: 64m
+    memswap_limit: 128m
     ports:
       - "80:80"
       - "443:443"
