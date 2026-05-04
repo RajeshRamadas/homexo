@@ -16,6 +16,7 @@ psycopg2-binary>=2.9       # PostgreSQL adapter
 # boto3>=1.34               # AWS SDK (optional)
 
 # Vector DB / RAG Chatbot (Urvashi — Claude + local embeddings)
-pgvector>=0.4.0            # pgvector Django ORM integration
-anthropic>=0.20.0          # Claude API (Haiku/Sonnet)
-sentence-transformers>=2.6 # Local embeddings — all-MiniLM-L6-v2 (384-dim)
+# ── Disabled on $16/mo plan — re-enable when upgrading to 4 GB Droplet ──
+# pgvector>=0.4.0            # pgvector Django ORM integration
+# anthropic>=0.20.0          # Claude API (Haiku/Sonnet)
+# sentence-transformers>=2.6 # Local embeddings — all-MiniLM-L6-v2 (384-dim)

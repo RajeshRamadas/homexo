@@ -50,7 +50,7 @@ LOCAL_APPS = [
     'wishlist',
     'pages',
     'legal_services',
-    'chatbot',
+    # 'chatbot',  # ── Disabled: re-enable when upgrading to 4 GB Droplet ──
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

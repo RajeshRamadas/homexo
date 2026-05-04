@@ -691,13 +691,14 @@
       </svg>
     </a>
   </div>
-  <div class="fab-wrap">
-    <div class="fab-label">Ask Urvashi</div>
-    <button onclick="toggleUrvashi()" class="fab fab-urvashi" title="Ask Urvashi" aria-label="Chat with Urvashi, AI Property Consultant" id="urvashi-fab">
-      <img src="{% static 'images/urvashi.png' %}" alt="Urvashi" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.35);">
-      <span class="fab-notification-badge">✨</span>
-    </button>
-  </div>
+  {# ── Urvashi FAB disabled — re-enable when chatbot app is restored ── #}
+  {# <div class="fab-wrap"> #}
+  {#   <div class="fab-label">Ask Urvashi</div> #}
+  {#   <button onclick="toggleUrvashi()" class="fab fab-urvashi" title="Ask Urvashi" aria-label="Chat with Urvashi, AI Property Consultant" id="urvashi-fab"> #}
+  {#     <img src="{% static 'images/urvashi.png' %}" alt="Urvashi" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.35);"> #}
+  {#     <span class="fab-notification-badge">✨</span> #}
+  {#   </button> #}
+  {# </div> #}
   <div class="fab-wrap">
     <div class="fab-label">Chat on WhatsApp</div>
     <a href="https://wa.me/919999999999?text=Hi%2C%20I%20am%20interested%20in%20a%20property%20from%20Homexo." target="_blank" rel="noopener" class="fab fab-wa" title="WhatsApp" aria-label="Chat on WhatsApp">
@@ -894,7 +895,10 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 End of Tawk.to Script-->
 
-<!-- ── Urvashi Chat Widget ────────────────────────────────────────────────── -->
+{% comment %} ── Urvashi Chat Widget — DISABLED (chatbot app off on $16/mo plan) ────
+  To re-enable: uncomment chatbot in INSTALLED_APPS and remove this comment block.
+── {% endcomment %}
+{% comment %}
 <style>
   /* ── Urvashi FAB (lives inside .floating-actions) ── */
   .fab-urvashi { background: #0D2B4E; color: #fff; }
@@ -1124,6 +1128,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+{% endcomment %}
 
 </body>
 </html>
