@@ -144,12 +144,14 @@ def profile_view(request):
     chat_leads = []
     _lead_roles = {'admin', 'customer_support'}
     if request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') in _lead_roles:
-        from chatbot.models import ChatSession
-        chat_leads = (
-            ChatSession.objects
-            .filter(visitor_name__gt='')   # only sessions with a name captured
-            .order_by('-updated_at')[:50]
-        )
+        from django.apps import apps
+        if apps.is_installed('chatbot'):
+            from chatbot.models import ChatSession
+            chat_leads = (
+                ChatSession.objects
+                .filter(visitor_name__gt='')   # only sessions with a name captured
+                .order_by('-updated_at')[:50]
+            )
 
     return render(request, 'accounts/profile.html', {
         'user': request.user,

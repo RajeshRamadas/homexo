@@ -12,9 +12,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-homexo}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-homexo} -d ${DB_NAME:-homexo_db}"]
       interval: 5s
       timeout: 5s
       retries: 10
